@@ -16,3 +16,6 @@ bun.lockb
 
 # Generated browser modules.
 .demo/
+
+.next/
+next-env.d.ts

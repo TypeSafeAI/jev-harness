@@ -1,6 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "compilerOptions": { "noEmit": false, "outDir": ".demo", "rootDir": ".", "types": [], "lib": ["ES2022", "DOM", "DOM.Iterable"] },
-  "include": ["examples/routing/browser.ts"],
-  "exclude": ["node_modules", ".demo"]
-}

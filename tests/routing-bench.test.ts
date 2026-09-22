@@ -12,7 +12,7 @@ test("paired synthetic evaluation measures inclusion separately from selection",
     assert.equal(pair.metrics.executionLatencyMs, null);
     assert.equal(pair.metrics.providerTokens, null);
     assert.ok(pair.metrics.fullContextBytes >= pair.metrics.leanContextBytes);
-    assert.ok(pair.metrics.leanTotalEstimatedInputTokens >= pair.metrics.leanContextEstimatedTokens);
+    assert.ok(pair.metrics.leanTotalEstimatedInputTokens !== null && pair.metrics.leanTotalEstimatedInputTokens >= pair.metrics.leanContextEstimatedTokens);
     assert.equal(pair.receipt.source, "mock");
     assert.equal(pair.receipt.execution.applied, false);
     assert.equal(JSON.stringify(pair.receipt.request).includes("expected"), false);

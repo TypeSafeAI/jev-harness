@@ -12,12 +12,14 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "test": "pnpm build:demo && tsx --test tests/*.test.ts",
+    "test": "tsx --test tests/*.test.ts",
     "prepare": "git config core.hooksPath .githooks || true",
     "check:secrets": "node scripts/check-secrets.mjs --all",
     "bench:routing": "tsx scripts/bench-routing.ts",
-    "build:demo": "tsc -p tsconfig.demo.json",
-    "demo": "pnpm build:demo && tsx scripts/demo-routing.ts"
+    "demo": "pnpm dev",
+    "dev": "next dev --webpack --hostname 127.0.0.1 --port 4173",
+    "build": "next build --webpack",
+    "start": "next start --hostname 127.0.0.1 --port 4173"
   },
   "devDependencies": {
     "@types/node": "26.6.2",
