@@ -71,7 +71,7 @@ pnpm test        # decision-table tests, fully offline
 pnpm typecheck
 ```
 
-No API key. Nothing in this repository makes a network request. You get the verdict types, the decision table, and tests that pin its behavior; the pieces that talk to Jev are being extracted next (see [Roadmap](#roadmap)).
+No API key. No code here calls a model provider; the optional demo serves browser assets on loopback. You get the verdict types, the decision table, and tests that pin its behavior; the pieces that talk to Jev are being extracted next (see [Roadmap](#roadmap)).
 
 Want to see it run against live Jev today? The interactive workspace is in [`typesafe-playground` PR #41](https://github.com/TypeSafeAI/typesafe-playground/pull/41) — `pnpm dev` there and open `/proposal-review` (Mock needs no key; Live Jev needs a `TYPESAFE_API_KEY`).
 
@@ -202,6 +202,15 @@ The same shape — closed-set question → typed answer → policy in code — c
 ```sh
 pnpm --silent bench:routing > routing-run.json
 ```
+
+For the dark, interactive **Routing room** demo:
+
+```sh
+pnpm demo
+# Open http://127.0.0.1:4173 (or pnpm demo 4187 for a different port)
+```
+
+Change tool availability, compare Lean with Batteries included, inspect the selection evidence, and download the receipt. Sample tasks use scripted evidence; custom text asks for clarification. No tool or sub-agent executes. See [the demo guide and browser verification](docs/routing-demo.md).
 
 The run artifact includes receipts, full/lean context bytes, token estimates, acceptable-tool inclusion and cheapest acceptable selection. Evidence is scripted; local timing is not Jev or execution latency. Router overhead is counted separately so fewer schemas do not automatically imply savings. See [the design, metrics and host adapter boundary](docs/routing.md).
 

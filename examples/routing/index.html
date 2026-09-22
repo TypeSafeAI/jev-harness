@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An offline, synthetic demonstration of typed tool routing and dynamic schema context.">
+  <title>Routing room · jev-harness</title>
+  <link rel="icon" href="/favicon.svg">
+  <link rel="stylesheet" href="/style.css">
+  <script type="module" src="/modules/examples/routing/browser.js"></script>
+</head>
+<body>
+  <a class="skip" href="#task">Skip to task</a>
+  <header class="masthead"><a class="wordmark" href="/">jev<span> / harness</span></a><span class="status-pill">Offline · scripted evidence</span></header>
+  <main>
+    <div class="intro"><div><p class="eyebrow">A tool-context experiment</p><h1>Routing room<span>.</span></h1><p class="lede">Load the tools a task needs. <br>Inspect the evidence behind every selection.</p></div><p class="boundary">Community demo, independent of TypeSafe AI. <br>No model calls. No tool or sub-agent executes. <br>Selection is evidence, never authorization.</p></div>
+    <section class="overview" aria-label="Current routing flow">
+      <article class="stage stage-available"><p class="stage-label"><span>01</span> Host availability</p><strong id="flow-available">—</strong><p>The host defines what can be considered.</p></article>
+      <article class="stage stage-selection"><p class="stage-label"><span>02</span> Routing selection</p><strong id="flow-selection">—</strong><p id="flow-reason">Waiting for a comparison.</p></article>
+      <article class="stage stage-context"><p class="stage-label"><span>03</span> Loaded context</p><strong id="flow-loaded">—</strong><p id="flow-mode">Only descriptors enter context. Nothing runs.</p></article>
+    </section>
+    <a class="mobile-result" href="#context-heading"><span id="mobile-selection">View context</span><strong>View result ↓</strong></a>
+    <div class="workspace">
+      <section class="conversation panel" aria-labelledby="task-heading">
+        <div class="section-head"><h2 id="task-heading">The task</h2><span class="label">Synthetic workspace</span></div>
+        <label for="scenario">Try a scenario</label><select id="scenario"></select>
+        <div id="chat" class="chat" role="log" aria-label="Task and routing history" aria-live="polite"></div>
+        <form id="task-form">
+          <label for="task">Task message</label><textarea id="task" rows="3" maxlength="16000" required aria-describedby="task-help"></textarea>
+          <p class="hint" id="task-help">Sample tasks have scripted answers. Other text asks for clarification. Everything stays in this browser.</p>
+          <button class="primary" type="submit" id="route-button">Route this task <span aria-hidden="true">↗</span></button>
+        </form>
+      </section>
+      <section class="toolbox panel" aria-labelledby="tools-heading">
+        <div class="section-head"><h2 id="tools-heading">Available tools</h2><span id="available-count" class="label"></span></div>
+        <p class="hint">Change availability to recompute the route. Only checked descriptors can enter context.</p>
+        <div id="tools"></div>
+        <fieldset class="controls"><legend>Selection policy</legend><label for="top-k">Maximum tools<select id="top-k"><option value="1">1 tool</option><option value="2">2 tools</option><option value="3">3 tools</option></select></label><label for="budget">Cost limit per tool<input id="budget" type="number" min="0" max="100" step="1" value="10" required></label></fieldset>
+        <details class="policy-detail"><summary>How selection works</summary><p class="hint">Cost units are illustrative estimates. Eligible tools are ranked by cost within 0.10 of the leading probability; confidence floor 0.70, probability floor 0.20.</p></details>
+      </section>
+      <section class="context panel" aria-labelledby="context-heading">
+        <div class="section-head"><h2 id="context-heading" tabindex="-1">In context</h2><button id="download" type="button" class="quiet" disabled>Download receipt ↓</button></div>
+        <fieldset class="mode"><legend class="sr-only">Context mode</legend><label><input type="radio" name="mode" value="lean" checked>Lean</label><label><input type="radio" name="mode" value="full">Batteries included</label></fieldset>
+        <p class="hint" id="mode-help">Lean loads the selection. Batteries included loads every available tool. Compare both below.</p>
+        <div class="context-strip" id="context-strip" aria-label="Schema inclusion"></div>
+        <p id="decision" class="decision"></p>
+        <p id="transition" class="transition"></p>
+        <div class="metrics"><div><span>Full context</span><strong id="full-bytes">—</strong><small>UTF-8 bytes</small></div><div><span>Lean context</span><strong id="lean-bytes">—</strong><small>UTF-8 bytes</small></div><div><span>Schema context reduction</span><strong id="reduction">—</strong><small>not total cost savings</small></div></div>
+        <details class="comparison-detail"><summary>Compare the full cost breakdown</summary>
+        <table><caption>Paired comparison · the same task and availability</caption><thead><tr><th scope="col">Measure</th><th scope="col">Full</th><th scope="col">Lean</th></tr></thead><tbody id="comparison"></tbody></table>
+        <p class="hint">Tokens ≈ UTF-8 bytes ÷ 4, rounded up per payload. Lean total includes router input; output is separate. Inclusion is not model selection accuracy. Execution latency and provider usage are unmeasured.</p>
+        <p id="timing" class="hint"></p>
+        </details>
+        <details><summary>Inspect loaded schemas</summary><pre id="schemas"></pre></details>
+        <details><summary>Inspect routing evidence and receipt</summary><pre id="receipt"></pre></details>
+      </section>
+    </div>
+    <p id="status" class="sr-only" role="status" aria-live="polite"></p>
+    <footer><span>Typed descriptors → routing evidence → code policy → context</span><span>Nothing executes. Every comparison leaves a receipt.</span></footer>
+  </main>
+</body>
+</html>

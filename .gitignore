@@ -11,3 +11,7 @@ package-lock.json
 npm-shrinkwrap.json
 yarn.lock
 bun.lockb
+
+# Generated browser modules and local browser verification artifacts.
+.demo/
+output/playwright/
