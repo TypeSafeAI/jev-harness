@@ -472,3 +472,17 @@ body:has(dialog[open]) { overflow: hidden; }
 .detail-dialog .arena-answer { max-width: none; }
 @media (hover: hover) { .detail-trigger:hover { color: var(--pink); } }
 @media (max-width: 600px) { .detail-dialog-heading { padding: 18px; gap: 12px; } .detail-dialog-heading h2 { font-size: 20px; } .detail-dialog-body { padding: 20px 18px; } .run-inspector > .detail-trigger { padding: 18px; } .arena-method > .detail-trigger { min-height: 40px; } .lane-activity > .detail-trigger { padding-bottom: 6px; } .detail-dialog .inspector-tabs { display: grid; grid-template-columns: 1fr 1fr; } }
+
+/* Settings keeps the manual key source explicit without revealing a credential. */
+.settings-dialog { width: min(560px, 100%); }
+.settings-dialog h3 { font-size: 18px; margin: 0 0 10px; }
+.key-override-dot { display: inline-block; width: 6px; height: 6px; margin-left: 8px; border-radius: 50%; background: var(--pink); vertical-align: middle; }
+.key-source-card { margin: 24px 0; padding: 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); }
+.key-source-card > span { display: block; font-size: 11px; color: var(--muted); }
+.key-source-card strong { display: block; margin-top: 8px; font-size: 16px; font-weight: 500; }
+.key-source-card.has-override strong { color: var(--pink); }
+.key-source-card p { color: var(--muted); font-size: 13px; line-height: 1.8; margin: 10px 0 0; }
+.settings-dialog .dialog-actions { flex-wrap: wrap; margin-top: 20px; gap: 10px; }
+.key-message { font-size: 13px; line-height: 1.8; color: var(--muted); }
+.key-error { color: var(--pink); }
+.key-message:empty { display: none; }

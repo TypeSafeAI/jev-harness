@@ -56,3 +56,18 @@ test("local origin validates the actual Host when Next canonicalizes the request
   assert.equal(localOrigin(new Request(url, { headers: { origin: "http://evil.example:4173", host: "evil.example:4173" } })), false);
   assert.equal(localOrigin(new Request(url, { headers: { origin: "http://127.0.0.1:4173", host: "localhost:4173" } })), false);
 });
+
+test("manual override takes precedence and removing it restores the server key", async () => {
+  const authorizations: string[] = [];
+  const handler = createLiveHandler({ serverKey: "synthetic-server-credential", fetch: async (_url, init) => {
+    authorizations.push(new Headers(init?.headers).get("authorization") ?? "");
+    return Response.json({ model: "jev-1.13.0", answers: { tool: { type: "choice", choice: "read_file", confidence: .9, probabilities: { read_file: .9, needs_clarification: .1 } } } });
+  } });
+  const base = "http://127.0.0.1:4173";
+  for (const override of [undefined, "synthetic-manual-credential", "synthetic-replacement-credential", undefined]) {
+    const response = await handler(new Request(base + "/api/route", { method: "POST", headers: { origin: base, "content-type": "application/json", ...(override ? { "x-typesafe-api-key": override } : {}) }, body: JSON.stringify({ intent: "Read the synthetic file", availableIds: ["read_file"] }) }));
+    assert.equal(response.status, 200);
+    assert.ok(!(await response.text()).includes("credential"));
+  }
+  assert.deepEqual(authorizations, ["Bearer synthetic-server-credential", "Bearer synthetic-manual-credential", "Bearer synthetic-replacement-credential", "Bearer synthetic-server-credential"]);
+});
