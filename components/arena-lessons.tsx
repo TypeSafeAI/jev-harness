@@ -10,7 +10,7 @@ export function ArenaLessons({ report, onHistory }: { report: RunLessons; onHist
     { label: "Calls observed", unit: "count" as const, values: report.measurements.calls },
   ];
   return <section className="arena-lessons" aria-label="Lessons learned">
-    <DetailPanel title="Lessons from this run" trigger={<><span className="lesson-preview"><span className="eyebrow">Lessons learned</span><strong>{report.headline}</strong><small>Next: {report.recommendations[0]?.title}</small></span><span className="lesson-open">Review {report.recommendations.length} recommendations</span></>}>
+    <DetailPanel title="Lessons from this run" trigger={<><span className="lesson-preview"><span className="eyebrow">Lessons learned</span><strong>{report.headline}</strong><small>Next: {report.recommendations[0]?.title}</small></span><span className="lesson-open">Review {report.recommendations.length} {report.recommendations.length === 1 ? "recommendation" : "recommendations"}</span></>}>
       <div className="lessons-content">
         <p className="lesson-source">From this run’s evidence · no additional API usage</p>
         <h3 className="lessons-headline">{report.headline}</h3>
