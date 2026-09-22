@@ -27,17 +27,27 @@ export async function verifyRoutingDemo(page, baseURL = "http://127.0.0.1:4187")
     await page.goto(baseURL);
     await expectOutcome("selected");
     check(await page.evaluate(() => getComputedStyle(document.documentElement).colorScheme === "dark"), "dark mode is the default");
+    check(await page.getByRole("checkbox", { name: "read_file", exact: true }).isHidden(), "tool controls are disclosed on demand");
+    check(await page.locator("#decision").isHidden(), "routing evidence is disclosed on demand");
+    check(await page.locator("#comparison").isHidden(), "comparison is disclosed on demand");
+    check(await page.locator("#chat").isHidden(), "history is disclosed on demand");
+    check(await page.getByRole("button", { name: "Download receipt" }).isHidden(), "receipt export is disclosed on demand");
     check((await receipt()).selectedIds.join() === "read_file", "lower-cost eligible tool selected");
+    check((await page.locator("#comparison-takeaway").textContent()).includes("51 fewer estimated input tokens (14%)"), "comparison headline includes router input overhead");
+    check((await page.locator("#routed-explanation").textContent()).includes("103 for the task and 1 selected schema + 221 for routing"), "comparison explains both routed inputs");
+    check((await page.locator("#output-overhead").textContent()).includes("42 output tokens"), "router output is separately disclosed");
     await page.getByRole("radio", { name: "Batteries included" }).check();
     check((await page.locator("#flow-loaded").textContent()) === "3 schemas", "full mode loads all schemas");
     await page.getByRole("radio", { name: "Lean", exact: true }).check();
     check((await page.locator("#transition").textContent()).includes("Evicted: propose_patch, inspect_agent"), "lean mode evicts extra schemas");
+    await page.getByText("Tools & policy", { exact: true }).click();
     await page.getByRole("checkbox", { name: "read_file", exact: true }).uncheck();
     check((await receipt()).selectedIds.join() === "inspect_agent", "availability recomputes selection");
     await page.getByRole("checkbox", { name: "inspect_agent", exact: true }).uncheck();
     await expectOutcome("needs_clarification");
     await page.getByRole("checkbox", { name: "propose_patch", exact: true }).uncheck();
     await expectOutcome("no_match");
+    check((await page.locator("#comparison-takeaway").textContent()).includes("no equivalent completed task"), "no selection is not presented as task savings");
     check((await page.locator("#flow-loaded").textContent()) === "0 schemas", "empty availability loads nothing");
     for (const id of ["read_file", "propose_patch", "inspect_agent"]) await page.getByRole("checkbox", { name: id, exact: true }).check();
     await page.getByLabel("Cost limit per tool").fill("0");
@@ -55,10 +65,11 @@ export async function verifyRoutingDemo(page, baseURL = "http://127.0.0.1:4187")
     }
     await page.getByLabel("Task message", { exact: true }).fill('<img src=x onerror="alert(1)">');
     check((await page.locator("#status").textContent()).includes("No current selection"), "editing clears accessible status");
-    check(await page.getByRole("button", { name: "Download receipt" }).isDisabled(), "editing disables stale receipt download");
+    check(await page.locator("#download").isDisabled(), "editing disables stale receipt download");
     await page.getByRole("button", { name: "Route this task" }).click();
     await expectOutcome("needs_clarification");
     check(await page.locator("#chat img").count() === 0, "custom text is rendered as text");
+    await page.getByText("Inspect routing evidence and receipt", { exact: true }).click();
     const downloadPromise = page.waitForEvent("download");
     await page.getByRole("button", { name: "Download receipt" }).click();
     const download = await downloadPromise;
@@ -72,16 +83,22 @@ export async function verifyRoutingDemo(page, baseURL = "http://127.0.0.1:4187")
     for (const width of [320, 375, 390, 768, 1024, 1440, 1920]) {
       await page.setViewportSize({ width, height: 900 });
       check(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), `no horizontal overflow at ${width}px`);
-      await page.getByText("Compare the full cost breakdown", { exact: true }).click();
+      await page.getByText("Does routing reduce the input?", { exact: true }).click();
+      await page.getByText("Show the calculation", { exact: true }).click();
       await page.getByText("Inspect loaded schemas", { exact: true }).click();
       check(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), `expanded details fit at ${width}px`);
-      await page.getByText("Compare the full cost breakdown", { exact: true }).click();
+      await page.getByText("Show the calculation", { exact: true }).click();
+      await page.getByText("Does routing reduce the input?", { exact: true }).click();
       await page.getByText("Inspect loaded schemas", { exact: true }).click();
-      if (width < 760) {
-        await page.getByRole("link", { name: /View result/ }).click();
-        check(await page.locator("#context-heading").evaluate(element => element.getBoundingClientRect().top >= 0), `mobile result navigation at ${width}px`);
-      }
+
     }
+    await page.getByText("Tools & policy", { exact: true }).click();
+    check(await page.getByRole("checkbox", { name: "read_file", exact: true }).isHidden(), "closing tools preserves progressive disclosure");
+    await page.getByText("Why this selection", { exact: true }).focus();
+    await page.keyboard.press("Enter");
+    check(await page.locator("#decision").isVisible(), "evidence disclosure works from keyboard");
+    await page.keyboard.press("Enter");
+    check(await page.locator("#decision").isHidden(), "evidence closes with keyboard");
     await page.setViewportSize({ width: 1440, height: 1000 });
     await page.goto(baseURL);
     await page.keyboard.press("Tab");

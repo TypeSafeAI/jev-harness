@@ -11,20 +11,21 @@ Open `http://127.0.0.1:4173`. If that port is occupied, run `pnpm demo 4187` and
 
 ## Read the flow
 
-The three summary cards show host availability, routing selection and loaded schema context. They are separate: an available tool may not be selected, and Batteries included loads available schemas even when routing asks for clarification. Loading a descriptor never executes it.
+The default view shows one task and one result: the selected tool and the schemas loaded into context. An available tool may not be selected, and Batteries included loads available schemas even when routing asks for clarification. Loading a descriptor never executes it.
 
 1. Choose a sample task or type a message. Samples have scripted responses; other messages ask for clarification. This is not a live chat model.
-2. Toggle available tools or change maximum tools and the estimated cost limit. Each change recomputes the selection. Probability bars show the synthetic evidence; selection is deterministic policy, not hidden model reasoning.
-3. Switch between Lean and Batteries included. The loaded schema chips, load/eviction transition and summary update together.
-4. Expand the cost breakdown, schemas or receipt for the complete record. Download saves the current paired comparison as JSON. Editing inputs clears stale results and disables that download until the next comparison.
+2. Open **Tools & policy** to change availability, maximum tools or the estimated cost limit. Each change recomputes the selection.
+3. Switch between **Lean** and **Batteries included** to see the loaded schemas change. **Why this selection** explains the deterministic policy and shows its scripted evidence.
+4. Open **Does routing reduce the input?** for a paired Without/With comparison. Both totals include the task; With routing also includes the routing request. Routing output is reported separately. **Show the calculation** reveals schema bytes and the detailed table. If no tool is selected, the panel explicitly says the runs do not represent equivalent completed work.
+5. Schemas, the receipt, download and recent tasks each appear in their own disclosure. Editing inputs clears stale results and disables download until the next comparison.
 
-The dark surfaces, rose controls and teal evidence accents follow the community [typesafe-router UI](https://github.com/TypeSafeAI/typesafe-router/blob/main/app/globals.css). This is an independent community demonstration, not the official TypeSafe AI console. Background cards distinguish the three stages; text labels and values carry the same information without color. The layout changes from three columns to a two-column tablet layout and a single phone column. A mobile shortcut brings the current context into view.
+The dark surfaces and rose accent follow the community [typesafe-router UI](https://github.com/TypeSafeAI/typesafe-router/blob/main/app/globals.css). This is an independent community demonstration, not the official TypeSafe AI console. Two quiet cards separate task from result; advanced controls and evidence stay closed by default. Comparison cards sit side by side on larger screens and stack on narrow phones. Labels carry the same information without color.
 
 ## Data and measurement boundaries
 
 Task text stays in browser memory. The server binds to loopback and serves an explicit asset allowlist; it has no task endpoint, provider transport or execution path. The browser has no external font, telemetry, storage or network dependency. Do not add live provider keys to this UI.
 
-Context size is measured in serialized UTF-8 bytes. Token figures are estimates, and local comparison duration measures JS work only. The full baseline has no tool-selection model; acceptable-tool inclusion is not accuracy. Router overhead appears in the expanded comparison. See [routing metrics](routing.md#reproduce-the-synthetic-comparison) before quoting savings.
+Context size is measured in serialized UTF-8 bytes. Token figures are estimates, and local comparison duration measures JS work only. The full baseline has no tool-selection model; acceptable-tool inclusion is not accuracy. The comparison leads with estimated total input including router overhead, rather than schema-only reduction. See [routing metrics](routing.md#reproduce-the-synthetic-comparison) before quoting savings.
 
 ## Verification
 

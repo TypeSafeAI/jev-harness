@@ -57,7 +57,12 @@ for (const tool of DEMO_CATALOG) {
   meter.max = 1;
   meter.value = 0;
   meter.setAttribute("aria-label", `${tool.id} scripted probability`);
-  container.append(line, description, meta, evidenceLabel, meter);
+  container.append(line, description, meta);
+  const evidenceRow = node("div", "", "evidence-row");
+  const evidenceHeading = node("div", "", "evidence-heading");
+  evidenceHeading.append(node("span", tool.id), evidenceLabel);
+  evidenceRow.append(evidenceHeading, meter);
+  element("evidence-tools").append(evidenceRow);
   evidenceLabels.set(tool.id, evidenceLabel);
   meters.set(tool.id, meter);
   element("tools").append(container);
@@ -89,13 +94,11 @@ function render(result: NonNullable<typeof current>) {
   element("flow-selection").textContent = selectionLabel;
   element("flow-reason").textContent = receipt.outcome === "selected"
     ? `${metrics.selectedEstimatedCostUnits} estimated cost ${metrics.selectedEstimatedCostUnits === 1 ? "unit" : "units"} · lowest cost among eligible tools.`
-    : receipt.outcome === "needs_clarification" ? "Ask a more specific question before choosing a tool."
+    : receipt.outcome === "needs_clarification" ? (comparison.scenarioId === "custom" ? "No scripted answer for this task. Choose a sample to see routing." : "Ask a more specific question before choosing a tool.")
     : receipt.outcome === "no_match" ? "Check availability and the per-tool cost limit."
     : "No usable routing evidence. Lean context stays empty.";
   element("flow-loaded").textContent = `${context.state.loadedIds.length} ${context.state.loadedIds.length === 1 ? "schema" : "schemas"}`;
   element("flow-mode").textContent = context.mode === "lean" ? "Lean mode · selected tool schemas only." : "Batteries included · all available schemas.";
-  element("mobile-selection").textContent = selectionLabel;
-  element("available-count").textContent = `${receipt.request.options.length - 1} descriptors`;
   for (const tool of DEMO_CATALOG) {
     const badge = badges.get(tool.id)!;
     const enabled = checkboxes.get(tool.id)!.checked;
@@ -108,16 +111,30 @@ function render(result: NonNullable<typeof current>) {
     badge.closest("article")!.classList.toggle("tool-selected", selected);
     badge.closest("article")!.classList.toggle("tool-unavailable", !enabled);
   }
-  element("context-strip").replaceChildren(...DEMO_CATALOG.map(tool => {
-    const loaded = context.state.loadedIds.includes(tool.id);
-    return node("span", `${loaded ? "+" : "−"} ${tool.id}`, `schema-chip${loaded ? " loaded" : ""}`);
-  }));
+  element("context-strip").replaceChildren(...context.state.loadedIds.map(id => node("span", id, "schema-chip")));
+  if (!context.state.loadedIds.length) element("context-strip").append(node("span", "No schemas loaded", "empty-context"));
   const confidence = receipt.evidence === null ? "" : ` Choice confidence: ${Math.round(receipt.evidence.confidence * 100)}% (scripted).`;
   element("decision").textContent = receipt.reason + confidence;
   element("transition").textContent = `Loaded: ${context.state.loadedIds.join(", ") || "none"}. Added: ${context.addedIds.join(", ") || "none"}. Evicted: ${context.evictedIds.join(", ") || "none"}.`;
   element("full-bytes").textContent = metrics.fullContextBytes.toLocaleString();
   element("lean-bytes").textContent = metrics.leanContextBytes.toLocaleString();
   element("reduction").textContent = `${Math.round(metrics.contextReductionFraction * 100)}%`;
+  const baseline = metrics.fullContextEstimatedTokens;
+  const routed = metrics.leanTotalEstimatedInputTokens;
+  const difference = baseline - routed;
+  element("comparison-takeaway").textContent = receipt.outcome !== "selected" ? "No tool was selected. There is no equivalent completed task to compare." : difference === 0 ? "Routing uses the same estimated input." : `Routing uses ${Math.abs(difference)} ${difference > 0 ? "fewer" : "more"} estimated input tokens (${Math.round(Math.abs(difference) / baseline * 100)}%).`;
+  element("baseline-tokens").textContent = baseline.toLocaleString();
+  element("routed-tokens").textContent = routed.toLocaleString();
+  element("baseline-explanation").textContent = `${comparison.full.state.loadedIds.length} available tool schemas + the task. No routing request.`;
+  element("routed-explanation").textContent = `${metrics.leanContextEstimatedTokens} for the task and ${comparison.lean.state.loadedIds.length} selected ${comparison.lean.state.loadedIds.length === 1 ? "schema" : "schemas"} + ${routed - metrics.leanContextEstimatedTokens} for routing.`;
+  for (const [id, value] of [["baseline-meter", baseline], ["routed-meter", routed]] as const) {
+    const meter = element<HTMLMeterElement>(id);
+    meter.max = Math.max(baseline, routed, 1);
+    meter.value = value;
+  }
+  element("output-overhead").textContent = metrics.routerResponseEstimatedTokens === null
+    ? "Routing output is unavailable; total usage cannot be compared."
+    : `Routing also adds approximately ${metrics.routerResponseEstimatedTokens} output tokens, separate from the input above.`;
   element("comparison").replaceChildren(
     row("Context tokens (estimate)", metrics.fullContextEstimatedTokens, metrics.leanContextEstimatedTokens),
     row("Router request bytes", 0, metrics.routerRequestBytes),
@@ -144,20 +161,26 @@ function invalidate() {
   element("comparison").replaceChildren();
   const availableCount = [...checkboxes.values()].filter(box => box.checked).length;
   element("flow-available").textContent = `${availableCount} available`;
-  element("available-count").textContent = `${availableCount} descriptors`;
   element("flow-selection").textContent = "Ready to route";
   element("flow-reason").textContent = "Run the edited task to produce fresh evidence.";
   element("flow-loaded").textContent = "No current result";
   element("flow-mode").textContent = "The previous comparison has been cleared.";
-  element("mobile-selection").textContent = "Ready to route";
   for (const [id, meter] of meters) { meter.value = 0; evidenceLabels.get(id)!.textContent = "Awaiting evidence"; }
-  for (const id of ["full-bytes", "lean-bytes", "reduction"]) element(id).textContent = "—";
-  for (const id of ["schemas", "receipt", "timing"]) element(id).textContent = "";
+  for (const id of ["full-bytes", "lean-bytes", "reduction", "baseline-tokens", "routed-tokens"]) element(id).textContent = "—";
+  for (const id of ["schemas", "receipt", "timing", "comparison-takeaway", "baseline-explanation", "routed-explanation", "output-overhead"]) element(id).textContent = "";
+  for (const id of ["baseline-meter", "routed-meter"]) element<HTMLMeterElement>(id).value = 0;
   for (const [id, badge] of badges) { badge.textContent = checkboxes.get(id)!.checked ? "Available" : "Unavailable"; badge.className = "badge"; badge.closest("article")!.classList.remove("tool-selected"); badge.closest("article")!.classList.toggle("tool-unavailable", !checkboxes.get(id)!.checked); }
 }
 async function update(addTurn: boolean) {
   const thisGeneration = ++generation;
-  if (!task.reportValidity() || !budget.reportValidity()) { invalidate(); return; }
+  task.setCustomValidity(task.value.trim() ? "" : "Enter a task to route.");
+  if (!task.reportValidity()) { invalidate(); return; }
+  if (!budget.checkValidity()) {
+    element<HTMLDetailsElement>("settings").open = true;
+    budget.reportValidity();
+    invalidate();
+    return;
+  }
   button.disabled = true;
   download.disabled = true;
   const intent = task.value.trim();
@@ -190,10 +213,12 @@ element<HTMLFormElement>("task-form").addEventListener("submit", event => { even
 scenarioSelect.addEventListener("change", () => {
   const scenario = SCENARIOS.find(item => item.id === scenarioSelect.value);
   task.value = scenario?.intent ?? "";
+  task.setCustomValidity("");
   if (scenario) void update(true);
   else { invalidate(); task.focus(); }
 });
 task.addEventListener("input", () => {
+  task.setCustomValidity("");
   scenarioSelect.value = SCENARIOS.find(item => item.intent === task.value.trim())?.id ?? "custom";
   // Invalidate pending receipts as soon as the visible task changes.
   invalidate();
