@@ -18,6 +18,14 @@ Architecture: pure TypeScript catalog and selection policy consume normalized ch
 - [x] Implement a no-dependency browser UI under `examples/routing/`: synthetic chat scenarios, lean/full toggle, availability controls, loaded/evicted schema state, policy reasons, paired context metrics and JSON receipt download.
 - [x] Build browser modules with the pinned TypeScript compiler. Serve only allowlisted generated modules/static assets from a loopback server. No task input reaches a server or provider.
 - [x] Browser-check scenario changes, availability, modes, clarification, download, narrow layout and keyboard focus. Record automated coverage and human accessibility gap distinctly.
-- [x] Complete local verification and prepare the signed, stacked browser PR. Hosted CI is the remaining delivery check; do not merge.
+- [x] Complete local verification and prepare the signed, stacked browser PR. Hosted CI and review conversations gate merging. Val subsequently authorized merge after those gates.
 
 The user requested default dark mode in the TypeSafeAI style, then responsive clarity and richer card surfaces. The demo follows typesafe-router tokens and adds explicit routing stages, probability bars, expanded inspection panels and a mobile result shortcut. Browser evidence: [recorded run](../verification/routing-browser-2026-09-22.json). Human keyboard-only and VoiceOver acceptance remains unverified.
+
+## Follow-up requested by Val
+
+- [x] Replace the static host with native Next.js App Router and React components.
+- [x] Add masked personal-key persistence, explicit live routing and scalar session usage.
+- [x] Add schema/context examples and a real Codex CLI arena with synthetic MCP tools.
+- [ ] Complete fresh production-browser, live arena and review verification.
+- [ ] Open the implementation PR and merge this task's PR stack after exact-head CI and conversations are resolved.

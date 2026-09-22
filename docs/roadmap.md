@@ -44,9 +44,11 @@ are not new live measurements. Apply the [evaluation plan](hardening/09-evaluati
 
 - [x] `ToolRouter` contract: intent + host-available tool ids → top-k descriptors, clarification, confidence/probability floors, deterministic cost policy
 - [x] Offline synthetic comparison: full vs selected schemas, explicit load/eviction state, receipts and cost/token proxies (`pnpm bench:routing`)
-- [x] Interactive synthetic browser demonstration: dark TypeSafe-style cards, explicit availability/selection/context flow, responsive layouts, paired metrics, receipt export; `pnpm demo`
+- [x] Interactive synthetic browser demonstration: Next.js dark full-width UI, progressive disclosure, key override, reported usage, responsive layouts, paired metrics and receipt export; `pnpm demo`
 - [ ] Experiment: N tools in context vs Jev top-k, measured on token cost and correct-tool rate
-- [ ] Live host adapter using `typesafe-router` where it fits; [normalization boundary documented](routing.md#host-adapter-and-reuse), no duplicate provider client in this package
+- [x] Optional local live-routing example host, separate from the exported pure package: persisted personal-key override, explicit provider calls, measured usage and failure handling. [Manual smoke receipt](verification/live-routing-2026-09-22.json); the multi-task quality/cost experiment remains open.
+
+- [x] Local Codex CLI arena and additional schema/context examples; synthetic MCP tools, full versus Jev-selected exposure, actual call/usage records. This does not complete the repeated cost/quality experiment above.
 
 ## 4 · Context scoring
 

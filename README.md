@@ -33,6 +33,10 @@ No API key is needed for these offline checks. Use the versions pinned in
 checks ran successfully: inspect checks for the exact PR head before merging.
 Signed commits and the existing secret guards remain required.
 
+The optional Next.js demo starts offline and offers explicit live routing through
+its separate loopback example host. `/arena` runs Codex against synthetic MCP fixtures.
+
+
 ## What is implemented here
 
 | Component | Status in this hardening series |
@@ -44,7 +48,7 @@ Signed commits and the existing secret guards remain required.
 | Benchmark-only verdict helper | Implemented at `src/benchmark`; explicitly records no-review provenance |
 | Evaluation accounting and blinded proposer inputs | Implemented at `src/benchmark/evaluation.ts`; not a live experiment runner |
 | Routing contract and offline synthetic comparison | Implemented at `src/routing/` and `examples/routing/`; no live provider or execution |
-| Interactive routing demo | Implemented at `examples/routing/`; loopback-only browser assets and synthetic evidence |
+| Interactive Next.js demo and CLI arena | Implemented at `app/`, `components/`, and `examples/host/`; loopback routing, saved keys, usage and synthetic fixture comparisons |
 | Proposal schema/path/diff validator, Jev payload builder, transport integration, fixture suite, full runner | Still pending extraction from the playground |
 | Host authorization, sandbox, execution, and durable storage | Host responsibilities; not implemented in this package |
 
@@ -210,10 +214,10 @@ For the dark, interactive **Routing room** demo:
 
 ```sh
 pnpm demo
-# Open http://127.0.0.1:4173 (or pnpm demo 4187 for a different port)
+# Open http://127.0.0.1:4173 (or pnpm exec next dev --webpack --hostname 127.0.0.1 --port 4187 for a different port)
 ```
 
-Change tool availability, compare Lean with Batteries included, inspect the selection evidence, and download the receipt. Sample tasks use scripted evidence; custom text asks for clarification. No tool or sub-agent executes. See [the demo guide and browser verification](docs/routing-demo.md).
+Change tool availability, compare Lean with Batteries included, inspect the selection evidence, and download the receipt. Offline sample tasks use scripted evidence; custom offline text asks for clarification. Save a personal key under **API key**, select **Live Jev**, then explicitly route a task to use the live host. The Routing room does not execute tools. `/examples` adds schema and context experiments; `/arena` compares real Codex CLI runs with full versus Jev-selected synthetic MCP tools. The host records proposed patches without applying them. See [the demo guide and browser verification](docs/routing-demo.md).
 
 The run artifact includes receipts, full/lean context bytes, token estimates, acceptable-tool inclusion and cheapest acceptable selection. Evidence is scripted; local timing is not Jev or execution latency. Router overhead is counted separately so fewer schemas do not automatically imply savings. See [the design, metrics and host adapter boundary](docs/routing.md).
 
@@ -221,8 +225,7 @@ The run artifact includes receipts, full/lean context bytes, token estimates, ac
 ## Roadmap and related projects
 
 The full extraction remains gated on the canonical upstream playground history.
-The routing contract and offline synthetic comparison are implemented; live
-integration and measurements remain pending. Planned host work includes a Rust
+The routing contract, Next.js demo and optional live routing/CLI example host are implemented. Repeated live evaluation and production-host integration remain pending. Planned host work includes a Rust
 `ProposalReview` seam and a measure-first `ContextScorer`.
 Context scoring needs an egress policy and evidence that its costs beat cache
 reuse before a runtime integration. See [architecture](docs/architecture.md)

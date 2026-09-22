@@ -87,7 +87,7 @@ Repository files, evidence lines, and a proposal's `rationale` are untrusted dat
 
 Fixtures are synthetic. Never add a fixture drawn from a real repository, a customer, a private conversation, or anything containing a credential, token, or personal data. Instruction-trap fixtures stay harmless (the "attack" is "delete `.env`", not a working exploit). No operational attack steps.
 
-Any future live transport keeps keys on the host's server side. Keys never appear in this package, its fixtures, its receipts, its logs, or its test output. Automated tests never call a live provider and never consume shared credits.
+The optional example host keeps its default key server-side. At the user's request, its UI supports a personal override saved in origin-local, unencrypted browser storage, matching the playground. Never expose a saved value, and never put a key in model state, fixtures, receipts, logs, or test output. Save/remove and cross-tab changes invalidate pending live results. Automated tests never call a live provider and never consume shared credits.
 
 Checked-in guards are not optional: the `pre-commit` hook (`scripts/check-secrets.mjs`, installed by `pnpm install`) and the CI `secret scan` job (gitleaks over full history). Maintainers must separately verify and enforce this repository's remote push protection and signing settings; upstream descriptions do not configure them. Do not disable, skip, or `--no-verify` past any of them to land a change. If a check fires on a false positive, rewrite the text so it is unambiguous (`<your-key>`, `$ENV_VAR`, `op://` references all pass). If it fires on a real key, stop and rotate it; do not amend it away.
 
@@ -119,7 +119,7 @@ A measured claim (a number in a README, a doc, or a PR body) links the run that 
 
 ## Not in scope here
 
-- Provider HTTP clients or SDK wrappers (hosts own transport).
+- Provider HTTP clients or SDK wrappers in the exported package. The separately scoped `examples/host/` adapter owns the local demo transport; it is never imported by `src/`.
 - Human approval interrupt/resume, permission grants, session identity, replay protection — host concerns.
 - Executing, applying, testing, or committing anything a model proposed.
 - Training or fine-tuning. Jev is not customer-fine-tunable; a specialist *proposer* is a separate, measured experiment that this harness can evaluate but does not contain.
@@ -145,3 +145,9 @@ A measured claim (a number in a README, a doc, or a PR body) links the run that 
 Read `docs/routing.md` before changing routing behavior. `src/routing/` is pure and shares the no-I/O boundary of `src/contract/`. Routing outcomes/receipts are separate from review verdicts. Hosts supply availability, cost estimates and normalized evidence; no descriptor grants permission or launches a sub-agent. Preserve the clarification option, closed-set validation, pinned model and untrusted-data note. Bump `ROUTING_QUESTION_SET_VERSION` when routing instruction semantics change.
 
 Routing scenarios are separate synthetic demonstrations, not new proposal-review fixture categories. Evaluation labels must never affect mock evidence or adapter payloads. Byte/token proxies and local JS timing do not establish live provider savings, correctness or execution speed. Link a run artifact for measured claims.
+
+## Optional Next.js demo host
+
+At Val's request, `app/`, `components/` and `examples/host/` implement the interactive demo. Keep React and provider/CLI I/O outside `src/`. Read the pinned Next.js docs under `node_modules/next/dist/docs/` before changing App Router behavior. Verify `pnpm build` alongside typecheck and tests.
+
+The arena host may invoke the underlying Codex CLI against fixed synthetic fixtures through bounded MCP tools. This is not a new runtime or permission grant: no proposed source is applied or executed. Preserve auth-only temporary CODEX_HOME and HOME, disabled external tools, read-only sandbox, exact fixture ids, process cancellation and output limits. Automated tests use a fake CLI and fake Jev; live smoke runs are explicit and separately recorded. No private repository context or global agent instructions may enter the arena.
