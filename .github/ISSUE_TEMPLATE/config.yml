@@ -1,8 +1,8 @@
 blank_issues_enabled: true
 contact_links:
-  - name: Design discussion or question
-    url: https://github.com/TypeSafeAI/jev-harness/discussions
-    about: Not a bug and not a fixture? Start a discussion.
-  - name: Security report
+  - name: Local design question
+    url: https://github.com/TypeSafeAI/jev-harness/issues
+    about: Non-sensitive questions about this community repository.
+  - name: Local security report
     url: https://github.com/TypeSafeAI/jev-harness/security/advisories/new
-    about: Anything that could make a proposal look more trustworthy than it is. Report privately.
+    about: Report privately when enabled. If unavailable, request a private channel without disclosing details.

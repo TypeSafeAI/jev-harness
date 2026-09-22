@@ -6,7 +6,7 @@ Start with `README.md`, then `docs/architecture.md`, `docs/roadmap.md`, and the 
 
 ## What this project is
 
-A coding-agent harness in which an LLM proposes one action, TypeSafe AI's Jev answers four narrow yes/no (`noul`) questions about it, and pure code turns those answers into one of four verdicts: `permit`, `proposal_only`, `reject`, `unavailable`. Every run produces a receipt. Nothing in this repository executes a proposal.
+A coding-agent harness in which an LLM proposes one action, TypeSafe AI's Jev answers four narrow yes/no (`noul`) questions about it, and pure code turns those answers into one of four verdicts: `permit`, `proposal_only`, `reject`, `unavailable`. A host constructs and stores each receipt; the full runner is not extracted here. Nothing in this repository executes a proposal.
 
 The whole value of the project is the boundary between *evidence* and *authority*. Keep it sharp:
 
@@ -16,7 +16,7 @@ The whole value of the project is the boundary between *evidence* and *authority
 
 ## What this project is not
 
-- Not an official TypeSafe AI product, SDK, or endorsed harness. It lives in a community organization. Do not write copy that implies otherwise.
+- Not an official TypeSafe AI product, SDK, or endorsed harness. It lives in the independent TypeSafeAI community organization. Do not write copy that implies otherwise.
 - Not an agent runtime. There is no loop here, no tool executor, no session, no identity binding.
 - Not a safety guarantee. `permit` means four answers were favorable at a threshold on one pinned model. Do not describe it as "safe", "approved", or "verified".
 
@@ -25,7 +25,9 @@ The whole value of the project is the boundary between *evidence* and *authority
 ```text
 src/contract/types.ts    shared types; the wire shape of Proposal, ReviewAnswer, Receipt, Fixture
 src/contract/decide.ts   decide(), decideBase(), unfavorable(), FAVORABLE, REVIEW_CONFIDENCE_THRESHOLD
-src/contract/index.ts    re-exports; src/index.ts is the public surface
+src/contract/index.ts    root exports; benchmark-only decideBase is not re-exported
+src/benchmark/          explicit base helper and offline evaluation/blinding
+src/audit/receipt.ts    optional Node binding/replay adapter; not a pure-root import
 src/routing/            pure catalog, normalized evidence seam, routing policy, context assembly
 examples/routing/       synthetic routing scenarios and paired comparison
 tests/*.test.ts          node:test via tsx, offline
@@ -51,11 +53,11 @@ Do not use npm, npx, Yarn, or Bun for installation, scripts, or tool execution. 
 
 ### The decision table
 
-`decide()` in `src/contract/decide.ts` is the only place a verdict is produced.
+`decide()` is the normal review decision table. The internal `decideBase()` table is benchmark-only; consumers import its provenance-preserving wrapper from `src/benchmark`, never use it as a failure fallback.
 
-- `validation.ok === false` → `reject`. Jev is never consulted and `jev` is `null` in the receipt.
-- `jev === null` or `jev.answers === null` → `unavailable`. The reason must say it is treated as proposal-only, never as safe.
-- Any answer whose direction differs from `FAVORABLE[id]`, or whose `confidence` is below the threshold, or which is missing or non-finite → `proposal_only`, with every miss named in the reason.
+- Malformed validation, `validation.ok !== true`, or nonempty validation errors → `reject`. The host must not call Jev first and records `jev: null`; this pure function cannot enforce prior host call order.
+- Missing/malformed review envelope, `jev === null`, `jev.answers === null`, or a non-null review error → `unavailable`. The reason must say it is treated as proposal-only, never as safe.
+- Any answer whose direction differs from `FAVORABLE[id]`, or whose `confidence` is below the threshold, or which is missing, non-finite, out of range, or inconsistent with its probability → `proposal_only`, with every miss named in the reason.
 - Otherwise → `permit`, with a reason that says it is evidence, not authorization.
 - A threshold outside `[0.5, 1]` throws. Never clamp it.
 
@@ -63,17 +65,17 @@ Changing any row of this table is a design change: update `docs/architecture.md`
 
 ### The question set
 
-Question ids (`addresses_task`, `evidence_supports`, `unrelated_changes`, `needs_clarification`) are stable and are the keys of `ReviewAnswers`. `FAVORABLE` pins the direction each one must point.
+Question ids (`addresses_task`, `evidence_supports`, `unrelated_changes`, `needs_clarification`) are stable and are the keys of `ReviewAnswers`. `FAVORABLE` pins the direction each one must point. These values and the tool list are readonly and frozen; never mutate them to change policy.
 
 Changing the *wording* of any question bumps `REVIEW_QUESTION_SET_VERSION`. Adding or removing a question is a new major version of the contract and needs a design note first.
 
 The model is pinned: `JEV_MODEL = "jev-1.13.0"`. Never `jev-latest` or `jev-preview`. Moving the pin is its own PR and re-runs the live bench in the playground.
 
-`noul` questions have no `criteria` field on the wire; criteria kept beside a question document intent and are stripped before sending. Do not rely on them reaching the model.
+`noul` supports optional `criteria: { true: string, false: string }` on the wire according to the [official Noul documentation](https://docs.typesafe.ai/primitives/noul) (checked 2026-09-22). The playground's historical stripping is a local validator behavior, not an API-wide rule. Preserve explicitly supplied criteria when the payload builder is extracted, test the exact post-validation request body, and version any change to effective question semantics. The 0.8 threshold is uncalibrated; pinning a model is not calibration. See [wire-contract guidance](docs/hardening/07-noul-contract.md).
 
 ### Receipts
 
-`Receipt.schemaVersion` is `1`. `Receipt.execution.applied` is the literal type `false` at this revision and stays that way until a host with real authorization exists somewhere else. `execution.status` is `recorded_pending` or `withheld`; there is no `applied`, `committed`, or `executed` status. Fixture labels (`arm`, `expected`, `mock`) may appear in a receipt for bookkeeping but are never part of the payload sent to Jev.
+`Receipt.schemaVersion` is `1`. `Receipt.execution.applied` is the literal type `false` at this revision and stays that way until a host with real authorization exists somewhere else. `execution.status` is `recorded_pending` or `withheld`; there is no `applied`, `committed`, or `executed` status. Fixture labels (`arm`, `expected`, `mock`) may appear in a receipt for bookkeeping but are never part of the payload sent to Jev. The optional Node bound-receipt wrapper has its own bindingVersion 1; its digest is not authentication or permission. See `docs/hardening/05-receipt-binding.md`.
 
 ### Purity
 
@@ -87,7 +89,7 @@ Fixtures are synthetic. Never add a fixture drawn from a real repository, a cust
 
 Any future live transport keeps keys on the host's server side. Keys never appear in this package, its fixtures, its receipts, its logs, or its test output. Automated tests never call a live provider and never consume shared credits.
 
-Guards exist and are not optional: the `pre-commit` hook (`scripts/check-secrets.mjs`, installed by `pnpm install`), the CI `secret scan` job (gitleaks over full history), and GitHub push protection on the remote. Do not disable, skip, or `--no-verify` past any of them to land a change. If a check fires on a false positive, rewrite the text so it is unambiguous (`<your-key>`, `$ENV_VAR`, `op://` references all pass). If it fires on a real key, stop and rotate it; do not amend it away.
+Checked-in guards are not optional: the `pre-commit` hook (`scripts/check-secrets.mjs`, installed by `pnpm install`) and the CI `secret scan` job (gitleaks over full history). Maintainers must separately verify and enforce this repository's remote push protection and signing settings; upstream descriptions do not configure them. Do not disable, skip, or `--no-verify` past any of them to land a change. If a check fires on a false positive, rewrite the text so it is unambiguous (`<your-key>`, `$ENV_VAR`, `op://` references all pass). If it fires on a real key, stop and rotate it; do not amend it away.
 
 ## How to add a fixture (once phase 1 lands)
 

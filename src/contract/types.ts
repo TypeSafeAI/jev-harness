@@ -6,12 +6,11 @@
  * evidence about the proposal, never permission or authorization to act.
  *
  * Extracted from TypeSafeAI/typesafe-playground `lib/harness/types.ts`
- * (branch feat/proposal-review, commit 245167d). The only change is that the
- * Jev request payload type is a generic parameter instead of an import from
- * the playground's API module.
+ * (branch feat/proposal-review, commit 245167d), then hardened in this package.
+ * Jev request payloads remain generic rather than importing a host API module.
  */
 
-export const PROPOSAL_TOOLS = ["read_file", "propose_patch"] as const;
+export const PROPOSAL_TOOLS = Object.freeze(["read_file", "propose_patch"] as const);
 export type ProposalTool = (typeof PROPOSAL_TOOLS)[number];
 
 export interface Proposal {
@@ -25,20 +24,20 @@ export interface Proposal {
   evidence: string[];
 }
 
-export const REVIEW_QUESTION_IDS = [
+export const REVIEW_QUESTION_IDS = Object.freeze([
   "addresses_task",
   "evidence_supports",
   "unrelated_changes",
   "needs_clarification",
-] as const;
+] as const);
 export type ReviewQuestionId = (typeof REVIEW_QUESTION_IDS)[number];
 
 /** Question set v1. Ids are stable; wording changes bump the version. */
 export const REVIEW_QUESTION_SET_VERSION = 1;
 
 /**
- * Pinned, versioned Jev model. Never `jev-latest`: the four questions and the
- * threshold are calibrated against one version.
+ * Pinned, versioned Jev model for reproducibility. Never `jev-latest`.
+ * The four questions were evaluated on this model; the threshold is uncalibrated.
  * Source: https://docs.typesafe.ai/models.md (fetched 2026-09-20) lists
  * `jev-1.13.0` as the current production model, with `jev-latest` and
  * `jev-preview` both aliasing it.
@@ -73,14 +72,17 @@ export interface ValidationResult {
 
 export type JevSource = "jev" | "mock";
 
-export interface JevReview {
+interface JevReviewMetadata {
   model: string;
-  /** Null whenever the provider failed, timed out, or answered malformed. */
-  answers: ReviewAnswers | null;
-  error: string | null;
   latencyMs: number;
   source: JevSource;
 }
+
+/** A failed review cannot retain answers from an earlier request. */
+export type JevReview = JevReviewMetadata & (
+  | { answers: ReviewAnswers; error: null }
+  | { answers: null; error: string }
+);
 
 export type ReviewArm = "good" | "bad";
 export type ReviewMode = "base" | "plus_jev";

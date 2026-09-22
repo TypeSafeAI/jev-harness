@@ -1,32 +1,44 @@
 # Roadmap
 
-Status as of 2026-09-22. Dates are targets, not promises.
+Status describes this hardening branch, not an automatically deployed runtime.
+Dates and phases are planning targets, not delivery promises.
 
-## 0 · Contract home (this commit)
+## 0 · Contract home and hardening
 
-- [x] Repository in the TypeSafeAI community org
-- [x] `src/contract/types.ts` and `src/contract/decide.ts`, extracted verbatim from `typesafe-playground` `feat/proposal-review` (PR #41, head `245167d`)
-- [x] Decision-table tests, offline
-- [x] README, architecture, agent guide, CI
+- [x] Repository in the independent TypeSafeAI community organization
+- [x] Types and decision table originally extracted from playground PR #41, head `245167d`, then hardened here
+- [x] Runtime invariants, immutable policy metadata, and offline regression tests
+- [x] Optional bound-receipt audit, benchmark-only API, and evaluation/blinding helpers
+- [x] Documentation and host-conformance specification
+- [ ] Signed hardening commits and passing pinned checks on each current PR head before merge
+
+These additions do not constitute a full validator, transport, runner, live
+benchmark, durable log store, or production host. See the
+[hardening index](hardening/README.md) for the ten separate findings and limits.
 
 ## 1 · Extract the rest of the Week 1 harness
 
-Source: `typesafe-playground/lib/harness/` on `feat/proposal-review`. Do this **after PR #41 merges** so there is one canonical history to extract from.
+Source: `typesafe-playground/lib/harness/` on `feat/proposal-review`. Do this
+**after PR #41 merges** so there is one canonical history to extract from.
 
-- [ ] `validate.ts` (zod; the playground's `zod` version is `4.6.5`)
-- [ ] `review.ts` — question set v1, `buildReviewPayload`, `JevTransport` injection; the `RunPayload`/`Question` types come with it
-- [ ] `run.ts`, `proposer.ts`, `mock.ts`, `fixtures.ts`, `load.ts`, `bench.ts`
-- [ ] `fixtures/proposal-review/*.json` (20 synthetic fixtures)
-- [ ] Port `tests/proposal-review*.test.ts` (route test stays in the playground)
-- [ ] Playground imports this package instead of its own `lib/harness/` (or vendors it with a pinned commit until the package is publishable)
+- [ ] `validate.ts` and its pinned schema dependency, reviewed separately
+- [ ] `review.ts`: question set, `buildReviewPayload`, injected transport, and request types
+- [ ] `run.ts`, `proposer.ts`, `mock.ts`, `fixtures.ts`, `load.ts`, and `bench.ts`
+- [ ] Original 20 synthetic fixture files and applicable proposal-review tests
+- [ ] Playground consumes the shared package or a pinned vendored revision
+- [ ] Preserve the hardening changes rather than replacing them with an older decision table
+- [ ] Test the exact post-validation wire payload, including supported criteria and absent labels
 
-Exit: `pnpm test` here reproduces the mock bench totals (base 7/20, +Jev 20/20 bad caught; 2/20 good blocked on the ambiguous fixtures).
+Exit: reproduce the original mock pipeline totals, retaining the ambiguity
+label history and separating legitimate abstentions. These scripted outcomes
+are not new live measurements. Apply the [evaluation plan](hardening/09-evaluation.md).
 
 ## 2 · Host seams
 
-- [ ] Rust: `ProposalReview<C>` in OpenCoven `crates/coven-agents` with `ReviewVerdict { Permit, ProposalOnly, Reject, Unavailable }`, fail-closed, fakes only, `RunEvent::ProposalReviewed`
-- [ ] Cave: `coven:proposal-review` receipt card, evidence only, no approve/deny controls
-- [ ] Document the receipt → marker mapping here so both hosts render the same fields
+- [ ] Rust `ProposalReview<C>` seam, fakes, and event wiring; no provider HTTP in the pure crate
+- [ ] Evidence-only receipt card, without approval controls
+- [ ] Document receipt-to-host-event mapping and preserve model/source/mode provenance
+- [ ] Complete the [host-conformance cases](hardening/08-host-conformance.md) in each real host before a gated pilot
 
 ## 3 · Tool router (Tier 1, second seam)
 
@@ -36,22 +48,25 @@ Exit: `pnpm test` here reproduces the mock bench totals (base 7/20, +Jev 20/20 b
 - [ ] Experiment: N tools in context vs Jev top-k, measured on token cost and correct-tool rate
 - [ ] Live host adapter using `typesafe-router` where it fits; [normalization boundary documented](routing.md#host-adapter-and-reuse), no duplicate provider client in this package
 
-## 4 · Context scoring (Tier 2, measure-first)
+## 4 · Context scoring
 
-- [ ] Cost model: (per-chunk scoring + re-prefill of assembled context) vs (cache reuse forfeited) on a real workload
-- [ ] Shadow experiment on synthetic or consented context only
-- [ ] Go/no-go on the numbers; no code before the cost model
+- [ ] Compare scoring/re-prefill costs with forfeited prefix-cache reuse
+- [ ] Review data egress and run a shadow experiment on synthetic or consented context
+- [ ] Make the integration decision from measured results, not token counts alone
 
-## 5 · Later, only with evidence
+## 5 · Later, with evidence
 
-- Real-host integration with mediated tools and canonical session binding
-- A specialist proposer model trained against measured harness failures (a separate experiment; Jev itself is not fine-tunable)
-- Calibrating the 0.8 threshold on more than 20 synthetic fixtures
+Real-host integration requires mediated tools, canonical session binding,
+protected evidence, and independently enforced grants. A specialist proposer
+experiment is separate from the reviewer. Calibrate thresholds on independently
+labeled held-out examples before any claim of production error rates.
+Publish the source package only after the extraction, compatibility, and
+verification gates are satisfied.
 
-## Not planned
+## Not planned here
 
-- A new agent runtime or runtime ID
-- Executing model-proposed code inside this package
-- Sending familiar memory, identity, or real repository content to Jev without a reviewed egress policy
+A new agent runtime, executing model-proposed code inside this package, or
+sending real source/identity/private memory to a provider without a reviewed
+egress policy. A model verdict is never a grant of authority.
 
 The offline routing experiment is independent of phase 1 extraction. Its scripted outcomes and byte/token proxies do not satisfy the live experiment exit criteria or establish execution-speed improvements.

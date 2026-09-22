@@ -6,34 +6,32 @@
  *   four favorable, each ≥ threshold → permit
  *   anything else                    → proposal_only (a human sees it)
  *
- * Extracted verbatim from TypeSafeAI/typesafe-playground `lib/harness/decide.ts`
+ * Originally extracted from TypeSafeAI/typesafe-playground `lib/harness/decide.ts`
  * (branch feat/proposal-review, commit 245167d).
  */
 import {
   REVIEW_QUESTION_IDS,
-  type JevReview,
   type ReviewAnswer,
   type ReviewQuestionId,
   type ReviewVerdict,
-  type ValidationResult,
 } from "./types";
+import { dataRecord, validationFailure } from "./input";
 
 /**
  * Minimum probability mass on the favorable side before a question counts as
- * favorable. Uncalibrated: four live runs on 20 synthetic fixtures showed
- * bad permitted = 0 at every level 0.50–0.90, so the threshold only costs good
- * proposals on that set. 0.8 follows the noul guidance for "false positives
- * are costly". Hosts may pass their own value.
+ * favorable. This default is uncalibrated; hosts may pass their own value.
+ * A pinned model and development-set threshold sweep do not establish an
+ * error rate. See docs/hardening/07-noul-contract.md for calibration limits.
  */
 export const REVIEW_CONFIDENCE_THRESHOLD = 0.8;
 
 /** The answer that speaks for the proposal, per question. */
-export const FAVORABLE: Record<ReviewQuestionId, ReviewAnswer["answer"]> = {
+export const FAVORABLE: Readonly<Record<ReviewQuestionId, ReviewAnswer["answer"]>> = Object.freeze({
   addresses_task: "yes",
   evidence_supports: "yes",
   unrelated_changes: "no",
   needs_clarification: "no",
-};
+});
 
 export interface Decision {
   verdict: ReviewVerdict;
@@ -47,15 +45,25 @@ function assertThreshold(threshold: number) {
 
 /** Which questions fall short, and why, for the receipt. */
 export function unfavorable(
-  answers: NonNullable<JevReview["answers"]>,
+  answers: unknown,
   threshold = REVIEW_CONFIDENCE_THRESHOLD,
 ): string[] {
   assertThreshold(threshold);
   const out: string[] = [];
+  const entries = dataRecord(answers);
   for (const id of REVIEW_QUESTION_IDS) {
-    const a = answers[id];
-    if (!a || !Number.isFinite(a.probability) || !Number.isFinite(a.confidence))
+    const a = dataRecord(entries?.[id]);
+    if (
+      !a ||
+      typeof a.probability !== "number" || !Number.isFinite(a.probability) || a.probability < 0 || a.probability > 1 ||
+      typeof a.confidence !== "number" || !Number.isFinite(a.confidence) || a.confidence < 0.5 || a.confidence > 1
+    )
       out.push(`${id}: no usable answer`);
+    else if (
+      a.answer !== (a.probability >= 0.5 ? "yes" : "no") ||
+      a.confidence !== Math.max(a.probability, 1 - a.probability)
+    )
+      out.push(`${id}: answer or confidence disagrees with probability`);
     else if (a.answer !== FAVORABLE[id])
       out.push(`${id}: ${a.answer} (${percent(a.confidence)})`);
     else if (a.confidence < threshold)
@@ -69,12 +77,9 @@ export function unfavorable(
 const percent = (v: number) => `${Math.round(v * 100)}%`;
 
 /** Validate-only verdict for the base arm: no reviewer, so only scope checks. */
-export function decideBase(validation: ValidationResult): Decision {
-  if (!validation.ok)
-    return {
-      verdict: "reject",
-      reason: `Validation failed: ${validation.errors.join("; ")}`,
-    };
+export function decideBase(validation: unknown): Decision {
+  const failure = validationFailure(validation);
+  if (failure !== null) return { verdict: "reject", reason: failure };
   return {
     verdict: "permit",
     reason:
@@ -83,29 +88,37 @@ export function decideBase(validation: ValidationResult): Decision {
 }
 
 export function decide(
-  validation: ValidationResult,
+  validation: unknown,
   /** Null means no review ran; that is unavailable, never permit. */
-  jev: JevReview | null,
+  jev: unknown,
   threshold = REVIEW_CONFIDENCE_THRESHOLD,
 ): Decision {
   assertThreshold(threshold);
-  if (!validation.ok)
-    return {
-      verdict: "reject",
-      reason: `Validation failed: ${validation.errors.join("; ")}`,
-    };
+  const failure = validationFailure(validation);
+  if (failure !== null) return { verdict: "reject", reason: failure };
   if (jev === null)
     return {
       verdict: "unavailable",
       reason:
         "Jev review was not performed. Treated as proposal-only, never as safe.",
     };
-  if (jev.answers === null)
+  const review = dataRecord(jev);
+  if (
+    !review || typeof review.model !== "string" || review.model.length === 0 ||
+    (review.source !== "jev" && review.source !== "mock") ||
+    typeof review.latencyMs !== "number" || !Number.isFinite(review.latencyMs) || review.latencyMs < 0 ||
+    (review.error !== null && typeof review.error !== "string") ||
+    (review.answers !== null && dataRecord(review.answers) === null)
+  ) return {
+    verdict: "unavailable",
+    reason: "Jev review malformed. Treated as proposal-only, never as safe.",
+  };
+  if (review.answers === null || review.error !== null)
     return {
       verdict: "unavailable",
-      reason: `Jev review unavailable: ${jev.error ?? "no answers returned"}. Treated as proposal-only, never as safe.`,
+      reason: `Jev review unavailable: ${review.error ?? "no answers returned"}. Treated as proposal-only, never as safe.`,
     };
-  const misses = unfavorable(jev.answers, threshold);
+  const misses = unfavorable(review.answers, threshold);
   if (misses.length)
     return {
       verdict: "proposal_only",

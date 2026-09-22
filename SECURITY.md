@@ -1,26 +1,54 @@
 # Security
 
-This repository contains no credentials, no live transport, and no code path that executes a proposal. The attack surface is small, but not zero: a bug in `decide()` that turns an unfavorable answer into `permit`, a fixture that leaks something real, or a validator (once extracted) that lets a path escape its root would all matter.
+This repository has no live provider transport and no code path that executes
+a proposal. Bugs that make evidence look more trustworthy than it is still
+matter. The optional audit adapter does not authenticate records merely by
+hashing them; see [receipt-binding limitations](docs/hardening/05-receipt-binding.md).
 
-## Reporting
+## Reporting and repository provenance
 
-**Report privately.** Use [GitHub private vulnerability reporting](https://github.com/TypeSafeAI/jev-harness/security/advisories/new) for anything that could cause a proposal to be treated as more trustworthy than it is. Do not open a public issue for it. Private reporting is enabled on this repository.
+Report vulnerabilities affecting this repository through
+[TypeSafeAI/jev-harness private reporting](https://github.com/TypeSafeAI/jev-harness/security/advisories/new)
+when enabled. Do not open a public issue containing vulnerability details,
+credentials, private source, or private receipts. If the private form is not
+available, request a private contact channel without including those details.
+Report issues in other repositories separately to their maintainers;
+this reporting channel covers this repository.
 
-**Never post a key.** If you accidentally commit a TypeSafe API key or any other secret, rotate it first, then tell us. Rewriting history does not un-leak a key.
+Questions about the Jev model or TypeSafe API belong with
+[TypeSafe AI's official channels](https://typesafe.ai). This community project
+cannot act on their behalf. Never post a key. Rotate exposed credentials first;
+rewriting history does not undo disclosure.
 
-**Scope note.** Questions about the Jev model or the TypeSafe API itself belong with [TypeSafe AI's official channels](https://typesafe.ai). This is a community project and cannot act on those.
+## Checked-in safeguards
 
-## What stops a secret from leaving
+Keep all these safeguards intact; none is a reason to skip the others.
 
-Four layers, from your laptop outward. None of them is a reason to skip the others.
+| Safeguard | Checked-in implementation |
+| --- | --- |
+| Local pre-commit hook | `.githooks/`, installed by pnpm's prepare step; dependency-free staged-file check and gitleaks when available |
+| Ignore rules | `.gitignore` excludes environment/key files and competing lockfiles; `.env.example` uses placeholders |
+| CI secret scan | Built-in tracked-file check and a pinned, checksum-checked gitleaks binary scanning full history |
+| Workflow permissions | Read-only contents token, commit-pinned actions, and checkout with persisted credentials disabled |
+| Dependency updates | `.github/dependabot.yml` supplies the checked-in update configuration |
 
-| Layer | Where | What it does |
-| --- | --- | --- |
-| `pre-commit` hook | your machine (`.githooks/`, installed by `pnpm install`) | `scripts/check-secrets.mjs` blocks staged `.env` files and well-known key shapes with no dependencies; runs `gitleaks protect --staged` too if you have it (`brew install gitleaks`) |
-| `.gitignore` | your machine | `.env`, `.env.*` (except `.env.example`), key files, competing lockfiles |
-| CI `secret scan` job | every push and PR | the built-in check over all tracked files plus **gitleaks** (pinned release, checksum-verified) over full history; a hit fails the build |
-| GitHub secret scanning + **push protection** | the remote | known provider tokens are rejected at push time before they land; alerts for anything that slips through |
+A committed workflow or configuration file does not prove that it ran or that
+remote settings are enabled. Maintainers must verify this repository's Actions
+permissions, private reporting, secret scanning, push protection, Dependabot
+alerts, and branch/ruleset enforcement independently. Required policy includes
+signed commits, no unauthorized force pushes/deletion, and reviewed linear
+integration; copying an upstream ruleset description does not install it here.
+This documentation change does not alter any remote setting or checked-in guard.
 
-Also on: Dependabot alerts and security updates, a `main` ruleset (signed commits required, no force-push, no deletion, linear history), read-only `GITHUB_TOKEN` in workflows, actions pinned to commit SHAs, `persist-credentials: false` on checkout.
+Do not disable or bypass hooks, scanners, signing, or required CI to land a
+change. For a false positive, use unambiguous placeholders such as `<your-key>`,
+`$ENV_VAR`, or `op://` references and rerun the check. For a real credential,
+stop and rotate it; do not merely amend it away.
 
-Bypassing the hook with `--no-verify` is for false positives only. If the thing it caught is real, rotate it; hiding it in history is not a fix.
+## Evidence handling
+
+Bound receipts can contain complete source snapshots and request bodies.
+Apply a reviewed egress/retention/access policy before using real repositories.
+Redact sensitive material before review; changing a bound record afterward
+invalidates its digest. Use synthetic minimized reproductions for public bug
+reports. No receipt field or digest is an execution permission.

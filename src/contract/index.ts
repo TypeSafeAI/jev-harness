@@ -1,2 +1,2 @@
 export * from "./types";
-export * from "./decide";
+export { decide, unfavorable, FAVORABLE, REVIEW_CONFIDENCE_THRESHOLD, type Decision } from "./decide";

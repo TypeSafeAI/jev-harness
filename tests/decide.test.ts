@@ -2,7 +2,6 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   decide,
-  decideBase,
   unfavorable,
   FAVORABLE,
   JEV_MODEL,
@@ -13,6 +12,7 @@ import {
   type ReviewAnswers,
   type ReviewQuestionId,
 } from "../src";
+import { decideBase } from "../src/benchmark";
 
 const ok = { ok: true, errors: [] };
 const bad = { ok: false, errors: ["path escapes the fixture root"] };
@@ -31,7 +31,10 @@ function favorable(confidence = 0.95): ReviewAnswers {
 }
 
 function review(answers: ReviewAnswers | null, error: string | null = null): JevReview {
-  return { model: JEV_MODEL, answers, error, latencyMs: 1, source: "mock" };
+  if (answers === null)
+    return { model: JEV_MODEL, answers: null, error: error ?? "no answers returned", latencyMs: 1, source: "mock" };
+  if (error !== null) throw Error("Successful test reviews cannot contain errors.");
+  return { model: JEV_MODEL, answers, error: null, latencyMs: 1, source: "mock" };
 }
 
 test("validation failure is reject and Jev is never needed", () => {

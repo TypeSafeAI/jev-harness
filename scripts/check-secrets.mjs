@@ -24,6 +24,8 @@ const PATTERNS = [
   ["Bearer literal", /authorization["']?\s*[:=]\s*["']?bearer\s+(?!\$)(?!<)(?!\{)[A-Za-z0-9_\-.=]{20,}/i],
   [".env file staged", null], // handled by path check
 ];
+/** Values that announce themselves as fake. Real keys do not contain these words. */
+const SYNTHETIC = /(test|synthetic|example|placeholder|dummy|fake|unused|sample|your-?key|changeme|redacted|xxx)/i;
 const ENV_PATH = /(^|\/)\.env(\..+)?$/;
 const ENV_ALLOW = /(^|\/)\.env\.example$/;
 const SKIP = /^(pnpm-lock\.yaml|.*\.svg|.*\.png|.*\.jpg|.*\.lock)$/;
@@ -65,7 +67,11 @@ for (const path of targets(process.argv.slice(2))) {
   for (const [name, re] of PATTERNS) {
     if (!re) continue;
     lines.forEach((line, i) => {
-      if (re.test(line)) findings.push(`${path}:${i + 1}: looks like a ${name}`);
+      const m = re.exec(line);
+      if (!m) return;
+      // A private-key block is never synthetic; everything else may be a labelled fixture.
+      if (!name.startsWith("Private key") && SYNTHETIC.test(m[0])) return;
+      findings.push(`${path}:${i + 1}: looks like a ${name}`);
     });
   }
 }
