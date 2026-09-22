@@ -136,3 +136,5 @@ authorization, or isolated execution. Future evaluation must follow the
 ## Routing experiment
 
 `src/routing/` supplies a pure catalog, injected `ToolRouter` seam, deterministic selection policy and schema context assembly. It does not change proposal-review decisions. `examples/routing/` contains synthetic evidence and paired context evaluation. See [Routing evidence and dynamic tool context](routing.md) for outcome semantics, host adapter mapping, cost assumptions and the live-measurement gate.
+
+The optional `examples/routing/` browser host is built into `.demo/` by the pinned TypeScript compiler. A loopback server allowlists only the static module graph and assets. Task messages stay in browser memory; there are no API endpoints, storage, provider requests or execution handlers. The UI invalidates its result and live status when an input changes, and recomputes availability against a fresh snapshot. See [the demo guide](routing-demo.md).

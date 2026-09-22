@@ -44,7 +44,7 @@ are not new live measurements. Apply the [evaluation plan](hardening/09-evaluati
 
 - [x] `ToolRouter` contract: intent + host-available tool ids → top-k descriptors, clarification, confidence/probability floors, deterministic cost policy
 - [x] Offline synthetic comparison: full vs selected schemas, explicit load/eviction state, receipts and cost/token proxies (`pnpm bench:routing`)
-- [ ] Interactive synthetic browser demonstration
+- [x] Interactive synthetic browser demonstration: dark TypeSafe-style cards, explicit availability/selection/context flow, responsive layouts, paired metrics, receipt export; `pnpm demo`
 - [ ] Experiment: N tools in context vs Jev top-k, measured on token cost and correct-tool rate
 - [ ] Live host adapter using `typesafe-router` where it fits; [normalization boundary documented](routing.md#host-adapter-and-reuse), no duplicate provider client in this package
 

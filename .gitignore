@@ -13,3 +13,6 @@ yarn.lock
 bun.lockb
 /.playwright-mcp
 /output/playwright
+
+# Generated browser modules.
+.demo/

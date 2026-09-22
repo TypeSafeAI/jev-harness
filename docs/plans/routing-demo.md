@@ -14,8 +14,10 @@ Architecture: pure TypeScript catalog and selection policy consume normalized ch
 
 ## PR 2 — browser demonstration
 
-- [ ] Write integration tests for a loopback-only static demo server, supported assets, methods and missing files.
-- [ ] Implement a no-dependency browser UI under `examples/routing/`: synthetic chat scenarios, lean/full toggle, availability controls, loaded/evicted schema state, policy reasons, paired context metrics and JSON receipt download.
-- [ ] Build browser modules with the pinned TypeScript compiler. Serve only allowlisted generated modules/static assets from a loopback server. No task input reaches a server or provider.
-- [ ] Browser-check scenario changes, availability, modes, clarification, download, narrow layout and keyboard focus. Record automated coverage and human accessibility gap distinctly.
-- [ ] Re-run verification and create a signed commit and stacked PR. Inspect hosted checks; do not merge.
+- [x] Write integration tests for a loopback-only static demo server, supported assets, methods and missing files.
+- [x] Implement a no-dependency browser UI under `examples/routing/`: synthetic chat scenarios, lean/full toggle, availability controls, loaded/evicted schema state, policy reasons, paired context metrics and JSON receipt download.
+- [x] Build browser modules with the pinned TypeScript compiler. Serve only allowlisted generated modules/static assets from a loopback server. No task input reaches a server or provider.
+- [x] Browser-check scenario changes, availability, modes, clarification, download, narrow layout and keyboard focus. Record automated coverage and human accessibility gap distinctly.
+- [x] Complete local verification and prepare the signed, stacked browser PR. Hosted CI is the remaining delivery check; do not merge.
+
+The user requested default dark mode in the TypeSafeAI style, then responsive clarity and richer card surfaces. The demo follows typesafe-router tokens and adds explicit routing stages, probability bars, expanded inspection panels and a mobile result shortcut. Browser evidence: [recorded run](../verification/routing-browser-2026-09-22.json). Human keyboard-only and VoiceOver acceptance remains unverified.

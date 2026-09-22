@@ -44,6 +44,7 @@ Signed commits and the existing secret guards remain required.
 | Benchmark-only verdict helper | Implemented at `src/benchmark`; explicitly records no-review provenance |
 | Evaluation accounting and blinded proposer inputs | Implemented at `src/benchmark/evaluation.ts`; not a live experiment runner |
 | Routing contract and offline synthetic comparison | Implemented at `src/routing/` and `examples/routing/`; no live provider or execution |
+| Interactive routing demo | Implemented at `examples/routing/`; loopback-only browser assets and synthetic evidence |
 | Proposal schema/path/diff validator, Jev payload builder, transport integration, fixture suite, full runner | Still pending extraction from the playground |
 | Host authorization, sandbox, execution, and durable storage | Host responsibilities; not implemented in this package |
 
@@ -204,6 +205,15 @@ historical label corrections rather than silently rewriting old results.
 ```sh
 pnpm --silent bench:routing > routing-run.json
 ```
+
+For the dark, interactive **Routing room** demo:
+
+```sh
+pnpm demo
+# Open http://127.0.0.1:4173 (or pnpm demo 4187 for a different port)
+```
+
+Change tool availability, compare Lean with Batteries included, inspect the selection evidence, and download the receipt. Sample tasks use scripted evidence; custom text asks for clarification. No tool or sub-agent executes. See [the demo guide and browser verification](docs/routing-demo.md).
 
 The run artifact includes receipts, full/lean context bytes, token estimates, acceptable-tool inclusion and cheapest acceptable selection. Evidence is scripted; local timing is not Jev or execution latency. Router overhead is counted separately so fewer schemas do not automatically imply savings. See [the design, metrics and host adapter boundary](docs/routing.md).
 

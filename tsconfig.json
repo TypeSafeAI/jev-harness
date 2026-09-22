@@ -16,6 +16,7 @@
     "src",
     "tests",
     "examples/routing",
-    "scripts/bench-routing.ts"
+    "scripts/bench-routing.ts",
+    "scripts/demo-routing.ts"
   ]
 }
