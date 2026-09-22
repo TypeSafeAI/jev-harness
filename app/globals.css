@@ -299,3 +299,7 @@ dialog::backdrop { background: #000a; backdrop-filter: blur(5px); }
 @media (hover: hover) { .page-tabs a:hover span { color: var(--ink); background: var(--soft); } .header-actions .quiet:hover { color: var(--ink); background: var(--soft); } }
 @media (max-width: 600px) { .header-bar { padding: 14px 16px 5px; } .header-actions { gap: 8px; flex-wrap: nowrap; } .header-actions .quiet { min-height: 40px; padding: 8px 10px; white-space: nowrap; } .masthead .page-tabs { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 2px; padding-inline: 8px; } .masthead .page-tabs a { justify-content: center; font-size: 12px; min-width: 0; } .page-tabs a[aria-current=page]::after { left: 12px; right: 12px; } }
 @media (max-width: 400px) { .header-bar .wordmark span { display: none; } }
+.event-list li > div { min-width: 0; flex: 1; }
+.recorded-proposal { margin-top: 10px; }
+.recorded-proposal summary { font-size: 11px; min-height: 40px; }
+.recorded-proposal pre { font-size: 10px; }

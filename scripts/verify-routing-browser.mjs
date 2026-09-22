@@ -1,7 +1,8 @@
 /**
  * Optional browser acceptance check. Pass a Playwright Page from your existing
  * browser driver; this repository does not install a second test framework.
- * Start `pnpm demo 4187`, then await verifyRoutingDemo(page, baseURL).
+ * Start `pnpm exec next dev --webpack --hostname 127.0.0.1 --port 4187`,
+ * then await verifyRoutingDemo(page, baseURL).
  */
 export async function verifyRoutingDemo(page, baseURL = "http://127.0.0.1:4187") {
   const checks = [];

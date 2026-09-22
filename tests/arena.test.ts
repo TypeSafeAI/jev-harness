@@ -69,3 +69,42 @@ test("arena starts both lanes before either finishes and waits for a remaining l
   assert.ok(events.some(e => e.type === "lane" && e.lane === "baseline" && e.phase === "failed"));
   assert.ok(events.some(e => e.type === "result" && e.lane === "integrated"));
 });
+
+test("agent prompt shares task and paths but keeps source contents behind MCP", async () => {
+  const { arenaPrompt } = await import("../examples/host/codex");
+  for (const fixture of ARENA_CASES) {
+    const prompt = arenaPrompt(fixture);
+    assert.ok(prompt.includes(fixture.task));
+    for (const [path, content] of Object.entries(fixture.files)) { assert.ok(prompt.includes(path)); assert.ok(!prompt.includes(content.trim())); }
+    assert.match(prompt, /do not invent file contents/);
+  }
+});
+
+test("MCP retains bounded pending proposals for inspection and rejects excess recordings", async t => {
+  const dir = await mkdtemp(join(tmpdir(), "jev-proposal-test-")); t.after(() => rm(dir, { recursive: true, force: true }));
+  const manifest = join(dir, "manifest.json"), trace = join(dir, "trace.jsonl");
+  const fixture = ARENA_CASES[1];
+  await writeFile(manifest, JSON.stringify({ tools: DEMO_CATALOG, files: fixture.files })); await writeFile(trace, "");
+  const child = spawn(process.execPath, [resolve("scripts/arena-mcp.mjs"), manifest, trace]);
+  let output = ""; child.stdout.on("data", chunk => { output += chunk.toString(); });
+  const args = { path: "src/sum.ts", patch: "synthetic-pending-diff\n" + "x".repeat(15900), rationale: "synthetic rationale " + "y".repeat(15900) };
+  child.stdin.end(Array.from({ length: 10 }, (_, id) => JSON.stringify({ jsonrpc: "2.0", id, method: "tools/call", params: { name: "propose_patch", arguments: args } })).join("\n") + "\n");
+  const [code] = await once(child, "close"); assert.equal(code, 0);
+  const responses = output.trim().split("\n").map(line => JSON.parse(line));
+  const records = (await readFile(trace, "utf8")).trim().split("\n").map(line => JSON.parse(line));
+  assert.deepEqual(records[0].proposal, { ...args, applied: false });
+  assert.equal(JSON.parse(responses[0].result.content[0].text).status, "recorded_pending");
+  assert.equal(records.at(-1).status, "rejected"); assert.equal(records.at(-1).proposal, undefined);
+  assert.equal(responses.at(-1).result.isError, true);
+  assert.ok(records.reduce((total, record) => total + (record.proposal ? Buffer.byteLength(JSON.stringify(record.proposal)) : 0), 0) <= 256_000);
+  assert.deepEqual(JSON.parse(await readFile(manifest, "utf8")).files, fixture.files);
+});
+
+test("Windows CLI host refuses before workspace/auth/process setup", async () => {
+  const descriptor = Object.getOwnPropertyDescriptor(process, "platform")!;
+  Object.defineProperty(process, "platform", { value: "win32" });
+  try {
+    const result = await runCodex(ARENA_CASES[0], [], new AbortController().signal, "must-not-spawn");
+    assert.equal(result.status, "failed"); assert.equal(result.durationMs, 0); assert.match(result.error!, /macOS or Linux/);
+  } finally { Object.defineProperty(process, "platform", descriptor); }
+});

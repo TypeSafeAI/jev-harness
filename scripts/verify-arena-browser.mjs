@@ -12,6 +12,7 @@ export async function verifyArena(page, baseURL) {
       { type: "result", lane: "integrated", tools: ["read_file"], result: { ...result, inputTokens: mode === "unknown" ? null : 950, toolCallCount: mode === "zero" ? 0 : 1, toolCalls: mode === "zero" ? [] : result.toolCalls } },
       { type: "done" },
     ];
+    if (mode === "proposal") events = events.map(event => event.type === "result" ? { ...event, result: { ...event.result, toolCalls: [{ tool: "propose_patch", status: "returned", at: "2026-09-22T00:00:00Z", proposal: { path: "src/sum.ts", patch: "@@\n- before\n+ after", rationale: "Synthetic pending fix", applied: false } }] } } : event);
     if (mode === "eof") events = [{ type: "stage", value: "Asking Jev…" }];
     if (mode === "skipped") events = [{ type: "usage", attempted: false }, { type: "error", value: "No key. No request made." }];
     await route.fulfill({ contentType: "application/x-ndjson", body: events.map(e => JSON.stringify(e)).join("\n") + "\n" });
@@ -60,6 +61,14 @@ export async function verifyArena(page, baseURL) {
     await page.getByRole("button", { name: "Close usage dashboard" }).click();
     mode = "skipped"; await run();
     check(await page.getByRole("button", { name: "Usage · 4", exact: true }).isVisible(), "explicit skipped request does not add usage");
+    mode = "proposal"; await run();
+    await page.locator(".run-inspector > summary").click();
+    await page.getByRole("tab", { name: "Tool activity" }).click();
+    await page.getByText("Inspect recorded proposal", { exact: true }).first().click();
+    check((await page.locator(".recorded-proposal pre").first().textContent()).includes("+ after"), "recorded proposals expose their pending diff in the inspector");
+    const proposalDownload = page.waitForEvent("download"); await page.getByRole("button", { name: "Download comparison" }).click();
+    const proposalStream = await (await proposalDownload).createReadStream(); let proposalJson = ""; for await (const chunk of proposalStream) proposalJson += chunk;
+    check(JSON.parse(proposalJson).lanes.baseline.result.toolCalls[0].proposal.applied === false, "proposal export preserves nonexecution and recorded data");
     return { checks, count: checks.length, providerCalls: 0, humanAccessibilityAcceptance: "not performed" };
   } finally { await page.unroute("**/api/arena"); }
 }

@@ -1,7 +1,7 @@
 {
-  "at": "2026-09-22T11:25:45.055Z",
+  "at": "2026-09-22T11:31:55.882Z",
   "framework": "Next.js App Router, development mode",
-  "revision": "68bf996 plus dashboard header tabs",
+  "revision": "a9d06e0 plus review fixes for MCP-only source and retained proposals",
   "runs": [
     {
       "name": "routing",
@@ -116,42 +116,6 @@
       "humanAccessibilityAcceptance": "not performed"
     },
     {
-      "name": "arena",
-      "checks": [
-        "tool exposure shown visually",
-        "headline includes router overhead even when savings disappear",
-        "actual calls visible per lane",
-        "answers visible side by side",
-        "accounting disclosed on demand",
-        "export retains overhead and nonexecution",
-        "tool activity is a readable event list",
-        "routing evidence is visualized as a distribution",
-        "raw data is a second-level disclosure",
-        "raw receipt stays collapsed",
-        "inspector tabs support arrow-key navigation",
-        "setup describes concurrent execution",
-        "Home selects first inspector tab",
-        "arena fits 320px",
-        "expanded accounting fits 320px",
-        "arena fits 390px",
-        "expanded accounting fits 390px",
-        "arena fits 768px",
-        "expanded accounting fits 768px",
-        "arena fits 1440px",
-        "expanded accounting fits 1440px",
-        "arena fits 1920px",
-        "expanded accounting fits 1920px",
-        "completed CLI with zero calls is not implied execution",
-        "unknown usage never becomes savings",
-        "early EOF shows partial status",
-        "early EOF records unknown usage",
-        "explicit skipped request does not add usage"
-      ],
-      "count": 28,
-      "providerCalls": 0,
-      "humanAccessibilityAcceptance": "not performed"
-    },
-    {
       "name": "progress",
       "checks": [
         "baseline shows independent working state",
@@ -183,6 +147,44 @@
       ],
       "count": 8,
       "providerCalls": 0
+    },
+    {
+      "name": "arena",
+      "checks": [
+        "tool exposure shown visually",
+        "headline includes router overhead even when savings disappear",
+        "actual calls visible per lane",
+        "answers visible side by side",
+        "accounting disclosed on demand",
+        "export retains overhead and nonexecution",
+        "tool activity is a readable event list",
+        "routing evidence is visualized as a distribution",
+        "raw data is a second-level disclosure",
+        "raw receipt stays collapsed",
+        "inspector tabs support arrow-key navigation",
+        "setup describes concurrent execution",
+        "Home selects first inspector tab",
+        "arena fits 320px",
+        "expanded accounting fits 320px",
+        "arena fits 390px",
+        "expanded accounting fits 390px",
+        "arena fits 768px",
+        "expanded accounting fits 768px",
+        "arena fits 1440px",
+        "expanded accounting fits 1440px",
+        "arena fits 1920px",
+        "expanded accounting fits 1920px",
+        "completed CLI with zero calls is not implied execution",
+        "unknown usage never becomes savings",
+        "early EOF shows partial status",
+        "early EOF records unknown usage",
+        "explicit skipped request does not add usage",
+        "recorded proposals expose their pending diff in the inspector",
+        "proposal export preserves nonexecution and recorded data"
+      ],
+      "count": 30,
+      "providerCalls": 0,
+      "humanAccessibilityAcceptance": "not performed"
     }
   ],
   "scope": "Offline browser interception; provider and CLI calls excluded. Human keyboard-only and VoiceOver acceptance not performed."
