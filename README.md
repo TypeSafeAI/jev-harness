@@ -221,7 +221,9 @@ The root page compares parallel Codex CLI runs with full versus Jev-selected syn
 
 Completed and interrupted comparisons are saved in this browser, up to 30 runs within 2 MB. **History** reopens evidence and compares input tokens or duration for matching tasks and harness setups, including Jev overhead. Unknown measurements remain unknown; a run is not a benchmark. The old `/arena` URL redirects to `/`; the Routing room and Example lab pages have been removed. See [the demo guide and browser verification](docs/routing-demo.md).
 
-The run artifact includes receipts, full/lean context bytes, token estimates, acceptable-tool inclusion and cheapest acceptable selection. Evidence is scripted; local timing is not Jev or execution latency. Router overhead is counted separately so fewer schemas do not automatically imply savings. See [the design, metrics and host adapter boundary](docs/routing.md).
+Each settled Arena run also includes **Lessons learned**: a local takeaway, supporting measurements and prioritized experiments for improving the Jev-integrated path. Reopened runs and downloads retain the connection to that run’s evidence. Recommendations count routing overhead and require answer review and repeated measurements; they make no extra API calls.
+
+The offline routing run artifact includes receipts, full/lean context bytes, token estimates, acceptable-tool inclusion and cheapest acceptable selection. Evidence is scripted; local timing is not Jev or execution latency. Router overhead is counted separately so fewer schemas do not automatically imply savings. See [the design, metrics and host adapter boundary](docs/routing.md).
 
 
 ## Roadmap and related projects

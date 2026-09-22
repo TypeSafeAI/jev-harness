@@ -52,6 +52,8 @@ are not new live measurements. Apply the [evaluation plan](hardening/09-evaluati
 
 - [x] Arena-only interface with overlay evidence, local run snapshots and matching-task performance history. Storage/unknown-value behavior is covered by [offline verification](verification/arena-history-2026-09-22.json); repeated live evaluation remains open.
 
+- [x] Local lessons from each settled Arena simulation: measured tradeoffs, evidence-first recommendations, repeat-run evaluation guidance and versioned export. [Offline verification](verification/arena-lessons-2026-09-22.json); this is not automated quality evaluation.
+
 ## 4 · Context scoring
 
 - [ ] Compare scoring/re-prefill costs with forfeited prefix-cache reuse
