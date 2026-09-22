@@ -26,6 +26,8 @@ The whole value of the project is the boundary between *evidence* and *authority
 src/contract/types.ts    shared types; the wire shape of Proposal, ReviewAnswer, Receipt, Fixture
 src/contract/decide.ts   decide(), decideBase(), unfavorable(), FAVORABLE, REVIEW_CONFIDENCE_THRESHOLD
 src/contract/index.ts    re-exports; src/index.ts is the public surface
+src/routing/            pure catalog, normalized evidence seam, routing policy, context assembly
+examples/routing/       synthetic routing scenarios and paired comparison
 tests/*.test.ts          node:test via tsx, offline
 docs/architecture.md     the design of record; update it when behavior changes
 docs/roadmap.md          phases and exit criteria; update it when a phase lands
@@ -133,5 +135,11 @@ A measured claim (a number in a README, a doc, or a PR body) links the run that 
 | favorable | the answer direction that speaks for the proposal, per question |
 | confidence | `max(p, 1 − p)` for a `noul` answer; a distribution statistic, not correctness |
 | receipt | the full record of one run; the unit of evidence |
-| seam | a narrow interface a host implements: `ProposalReview` today, `ToolRouter` and `ContextScorer` planned |
+| seam | a narrow interface a host implements: `ProposalReview` and `ToolRouter` today, `ContextScorer` planned |
 | host | whatever owns authorization and execution: the playground, a Rust runtime, your app |
+
+## Routing experiment
+
+Read `docs/routing.md` before changing routing behavior. `src/routing/` is pure and shares the no-I/O boundary of `src/contract/`. Routing outcomes/receipts are separate from review verdicts. Hosts supply availability, cost estimates and normalized evidence; no descriptor grants permission or launches a sub-agent. Preserve the clarification option, closed-set validation, pinned model and untrusted-data note. Bump `ROUTING_QUESTION_SET_VERSION` when routing instruction semantics change.
+
+Routing scenarios are separate synthetic demonstrations, not new proposal-review fixture categories. Evaluation labels must never affect mock evidence or adapter payloads. Byte/token proxies and local JS timing do not establish live provider savings, correctness or execution speed. Link a run artifact for measured claims.

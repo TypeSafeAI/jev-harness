@@ -6,11 +6,11 @@ Architecture: pure TypeScript catalog and selection policy consume normalized ch
 
 ## PR 1 — routing and evaluation
 
-- [ ] Add `tests/routing.test.ts` for catalog validation, compact requests, closed-set evidence, confidence, clarification, budget, unavailable tools, deterministic cost ordering, and failure receipts. Run `pnpm test` and confirm the new behavior is missing.
-- [ ] Implement `src/routing/{types,catalog,route,context,index}.ts`; export from `src/index.ts`. Catalogs carry object schemas but no handlers. Reject unknown/duplicate ids, invalid distributions and mismatched models. Snapshot adapter inputs before awaiting.
-- [ ] Add synthetic scenarios in `examples/routing/scenarios.ts`, paired comparison and `scripts/bench-routing.ts`. Assert correct-tool inclusion, cheapest acceptable choice, clarification and context accounting in `tests/routing-bench.test.ts`.
-- [ ] Update architecture, roadmap and README with the experiment boundary, model pin, units, adapter mapping and remaining live-measurement gate.
-- [ ] Run `pnpm typecheck`, `pnpm test`, `pnpm check:secrets`, and the offline benchmark before `git commit -S` and PR creation.
+- [x] Add `tests/routing.test.ts` for catalog validation, compact requests, closed-set evidence, confidence, clarification, budget, unavailable tools, deterministic cost ordering, and failure receipts. Run `pnpm test` and confirm the new behavior is missing.
+- [x] Implement `src/routing/{types,catalog,route,context,index}.ts`; export from `src/index.ts`. Catalogs carry object schemas but no handlers. Reject unknown/duplicate ids, invalid distributions and mismatched models. Snapshot adapter inputs before awaiting.
+- [x] Add synthetic scenarios in `examples/routing/scenarios.ts`, paired comparison and `scripts/bench-routing.ts`. Assert correct-tool inclusion, cheapest acceptable choice, clarification and context accounting in `tests/routing-bench.test.ts`.
+- [x] Update architecture, roadmap and README with the experiment boundary, model pin, units, adapter mapping and remaining live-measurement gate.
+- [x] Run `pnpm typecheck`, `pnpm test`, `pnpm check:secrets`, and the offline benchmark before `git commit -S` and PR creation.
 
 ## PR 2 — browser demonstration
 
