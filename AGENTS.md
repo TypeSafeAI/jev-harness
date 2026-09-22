@@ -6,7 +6,7 @@ Start with `README.md`, then `docs/architecture.md`, `docs/roadmap.md`, and the 
 
 ## What this project is
 
-A coding-agent harness in which an LLM proposes one action, TypeSafe AI's Jev answers four narrow yes/no (`noul`) questions about it, and pure code turns those answers into one of four verdicts: `permit`, `proposal_only`, `reject`, `unavailable`. A host constructs and stores each receipt; the full runner is not extracted here. Nothing in this repository executes a proposal.
+A coding-agent harness in which an LLM proposes one action, TypeSafe AI's Jev answers four narrow yes/no (`noul`) questions about it, and pure code turns those answers into one of four verdicts: `permit`, `proposal_only`, `reject`, `unavailable`. A host constructs and stores each receipt; a fixture-bench runner in `src/benchmark/` records receipts for synthetic fixtures only. Nothing in this repository executes a proposal.
 
 The whole value of the project is the boundary between *evidence* and *authority*. Keep it sharp:
 
@@ -26,7 +26,11 @@ The whole value of the project is the boundary between *evidence* and *authority
 src/contract/types.ts    shared types; the wire shape of Proposal, ReviewAnswer, Receipt, Fixture
 src/contract/decide.ts   decide(), decideBase(), unfavorable(), FAVORABLE, REVIEW_CONFIDENCE_THRESHOLD
 src/contract/index.ts    root exports; benchmark-only decideBase is not re-exported
-src/benchmark/          explicit base helper and offline evaluation/blinding
+src/contract/payload.ts  Question/RunPayload types and validateReviewPayload (criteria-preserving)
+src/contract/validate.ts proposal schema/path/diff validator (zod); diff.ts is its parser
+src/contract/review.ts   question set v1, buildReviewPayload, reviewProposal over an injected transport
+src/benchmark/          explicit base helper, offline evaluation/blinding, fixture bench (load.ts is Node-only)
+fixtures/proposal-review/ the 20 synthetic proposal-review fixtures
 src/audit/receipt.ts    optional Node binding/replay adapter; not a pure-root import
 src/routing/            pure catalog, normalized evidence seam, routing policy, context assembly
 examples/routing/       synthetic routing scenarios and paired comparison
@@ -37,7 +41,7 @@ docs/roadmap.md          phases and exit criteria; update it when a phase lands
 .githooks/ scripts/      pre-commit secret check (dependency-free) installed by pnpm's prepare step
 ```
 
-`src/contract/` was extracted from `TypeSafeAI/typesafe-playground` `lib/harness/` (branch `feat/proposal-review`, commit `245167d`). Until roadmap phase 1 lands, the validator, review payload builder, mock transport, fixtures, and bench still live there. Do not reimplement them here from memory; extract them from the merged playground history so the two stay identical.
+`src/contract/` was extracted from `TypeSafeAI/typesafe-playground` `lib/harness/` (branch `feat/proposal-review`, commit `245167d`). The phase 1 validator, review payload builder, mock transport, fixtures, and bench were extracted from commit `2c6cac9` of the same branch (PR #41, not yet merged); re-diff them against the merged playground history when it lands. Do not reimplement playground behavior here from memory; extract it so the two stay identical, except where the hardened contract deliberately differs.
 
 ## Package manager
 

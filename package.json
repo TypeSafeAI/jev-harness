@@ -16,6 +16,7 @@
     "prepare": "git config core.hooksPath .githooks || true",
     "check:secrets": "node scripts/check-secrets.mjs --all",
     "bench:routing": "tsx scripts/bench-routing.ts",
+    "bench:review": "tsx scripts/bench-review.ts",
     "demo": "pnpm dev",
     "dev": "next dev --webpack --hostname 127.0.0.1 --port 4173",
     "build": "next build --webpack",

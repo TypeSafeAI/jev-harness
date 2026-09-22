@@ -26,9 +26,15 @@ pnpm install --frozen-lockfile
 pnpm typecheck
 pnpm test
 pnpm check:secrets
+pnpm bench:review
 ```
 
-No API key is needed for these offline checks. Use the versions pinned in
+No API key is needed for these offline checks. `pnpm bench:review` runs the
+20 synthetic proposal-review fixtures through validation alone (base) and
+through validation plus the labeled mock transport (+Jev), then prints a
+per-category table. Its totals (base 7/20 bad caught, +Jev 20/20 bad caught,
+2/20 good held on the two ambiguous fixtures) are scripted mock values, not
+measurements of Jev. Use the versions pinned in
 `package.json` and `pnpm-lock.yaml`. A configured workflow is not proof that
 checks ran successfully: inspect checks for the exact PR head before merging.
 Signed commits and the existing secret guards remain required.
@@ -49,12 +55,15 @@ its separate loopback example host. `/arena` runs Codex against synthetic MCP fi
 | Evaluation accounting and blinded proposer inputs | Implemented at `src/benchmark/evaluation.ts`; not a live experiment runner |
 | Routing contract and offline synthetic comparison | Implemented at `src/routing/` and `examples/routing/`; no live provider or execution |
 | Interactive Next.js demo and CLI arena | Implemented at `app/`, `components/`, and `examples/host/`; loopback routing, saved keys, usage and synthetic fixture comparisons |
-| Proposal schema/path/diff validator, Jev payload builder, transport integration, fixture suite, full runner | Still pending extraction from the playground |
+| Proposal schema/path/diff validator and Jev payload builder | Extracted from playground PR #41 at `2c6cac9` into `src/contract/`; pure, transport injected |
+| Synthetic fixture suite, scripted proposer, mock transport, fixture runner, bench aggregation | Extracted into `fixtures/proposal-review/` and `src/benchmark/`; offline only (`pnpm bench:review`) |
+| Live Jev transport in the package, playground consuming this package | Not implemented; the demo host has its own adapter |
 | Host authorization, sandbox, execution, and durable storage | Host responsibilities; not implemented in this package |
 
 Do not confuse runtime validation of a `ValidationResult` with checking a
-proposal's actual filesystem paths or diff. A host still must perform those
-checks. The historical interactive demo and live measurements belong to
+proposal's actual filesystem paths or diff. `validateProposal` checks a proposal
+against the file snapshot you pass it; the host still owns obtaining that
+snapshot, running the validator, and not calling Jev after a rejection. The historical interactive demo and live measurements belong to
 [typesafe-playground PR 41](https://github.com/TypeSafeAI/typesafe-playground/pull/41),
 not to a runner in this repository.
 
@@ -100,7 +109,9 @@ and exact consistency of that triple. Confidence is a distribution statistic,
 The [official Noul API](https://docs.typesafe.ai/primitives/noul) supports optional
 `criteria` with true/false descriptions. Historical playground stripping was
 local validator behavior. See [wire-contract guidance](docs/hardening/07-noul-contract.md)
-for extraction and versioning requirements; this series changes no live payload.
+for versioning requirements. `buildReviewPayload` sends v1 as it historically
+reached the wire (type and instructions, no criteria); `validateReviewPayload`
+preserves criteria when a caller supplies them explicitly.
 
 ### Decision table
 
@@ -226,7 +237,7 @@ The run artifact includes receipts, full/lean context bytes, token estimates, ac
 
 ## Roadmap and related projects
 
-The full extraction remains gated on the canonical upstream playground history.
+Phase 1 extraction is from the unmerged playground PR #41 head and must be re-diffed once it merges.
 The routing contract, Next.js demo and optional live routing/CLI example host are implemented. Repeated live evaluation and production-host integration remain pending. Planned host work includes a Rust
 `ProposalReview` seam and a measure-first `ContextScorer`.
 Context scoring needs an egress policy and evidence that its costs beat cache

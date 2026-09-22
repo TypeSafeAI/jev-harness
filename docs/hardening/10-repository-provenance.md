@@ -15,8 +15,8 @@ and dependency changes are preserved.
 
 README and architecture examples now match the actual public exports, hardened
 decision inputs, optional receipt adapter, and benchmark/evaluation entry points.
-They do not claim that the still-unextracted runner, transport, or validator is
-implemented. The root no longer suggests importing the benchmark-only helper.
+They do not claim a live transport or production host is implemented; the
+phase 1 validator, payload builder, and offline fixture bench are extracted. The root no longer suggests importing the benchmark-only helper.
 The hardening index makes all ten findings and their implementation limits visible.
 
 Before merging the stack, verify signed commits and passing checks for each

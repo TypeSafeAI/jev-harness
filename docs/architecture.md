@@ -9,7 +9,7 @@ This package is not a full agent runtime. No proposal executes here.
 | Role | Owner | Boundary |
 | --- | --- | --- |
 | Proposer | Scripted fixture or host-supplied model | Cannot grant itself permission or create trusted provenance |
-| Proposal validator | Host; full extraction pending | Checks actual schema, scope, paths, and diff before provider calls |
+| Proposal validator | `src/contract/validate.ts`, run by the host | Pure checks of schema, scope, paths, and diff against a host-supplied file snapshot, before provider calls |
 | Semantic reviewer | Host transport using Jev | Supplies probabilities, not authority; sees only approved-for-egress context |
 | Decision | `src/contract/decide.ts` | Pure runtime checks and deterministic verdicts; no I/O |
 | Evidence audit | Optional `src/audit/receipt.ts` | Node hashing and offline replay; no authentication or persistence |
@@ -22,10 +22,15 @@ read grant does not automatically allow uploading that file to a provider.
 ## Implemented pipeline and pending pieces
 
 The root exports shared types, `decide`, `unfavorable`, threshold, and immutable
-question/direction/tool metadata, plus the pure routing API. It checks a host-supplied validation result;
-it does not prove the host performed filesystem validation. The proposal
-validator, review payload builder, live transport integration, original fixture
-suite, and full runner remain pending extraction from the playground.
+question/direction/tool metadata, plus the pure routing API. It also exports the
+phase 1 pieces extracted from playground PR #41 at `2c6cac9` (not yet merged
+upstream): `validateProposal` (zod schema, path, and single-file diff checks
+against a snapshot the caller passes in), `buildReviewPayload`,
+`validateReviewPayload`, `parseReviewAnswers`, and `reviewProposal` over an
+injected `JevTransport`. None of these read files, call a network, or read the
+environment. `decide()` still checks a supplied validation result; it cannot
+prove the host ran the validator. A live transport and durable log store are
+not part of this package.
 
 The intended host sequence is proposal -> validation -> permitted egress/review
 -> decision -> receipt -> independent host policy. The host must avoid provider
@@ -44,7 +49,15 @@ optional `criteria` with true/false descriptions. Historical stripping in the
 playground was a local validation behavior, not an API-wide restriction.
 [Wire-contract acceptance](hardening/07-noul-contract.md) requires testing the
 actual post-validation request and versioning effective semantic changes.
-This branch corrects guidance without changing a live request or version pin.
+`buildReviewPayload` sends question set v1 as it historically reached the wire:
+type and instructions, no criteria. The playground authored criteria text but
+its payload validator dropped noul criteria before sending, so no recorded run
+used them. That text is kept as `REVIEW_QUESTION_CRITERIA` and is not sent;
+sending it would change effective semantics and needs a new question-set
+version. `validateReviewPayload` preserves explicitly supplied `{ true, false }`
+criteria, rejects malformed criteria instead of dropping them, and refuses an
+empty model instead of substituting an alias. `tests/review-payload.test.ts`
+checks the exact request the injected transport receives.
 
 Given probability of yes `p`, derive answer from `p >= 0.5` and confidence from
 `Math.max(p, 1 - p)`. Confidence is not correctness. The threshold 0.8 remains
@@ -112,6 +125,16 @@ iterators or getters. `prepareProposerInput` whitelists and copies
 only task/files/evidence before a `BlindedProposer` sees them. The original
 labeled `Proposer` remains a scripted-fixture interface, not a blinded study
 contract. These helpers do not run a benchmark or authenticate labels.
+
+The extracted fixture bench lives beside them: `fixtures.ts` (zod fixture
+schema), `proposer.ts` (scripted `FixtureProposer`), `mock.ts` (labeled mock
+transport keyed by the proposal in the request state), `run.ts` (one pass of
+propose, validate, review, decide, receipt), `bench.ts` (pure aggregation),
+and the Node-only `load.ts`, which is not re-exported. The runner's base mode
+uses the benchmark `decideBase`; it never substitutes for a failed review, and
+no receipt it produces records an applied change. `pnpm bench:review` runs the
+20 synthetic fixtures offline with the mock transport and prints scripted
+totals, not measurements.
 
 ## Host seams and acceptance
 

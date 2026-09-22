@@ -10,9 +10,13 @@ not evidence that a threshold or a particular question set is calibrated.
 
 The pinned playground implementation contains question criteria but its local
 payload validation historically stripped them. That observation does not imply
-that the TypeSafe API forbids criteria. This repository does not yet contain the
-payload builder, so this PR corrects guidance without claiming to fix a live
-transport or silently changing question-set v1's historical effective payload.
+that the TypeSafe API forbids criteria.
+
+Phase 1 extracted the payload builder (`src/contract/review.ts`) and a
+criteria-preserving validator (`src/contract/payload.ts`). Question set v1 keeps
+its historical effective payload: type and instructions, no criteria. The
+playground-authored criteria text is exported as `REVIEW_QUESTION_CRITERIA` but
+not sent. No live transport is added to the package.
 
 ## Extraction acceptance checks
 
