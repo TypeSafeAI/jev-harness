@@ -24,7 +24,7 @@ Primary details open in a modal drawer over the content: **How the comparison wo
 
 ## Key and usage controls
 
-**API key** follows the playground's personal-override convention: masked input, save/replace/remove, origin-local `typesafe-api-key-override` storage. The saved value is never filled back into the input. Storage is unencrypted and accessible to same-origin scripts; origins include ports. A personal key overrides the host's server-only `TYPESAFE_API_KEY`. Server keys never reach the browser.
+**Settings → Jev API key** exposes the manual override and current key source. Saving activates it immediately; replacing updates it, and **Remove override** restores the server default for the next comparison. It follows the playground's personal-override convention: masked input, save/replace/remove, origin-local `typesafe-api-key-override` storage. The saved value is never filled back into the input. Storage is unencrypted and accessible to same-origin scripts; origins include ports. A personal key overrides the host's server-only `TYPESAFE_API_KEY`. Server keys never reach the browser.
 
 **Usage** opens reported input/output totals, a price estimate and request history for this tab's latest 200 live Jev requests. Session storage preserves scalar telemetry across refresh, without prompts or keys. **Clear local usage history** removes only that telemetry. Missing usage on failed/cancelled calls is not free; partial totals are labeled. Personal and host-key calls are identified separately. CLI usage is shown per arena lane, not mixed into the Jev totals.
 
@@ -75,6 +75,6 @@ pnpm build
 pnpm check:secrets
 ```
 
-Tests use fake provider/CLI transports and a real local synthetic MCP process; they never consume provider credits. Browser verifiers accept an existing Playwright Page without adding a second test dependency. See `scripts/verify-arena-browser.mjs`, `scripts/verify-arena-history-browser.mjs` and `scripts/verify-arena-controls-browser.mjs`. Run each verifier in a fresh browser context.
+Tests use fake provider/CLI transports and a real local synthetic MCP process; they never consume provider credits. Browser verifiers accept an existing Playwright Page without adding a second test dependency. See `scripts/verify-arena-browser.mjs`, `scripts/verify-arena-history-browser.mjs` `scripts/verify-arena-controls-browser.mjs` and `scripts/verify-arena-settings-browser.mjs`. Run each verifier in a fresh browser context. The Settings entry point is `verifyArenaSettings(page, baseURL, screenshotDir?)`; pass the context's Page, the running demo URL and an optional screenshot directory. It checks the manual key lifecycle with synthetic credentials and intercepted requests; see the [Settings verification record](verification/arena-key-settings-2026-09-22.json).
 
 The [arena history verification](verification/arena-history-2026-09-22.json) records offline unit, browser and build checks for the sole arena, example selection, overlays, persistence, unknown/partial outcomes and responsive layouts. Recorded runs live in [verification/](verification/). Automated browser checks and screenshot inspection are not human keyboard-only or VoiceOver acceptance. Cross-browser device testing and a repeated live benchmark remain outstanding.

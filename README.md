@@ -217,7 +217,7 @@ pnpm demo
 # Open http://127.0.0.1:4173 (or pnpm exec next dev --webpack --hostname 127.0.0.1 --port 4187 for a different port)
 ```
 
-The root page compares parallel Codex CLI runs with full versus Jev-selected synthetic MCP tools. Choose one of four example cards, inspect its task, then explicitly run the comparison. Details open over the results in modal drawers. Save a personal TypeSafe key under **API key**; **Usage** tracks reported Jev usage. The host records proposed patches without applying them.
+The root page compares parallel Codex CLI runs with full versus Jev-selected synthetic MCP tools. Choose one of four example cards, inspect its task, then explicitly run the comparison. Details open over the results in modal drawers. Save a personal TypeSafe key under **Settings → Jev API key**; **Usage** tracks reported Jev usage. The host records proposed patches without applying them.
 
 Completed and interrupted comparisons are saved in this browser, up to 30 runs within 2 MB. **History** reopens evidence and compares input tokens or duration for matching tasks and harness setups, including Jev overhead. Unknown measurements remain unknown; a run is not a benchmark. The old `/arena` URL redirects to `/`; the Routing room and Example lab pages have been removed. See [the demo guide and browser verification](docs/routing-demo.md).
 

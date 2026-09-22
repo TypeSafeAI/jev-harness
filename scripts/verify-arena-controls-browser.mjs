@@ -39,11 +39,11 @@ export async function verifyArenaControls(page, baseURL, screenshotDir) {
     await page.getByRole("button", { name: "How the comparison works" }).click();
     await page.mouse.click(10, 400);
     check(await page.locator(".detail-dialog[open]").count() === 0, "clicking the backdrop closes the drawer");
-    await page.locator("#key-settings").click(); await page.locator("#api-key").fill(credential); await page.getByRole("button", { name: "Save key", exact: true }).click();
-    await page.reload(); await page.getByRole("button", { name: "API key · saved", exact: true }).waitFor();
+    await page.locator("#key-settings").click(); await page.locator("#api-key").fill(credential); await page.getByRole("button", { name: "Save override", exact: true }).click();
+    await page.reload(); await page.getByRole("button", { name: "Settings, manual key override active", exact: true }).waitFor();
     await page.locator("#key-settings").click();
     check(await page.locator("#api-key").inputValue() === "", "saved credentials are never redisplayed after reload");
-    await page.getByRole("button", { name: "Close API key settings" }).click();
+    await page.getByRole("button", { name: "Close settings" }).click();
     await run();
     check(requests[0].headers["x-typesafe-api-key"] === credential && !requests[0].body.includes(credential), "personal credentials travel only in the request header");
     check(await page.evaluate(([key, value]) => { const raw = localStorage.getItem(key); return JSON.parse(raw).runs.length === 1 && !raw.includes(value); }, [historyKey, credential]), "run snapshots exclude credentials");
@@ -68,7 +68,7 @@ export async function verifyArenaControls(page, baseURL, screenshotDir) {
     await page.getByRole("tab", { name: "History" }).click(); await page.getByRole("button", { name: "Clear local history", exact: true }).click(); await page.getByRole("button", { name: "Clear history", exact: true }).click();
     await page.getByText("Your next run starts the timeline", { exact: true }).waitFor();
     check(await page.evaluate(key => Boolean(localStorage.getItem(key)), keyStorage), "clearing comparisons preserves the API key");
-    await page.locator("#key-settings").click(); await page.getByRole("button", { name: "Remove key", exact: true }).click();
+    await page.locator("#key-settings").click(); await page.getByRole("button", { name: "Remove override", exact: true }).click();
     check(await page.evaluate(key => localStorage.getItem(key) === null, keyStorage), "removing a saved API key clears the browser override");
     return { checks, count: checks.length, providerCalls: 0, liveCliCalls: 0, humanAccessibilityAcceptance: "not performed" };
   } finally { await page.unroute("**/api/arena"); }
