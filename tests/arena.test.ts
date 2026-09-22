@@ -35,8 +35,10 @@ test("synthetic MCP host exposes only selected schemas and refuses unavailable t
 test("CLI adapter uses isolated read-only settings and parses real event-shaped usage without provider calls", async t => {
   const dir = await mkdtemp(join(tmpdir(), "jev-cli-test-")); t.after(() => rm(dir, { recursive: true, force: true }));
   const fake = join(dir, "fake-cli");
-  await writeFile(fake, '#!/usr/bin/env node\nprocess.stdin.resume();process.stdin.on("end",()=>{console.log(JSON.stringify({type:"item.completed",item:{type:"agent_message",text:"Synthetic answer"}}));console.log(JSON.stringify({type:"turn.completed",usage:{input_tokens:80,cached_input_tokens:20,output_tokens:12}}));});\n', { mode: 0o700 });
-  const result = await runCodex(ARENA_CASES[0], DEMO_CATALOG, new AbortController().signal, fake);
+  await writeFile(fake, '#!/usr/bin/env node\nprocess.stdin.resume();process.stdin.on("end",()=>{console.log(JSON.stringify({type:"item.started",item:{type:"mcp_tool_call"}}));console.log(JSON.stringify({type:"item.completed",item:{type:"mcp_tool_call"}}));console.log(JSON.stringify({type:"item.completed",item:{type:"agent_message",text:"Synthetic answer"}}));console.log(JSON.stringify({type:"turn.completed",usage:{input_tokens:80,cached_input_tokens:20,output_tokens:12}}));});\n', { mode: 0o700 });
+  const phases: string[] = [];
+  const result = await runCodex(ARENA_CASES[0], DEMO_CATALOG, new AbortController().signal, fake, phase => phases.push(phase));
+  assert.deepEqual(phases, ["calling", "working", "answering"]);
   assert.equal(result.status, "completed"); assert.equal(result.answer, "Synthetic answer"); assert.equal(result.inputTokens, 80); assert.equal(result.cachedInputTokens, 20); assert.deepEqual(result.toolCalls, []);
   const args = codexArguments(dir, "fixture", "trace");
   assert.ok(args.includes("read-only")); assert.ok(args.includes("--ignore-user-config")); assert.ok(args.includes("shell_tool")); assert.ok(!args.some(arg => arg.includes("dangerously")));
@@ -45,4 +47,25 @@ test("CLI adapter uses isolated read-only settings and parses real event-shaped 
   assert.ok(args.includes('mcp_servers.arena.required=true'));
   const missing = await runCodex(ARENA_CASES[0], [], new AbortController().signal, join(dir, "missing"));
   assert.equal(missing.status, "failed"); assert.equal(missing.inputTokens, null);
+});
+
+test("arena starts both lanes before either finishes and waits for a remaining lane after failure", async () => {
+  const { runArenaLanes } = await import("../examples/host/arena-lanes");
+  const events: any[] = [], releases: (() => void)[] = [], started: string[][] = [];
+  const fake: typeof runCodex = async (_fixture, tools, _signal, _executable, progress) => {
+    started.push(tools.map(tool => tool.id));
+    progress?.("working");
+    await new Promise<void>((resolve, reject) => releases.push(started.length === 1 ? () => reject(Error("synthetic failure")) : resolve));
+    return { status: "completed", answer: "Fixture answer", durationMs: 10, inputTokens: 1, cachedInputTokens: 0, outputTokens: 1, toolCallCount: 0, traceTruncated: false, toolCalls: [], error: null };
+  };
+  let ended = false;
+  const pending = runArenaLanes(ARENA_CASES[0], ["read_file"], new AbortController().signal, event => events.push(event), fake).finally(() => { ended = true; });
+  const rejection = assert.rejects(pending, /CLI lane failed/);
+  assert.equal(started.length, 2, "both processes start without awaiting the first");
+  assert.deepEqual(started[0], DEMO_CATALOG.map(tool => tool.id)); assert.deepEqual(started[1], ["read_file"]);
+  releases[0]!(); await new Promise(resolve => setImmediate(resolve));
+  assert.equal(ended, false, "the second process still owns the host slot");
+  releases[1]!(); await rejection;
+  assert.ok(events.some(e => e.type === "lane" && e.lane === "baseline" && e.phase === "failed"));
+  assert.ok(events.some(e => e.type === "result" && e.lane === "integrated"));
 });

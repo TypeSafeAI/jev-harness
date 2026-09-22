@@ -17,7 +17,8 @@ export function codexArguments(cwd: string, manifest: string, trace: string) {
     "-c", `mcp_servers.arena.args=${JSON.stringify([resolve("scripts/arena-mcp.mjs"), manifest, trace])}`, "-"];
 }
 const tokens = (n: unknown) => typeof n === "number" && Number.isSafeInteger(n) && n >= 0 ? n : null;
-export async function runCodex(fixture: ArenaCase, tools: readonly ToolDefinition[], signal: AbortSignal, executable = "codex"): Promise<CliResult> {
+export type CliPhase = "starting" | "working" | "calling" | "answering" | "failed";
+export async function runCodex(fixture: ArenaCase, tools: readonly ToolDefinition[], signal: AbortSignal, executable = "codex", onProgress?: (phase: CliPhase) => void): Promise<CliResult> {
   const directory = await mkdtemp(join(tmpdir(), "jev-arena-"));
   const manifest = join(directory, "fixture.json"), trace = join(directory, "trace.jsonl");
   const start = performance.now();
@@ -35,13 +36,25 @@ export async function runCodex(fixture: ArenaCase, tools: readonly ToolDefinitio
     const env = { HOME: directory, CODEX_HOME: codexHome, NODE_ENV: process.env.NODE_ENV ?? "production", ...Object.fromEntries(["PATH", "LANG", "TMPDIR"].flatMap(key => process.env[key] ? [[key, process.env[key]!]] : [])) };
     const result = await new Promise<CliResult>(resolveResult => {
       const child = spawn(executable, codexArguments(directory, manifest, trace), { env, cwd: directory, stdio: ["pipe", "pipe", "pipe"], detached: process.platform !== "win32" });
-      let output = "", size = 0, stopped = false, spawnError = false;
+      let output = "", eventBuffer = "", lastPhase: CliPhase | null = null, size = 0, stopped = false, spawnError = false;
       let killTimer: ReturnType<typeof setTimeout> | undefined;
       const kill = (signal: NodeJS.Signals) => { try { if (child.pid && process.platform !== "win32") process.kill(-child.pid, signal); else child.kill(signal); } catch {} };
       const stop = () => { stopped = true; kill("SIGTERM"); killTimer ??= setTimeout(() => kill("SIGKILL"), 1500); };
       const timer = setTimeout(stop, 120_000);
       signal.addEventListener("abort", stop, { once: true }); if (signal.aborted) stop();
-      child.stdout.on("data", (chunk: Buffer) => { size += chunk.length; if (size > 1_000_000) stop(); else output += chunk.toString(); });
+      child.stdout.on("data", (chunk: Buffer) => {
+        size += chunk.length; if (size > 1_000_000) { stop(); return; }
+        output += chunk.toString(); eventBuffer += chunk.toString();
+        let newline;
+        while ((newline = eventBuffer.indexOf("\n")) >= 0) {
+          const line = eventBuffer.slice(0, newline); eventBuffer = eventBuffer.slice(newline + 1);
+          try {
+            const event = JSON.parse(line);
+            const phase: CliPhase | null = event.type === "turn.started" ? "working" : event.item?.type === "mcp_tool_call" ? event.type === "item.completed" ? "working" : "calling" : event.item?.type === "agent_message" ? "answering" : null;
+            if (phase && phase !== lastPhase) { lastPhase = phase; onProgress?.(phase); }
+          } catch { /* Unrecognized CLI output is not UI status or executable input. */ }
+        }
+      });
       child.stderr.on("data", () => { /* Never expose raw CLI stderr or credential diagnostics. */ });
       child.on("error", () => { spawnError = true; });
       child.on("close", code => {

@@ -41,9 +41,9 @@ The input-only estimate uses the [public $42/billion input-token price](https://
 `/arena` compares **Codex** with **Codex + Jev Harness** on four original synthetic tasks: reading a module, recording a proposed fix, inspecting timeouts and asking about an ambiguous request.
 
 1. Jev routes the fixed task against the known catalog.
-2. The baseline starts a fresh Codex CLI process whose MCP host exposes all fixture tools.
-3. The integrated lane starts another fresh process with only the schemas selected by the real harness policy.
-4. The UI illustrates tools exposed → calls observed → agent answer in paired cards. A completed CLI with no fixture calls is labeled explicitly. Accounting stays collapsed; its comparison bars include Jev input overhead, and missing usage stays unknown.
+2. Two fresh Codex CLI processes start in parallel: the baseline MCP host exposes all fixture tools; the integrated host exposes only schemas selected by the real harness policy.
+3. Each lane streams starting, working, tool-call and answer activity with an elapsed timer. Final results appear independently. Cancellation stops both processes.
+4. The UI illustrates tools exposed → calls observed → agent answer in paired cards. A completed CLI with no fixture calls is labeled explicitly. A collapsible run inspector offers keyboard-navigable Usage, Tool activity, Jev’s decision and Test setup tabs. Usage bars include Jev input overhead; missing usage stays unknown. Tool events use a readable timeline, evidence uses probability bars, and raw receipts stay one level deeper.
 5. The UI streams progress and shows returned answers, actual MCP calls, CLI-reported input/output/cache tokens, duration and Jev overhead. Download preserves the comparison.
 
 Install Codex separately and run `codex login` on the host. The adapter was developed against Codex CLI 0.155.1. It uses the CLI's default model and existing file-based sign-in. Keychain-only authentication is not supported. No CLI credentials are returned to the browser.
@@ -52,7 +52,7 @@ Each lane gets a temporary working directory and an auth-only Codex home. Only `
 
 Only fixed case ids are accepted, with no browser-supplied command, cwd, script or model. The host permits one comparison at a time. Each CLI run has time/output bounds, and cancellation terminates its process group, escalating after a short grace period. Provider failures remain visible and do not trigger a mock fallback. No model-proposed patch is applied, tested or committed.
 
-Baseline runs first. Both lanes have the same task, fixture, CLI settings and default model, but independent model trajectories and cache effects. Exposed-tool selection is the treatment; this does not gate all operations in a general-purpose production agent. One run does not establish quality, accuracy, latency or cost improvements. Task quality is not scored automatically.
+The lanes run concurrently after routing. Shared resource contention can affect timing. Both lanes have the same task, fixture, CLI settings and default model, but independent model trajectories and cache effects. Exposed-tool selection is the treatment; this does not gate all operations in a general-purpose production agent. One run does not establish quality, accuracy, latency or cost improvements. Task quality is not scored automatically.
 
 ## Local host boundary
 

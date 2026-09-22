@@ -1,6 +1,6 @@
 import { boundedText, json, localOrigin } from "../../../examples/host/live";
 import { liveHandle } from "../../../examples/host/runtime";
-import { runCodex } from "../../../examples/host/codex";
+import { runArenaLanes } from "../../../examples/host/arena-lanes";
 import { ARENA_CASES } from "../../../examples/arena/cases";
 import { DEMO_CATALOG, DEMO_POLICY } from "../../../examples/routing/scenarios";
 import { routeTools } from "../../../src/routing";
@@ -31,14 +31,8 @@ export async function POST(request: Request) {
         const receipt = await routeTools(DEMO_CATALOG, { intent: fixture.task, availableIds: DEMO_CATALOG.map(tool => tool.id) }, DEMO_POLICY, { source: "jev", review: async () => body.evidence }, signal);
         if (receipt.outcome === "unavailable") { emit({ type: "error", value: "Routing evidence unavailable. No CLI run started." }); return; }
         emit({ type: "routing", receipt });
-        // Fixed declared order, fresh process/workspace per lane. No benchmark significance implied.
-        for (const lane of ["baseline", "integrated"] as const) {
-          if (signal.aborted) return;
-          emit({ type: "stage", value: lane === "baseline" ? "Running Codex with all fixture tools…" : "Running Codex with Jev-selected fixture tools…" });
-          const tools = lane === "baseline" ? DEMO_CATALOG : DEMO_CATALOG.filter(tool => receipt.selectedIds.includes(tool.id));
-          const result = await runCodex(fixture, tools, signal);
-          emit({ type: "result", lane, tools: tools.map(tool => tool.id), result });
-        }
+        emit({ type: "stage", value: "Both agents are running in parallel. Results appear independently as each finishes." });
+        await runArenaLanes(fixture, receipt.selectedIds, signal, emit);
         if (!signal.aborted) emit({ type: "done", at: new Date().toISOString() });
       } catch { emit({ type: "error", value: "The comparison could not complete. Check the local CLI configuration and retry explicitly." }); }
       finally { running = false; try { controller.close(); } catch {} }

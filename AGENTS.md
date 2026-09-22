@@ -151,3 +151,13 @@ Routing scenarios are separate synthetic demonstrations, not new proposal-review
 At Val's request, `app/`, `components/` and `examples/host/` implement the interactive demo. Keep React and provider/CLI I/O outside `src/`. Read the pinned Next.js docs under `node_modules/next/dist/docs/` before changing App Router behavior. Verify `pnpm build` alongside typecheck and tests.
 
 The arena host may invoke the underlying Codex CLI against fixed synthetic fixtures through bounded MCP tools. This is not a new runtime or permission grant: no proposed source is applied or executed. Preserve auth-only temporary CODEX_HOME and HOME, disabled external tools, read-only sandbox, exact fixture ids, process cancellation and output limits. Automated tests use a fake CLI and fake Jev; live smoke runs are explicit and separately recorded. No private repository context or global agent instructions may enter the arena.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

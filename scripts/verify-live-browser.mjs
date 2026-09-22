@@ -22,6 +22,7 @@ export async function verifyLiveDemo(page, baseURL = "http://127.0.0.1:4187") {
     await page.getByLabel("API key", { exact: true }).fill(key);
     await page.getByRole("button", { name: "Save key", exact: true }).click();
     await page.reload();
+    await page.getByRole("button", { name: "API key · saved" }).waitFor();
     check(await page.getByRole("button", { name: "API key · saved" }).isVisible(), "key persists across refresh");
     await page.getByRole("button", { name: "API key · saved" }).click();
     check(await page.getByLabel("API key", { exact: true }).inputValue() === "", "saved key is never filled back into UI");
@@ -37,6 +38,7 @@ export async function verifyLiveDemo(page, baseURL = "http://127.0.0.1:4187") {
     check((await page.locator("#routed-explanation").textContent()).includes("300 for routing"), "live estimate uses actual wire request size");
     await page.getByRole("radio", { name: "Batteries included" }).check();
     check(calls === 1, "switching context mode reuses live evidence");
+    check((await page.locator("#status").textContent()).includes("3"), "accessible status reflects changed context mode");
     defer = true;
     await page.getByRole("button", { name: "Route with Jev" }).click();
     await page.waitForFunction(() => document.querySelector("#live-status").textContent.includes("Asking Jev"));
@@ -69,6 +71,7 @@ export async function verifyLiveDemo(page, baseURL = "http://127.0.0.1:4187") {
       await page.keyboard.press("Escape");
     }
     await page.reload();
+    await page.getByRole("button", { name: "Usage · 3", exact: true }).waitFor();
     check(await page.getByRole("button", { name: "Usage · 3", exact: true }).isVisible(), "usage survives refresh without storing prompts or credentials");
     await page.getByRole("button", { name: "Usage · 3", exact: true }).click();
     await page.getByRole("button", { name: "Clear local usage history" }).click();
