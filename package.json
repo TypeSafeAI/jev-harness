@@ -17,7 +17,7 @@
     "check:secrets": "node scripts/check-secrets.mjs --all"
   },
   "devDependencies": {
-    "@types/node": "22.20.3",
+    "@types/node": "26.6.2",
     "tsx": "4.23.13",
     "typescript": "7.0.2"
   }
