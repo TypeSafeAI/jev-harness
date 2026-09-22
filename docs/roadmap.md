@@ -66,6 +66,8 @@ Real-host integration requires mediated tools, canonical session binding,
 protected evidence, and independently enforced grants. A specialist proposer
 experiment is separate from the reviewer. Calibrate thresholds on independently
 labeled held-out examples before any claim of production error rates.
+The [per-question look at the four development runs](calibration/2026-09-22-per-question.md)
+is groundwork for issue #5, not that calibration.
 Publish the source package only after the extraction, compatibility, and
 verification gates are satisfied.
 
