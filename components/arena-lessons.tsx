@@ -2,7 +2,7 @@
 import type { RunLessons } from "../examples/arena/lessons";
 import { DetailPanel } from "./detail-panel";
 const format = (n: number | null, unit: "tokens" | "time" | "count") => n === null ? "Unknown" : unit === "time" ? `${(n / 1000).toLocaleString(undefined, { maximumFractionDigits: 3 })} s` : n.toLocaleString();
-export function ArenaLessons({ report, onHistory }: { report: RunLessons; onHistory: () => void }) {
+export function ArenaLessons({ report, onHistory, onIntegrate }: { report: RunLessons; onHistory: () => void; onIntegrate: () => void }) {
   const metrics = [
     { label: "Input tokens", unit: "tokens" as const, values: report.measurements.input },
     { label: "Measured time", unit: "time" as const, values: report.measurements.duration },
@@ -21,7 +21,7 @@ export function ArenaLessons({ report, onHistory }: { report: RunLessons; onHist
           <summary><span className="lesson-number" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span><span><strong>{item.title}</strong><small>{item.scope}{index === 0 ? " · Start here" : ""}</small></span></summary>
           <div className="lesson-recommendation-body"><div><span>Observed</span><p>{item.evidence}</p></div><div><span>Try next</span><p>{item.next}</p></div><div><span>How to evaluate</span><p>{item.check}</p></div></div>
         </details>)}</div>
-        <div className="lesson-footer"><p>{report.caveat} Host experiments describe changes to evaluate outside this fixed demo; nothing is applied automatically. Lessons are included in the comparison download.</p><button className="quiet" onClick={event => { event.currentTarget.closest("dialog")?.close(); onHistory(); }}>Compare repeated runs in History ↗</button></div>
+        <div className="lesson-footer"><p>{report.caveat} Host experiments describe changes to evaluate outside this fixed demo; nothing is applied automatically. Lessons are included in the comparison download.</p><button className="quiet" onClick={event => { event.currentTarget.closest("dialog")?.close(); onHistory(); }}>Compare repeated runs in History ↗</button><button className="quiet" onClick={event => { event.currentTarget.closest("dialog")?.close(); onIntegrate(); }}>Adapt this in your harness ↗</button></div>
       </div>
     </DetailPanel>
   </section>;

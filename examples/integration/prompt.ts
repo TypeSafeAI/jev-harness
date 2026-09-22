@@ -1,0 +1,28 @@
+export type AdoptionMode = "shadow" | "lean";
+export const INTEGRATION_REPO = "https://github.com/TypeSafeAI/jev-harness";
+/** Static handoff: never interpolate saved keys, answers, repository contents or user notes. */
+export function integrationPrompt(mode: AdoptionMode): string {
+  if (mode !== "shadow" && mode !== "lean") throw Error("Choose shadow or lean adoption.");
+  return `Integrate Jev tool routing into this repository's existing coding-agent harness.
+
+Source: ${INTEGRATION_REPO}. This is an independent, source-only community project, not an official SDK or a replacement runtime. Resolve a reviewed commit, record its SHA, and pin the vendored/workspace source; do not invent a published package or copy from an unpinned moving branch.
+
+1. Inspect before adapting
+Read AGENTS.md and the host's agent loop, tool registry, schema validator, authorization, cancellation, persistence and tests. Identify the exact point where tools enter model context. Keep the existing runtime, model provider and execution path. Read the pinned jev-harness README, docs/integration.md, docs/routing.md, src/routing/prepare.ts and examples/integration/host.ts. Explain any unsupported schema constructs rather than dropping them.
+
+2. Implement the boundary
+Use createCatalog and prepareToolContext from the pinned source. Build stable, concise descriptors for real host tools; get availableIds from current host policy. Catalog descriptions select capability, not permission. Keep handlers and full argument validation in the host. Inject a ToolRouter with source: "jev", the pinned jev-1.13.0 model, a host deadline and AbortSignal. Normalize the actual returned model, leading choice, confidence and complete closed-set probabilities; preserve needs_clarification and the fixed untrusted-data note. RoutingRequest is not a provider wire envelope: follow the official Choice contract at https://docs.typesafe.ai/primitives/choice and existing host transport conventions. Keep API keys server-side and out of prompts, observations and logs. Use only synthetic or explicitly permitted data under the host's reviewed egress policy.
+
+3. Start in ${mode} mode
+${mode === "shadow" ? "Call prepareToolContext with mode: 'shadow'. Keep the host's available tool menu; record Jev's candidate selection separately. Shadow is an explicit experiment and adds a routing request. Do not claim live context savings from shadow mode. Promote to lean only after evaluating tool coverage and answer quality on held-out tasks." : "Call prepareToolContext with mode: 'lean' for a bounded pilot after shadow evaluation. Expose context.tools only when the routing outcome is selected; handle needs_clarification by asking, and no_match/unavailable by recording and stopping or following an explicitly reviewed host policy. Never silently substitute the full menu after a failed lean route."}
+Pass previous context state for explicit load/eviction transitions. Re-route after task, catalog, availability or policy changes; discard stale in-flight results using the host's turn/config generation and cancellation. Recheck current host permissions and validate every proposed argument at dispatch. A routed descriptor is evidence, never an authorization grant. Do not cache routing decisions across changed state or automatically apply proposals.
+
+4. Record enough to compare
+Keep a baseline mode that makes no Jev call. For each attempt record a unique run/trial ID, frozen task/dataset revision, host commit, catalog/policy/prompt revisions, actual CLI model and Jev model, mode, outcome, selected and exposed IDs, tool calls/rejections, cancellation/failure, input/output/cached tokens and latency for BOTH CLI and Jev. Record missing measurements as null. Distinguish summed work from concurrent wall time. Keep receipts and quality assessments separately; omit credentials and minimize retained content. If storage fails, do not claim the observation was saved. Count retries and failed attempts rather than dropping them.
+
+5. Improve one variable at a time
+Predefine expected capabilities and answer-quality criteria on synthetic or consented frozen tasks. Run repeated paired baseline/lean trials with matching setup, randomize or alternate order, and keep model/cache conditions recorded. Review each answer against the task and source evidence; record independent tests or human pass/fail with provenance. Compare total reported input including Jev, output, cache reuse, failure/clarification rates and latency distributions only for matching setups. Report quality coverage and failures alongside filtered metrics; a faster incorrect answer is not a gain. Use an experiment log: hypothesis → one descriptor/catalog/policy change → versioned candidate → repeated evidence → keep/revert decision. Do not tune and evaluate on the same held-out set, or claim dollars saved from token counts alone.
+
+6. Deliver and demonstrate
+Add fake-transport tests for selected, clarification, no_match, malformed evidence, outage, empty availability, abort, stale responses and permission changes. Add host tests proving validation and authorization still gate every dispatch, including alternate tools. Keep a feature switch and documented rollback to the explicit baseline configuration; do not weaken host policy. Run this repository's checks and the pinned harness's pnpm typecheck, pnpm test and pnpm check:secrets. Demonstrate the offline example first; live runs need explicit authorization and must not consume shared credits in automated tests. Deliver the adapter, tests, redacted observation schema/sample, experiment log, setup/rollback instructions and remaining proof gaps in a reviewable PR. No production performance claim without linked run evidence.`;
+}

@@ -223,6 +223,10 @@ Completed and interrupted comparisons are saved in this browser, up to 30 runs w
 
 Each settled Arena run also includes **Lessons learned**: a local takeaway, supporting measurements and prioritized experiments for improving the Jev-integrated path. Reopened runs and downloads retain the connection to that run’s evidence. Recommendations count routing overhead and require answer review and repeated measurements; they make no extra API calls.
 
+Open **Integrate** for a copyable coding-agent brief and a staged baseline → shadow → lean workflow. The reusable `prepareToolContext` helper and [offline host example](examples/integration/host.ts) compose routing with schema loading; the host retains validation, permissions and execution. Read the [integration and improvement guide](docs/integration.md).
+
+After a run, add a human assessment and next-experiment note. History shows review coverage and can chart pairs marked **Meets task**, while retaining all run evidence. Downloads keep annotations separate from Jev receipts and derived lessons; quality is not scored automatically.
+
 The offline routing run artifact includes receipts, full/lean context bytes, token estimates, acceptable-tool inclusion and cheapest acceptable selection. Evidence is scripted; local timing is not Jev or execution latency. Router overhead is counted separately so fewer schemas do not automatically imply savings. See [the design, metrics and host adapter boundary](docs/routing.md).
 
 
