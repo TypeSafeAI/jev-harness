@@ -105,3 +105,10 @@ test("context transitions expose real schema loads and evictions without executi
   assert.deepEqual(unavailable.evictedIds, ["read"]);
   assert.throws(() => api.assembleContext(receipt, "invalid" as "lean"));
 });
+
+test("unsupported schema constraints are rejected instead of silently widened", () => {
+  for (const inputSchema of [
+    { ...tools[0]!.inputSchema, allOf: [{ required: ["path"] }] },
+    { ...tools[0]!.inputSchema, properties: { path: { ...tools[0]!.inputSchema.properties.path!, enum: ["read"] } } },
+  ]) assert.throws(() => api.createCatalog([{ ...tools[0]!, inputSchema }]));
+});

@@ -17,7 +17,7 @@ The original description assumed a loop and tool executor already existed. They 
 
 ## Contract
 
-`createCatalog()` validates and snapshots descriptors. Ids are unique lowercase identifiers; `needs_clarification` is reserved. Each schema is a closed object with string, number or boolean properties, descriptions and declared required keys. This is a deliberately limited schema vocabulary, not an arbitrary JSON Schema validator or an argument validator. Catalogs cannot carry handlers through normalization.
+`createCatalog()` validates and snapshots descriptors. Ids are unique lowercase identifiers; `needs_clarification` is reserved. Each schema is a closed object with string, number or boolean properties, descriptions and declared required keys. This is a deliberately limited schema vocabulary, not an arbitrary JSON Schema validator or an argument validator. Unsupported schema keywords are rejected rather than silently removed. Catalogs cannot carry handlers through normalization.
 
 `routeTools(catalog, input, policy, router, signal?)` snapshots the catalog, input and policy before awaiting the host. The request contains the pinned model, routing question-set version, task, fixed untrusted-data note, available ids, kinds and short descriptions, plus a clarification option. Schemas, cost estimates, expected labels and mock weights are not in the request. The maximum catalog size leaves room for clarification within Jev's [choice limit](https://docs.typesafe.ai/primitives/choice).
 

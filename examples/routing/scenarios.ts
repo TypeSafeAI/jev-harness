@@ -18,10 +18,12 @@ export interface RoutingScenario {
   expectedOutcome: RoutingReceipt["outcome"];
   weights: Record<string, number>;
   confidence: number;
+  /** Scripted alternatives are independent of evaluation labels. */
+  mockAlternatives?: Record<string, string>;
   failure?: "unavailable" | "malformed";
 }
 export const SCENARIOS: readonly RoutingScenario[] = [
-  { id: "read", title: "Read a file", intent: "Read src/sum.ts in the synthetic workspace.", acceptableIds: ["read_file", "inspect_agent"], expectedOutcome: "selected", weights: { read_file: 0.46, inspect_agent: 0.5, propose_patch: 0.01, needs_clarification: 0.03 }, confidence: 0.9 },
+  { id: "read", mockAlternatives: { read_file: "inspect_agent", inspect_agent: "read_file" }, title: "Read a file", intent: "Read src/sum.ts in the synthetic workspace.", acceptableIds: ["read_file", "inspect_agent"], expectedOutcome: "selected", weights: { read_file: 0.46, inspect_agent: 0.5, propose_patch: 0.01, needs_clarification: 0.03 }, confidence: 0.9 },
   { id: "patch", title: "Propose an edit", intent: "Propose a patch to fix the off-by-one loop in synthetic src/sum.ts.", acceptableIds: ["propose_patch"], expectedOutcome: "selected", weights: { read_file: 0.03, inspect_agent: 0.04, propose_patch: 0.9, needs_clarification: 0.03 }, confidence: 0.9 },
   { id: "inspect", title: "Ask a specialist", intent: "Explain the interaction of both helpers in synthetic src/sum.ts.", acceptableIds: ["inspect_agent"], expectedOutcome: "selected", weights: { read_file: 0.1, inspect_agent: 0.84, propose_patch: 0.03, needs_clarification: 0.03 }, confidence: 0.85 },
   { id: "ambiguous", title: "Clarify the task", intent: "Clean up the helper.", acceptableIds: [], expectedOutcome: "needs_clarification", weights: { needs_clarification: 1 }, confidence: 0.95 },
@@ -37,16 +39,12 @@ export function scenarioRouter(scenario: RoutingScenario): ToolRouter {
     if (scenario.failure === "malformed") return { model: request.model, choice: "not_in_catalog", confidence: 1, probabilities: {} };
     const weights = request.options.map(option => [option.id, scenario.weights[option.id] ?? 0] as const);
     // A removed relevant tool does not promote an unrelated tool by renormalization.
-    const removedMass = Object.entries(scenario.weights).filter(([id]) => !request.options.some(option => option.id === id)).reduce((sum, [, value]) => sum + value, 0);
-    const probabilities = Object.fromEntries(weights.map(([id, value]) => [id, value + (id === "needs_clarification" ? removedMass : 0)]));
-    // If at least one equivalent inspection choice remains, transfer its missing
-    // alternative's mass to that choice. This is explicit fixture behavior.
-    if (scenario.id === "read") {
-      const remaining = request.options.filter(option => scenario.acceptableIds.includes(option.id));
-      if (remaining.length === 1) {
-        probabilities[remaining[0]!.id]! += removedMass;
-        probabilities.needs_clarification! -= removedMass;
-      }
+    const probabilities = Object.fromEntries(weights);
+    for (const [id, mass] of Object.entries(scenario.weights)) {
+      if (request.options.some(option => option.id === id)) continue;
+      const alternative = scenario.mockAlternatives?.[id];
+      const target = alternative && Object.hasOwn(probabilities, alternative) ? alternative : "needs_clarification";
+      probabilities[target]! += mass;
     }
     const total = Object.values(probabilities).reduce((sum, value) => sum + value, 0);
     if (total === 0) probabilities.needs_clarification = 1;

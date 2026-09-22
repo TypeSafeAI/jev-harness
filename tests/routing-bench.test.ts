@@ -28,3 +28,25 @@ test("availability changes the closed set and context immediately", async () => 
   assert.equal(empty.receipt.outcome, "no_match");
   assert.equal(empty.metrics.cheapestAcceptableSelected, null);
 });
+
+test("evaluation labels cannot influence scripted routing evidence", async () => {
+  const scenario = demo.SCENARIOS[0]!;
+  const original = await bench.compareScenario(scenario, ["read_file"]);
+  const relabeled = await bench.compareScenario({ ...scenario, acceptableIds: [], expectedOutcome: "unavailable" }, ["read_file"]);
+  assert.deepEqual(relabeled.receipt, original.receipt);
+});
+
+test("comparison metrics use the same snapshot as the receipt", async () => {
+  const scenario = structuredClone(demo.SCENARIOS[0]!);
+  const available = demo.DEMO_CATALOG.map(tool => tool.id);
+  const policy = { ...demo.DEMO_POLICY };
+  const pending = bench.compareScenario(scenario, available, policy);
+  available.length = 0;
+  policy.maxCostUnits = 0;
+  scenario.acceptableIds = [];
+  scenario.expectedOutcome = "unavailable";
+  const result = await pending;
+  assert.equal(result.metrics.leanAcceptableToolIncluded, true);
+  assert.equal(result.metrics.cheapestAcceptableSelected, true);
+  assert.equal(result.expectationMet, true);
+});

@@ -25,10 +25,10 @@ export function createCatalog(definitions: readonly ToolDefinition[]): Catalog {
     if ((tool.kind !== "tool" && tool.kind !== "subagent") || !nonempty(tool.description) || typeof tool.estimatedCostUnits !== "number" || !Number.isFinite(tool.estimatedCostUnits) || tool.estimatedCostUnits < 0)
       throw Error("Tool kind, description or estimated cost is invalid.");
     const schema = tool.inputSchema;
-    if (!isRecord(schema) || schema.type !== "object" || !isRecord(schema.properties) || schema.additionalProperties !== false || !Array.isArray(schema.required))
+    if (!isRecord(schema) || Object.keys(schema).some(key => !["type", "properties", "required", "additionalProperties"].includes(key)) || schema.type !== "object" || !isRecord(schema.properties) || schema.additionalProperties !== false || !Array.isArray(schema.required))
       throw Error("Tool input schema must use the supported closed object subset.");
     const properties = Object.fromEntries(Object.entries(schema.properties).map(([name, property]) => {
-      if (!nonempty(name) || !isRecord(property) || (property.type !== "string" && property.type !== "number" && property.type !== "boolean") || !nonempty(property.description))
+      if (!nonempty(name) || !isRecord(property) || Object.keys(property).some(key => !["type", "description"].includes(key)) || (property.type !== "string" && property.type !== "number" && property.type !== "boolean") || !nonempty(property.description))
         throw Error("Invalid schema property.");
       return [name, { type: property.type as "string" | "number" | "boolean", description: property.description }];
     }));
