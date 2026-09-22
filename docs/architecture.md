@@ -118,7 +118,11 @@ contract. These helpers do not run a benchmark or authenticate labels.
 The routing contract and offline synthetic comparison are implemented; live
 integration and measurements remain pending. Planned host work includes the Rust
 `ProposalReview` seam and `ContextScorer` (relevance per chunk). A context-scoring experiment needs an egress policy and a
-cost model comparing scoring/re-prefill with forfeited prefix-cache reuse.
+cost model comparing scoring/re-prefill with forfeited prefix-cache reuse. The
+[ContextScorer cost model](context-scoring-cost-model.md) records a no-go for
+integration code and a conditional go for a synthetic shadow experiment: with
+cache reads at 0.1× input price, a stable context block breaks even only when
+scoring drops at least `s·(1 − r) + ρ·(1 + ε)` of it.
 The planned Rust seam does not put provider HTTP clients into a pure crate;
 transport stays in an appropriate host adapter.
 
