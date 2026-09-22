@@ -109,6 +109,7 @@ export async function verifyArenaProgress(page, baseURL) {
   await page.waitForFunction(() => [...document.querySelectorAll(".lane-status small")].every(e => parseInt(e.textContent) >= 1));
   check(await page.locator(".lane-status small").count() === 2, "both elapsed timers advance while pending");
   check(await page.getByRole("button", { name: "Comparing…", exact: true }).isDisabled(), "run button communicates pending state");
+  check(await page.locator(".arena-lessons").count() === 0, "pending runs do not show premature lessons");
   check(await page.getByRole("radio", { name: "Read a tiny module", exact: true }).isDisabled(), "examples cannot change during a run");
   const other = await page.context().newPage(); await other.goto(baseURL);
   await other.evaluate(() => localStorage.setItem("jev-arena-history-v1", JSON.stringify({ version: 1, runs: [] })));

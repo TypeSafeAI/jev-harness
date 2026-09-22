@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { ARENA_CASES } from "../examples/arena/cases";
+import { analyzeRun } from "../examples/arena/lessons";
+import { ArenaLessons } from "./arena-lessons";
 import { createRun, type ArenaRun } from "../examples/arena/history";
 import { KEY_STORAGE, readApiKey } from "../examples/routing/api-key";
 import { recordUsage } from "../examples/routing/usage";
@@ -96,10 +98,11 @@ export function Arena() {
     }
   }
   const shownLanes = selectedRun?.lanes ?? lanes, shownReceipt = selectedRun ? selectedRun.receipt : receipt, shownUsage = selectedRun ? selectedRun.jevUsage : jevUsage, shownFixture = selectedRun?.fixture ?? fixture;
+  const lessons = selectedRun && !pending ? analyzeRun(selectedRun) : null;
   const hasResults = pending || selectedRun !== null || receipt !== null || Object.keys(lanes).length > 0;
   function exportRun() {
     const data = selectedRun ?? { at: new Date().toISOString(), caseId, fixture, receipt, jevUsage, lanes };
-    const url = URL.createObjectURL(new Blob([JSON.stringify({ ...data, executionSchedule: "parallel_after_routing", applied: false }, null, 2)], { type: "application/json" }));
+    const url = URL.createObjectURL(new Blob([JSON.stringify({ ...data, ...(lessons ? { lessons } : {}), executionSchedule: "parallel_after_routing", applied: false }, null, 2)], { type: "application/json" }));
     const link = document.createElement("a"); link.href = url; link.download = "agent-arena.json"; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
   return <main className="arena-workspace" id="arena-workspace" tabIndex={-1}>
@@ -109,7 +112,7 @@ export function Arena() {
     <section id="arena-view-compare" role="tabpanel" aria-labelledby="arena-tab-compare" hidden={view !== "compare"} className="arena-compare-view">
       {(saveError || history.error) && <p className="cache-error" role="status">{saveError || history.error}</p>}
       {selectedRun && <div className="saved-run-banner"><span>{history.runs.some(run => run.id === selectedRun.id) ? "Viewing saved evidence" : "Viewing unsaved evidence"} · {runTime(selectedRun.finishedAt)}<small>{history.runs.some(run => run.id === selectedRun.id) ? "Saved locally. Viewing this evidence uses no credits." : "Kept in this tab only. Download it before closing or starting another run."}</small>{selectedRun.status !== "complete" && <small className="saved-run-message">{selectedRun.message}</small>}</span><button className="quiet" onClick={() => setView("history")}>See history</button></div>}
-      {hasResults ? <><ArenaResults lanes={shownLanes} receipt={shownReceipt} jevUsage={shownUsage} pending={pending} progress={progress} finished={selectedRun !== null} /><ArenaInspector lanes={shownLanes} receipt={shownReceipt} jevUsage={shownUsage} fixture={shownFixture} pending={pending} exportRun={exportRun} canExport={!pending} /></> : <div className="arena-welcome"><div><span className="welcome-lane">Without Jev</span><h2>The full tool catalog</h2><p>Codex gets every fixture tool.</p></div><span className="welcome-versus" aria-hidden="true">↔</span><div><span className="welcome-lane">With Jev</span><h2>A selected tool menu</h2><p>Jev routes first. Codex gets the selected tools.</p></div><p className="welcome-note">Run an example to compare the answers, calls, input tokens and timing. Each result is saved locally for your next visit.</p></div>}
+      {hasResults ? <><ArenaResults lanes={shownLanes} receipt={shownReceipt} jevUsage={shownUsage} pending={pending} progress={progress} finished={selectedRun !== null} />{lessons && <ArenaLessons key={lessons.runId} report={lessons} onHistory={() => { setView("history"); document.getElementById("arena-tab-history")?.focus(); }} />}<ArenaInspector lanes={shownLanes} receipt={shownReceipt} jevUsage={shownUsage} fixture={shownFixture} pending={pending} exportRun={exportRun} canExport={!pending} /></> : <div className="arena-welcome"><div><span className="welcome-lane">Without Jev</span><h2>The full tool catalog</h2><p>Codex gets every fixture tool.</p></div><span className="welcome-versus" aria-hidden="true">↔</span><div><span className="welcome-lane">With Jev</span><h2>A selected tool menu</h2><p>Jev routes first. Codex gets the selected tools.</p></div><p className="welcome-note">Run an example to compare the answers, calls, input tokens and timing. Each result is saved locally for your next visit.</p></div>}
     </section>
     <section id="arena-view-history" role="tabpanel" aria-labelledby="arena-tab-history" hidden={view !== "history"}><ArenaHistory runs={history.runs} fixture={fixture} selectedId={selectedRun?.id ?? null} pending={pending} error={history.error} onOpen={openRun} onClear={history.clear} onCompare={() => setView("compare")} /></section>
     <footer>Independent community experiment. Evidence, not authorization. No proposed code executes.</footer>
