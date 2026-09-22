@@ -19,3 +19,7 @@ bun.lockb
 
 .next/
 next-env.d.ts
+
+# Local run artifact produced by `pnpm --silent bench:routing > routing-run.json`
+# (README, docs/routing.md). Link a run deliberately; do not commit the default file.
+/routing-run.json
