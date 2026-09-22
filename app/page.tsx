@@ -1,2 +1,2 @@
-import { RoutingRoom } from "../components/routing-room";
-export default function Page() { return <RoutingRoom />; }
+import { Arena } from "../components/arena";
+export default function Page() { return <Arena />; }
