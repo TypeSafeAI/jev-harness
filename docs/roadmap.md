@@ -48,7 +48,9 @@ are not new live measurements. Apply the [evaluation plan](hardening/09-evaluati
 - [ ] Experiment: N tools in context vs Jev top-k, measured on token cost and correct-tool rate
 - [x] Optional local live-routing example host, separate from the exported pure package: persisted personal-key override, explicit provider calls, measured usage and failure handling. [Manual smoke receipt](verification/live-routing-2026-09-22.json); the multi-task quality/cost experiment remains open.
 
-- [x] Local Codex CLI arena and additional schema/context examples; synthetic MCP tools, full versus Jev-selected exposure, actual call/usage records. This does not complete the repeated cost/quality experiment above.
+- [x] Local Codex CLI arena with four selectable synthetic examples; synthetic MCP tools, full versus Jev-selected exposure, actual call/usage records. This does not complete the repeated cost/quality experiment above.
+
+- [x] Arena-only interface with overlay evidence, local run snapshots and matching-task performance history. Storage/unknown-value behavior is covered by [offline verification](verification/arena-history-2026-09-22.json); repeated live evaluation remains open.
 
 ## 4 · Context scoring
 

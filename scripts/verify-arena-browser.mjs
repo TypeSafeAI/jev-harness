@@ -1,3 +1,6 @@
+function browserReceipt(selectedIds = ["read_file"]) {
+  return { schemaVersion: 1, catalog: [], request: { model: "jev-1.13.0", questionSetVersion: 1, intent: "Synthetic test", untrustedDataNote: "Synthetic test data", options: [] }, selectedIds, reason: "One fixture tool selected.", source: "jev", outcome: selectedIds.length ? "selected" : "needs_clarification", execution: { applied: false }, evidence: { model: "jev-1.13.0", choice: selectedIds[0] ?? "needs_clarification", confidence: .9, probabilities: { read_file: .9, needs_clarification: .1 } }, policy: { topK: 1, confidenceFloor: .6, probabilityFloor: .2, relevanceWindow: .1, maxCostUnits: 10 } };
+}
 /** Offline UI acceptance; synthetic NDJSON replaces both live providers. */
 export async function verifyArena(page, baseURL) {
   const checks = [];
@@ -7,7 +10,7 @@ export async function verifyArena(page, baseURL) {
   await page.route("**/api/arena", async route => {
     let events = [
       { type: "usage", attempted: true, measurement: { inputTokens: 100, outputTokens: 10, requestBytes: 400, responseBytes: 40, latencyMs: 200 } },
-      { type: "routing", receipt: { selectedIds: ["read_file"], reason: "One fixture tool selected.", evidence: { probabilities: { read_file: .9, needs_clarification: .1 } }, policy: { topK: 1, confidenceFloor: .6, probabilityFloor: .2, maxCostUnits: 10 } } },
+      { type: "routing", receipt: browserReceipt() },
       { type: "result", lane: "baseline", tools: ["read_file", "propose_patch", "inspect_agent"], result },
       { type: "result", lane: "integrated", tools: ["read_file"], result: { ...result, inputTokens: mode === "unknown" ? null : 950, toolCallCount: mode === "zero" ? 0 : 1, toolCalls: mode === "zero" ? [] : result.toolCalls } },
       { type: "done" },
@@ -31,7 +34,7 @@ export async function verifyArena(page, baseURL) {
     check(await page.getByText("1 fixture call returned", { exact: true }).count() === 2, "actual calls visible per lane");
     check(await page.getByText("The synthetic sum returns 5.", { exact: true }).count() === 2, "answers visible side by side");
     check(await page.locator(".accounting-chart").isHidden(), "accounting disclosed on demand");
-    await page.locator(".run-inspector > summary").click();
+    await page.locator(".run-inspector > .detail-trigger").click();
     const dl = page.waitForEvent("download"); await page.getByRole("button", { name: "Download comparison" }).click();
     const stream = await (await dl).createReadStream(); let raw = ""; for await (const chunk of stream) raw += chunk;
     const exported = JSON.parse(raw); check(exported.jevUsage.inputTokens === 100 && exported.applied === false, "export retains overhead and nonexecution");
@@ -47,27 +50,27 @@ export async function verifyArena(page, baseURL) {
     check(await page.getByText("Two lanes, in parallel", { exact: true }).isVisible(), "setup describes concurrent execution");
     await page.keyboard.press("Home");
     check(await page.getByRole("tab", { name: "Usage", exact: true }).getAttribute("aria-selected") === "true", "Home selects first inspector tab");
-    await page.locator(".run-inspector > summary").click();
+    await page.getByRole("button", { name: "Close details" }).click();
     for (const width of [320, 390, 768, 1440, 1920]) {
       await page.setViewportSize({ width, height: 900 });
       check(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `arena fits ${width}px`);
-      await page.locator(".run-inspector > summary").click();
-      check(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `expanded accounting fits ${width}px`);
-      await page.locator(".run-inspector > summary").click();
+      await page.locator(".run-inspector > .detail-trigger").click();
+      check(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `overlay accounting fits ${width}px`);
+      await page.getByRole("button", { name: "Close details" }).click();
     }
     mode = "zero"; await run();
     check(await page.getByText("No fixture call observed", { exact: true }).isVisible(), "completed CLI with zero calls is not implied execution");
     mode = "unknown"; await run();
     check(await page.getByText("Usage incomplete", { exact: true }).isVisible(), "unknown usage never becomes savings");
     mode = "eof"; await run();
-    check((await page.locator("#arena-status").textContent()).includes("partial"), "early EOF shows partial status");
+    check((await page.locator(".saved-run-message").textContent()).includes("partial"), "early EOF shows partial status");
     await page.getByRole("button", { name: "Usage · 4", exact: true }).click();
     check((await page.locator("#usage-unknown").textContent()).includes("1 requests"), "early EOF records unknown usage");
     await page.getByRole("button", { name: "Close usage dashboard" }).click();
     mode = "skipped"; await run();
     check(await page.getByRole("button", { name: "Usage · 4", exact: true }).isVisible(), "explicit skipped request does not add usage");
     mode = "proposal"; await run();
-    await page.locator(".run-inspector > summary").click();
+    await page.locator(".run-inspector > .detail-trigger").click();
     await page.getByRole("tab", { name: "Tool activity" }).click();
     await page.getByText("Inspect recorded proposal", { exact: true }).first().click();
     check((await page.locator(".recorded-proposal pre").first().textContent()).includes("+ after"), "recorded proposals expose their pending diff in the inspector");
@@ -82,14 +85,14 @@ export async function verifyArena(page, baseURL) {
 export async function verifyArenaProgress(page, baseURL) {
   const checks = [];
   const check = (ok, label) => { if (!ok) throw Error(label); checks.push(label); };
-  await page.addInitScript(() => {
+  await page.addInitScript(({ receipt }) => {
     const original = window.fetch;
     window.fetch = async (input, init) => {
       if (input !== "/api/arena") return original(input, init);
       return new Response(new ReadableStream({ start(controller) {
         const emit = event => controller.enqueue(new TextEncoder().encode(JSON.stringify(event) + "\n"));
-        emit({ type: "usage", attempted: true, measurement: { inputTokens: 20, outputTokens: 3, latencyMs: 2 } });
-        emit({ type: "routing", receipt: { selectedIds: ["read_file"] } });
+        emit({ type: "usage", attempted: true, measurement: { inputTokens: 20, outputTokens: 3, latencyMs: 2, requestBytes: 100, responseBytes: 20 } });
+        emit({ type: "routing", receipt });
         emit({ type: "stage", value: "Both agents are running in parallel." });
         emit({ type: "lane", lane: "baseline", phase: "working" });
         emit({ type: "lane", lane: "integrated", phase: "calling" });
@@ -97,7 +100,7 @@ export async function verifyArenaProgress(page, baseURL) {
         init.signal.addEventListener("abort", () => controller.error(new DOMException("Aborted", "AbortError")), { once: true });
       } }), { headers: { "Content-Type": "application/x-ndjson" } });
     };
-  });
+  }, { receipt: browserReceipt() });
   await page.goto(baseURL + "/arena");
   await page.getByRole("button", { name: "Run comparison" }).click();
   await page.getByText("Both agents are running in parallel.", { exact: true }).waitFor();
@@ -106,6 +109,11 @@ export async function verifyArenaProgress(page, baseURL) {
   await page.waitForFunction(() => [...document.querySelectorAll(".lane-status small")].every(e => parseInt(e.textContent) >= 1));
   check(await page.locator(".lane-status small").count() === 2, "both elapsed timers advance while pending");
   check(await page.getByRole("button", { name: "Comparing…", exact: true }).isDisabled(), "run button communicates pending state");
+  check(await page.getByRole("radio", { name: "Read a tiny module", exact: true }).isDisabled(), "examples cannot change during a run");
+  const other = await page.context().newPage(); await other.goto(baseURL);
+  await other.evaluate(() => localStorage.setItem("jev-arena-history-v1", JSON.stringify({ version: 1, runs: [] })));
+  await other.close();
+  check(await page.getByRole("button", { name: "Comparing…", exact: true }).isDisabled() && await page.getByText("Both agents are running in parallel.", { exact: true }).isVisible(), "history storage events do not cancel an active comparison");
   await page.emulateMedia({ reducedMotion: "reduce" });
   check(await page.locator(".activity-dot").evaluateAll(dots => dots.every(dot => getComputedStyle(dot).animationName === "none")), "pending indicators stop animating with reduced motion");
   check((await page.locator(".integrated .lane-metrics dd strong").allTextContents()).slice(1).every(value => value === "Pending"), "running metrics show pending rather than zero");
@@ -114,15 +122,26 @@ export async function verifyArenaProgress(page, baseURL) {
   check((await page.locator(".baseline .lane-status").textContent()).includes("1 fixture call returned"), "finished lane displays its outcome immediately");
   check((await page.locator(".integrated .lane-status").textContent()).includes("Calling a fixture tool"), "other lane stays active after first finishes");
   await page.evaluate(() => window.finishArenaBaseline(true));
-  await page.locator(".run-inspector > summary").click();
+  await page.locator(".run-inspector > .detail-trigger").click();
   await page.getByRole("tab", { name: "Tool activity" }).click();
   check((await page.locator(".trace-lane").first().textContent()).includes("No fixture calls recorded."), "finished zero-call lane does not wait for sibling trace");
+  await page.getByRole("button", { name: "Close details" }).click();
   await page.getByRole("button", { name: "Cancel", exact: true }).click();
   check((await page.locator(".integrated .lane-status").textContent()).includes("Run stopped"), "cancel removes stale running state");
   check(await page.locator(".activity-dot").count() === 0, "cancel clears activity indicators");
   check((await page.locator(".integrated .lane-metrics dd strong").allTextContents()).slice(1).every(value => value === "Unknown"), "cancelled missing lane metrics remain unknown");
   check(await page.getByText("First lane finished.", { exact: true }).isVisible(), "cancel preserves completed lane result");
+  await page.locator(".run-inspector > .detail-trigger").click();
   check((await page.locator(".trace-lane").last().textContent()).includes("call count is unknown"), "cancelled missing trace is not counted as zero calls");
+  await page.getByRole("button", { name: "Close details" }).click();
+  await page.waitForFunction(() => JSON.parse(localStorage.getItem("jev-arena-history-v1")).runs.length === 1);
+  check(await page.evaluate(() => { const run = JSON.parse(localStorage.getItem("jev-arena-history-v1")).runs[0]; return run.status === "cancelled" && run.lanes.baseline.result.answer === "First lane finished." && !run.lanes.integrated; }), "cancelled run saves the returned evidence exactly once");
+  await page.getByRole("button", { name: "Run comparison" }).click();
+  await page.getByText("Both agents are running in parallel.", { exact: true }).waitFor();
+  await page.evaluate(() => window.dispatchEvent(new Event("jev-key-change")));
+  await page.waitForFunction(() => JSON.parse(localStorage.getItem("jev-arena-history-v1")).runs.length === 2);
+  check(await page.locator(".arena-welcome").isVisible() && await page.getByRole("button", { name: "Run comparison" }).isEnabled(), "key changes abort the run and clear stale visible results");
+  check(await page.evaluate(() => JSON.parse(localStorage.getItem("jev-arena-history-v1")).runs.every(run => run.status === "cancelled")), "key-change cancellation is retained without manufacturing a complete comparison");
   return { checks, count: checks.length, providerCalls: 0 };
 }
 
@@ -146,7 +165,7 @@ export async function verifyArenaClarity(page, baseURL, screenshotDir) {
     if (mode === "zero") Object.assign(integrated, { toolCallCount: 0, toolCalls: [] });
     const events = [
       { type: "usage", attempted: true, measurement: mode === "unknown" ? null : { inputTokens: 800, outputTokens: 10, requestBytes: 1000, responseBytes: 200, latencyMs: 500 } },
-      { type: "routing", receipt: { selectedIds: mode === "zero" ? [] : ["inspect_agent"] } },
+      { type: "routing", receipt: browserReceipt(mode === "zero" ? [] : ["inspect_agent"]) },
       { type: "result", lane: "baseline", tools: ["read_file", "propose_patch", "inspect_agent"], result },
       { type: "result", lane: "integrated", tools: mode === "zero" ? [] : ["inspect_agent"], result: integrated },
       { type: "done" },
@@ -168,7 +187,7 @@ export async function verifyArenaClarity(page, baseURL, screenshotDir) {
     check(await page.getByText("96 more tokens", { exact: true }).isVisible(), "routing overhead can reverse apparent CLI savings");
     check(await page.getByText("18.7 s longer with Jev · includes routing", { exact: true }).isVisible(), "comparison exposes the latency tradeoff without declaring a winner");
     check(await page.getByText("29,490 CLI + 800 Jev", { exact: true }).isVisible(), "total input has a visible component breakdown");
-    check(await page.locator(".lane-activity:not([open])").count() === 2, "tool detail starts collapsed");
+    check(await page.locator(".lane-activity dialog:not([open])").count() === 2, "tool detail starts collapsed");
     check(await page.locator(".integrated .activity-summary").textContent() === "Inspect fixture", "collapsed activity identifies the actual tool");
     check(await page.locator(".baseline .arena-answer p").count() === 2, "answer paragraphs preserve qualifications with readable spacing");
     for (const width of [320, 390, 600, 768, 900, 1024, 1280, 1440, 1920, 2560]) {
@@ -183,27 +202,28 @@ export async function verifyArenaClarity(page, baseURL, screenshotDir) {
       if (screenshotDir && [390, 1440, 1920].includes(width)) await page.locator(".arena-lanes").screenshot({ path: `${screenshotDir}/arena-clarity-${width}.png` });
     }
     await page.setViewportSize({ width: 390, height: 844 });
-    const disclosure = page.locator(".integrated .lane-activity > summary");
+    const disclosure = page.locator(".integrated .lane-activity > .detail-trigger");
     await disclosure.focus(); await page.keyboard.press("Enter");
-    check(await page.locator(".integrated .lane-activity").getAttribute("open") !== null, "tool disclosure opens with keyboard");
+    check(await page.locator(".integrated .lane-activity dialog").getAttribute("open") !== null, "tool disclosure opens with keyboard");
     check(await page.locator(".integrated .call-chip").textContent() === "Inspect fixturereturned", "expanded activity distinguishes call status from availability");
     check(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), "expanded tool detail fits mobile");
-    await page.keyboard.press("Enter");
-    check(await page.locator(".integrated .lane-activity").getAttribute("open") === null, "tool disclosure closes with keyboard");
+    await page.keyboard.press("Escape");
+    check(await page.locator(".integrated .lane-activity dialog").getAttribute("open") === null, "tool disclosure closes with keyboard");
     mode = "long"; await run();
     check(await page.getByText("Preview", { exact: true }).isVisible(), "long answer is explicitly labeled a preview");
-    check(!(await page.locator(".integrated .arena-answer").textContent()).includes("Final caveat"), "long answer is progressively disclosed");
+    check(!(await page.locator(".integrated .lane-answer > .arena-answer").textContent()).includes("Final caveat"), "long answer is progressively disclosed");
     const expand = page.getByRole("button", { name: "Read full answer" });
     await expand.focus(); await page.keyboard.press("Enter");
-    check(await page.getByRole("button", { name: "Show less" }).getAttribute("aria-expanded") === "true", "answer expansion announces its state");
-    check((await page.locator(".integrated .arena-answer").textContent()).includes("Final caveat"), "full answer retains the final qualification");
+    check(await page.getByRole("dialog", { name: "Agent answer", exact: true }).isVisible(), "full answer opens in an accessible dialog");
+    check((await page.locator(".detail-dialog[open] .arena-answer").textContent()).includes("Final caveat"), "full answer retains the final qualification");
     check(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), "expanded long answer fits mobile without nested scrolling");
-    await page.getByRole("button", { name: "Show less" }).click();
-    check(await page.getByRole("button", { name: "Read full answer" }).isVisible(), "long answer collapses again");
+    await page.getByRole("button", { name: "Close details" }).click();
+    check(await page.getByRole("button", { name: "Read full answer" }).isVisible(), "closing full answer preserves the preview");
     mode = "multiline"; await run();
-    check(await page.getByText("Preview", { exact: true }).isVisible() && !(await page.locator(".integrated .arena-answer").textContent()).includes("Line 9"), "many short lines are also bounded in the answer preview");
+    check(await page.getByText("Preview", { exact: true }).isVisible() && !(await page.locator(".integrated .lane-answer > .arena-answer").textContent()).includes("Line 9"), "many short lines are also bounded in the answer preview");
     await page.getByRole("button", { name: "Read full answer" }).click();
-    check((await page.locator(".integrated .arena-answer").textContent()).includes("Line 20"), "multiline answer expands without losing content");
+    check((await page.locator(".detail-dialog[open] .arena-answer").textContent()).includes("Line 20"), "multiline answer opens without losing content");
+    await page.getByRole("button", { name: "Close details" }).click();
     mode = "normal"; await run();
     check(await page.getByRole("button", { name: "Read full answer" }).count() === 0, "new short answer clears the old disclosure state");
     mode = "unknown"; await run();
