@@ -27,13 +27,15 @@ a { color: inherit; }
 ::selection { background: var(--pink); color: #1b1b1f; }
 .skip { position: absolute; top: -80px; left: 20px; z-index: 2; padding: 14px; background: var(--soft); border-radius: 8px; }
 .skip:focus { top: 12px; }
-.masthead { max-width: 1040px; margin: auto; padding: 26px 32px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.masthead { width: 100%; margin: 0; padding: 26px 32px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .wordmark { font: 600 16px ui-monospace, "SF Mono", Menlo, monospace; text-decoration: none; letter-spacing: -.5px; }
 .wordmark span { color: var(--muted); font-weight: 400; }
 .status-pill { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 11px; }
 .status-pill::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: #72bca4; }
-main { width: min(100% - 48px, 720px); margin: 34px auto 0; }
-.intro { margin-bottom: 28px; }
+main { width: calc(100% - 64px); margin: 22px auto 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+.intro, .inspection, main > footer { grid-column: 1 / -1; }
+main > * { min-width: 0; }
+.intro { margin-bottom: 0; }
 h1 { font-size: 32px; line-height: 1.2; font-weight: 550; letter-spacing: -1.2px; margin: 0 0 10px; }
 h1 span { color: var(--pink); }
 .intro p { color: var(--muted); font-size: 14px; line-height: 1.7; margin: 0; }
@@ -69,7 +71,7 @@ input[type=checkbox], input[type=radio] { accent-color: var(--pink); width: 17px
 .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; border: 0; padding: 0; margin: 0; min-width: 0; }
 .controls label { display: grid; gap: 8px; }
 .controls select, .controls input { width: 100%; min-width: 0; }
-.result { margin: 22px 0 16px; padding: 26px 24px 20px; border-radius: 16px; border: 1px solid #3b2e36; background: linear-gradient(125deg, #241c23, #19191d 65%); }
+.result { margin: 0; padding: 26px 24px 20px; border-radius: 16px; border: 1px solid #3b2e36; background: linear-gradient(125deg, #241c23, #19191d 65%); }
 .result-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .eyebrow { font-size: 10px; font-weight: 550; color: var(--pink); letter-spacing: 1px; text-transform: uppercase; margin: 0; }
 .evidence-label { color: var(--muted); font-size: 10px; }
@@ -86,7 +88,7 @@ h3 span { display: block; color: var(--muted); font-size: 10px; font-weight: 400
 .schema-chip { padding: 7px 10px; border-radius: 6px; color: #dcc3cd; background: #ffffff06; border: 1px solid #ffffff0c; font: 11px ui-monospace, "SF Mono", Menlo, monospace; overflow-wrap: anywhere; }
 .empty-context { color: var(--muted); font-size: 12px; }
 #flow-mode { margin: 10px 0 0; font-size: 10px; }
-.inspection { padding: 0 24px; }
+.inspection { padding: 0; }
 .inspection details:first-child { border-top: 0; }
 .decision { font-size: 12px; line-height: 1.9; color: #c4c4cb; margin: 0 0 20px; }
 .evidence-row { margin: 16px 0; }
@@ -118,8 +120,8 @@ footer { text-align: center; padding: 32px 0 36px; color: var(--muted); font-siz
 }
 @media (max-width: 600px) {
   .masthead { padding: 22px 20px; }
-  main { width: calc(100% - 32px); margin-top: 22px; }
-  .intro { margin-bottom: 24px; }
+  main { width: calc(100% - 32px); margin-top: 16px; gap: 16px; }
+  .intro { margin-bottom: 4px; }
   h1 { font-size: 29px; }
   .intro p { font-size: 12px; }
   .composer { padding: 18px 18px 0; }
@@ -130,11 +132,11 @@ footer { text-align: center; padding: 32px 0 36px; color: var(--muted); font-siz
   .compose-actions { gap: 10px; margin-bottom: 18px; }
   .compose-actions p { max-width: 130px; font-size: 10px; }
   .primary { min-height: 44px; padding: 10px 12px; gap: 12px; font-size: 11px; }
-  .result { padding: 22px 18px 18px; margin-top: 16px; }
+  .result { padding: 22px 18px 18px; margin-top: 0; }
   h2 { font-size: 23px; }
   .context-heading { gap: 10px; flex-wrap: wrap; }
   .mode label { min-height: 40px; padding-inline: 8px; }
-  .inspection { padding: 0 18px; }
+  .inspection { padding: 0; }
   summary { min-height: 56px; }
   .tool { grid-template-columns: 1fr; gap: 2px; }
   .tool-meta { grid-row: 3; margin-left: 29px; }
@@ -163,3 +165,6 @@ footer { text-align: center; padding: 32px 0 36px; color: var(--muted); font-siz
 .comparison-caveat { font-size: 12px; line-height: 1.8; color: #c4c4cb; }
 .technical-comparison { margin-top: 20px; }
 @media (max-width: 400px) { .comparison-options { grid-template-columns: 1fr; } }
+
+@media (max-width: 900px) { main { grid-template-columns: minmax(0, 1fr); } }
+@media (min-width: 901px) { .composer, .result { height: 100%; } .comparison-options { margin-block: 16px; } .technical-comparison table { table-layout: fixed; } }

@@ -19,7 +19,7 @@ The default view shows one task and one result: the selected tool and the schema
 4. Open **Does routing reduce the input?** for a paired Without/With comparison. Both totals include the task; With routing also includes the routing request. Routing output is reported separately. **Show the calculation** reveals schema bytes and the detailed table. If no tool is selected, the panel explicitly says the runs do not represent equivalent completed work.
 5. Schemas, the receipt, download and recent tasks each appear in their own disclosure. Editing inputs clears stale results and disables download until the next comparison.
 
-The dark surfaces and rose accent follow the community [typesafe-router UI](https://github.com/TypeSafeAI/typesafe-router/blob/main/app/globals.css). This is an independent community demonstration, not the official TypeSafe AI console. Two quiet cards separate task from result; advanced controls and evidence stay closed by default. Comparison cards sit side by side on larger screens and stack on narrow phones. Labels carry the same information without color.
+The dark surfaces and rose accent follow the community [typesafe-router UI](https://github.com/TypeSafeAI/typesafe-router/blob/main/app/globals.css). This is an independent community demonstration, not the official TypeSafe AI console. The workspace fills the viewport width, with task and result side by side on desktop and stacked below 900px; advanced controls and evidence stay closed by default. Comparison cards sit side by side on larger screens and stack on narrow phones. Labels carry the same information without color.
 
 ## Data and measurement boundaries
 
