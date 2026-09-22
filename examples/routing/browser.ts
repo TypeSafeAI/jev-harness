@@ -172,6 +172,7 @@ function invalidate() {
   for (const [id, badge] of badges) { badge.textContent = checkboxes.get(id)!.checked ? "Available" : "Unavailable"; badge.className = "badge"; badge.closest("article")!.classList.remove("tool-selected"); badge.closest("article")!.classList.toggle("tool-unavailable", !checkboxes.get(id)!.checked); }
 }
 async function update(addTurn: boolean) {
+  invalidate();
   const thisGeneration = ++generation;
   task.setCustomValidity(task.value.trim() ? "" : "Enter a task to route.");
   if (!task.reportValidity()) { invalidate(); return; }
