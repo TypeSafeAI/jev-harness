@@ -56,7 +56,7 @@ are not new live measurements. Apply the [evaluation plan](hardening/09-evaluati
 
 ## 4 · Context scoring
 
-- [ ] Compare scoring/re-prefill costs with forfeited prefix-cache reuse
+- [x] Compare scoring/re-prefill costs with forfeited prefix-cache reuse. [Cost model](context-scoring-cost-model.md): no-go for integration code; conditional go for a synthetic shadow experiment
 - [ ] Review data egress and run a shadow experiment on synthetic or consented context
 - [ ] Make the integration decision from measured results, not token counts alone
 
