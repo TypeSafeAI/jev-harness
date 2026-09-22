@@ -285,3 +285,17 @@ dialog::backdrop { background: #000a; backdrop-filter: blur(5px); }
 @media (max-width: 600px) { .run-inspector > summary { padding: 18px; } .inspector-summary { display: none; } .inspector-body { padding-inline: 18px; } .inspector-tabs { width: 100%; } .inspector-tabs button { min-height: 44px; padding-inline: 10px; } .inspector-footer { align-items: start; flex-direction: column; gap: 8px; } .trace-columns, .decision-columns, .setup-grid { grid-template-columns: 1fr; gap: 14px; } .decision-summary { flex-direction: column; align-items: start; gap: 8px; } .trace-lane { padding: 14px; } .event-list time { display: none; } }
 
 @media (max-width: 600px) { .inspector-tabs { display: grid; grid-template-columns: 1fr 1fr; overflow: visible; } .inspector-tabs button { white-space: normal; } }
+
+/* Page navigation keeps link semantics, with a compact dashboard tab treatment. */
+.masthead { display: block; padding: 0; border-bottom: 1px solid var(--line); background: var(--bg); }
+.header-bar { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 18px 32px 8px; }
+.header-actions .quiet { min-height: 34px; padding: 7px 11px; background: transparent; border-radius: 6px; }
+.masthead .page-tabs { display: flex; gap: 16px; padding: 0 24px; flex-wrap: nowrap; }
+.masthead .page-tabs a { position: relative; min-height: 50px; padding: 7px 0 10px; color: var(--muted); font-size: 13px; white-space: nowrap; }
+.page-tabs a span { display: block; padding: 7px 10px; border-radius: 6px; transition: background-color 140ms var(--ease), color 140ms var(--ease); }
+.masthead .page-tabs a[aria-current=page] { color: var(--ink); }
+.page-tabs a[aria-current=page]::after { content: ""; position: absolute; left: 10px; right: 10px; bottom: -1px; height: 2px; background: var(--ink); border-radius: 2px 2px 0 0; }
+.page-tabs a:focus-visible { outline-offset: -4px; border-radius: 7px; }
+@media (hover: hover) { .page-tabs a:hover span { color: var(--ink); background: var(--soft); } .header-actions .quiet:hover { color: var(--ink); background: var(--soft); } }
+@media (max-width: 600px) { .header-bar { padding: 14px 16px 5px; } .header-actions { gap: 8px; flex-wrap: nowrap; } .header-actions .quiet { min-height: 40px; padding: 8px 10px; white-space: nowrap; } .masthead .page-tabs { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 2px; padding-inline: 8px; } .masthead .page-tabs a { justify-content: center; font-size: 12px; min-width: 0; } .page-tabs a[aria-current=page]::after { left: 12px; right: 12px; } }
+@media (max-width: 400px) { .header-bar .wordmark span { display: none; } }

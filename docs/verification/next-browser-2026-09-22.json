@@ -1,7 +1,7 @@
 {
-  "at": "2026-09-22T11:19:23.316Z",
+  "at": "2026-09-22T11:25:45.055Z",
   "framework": "Next.js App Router, development mode",
-  "revision": "da79826 plus parallel arena and run inspector",
+  "revision": "68bf996 plus dashboard header tabs",
   "runs": [
     {
       "name": "routing",
@@ -167,6 +167,21 @@
         "cancelled missing trace is not counted as zero calls"
       ],
       "count": 11,
+      "providerCalls": 0
+    },
+    {
+      "name": "header",
+      "checks": [
+        "Routing room active tab matches route",
+        "Examples active tab matches route",
+        "Agent arena active tab matches route",
+        "header fits 320px",
+        "header fits 390px",
+        "header fits 768px",
+        "header fits 1440px",
+        "header fits 1920px"
+      ],
+      "count": 8,
       "providerCalls": 0
     }
   ],
