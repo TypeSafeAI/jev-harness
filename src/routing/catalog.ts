@@ -18,7 +18,7 @@ const nonempty = (v: unknown): v is string => typeof v === "string" && v.trim().
 export function createCatalog(definitions: readonly ToolDefinition[]): Catalog {
   if (!Array.isArray(definitions) || definitions.length > 254) throw Error("Catalog must contain at most 254 tools.");
   const seen = new Set<string>();
-  const catalog = definitions.map((tool): ToolDefinition => {
+  const catalog = Array.from(definitions).map((tool): ToolDefinition => {
     if (!isRecord(tool) || !nonempty(tool.id) || !/^[a-z][a-z0-9_]{0,63}$/.test(tool.id) || tool.id === CLARIFICATION_ID || seen.has(tool.id))
       throw Error("Tool ids must be unique identifiers and cannot use the clarification id.");
     seen.add(tool.id);
@@ -32,7 +32,7 @@ export function createCatalog(definitions: readonly ToolDefinition[]): Catalog {
         throw Error("Invalid schema property.");
       return [name, { type: property.type as "string" | "number" | "boolean", description: property.description }];
     }));
-    if (new Set(schema.required).size !== schema.required.length || schema.required.some(key => typeof key !== "string" || !Object.hasOwn(properties, key)))
+    if (new Set(schema.required).size !== schema.required.length || Array.from(schema.required).some(key => typeof key !== "string" || !Object.hasOwn(properties, key)))
       throw Error("Required properties must be unique and declared.");
     return { id: tool.id, kind: tool.kind, description: tool.description, estimatedCostUnits: tool.estimatedCostUnits,
       inputSchema: { type: "object" as const, properties, required: [...schema.required], additionalProperties: false as const } };
