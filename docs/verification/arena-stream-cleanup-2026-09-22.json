@@ -1,0 +1,54 @@
+{
+  "finding": "PR25 discussion_r4071719659",
+  "fix": "Abort parser/buffer failures without relabeling them as user cancellation; label failed and partial outcomes distinctly.",
+  "regressionBeforeFix": "malformed stream aborts the live request failed as expected",
+  "regressionAfterFix": {
+    "checks": [
+      "malformed stream aborts the live request",
+      "malformed stream remains a failure rather than user cancellation",
+      "failed requests have an explicit failed status",
+      "oversized stream aborts the live request",
+      "oversized stream remains a failure rather than user cancellation",
+      "failed requests have an explicit failed status",
+      "partial stream aborts the live request",
+      "partial stream remains a failure rather than user cancellation",
+      "stream failure preserves the completed lane"
+    ],
+    "count": 9,
+    "providerCalls": 0,
+    "liveCliCalls": 0
+  },
+  "cancellationRegression": {
+    "checks": [
+      "baseline shows independent working state",
+      "integrated shows independent tool activity",
+      "both elapsed timers advance while pending",
+      "run button communicates pending state",
+      "examples cannot change during a run",
+      "history storage events do not cancel an active comparison",
+      "pending indicators stop animating with reduced motion",
+      "running metrics show pending rather than zero",
+      "finished lane displays its outcome immediately",
+      "other lane stays active after first finishes",
+      "finished zero-call lane does not wait for sibling trace",
+      "cancel removes stale running state",
+      "cancel clears activity indicators",
+      "cancelled missing lane metrics remain unknown",
+      "cancel preserves completed lane result",
+      "cancelled missing trace is not counted as zero calls",
+      "cancelled run saves the returned evidence exactly once",
+      "key changes abort the run and clear stale visible results",
+      "key-change cancellation is retained without manufacturing a complete comparison"
+    ],
+    "count": 19,
+    "providerCalls": 0
+  },
+  "offlineTests": {
+    "passed": 83,
+    "failed": 0
+  },
+  "typecheck": "passed",
+  "productionBuild": "passed",
+  "secretScan": "passed",
+  "freshReview": "No important findings in narrow followup diff."
+}

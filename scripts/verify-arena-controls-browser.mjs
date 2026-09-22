@@ -73,3 +73,34 @@ export async function verifyArenaControls(page, baseURL, screenshotDir) {
     return { checks, count: checks.length, providerCalls: 0, liveCliCalls: 0, humanAccessibilityAcceptance: "not performed" };
   } finally { await page.unroute("**/api/arena"); }
 }
+
+/** Malformed streams must release the request while retaining failed/partial evidence. */
+export async function verifyArenaStreamFailures(page, baseURL) {
+  const checks = [];
+  const check = (ok, label) => { if (!ok) throw Error(label); checks.push(label); };
+  await page.addInitScript(() => {
+    const original = window.fetch;
+    window.arenaStreamFault = "malformed";
+    window.fetch = async (input, init) => {
+      if (input !== "/api/arena") return original(input, init);
+      window.arenaStreamAborted = false;
+      return new Response(new ReadableStream({ start(controller) {
+        init.signal.addEventListener("abort", () => { window.arenaStreamAborted = true; controller.error(new DOMException("Aborted", "AbortError")); }, { once: true });
+        if (window.arenaStreamFault === "partial") controller.enqueue(new TextEncoder().encode(JSON.stringify({ type: "result", lane: "baseline", tools: ["read_file"], result: { status: "completed", answer: "Evidence returned before stream failure.", durationMs: 1000, inputTokens: 100, cachedInputTokens: 0, outputTokens: 10, toolCallCount: 0, traceTruncated: false, toolCalls: [], error: null } }) + "\n"));
+        controller.enqueue(new TextEncoder().encode(window.arenaStreamFault === "oversized" ? "x".repeat(1_000_001) : "malformed-json\n"));
+      } }), { headers: { "Content-Type": "application/x-ndjson" } });
+    };
+  });
+  await page.goto(baseURL);
+  for (const mode of ["malformed", "oversized", "partial"]) {
+    await page.evaluate(mode => { window.arenaStreamFault = mode; }, mode);
+    await page.getByRole("button", { name: "Run comparison" }).click();
+    await page.waitForFunction(() => !document.querySelector(".arena-run-actions .primary").disabled);
+    check(await page.evaluate(() => window.arenaStreamAborted), `${mode} stream aborts the live request`);
+    const run = await page.evaluate(() => JSON.parse(localStorage.getItem("jev-arena-history-v1")).runs[0]);
+    check(run.status === (mode === "partial" ? "partial" : "failed") && run.message.includes("connection failed"), `${mode} stream remains a failure rather than user cancellation`);
+    if (mode === "partial") check(await page.getByText("Evidence returned before stream failure.", { exact: true }).isVisible(), "stream failure preserves the completed lane");
+    else check((await page.locator("#arena-status").textContent()).startsWith("Failed run"), "failed requests have an explicit failed status");
+  }
+  return { checks, count: checks.length, providerCalls: 0, liveCliCalls: 0 };
+}
