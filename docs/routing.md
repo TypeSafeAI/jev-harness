@@ -37,6 +37,8 @@ These are routing outcomes, not additions to `ReviewVerdict`. A `RoutingReceipt`
 
 `assembleContext(receipt, mode, previousState?)` serializes the task and actual tool schemas. It reports newly loaded and evicted ids. An evicted schema remains in the catalog and can be loaded again. This state is only schema inclusion, not a conversation, identity, cache, permission grant or semantic summary. Full mode includes available schemas even on a failed route because it represents the no-routing baseline; that never indicates permission to use them. Lean mode includes none after a failed route.
 
+`prepareToolContext({ catalog, input, policy, router, mode, previous?, signal? })` composes one routing request with both context snapshots. Explicit `shadow` mode returns the full available menu as its active `context`; `lean` returns only selected schemas. Cancellation empties the active handoff in both modes, while comparison snapshots retain evidence. This helper does not implement transport, caching, a deadline, a session or authorization. See the [integration guide and runnable example](integration.md) for host freshness checks and a staged evaluation workflow.
+
 ## Host adapter and reuse
 
 Reuse [`typesafe-router`'s routing engine](https://github.com/TypeSafeAI/typesafe-router/blob/main/lib/jevRouter.ts) on the host where appropriate. It currently lives in a Next.js source tree, imports application aliases, and has provider defaults and logging; importing that engine into the pure contract would bring host behavior with it. This package therefore owns only the normalization boundary and context-selection policy.
