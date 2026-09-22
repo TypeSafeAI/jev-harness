@@ -30,9 +30,11 @@ Exit: `pnpm test` here reproduces the mock bench totals (base 7/20, +Jev 20/20 b
 
 ## 3 · Tool router (Tier 1, second seam)
 
-- [ ] `ToolRouter` contract: intent + permitted tool ids → top-k, `needs_clarification`, confidence floor
+- [x] `ToolRouter` contract: intent + host-available tool ids → top-k descriptors, clarification, confidence/probability floors, deterministic cost policy
+- [x] Offline synthetic comparison: full vs selected schemas, explicit load/eviction state, receipts and cost/token proxies (`pnpm bench:routing`)
+- [ ] Interactive synthetic browser demonstration
 - [ ] Experiment: N tools in context vs Jev top-k, measured on token cost and correct-tool rate
-- [ ] Reuse `typesafe-router`'s `createRouter` where it fits rather than writing a second router
+- [ ] Live host adapter using `typesafe-router` where it fits; [normalization boundary documented](routing.md#host-adapter-and-reuse), no duplicate provider client in this package
 
 ## 4 · Context scoring (Tier 2, measure-first)
 
@@ -51,3 +53,5 @@ Exit: `pnpm test` here reproduces the mock bench totals (base 7/20, +Jev 20/20 b
 - A new agent runtime or runtime ID
 - Executing model-proposed code inside this package
 - Sending familiar memory, identity, or real repository content to Jev without a reviewed egress policy
+
+The offline routing experiment is independent of phase 1 extraction. Its scripted outcomes and byte/token proxies do not satisfy the live experiment exit criteria or establish execution-speed improvements.

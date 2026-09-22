@@ -187,20 +187,30 @@ If you are wiring the seam into a runtime rather than a script, the Rust shape p
 
 ## Beyond the approval gate
 
-The same shape — closed-set question → typed answer → policy in code — covers two more seams. Both are planned; neither exists here yet.
+The same shape — closed-set question → typed answer → policy in code — covers two more seams. The routing contract and offline comparison are available; context scoring remains planned.
 
 | Tier | Seam | Jev primitive | Question | Status |
 | --- | --- | --- | --- | --- |
 | 1 | `ProposalReview` | `noul` × 4 | Is this one proposed edit on task, supported, scoped, and unambiguous? | **contract here, measured in playground** |
-| 1 | `ToolRouter` | `choice` over N tools | Which permitted tool fits this intent? (top-k, closed set) | experiment planned; see [`typesafe-router`](https://github.com/TypeSafeAI/typesafe-router) |
+| 1 | `ToolRouter` | `choice` over N tools | Which permitted tool fits this intent? (top-k, closed set) | offline contract and comparison; see [`typesafe-router`](https://github.com/TypeSafeAI/typesafe-router) |
 | 2 | `ContextScorer` | `score` per chunk | How relevant is this context chunk to the current query? (hide / summarize / show) | measure-first: needs a cost model before code |
+
+## Dynamic tool context experiment
+
+`src/routing/` adds an injected `ToolRouter` seam, a schema catalog, availability snapshots, cost-aware top-k selection and explicit schema loading/eviction. No tool or sub-agent executes. Run the paired synthetic comparison:
+
+```sh
+pnpm --silent bench:routing > routing-run.json
+```
+
+The run artifact includes receipts, full/lean context bytes, token estimates, acceptable-tool inclusion and cheapest acceptable selection. Evidence is scripted; local timing is not Jev or execution latency. Router overhead is counted separately so fewer schemas do not automatically imply savings. See [the design, metrics and host adapter boundary](docs/routing.md).
 
 ## Roadmap
 
 - [x] **0 · Contract home** — types, decision table, offline tests, docs, CI *(you are here)*
 - [ ] **1 · Extract the rest of the harness** — validator, review payload builder, mock transport, 20 fixtures, bench; playground imports this package. Gated on PR #41 merging.
 - [ ] **2 · Host seams** — Rust `ProposalReview<C>` in OpenCoven `coven-agents`; a receipt card in Coven Cave (evidence only, no approve button)
-- [ ] **3 · Tool router** — N-tools-in-context vs Jev top-k, measured on tokens and correct-tool rate
+- [ ] **3 · Tool router** — typed catalog, routing policy and synthetic comparison implemented; live N-tools-in-context vs Jev top-k measurement remains pending
 - [ ] **4 · Context scoring** — cost model first, then a shadow experiment on synthetic context
 - [ ] **5 · Publish** — `npm` package once phase 1 is stable
 

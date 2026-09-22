@@ -14,7 +14,8 @@
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts",
     "prepare": "git config core.hooksPath .githooks || true",
-    "check:secrets": "node scripts/check-secrets.mjs --all"
+    "check:secrets": "node scripts/check-secrets.mjs --all",
+    "bench:routing": "tsx scripts/bench-routing.ts"
   },
   "devDependencies": {
     "@types/node": "26.6.2",

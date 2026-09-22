@@ -75,12 +75,12 @@ A `noul` answer is a single probability of "yes". `answer = p ≥ 0.5 ? yes : no
 
 ## Seams beyond the approval gate
 
-The same shape (closed-set question → typed answer → code policy) covers two more seams. Both are planned, neither exists here yet.
+The same shape (closed-set question → typed answer → code policy) covers two more seams. The routing contract and synthetic comparison now exist; context scoring remains planned.
 
 | Seam | Jev primitive | Input | Output | Policy in code |
 | --- | --- | --- | --- | --- |
 | `ProposalReview` | `noul` ×4 | one proposal + task + evidence | four answers | decision table above |
-| `ToolRouter` | `choice` over N tool ids (+ `needs_clarification`) | intent text + permitted tool list | top-k tools | closed-set check, confidence floor, mocked execution |
+| `ToolRouter` | `choice` over N tool ids (+ `needs_clarification`) | intent text + permitted tool list | selected descriptors or clarification | closed-set check, confidence/probability floors, relevance window, cost limits; no execution |
 | `ContextScorer` | `score` per chunk | query + context chunks | relevance per chunk | hide / summarize / show thresholds; **only after a cost model shows scoring + re-prefill beats cache reuse** |
 
 The router already has a demo in the playground (`/tool-router`) and a library in `typesafe-router`. Context scoring sends every chunk to Jev, so it needs a data-egress policy before any non-synthetic context is used.
@@ -108,3 +108,7 @@ The Rust host takes the seam and the verdict enum, not a Jev transport: that cra
 1. Is `criteria` being dropped from `noul` questions the intended contract, or should question semantics live only in the instruction sentence?
 2. Confidence is a distribution statistic. What guidance exists for turning it into a permit threshold before anyone tunes 0.8?
 3. Does the four-question set hold on non-synthetic tasks, and at what egress cost?
+
+## Routing experiment
+
+`src/routing/` supplies a pure catalog, injected `ToolRouter` seam, deterministic selection policy and schema context assembly. It does not change proposal-review decisions. `examples/routing/` contains synthetic evidence and paired context evaluation. See [Routing evidence and dynamic tool context](routing.md) for outcome semantics, host adapter mapping, cost assumptions and the live-measurement gate.
