@@ -66,7 +66,8 @@ test("labels never reach payloads and only change scoring", async () => {
   for (const input of first.inputs) {
     assert.deepEqual(Object.keys(input).sort(), ["files", "task", "tools"]);
     assert.ok(Object.isFrozen(input));
-    assert.doesNotMatch(JSON.stringify(input), /acceptable|expected|weights|prefers/);
+    for (const tool of input.tools) assert.deepEqual(Object.keys(tool).sort(), ["description", "id", "inputSchema", "kind"]);
+    assert.doesNotMatch(JSON.stringify(input), /acceptable|estimatedCost|expected|weights|prefers/);
   }
   const inverted = Object.fromEntries(Object.entries(EXPERIMENT_LABELS).map(([id, label]) => [id, { acceptableIds: [], expectedOutcome: label.expectedOutcome === "selected" ? "needs_clarification" as const : "selected" as const }]));
   const second = { requests: [] as RoutingRequest[], inputs: [] as ProposerInput[] };
@@ -97,7 +98,7 @@ test("scoring: acceptable call, clarification, and unavailable routes never fall
 });
 
 test("reported usage sums proposer and Jev only when both are known", async () => {
-  const reporting: Proposer = { source: "codex", propose: async input => ({ status: "completed", calledToolIds: input.tools.slice(0, 1).map(t => t.id), inputTokens: 1000 + input.tools.length, cachedInputTokens: 0, outputTokens: 50, error: null }) };
+  const reporting: Proposer = { source: "codex", propose: async input => ({ status: "completed", calledToolIds: input.tools.slice(0, 1).map(t => t.id), traceTruncated: false, inputTokens: 1000 + input.tools.length, cachedInputTokens: 0, outputTokens: 50, error: null }) };
   const deps: ExperimentDeps = { source: "live", proposer: reporting, routerFor: taskId => { const h = fakeRouterFor(taskId); return { router: h.router, measurement: () => ({ requestBytes: 1, responseBytes: 1, inputTokens: 120, outputTokens: 4, latencyMs: 1 }) }; } };
   const trials = await runExperiment({ runs: 1, sizes: ["large"], policy: DEMO_POLICY }, deps);
   const a = trials.find(t => t.taskId === "read-large" && t.arm === "all_tools")!, b = trials.find(t => t.taskId === "read-large" && t.arm === "jev_top_k")!;
@@ -107,6 +108,23 @@ test("reported usage sums proposer and Jev only when both are known", async () =
   assert.deepEqual(reportedTotals(clarified), { input: 120, output: 4 }, "routed clarification pays only for Jev");
   const unknown: Trial = { ...a, proposer: { ...a.proposer!, reported: { input: null, cachedInput: null, output: 50 } } };
   assert.deepEqual(reportedTotals(unknown), { input: null, output: 50 });
+});
+
+test("truncated proposer traces keep first-call scoring but exclude unknown correct-tool outcomes", () => {
+  const label = EXPERIMENT_LABELS.patch!;
+  const truncated: Trial = {
+    run: 1, taskId: "patch-small", baseId: "patch", size: "small", catalogSize: 3, arm: "all_tools", order: 1,
+    exposedToolIds: ["inspect_agent", "propose_patch"], routing: null,
+    proposer: { status: "completed", calledToolIds: ["inspect_agent"], traceTruncated: true, durationMs: 5, reported: { input: null, cachedInput: null, output: null }, error: null },
+    outcome: "tool_called", firstToolId: "inspect_agent",
+    proxies: { proposerInputTokens: 1, jevRequestTokens: 0, totalInputTokens: 1 },
+  };
+  assert.equal(scoreTrial(truncated, label).correct, null);
+  assert.equal(scoreTrial(truncated, label).firstCallCorrect, false);
+  const summary = summarizeExperiment([truncated, { ...truncated, taskId: "patch-small-2", baseId: "patch", proposer: { ...truncated.proposer!, calledToolIds: ["propose_patch"], traceTruncated: false }, firstToolId: "propose_patch" }], { patch: label });
+  assert.equal(summary.byArm.all_tools.correct, 1);
+  assert.equal(summary.byArm.all_tools.correctKnown, 1);
+  assert.equal(summary.byArm.all_tools.correctRate, 1);
 });
 
 test("artifact schema round-trips and rejects tampering", async () => {

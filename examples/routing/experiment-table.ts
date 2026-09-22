@@ -3,7 +3,7 @@ import { ARMS, summarizeExperiment, type Arm, type ArmSummary, type ExperimentAr
 
 const ARM_LABEL: Record<Arm, string> = { all_tools: "A · all N schemas", jev_top_k: "B · Jev top-k" };
 const n = (v: number | null, digits = 0) => v === null ? "n/a" : v.toFixed(digits);
-const pct = (s: ArmSummary) => s.correctRate === null ? "n/a" : `${s.correct}/${s.trials} (${(s.correctRate * 100).toFixed(0)}%)`;
+const pct = (s: ArmSummary) => s.correctRate === null ? "n/a" : `${s.correct}/${s.correctKnown} (${(s.correctRate * 100).toFixed(0)}%)${s.correctKnown === s.trials ? "" : ` · ${s.trials - s.correctKnown} unknown`}`;
 const reported = (s: ArmSummary, v: number | null) => v === null ? `unknown (${s.reportedUnknown}/${s.trials})` : s.reportedUnknown ? `${n(v)} (${s.reportedUnknown} unknown)` : n(v);
 const row = (cells: readonly string[]) => `| ${cells.join(" | ")} |`;
 
