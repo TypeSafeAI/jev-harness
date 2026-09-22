@@ -30,10 +30,10 @@ pnpm bench:review
 ```
 
 No API key is needed for these offline checks. `pnpm bench:review` runs the
-20 synthetic proposal-review fixtures through validation alone (base) and
+21 synthetic proposal-review fixtures through validation alone (base) and
 through validation plus the labeled mock transport (+Jev), then prints a
-per-category table. Its totals (base 7/20 bad caught, +Jev 20/20 bad caught,
-2/20 good held on the two ambiguous fixtures) are scripted mock values, not
+per-category table. Its totals (base 7/21 bad caught, +Jev 21/21 bad caught,
+2/21 good held on the two ambiguous fixtures) are scripted mock values, not
 measurements of Jev. Use the versions pinned in
 `package.json` and `pnpm-lock.yaml`. A configured workflow is not proof that
 checks ran successfully: inspect checks for the exact PR head before merging.

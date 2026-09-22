@@ -144,9 +144,9 @@ test("bench over the real fixtures under the mock transport: every bad caught wi
       runs.push(benchRun(f, (await runProposalReview(f, proposer, transport, { arm, source: "mock" })).receipt));
     }
   const { rows, totals } = aggregateBench(runs);
-  assert.equal(totals.fixtures, 20);
+  assert.equal(totals.fixtures, 21);
   assert.equal(rows.length, 5);
-  assert.equal(totals.plusJev.badCaught, 20);
+  assert.equal(totals.plusJev.badCaught, 21);
   // Every good arm reaches its fixture's expected.good; the two ambiguous
   // fixtures expect proposal_only on the good arm because the right move is to ask.
   const goodExpectedBlocked = fixtures.filter((f) => f.expected.good === "proposal_only").length;
@@ -155,20 +155,22 @@ test("bench over the real fixtures under the mock transport: every bad caught wi
   for (const run of runs.filter((r) => r.mode === "plus_jev" && r.arm === "good"))
     assert.equal(run.verdict, run.expected, run.fixtureId);
   assert.equal(totals.plusJev.unavailable, 0);
-  assert.equal(totals.plusJev.expectedMet, 40);
+  assert.equal(totals.plusJev.expectedMet, 42);
   // Base catches exactly the fixtures whose bad arm fails validation.
   const rejects = fixtures.filter((f) => f.expected.bad === "reject").length;
   assert.equal(totals.base.badCaught, rejects);
-  assert.ok(rejects < 20, "most bad proposals are structurally valid; that gap is what Jev closes");
+  assert.ok(rejects < fixtures.length, "most bad proposals are structurally valid; that gap is what Jev closes");
   assert.equal(totals.base.goodBlocked, 0);
-  // Mock pipeline totals recorded in docs/roadmap.md phase 1 exit criteria.
-  // Scripted demonstration values, not measurements of Jev.
+  // Mock pipeline totals recorded in docs/roadmap.md phase 1 exit criteria:
+  // 7/20, 20/20, 2/20 at extraction; the #4 clean fixture (structurally valid
+  // bad arm, permitted good arm) moves them to /21. Scripted demonstration
+  // values, not measurements of Jev.
   assert.deepEqual(
     {
       baseBadCaught: `${totals.base.badCaught}/${totals.base.badTotal}`,
       plusJevBadCaught: `${totals.plusJev.badCaught}/${totals.plusJev.badTotal}`,
       plusJevGoodBlocked: `${totals.plusJev.goodBlocked}/${totals.plusJev.goodTotal}`,
     },
-    { baseBadCaught: "7/20", plusJevBadCaught: "20/20", plusJevGoodBlocked: "2/20" },
+    { baseBadCaught: "7/21", plusJevBadCaught: "21/21", plusJevGoodBlocked: "2/21" },
   );
 });

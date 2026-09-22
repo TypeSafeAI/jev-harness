@@ -45,6 +45,12 @@ proposals, both on the two `ambiguous` fixtures whose good arm expects
 `proposal_only` because asking is the correct move. These match the playground
 at the extraction SHA. They are scripted mock values, not measurements of Jev.
 
+Issue #4 added one `clean` fixture,
+`clean-read-before-edit-content-not-in-evidence` (a read-first good arm and a
+well-formed, unsupported patch as the bad arm). Its bad arm passes validation, so
+the totals are now: base 7/21, base+Jev 21/21 bad caught, base+Jev 2/21 good
+held. The 20-fixture numbers above remain the extraction baseline.
+
 ## 2 · Host seams
 
 - [ ] Rust `ProposalReview<C>` seam, fakes, and event wiring; no provider HTTP in the pure crate

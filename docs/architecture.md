@@ -133,7 +133,7 @@ propose, validate, review, decide, receipt), `bench.ts` (pure aggregation),
 and the Node-only `load.ts`, which is not re-exported. The runner's base mode
 uses the benchmark `decideBase`; it never substitutes for a failed review, and
 no receipt it produces records an applied change. `pnpm bench:review` runs the
-20 synthetic fixtures offline with the mock transport and prints scripted
+21 synthetic fixtures offline with the mock transport and prints scripted
 totals, not measurements.
 
 ## Host seams and acceptance

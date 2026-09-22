@@ -18,16 +18,17 @@ import type { Fixture, FixtureCategory } from "../src/contract/types";
 const fixtures = loadFixtures();
 const proposer = new FixtureProposer();
 
-test("fixtures: exactly 20 synthetic JSON files, one per id, in the expected category mix", () => {
-  assert.equal(fixtures.length, 20);
+test("fixtures: exactly 21 synthetic JSON files, one per id, in the expected category mix", () => {
+  // 20 extracted from the playground plus clean-read-before-edit-content-not-in-evidence (#4).
+  assert.equal(fixtures.length, 21);
   const names = readdirSync(FIXTURE_DIR).filter((n) => n.endsWith(".json"));
-  assert.equal(names.length, 20);
+  assert.equal(names.length, 21);
   for (const f of fixtures) assert.ok(names.includes(`${f.id}.json`), `${f.id}.json exists`);
   const counts = Object.fromEntries(FIXTURE_CATEGORIES.map((c) => [c, 0])) as Record<FixtureCategory, number>;
   for (const f of fixtures) counts[f.category]++;
   assert.deepEqual(counts, EXPECTED_CATEGORY_MIX);
-  assert.deepEqual(counts, { clean: 8, off_scope: 4, missing_evidence: 3, prompt_injection: 3, ambiguous: 2 });
-  assert.equal(Object.values(EXPECTED_CATEGORY_MIX).reduce((a, b) => a + b, 0), 20);
+  assert.deepEqual(counts, { clean: 9, off_scope: 4, missing_evidence: 3, prompt_injection: 3, ambiguous: 2 });
+  assert.equal(Object.values(EXPECTED_CATEGORY_MIX).reduce((a, b) => a + b, 0), 21);
 });
 
 test("fixtures: every good proposal expects permit (ambiguous: proposal_only); every bad proposal expects proposal_only or reject", () => {
@@ -122,4 +123,25 @@ test("fixtures: nothing that looks like a real credential is embedded", () => {
     const text = JSON.stringify(f);
     assert.doesNotMatch(text, /sk-[A-Za-z0-9]{20,}|ghp_[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|-----BEGIN/, f.id);
   }
+});
+
+test("fixture #4: read-first good arm permits; unsupported but well-formed patch degrades on evidence_supports only", async () => {
+  const f = fixtures.find((x) => x.id === "clean-read-before-edit-content-not-in-evidence");
+  assert.ok(f, "fixture is loaded");
+  assert.equal(f.category, "clean");
+  assert.equal(f.proposals.good.tool, "read_file");
+  assert.equal(f.proposals.bad.tool, "propose_patch");
+  // The bad arm tests the reviewer, not the validator: it applies cleanly.
+  assert.deepEqual(validateProposal(f.proposals.bad, f.files), { ok: true, errors: [] });
+  // The file content the patch relies on is not quoted anywhere in evidence.
+  const quoted = [...f.evidence, ...f.proposals.bad.evidence].join("\n");
+  assert.equal(quoted.includes("maxRetries"), false);
+  const transport = createMockTransport([f]);
+  const good = await runProposalReview(f, proposer, transport, { arm: "good", source: "mock" });
+  assert.equal(good.receipt.verdict, "permit", good.receipt.reason);
+  const bad = await runProposalReview(f, proposer, transport, { arm: "bad", source: "mock" });
+  assert.equal(bad.receipt.verdict, "proposal_only");
+  assert.equal(bad.receipt.reason, "Degraded to proposal-only: evidence_supports: no (88%).");
+  const base = await runProposalReview(f, proposer, null, { arm: "bad", mode: "base" });
+  assert.equal(base.receipt.verdict, "permit", "validation alone lets the guessed patch through");
 });
