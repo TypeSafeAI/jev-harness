@@ -19,11 +19,11 @@
 import { readFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 import { decide, FAVORABLE } from "../src/contract/decide.js";
-import { REVIEW_QUESTION_IDS, type ReviewQuestionId } from "../src/contract/types.js";
+import { REVIEW_QUESTION_IDS, type JevReview, type ReviewAnswer, type ReviewQuestionId } from "../src/contract/types.js";
 
 export type ArmClass = "good_permit" | "good_clarify" | "bad";
 
-export interface RunAnswer { probability: number; answer: "yes" | "no"; confidence: number }
+export type RunAnswer = ReviewAnswer;
 
 export interface RunFile {
   at: string;
@@ -35,7 +35,7 @@ export interface RunFile {
     arm: string;
     mode: string;
     validation: unknown;
-    jev: { answers: Record<string, RunAnswer> | null } | null;
+    jev: JevReview | null;
   }>;
 }
 
@@ -108,7 +108,13 @@ export function collect(files: readonly RunFile[]): { observations: Observation[
 
 const favorable = (id: ReviewQuestionId, a: RunAnswer) => a.answer === FAVORABLE[id];
 
-/** Why one question fails an observation at a floor, mirroring unfavorable(). */
+/**
+ * Why one well-formed question answer fails an observation at a floor.
+ *
+ * This helper only classifies canonical recorded answers into direction versus
+ * confidence misses. Malformed review envelopes and malformed answer triples are
+ * handled by `decide()` in the pooled sweep, not split out here.
+ */
 export function miss(id: ReviewQuestionId, a: RunAnswer, floor: number): "direction" | "confidence" | null {
   if (!favorable(id, a)) return "direction";
   if (a.confidence < floor) return "confidence";

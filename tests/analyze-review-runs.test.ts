@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { analyze, collect, miss, type RunFile } from "../scripts/analyze-review-runs.js";
+import type { JevReview } from "../src/contract/types.js";
 
 // Tiny original synthetic runs. Arithmetic fixtures only; no live or recorded data.
 const answer = (probability: number) => ({
@@ -8,7 +9,7 @@ const answer = (probability: number) => ({
   answer: probability >= 0.5 ? ("yes" as const) : ("no" as const),
   confidence: Math.max(probability, 1 - probability),
 });
-const jev = (a: number, e: number, u: number, c: number) => ({
+const jev = (a: number, e: number, u: number, c: number): JevReview => ({
   model: "jev-1.13.0", source: "mock", latencyMs: 1, error: null,
   answers: { addresses_task: answer(a), evidence_supports: answer(e), unrelated_changes: answer(u), needs_clarification: answer(c) },
 });
@@ -43,7 +44,7 @@ test("later labels win, conflicts are reported, and unanswered receipts are skip
   assert.ok(observations.filter(o => o.fixtureId === "ask-good").every(o => o.cls === "good_clarify"));
 });
 
-test("miss separates direction from confidence exactly like the decision table", () => {
+test("miss separates direction from confidence for canonical recorded answers", () => {
   assert.equal(miss("unrelated_changes", answer(0.6), 0.8), "direction");
   assert.equal(miss("addresses_task", answer(0.7), 0.8), "confidence");
   assert.equal(miss("addresses_task", answer(0.8), 0.8), null);
