@@ -63,6 +63,7 @@ test("clarification and unavailable routing prioritize recovering evidence rathe
 
 test("rejected calls take priority over optimizing a smaller token count", async () => {
   const run = await sample(); run.lanes.integrated!.result.toolCalls[0]!.status = "rejected";
+  assert.equal(run.lanes.baseline!.result.toolCalls[0]!.status, "returned");
   const report = analyzeRun(run);
   assert.equal(report.recommendations[0]?.id, "rejected-calls");
   assert.match(report.recommendations[0]!.next, /required|schema|argument/);

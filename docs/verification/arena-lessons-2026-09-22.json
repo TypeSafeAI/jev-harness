@@ -11,7 +11,8 @@
     "productionBuild": "passed in isolated copy",
     "secretScan": "passed",
     "diffWhitespace": "passed",
-    "independentReview": "Both-lane evidence-priority finding fixed and re-reviewed; no remaining substantive findings"
+    "independentReview": "Both-lane evidence-priority finding fixed and re-reviewed; no remaining substantive findings",
+    "automatedReview": "Lane-isolation concern verified: createRun already rebuilds each lane trace. Added an explicit baseline-unchanged assertion to the integrated rejection test."
   },
   "browser": {
     "development": {
@@ -36,7 +37,7 @@
           "refresh derives the same lessons without another request",
           "a better measured run has its own bounded takeaway",
           "history action closes the overlay and selects History",
-          "reopening an older result restores that run’s lessons",
+          "reopening an older result restores that run\u2019s lessons",
           "download binds versioned lessons to the original evidence without execution claims",
           "unknown evidence gives the appropriate lesson",
           "partial evidence gives the appropriate lesson",
@@ -154,7 +155,7 @@
           "refresh derives the same lessons without another request",
           "a better measured run has its own bounded takeaway",
           "history action closes the overlay and selects History",
-          "reopening an older result restores that run’s lessons",
+          "reopening an older result restores that run\u2019s lessons",
           "download binds versioned lessons to the original evidence without execution claims",
           "unknown evidence gives the appropriate lesson",
           "partial evidence gives the appropriate lesson",
