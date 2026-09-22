@@ -23,7 +23,7 @@ export async function routeTools(catalog: Catalog, input: RoutingInput, policy: 
   const snapshot = createCatalog(catalog);
   const limits = snapshotPolicy(policy);
   if (typeof input.intent !== "string" || !input.intent.trim() || input.intent.length > 16_000) throw Error("Intent must contain 1–16000 characters.");
-  if (!Array.isArray(input.availableIds) || new Set(input.availableIds).size !== input.availableIds.length || input.availableIds.some(id => !snapshot.some(tool => tool.id === id)))
+  if (!Array.isArray(input.availableIds) || new Set(input.availableIds).size !== input.availableIds.length || Array.from(input.availableIds).some(id => !snapshot.some(tool => tool.id === id)))
     throw Error("Availability must name unique catalog ids.");
   if (router.source !== "mock" && router.source !== "jev") throw Error("Invalid routing source.");
   const source = router.source;

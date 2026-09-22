@@ -112,3 +112,19 @@ test("unsupported schema constraints are rejected instead of silently widened", 
     { ...tools[0]!.inputSchema, properties: { path: { ...tools[0]!.inputSchema.properties.path!, enum: ["read"] } } },
   ]) assert.throws(() => api.createCatalog([{ ...tools[0]!, inputSchema }]));
 });
+
+
+test("sparse catalogs and required-property arrays are rejected", () => {
+  assert.throws(() => api.createCatalog(Array<api.ToolDefinition>(1)));
+  const sparseRequired = { ...tools[0]!, inputSchema: { ...tools[0]!.inputSchema, required: Array<string>(1) } };
+  assert.throws(() => api.createCatalog([sparseRequired]));
+});
+
+test("sparse availability is rejected before calling the adapter", async () => {
+  const availableIds = Array<string>(2);
+  availableIds[1] = "read";
+  let calls = 0;
+  const adapter: api.ToolRouter = { source: "mock", review: async () => { calls++; return evidence; } };
+  await assert.rejects(() => api.routeTools(api.createCatalog(tools), { ...input, availableIds }, policy, adapter));
+  assert.equal(calls, 0);
+});
