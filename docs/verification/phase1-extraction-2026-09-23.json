@@ -1,0 +1,140 @@
+{
+  "kind": "offline-extraction-verification",
+  "date": "2026-09-23",
+  "source": "mock",
+  "liveProviderCalls": 0,
+  "testedBaseCommit": "30bcee2fba867d3cd6a1238ec3eb7ccad2b4bfe2",
+  "mergedDependencyCommit": "30cab0d673db2eff6e2814be66215557c21c0ef5",
+  "sourceRevision": "6fe5967dc020521a0731682b06c4d8eeeab95ffb",
+  "sourceClean": true,
+  "fixturesByteIdentical": 20,
+  "normalizedV1RequestsIdentical": 40,
+  "validationResultsIdentical": 40,
+  "normalizedMockReceiptsIdentical": 80,
+  "normalization": "Requests normalized through each payload validator and JSON round-trip; receipts omit reason text and set latencyMs to zero. No other fields omitted.",
+  "fixtures": [
+    {
+      "name": "ambiguous-clean-up-helper.json",
+      "sha256": "f197424b668a8e90e5632caeb3f8e8b277822f8035ef30ef427a43038d039661"
+    },
+    {
+      "name": "ambiguous-which-timeout.json",
+      "sha256": "a587abc2d100d11fc3648d9f2a3bae2c0f4451ea0128e560101dd5c55f833deb"
+    },
+    {
+      "name": "clean-default-timeout.json",
+      "sha256": "4a19ea168942f3c97ecaacbfae5578443e00d59df270a270cb1421a1a07af4a6"
+    },
+    {
+      "name": "clean-null-guard.json",
+      "sha256": "c372b61809fe2f91bc05d671a87f88af1dc1a1f8d8bd9925c02fd706de29cd6d"
+    },
+    {
+      "name": "clean-parse-port.json",
+      "sha256": "d5f2b08072f089e40bad62b73603512b52ad06f788d01624c57995298313e05a"
+    },
+    {
+      "name": "clean-percent-rounding.json",
+      "sha256": "20742e33c762680ea04ea62186a865fc916112ff787c2e2f87939456441d6506"
+    },
+    {
+      "name": "clean-read-before-edit.json",
+      "sha256": "2bf0b31b1440ec2f8f822fa5be6dac62497bbf450fbee83b70e3cd8366b5285d"
+    },
+    {
+      "name": "clean-sort-ascending.json",
+      "sha256": "3d5c958488600ea2fda86fcf3ecc3ac38e0f9f5ff57dc10e9363a6fa10555681"
+    },
+    {
+      "name": "clean-sum-loop-bound.json",
+      "sha256": "d7afd49d66182f8048ed22bd5b0efbba1b97c30ac7dbc4dd1e9e09971f2c3126"
+    },
+    {
+      "name": "clean-typo-message.json",
+      "sha256": "5c11587fdf9b180e60cb189f8cc0810f5a31c0d2a6168a48a160cfdc0822b413"
+    },
+    {
+      "name": "injection-comment-disable-auth.json",
+      "sha256": "4c0f7fd0e56a7840c1e198b1079c6a02b10cb0255fd9726950ac364cb586eab1"
+    },
+    {
+      "name": "injection-readme-delete-env.json",
+      "sha256": "fbf600b96cf87e0e4c5cc11086714cc2bf381f526728959809f48bbcded2c5c5"
+    },
+    {
+      "name": "injection-todo-delete-env.json",
+      "sha256": "b1bf18da2c37def6226fdc75df67b887be77e16b20a5bebc20714871a1d77597"
+    },
+    {
+      "name": "missing-evidence-cache-claim.json",
+      "sha256": "a841f7bf70f7c54278ed0ec5957fa63ae0c4c24874c5b462d161c4da5e3a0168"
+    },
+    {
+      "name": "missing-evidence-fake-quote.json",
+      "sha256": "cea1a1b2c8ab93cedc37986b6dd54b139eea4e4b86b611ab1b6b92f8a3da32a4"
+    },
+    {
+      "name": "missing-evidence-phantom-null.json",
+      "sha256": "81fe997a3af5932ad5cff8b77252a5ce0fe93455f52cb34e38c9aad5841e0e01"
+    },
+    {
+      "name": "off-scope-escape-root.json",
+      "sha256": "a6a20618418d462bf297eb31c6dbdfb729c9fe50553b6d1be35c9f6df40bea77"
+    },
+    {
+      "name": "off-scope-log-level.json",
+      "sha256": "815c3d598ad966a3d5dc34b6a417c8dd8f2000bfc25dfe8b2b7eebcde08cfa67"
+    },
+    {
+      "name": "off-scope-two-files.json",
+      "sha256": "e57ae690e9c1d2d54143a0969cb77c52eca9bc88ad0db4281770560b1db1f947"
+    },
+    {
+      "name": "off-scope-wrong-file.json",
+      "sha256": "3f4bbb1ebacbbefc51c55188b48fa5bcc84e696841f48061d8e13912c681927f"
+    }
+  ],
+  "mockBench": {
+    "source": "mock",
+    "fixtures": 20,
+    "baseBadCaught": "7/20",
+    "plusJevBadCaught": "20/20",
+    "plusJevGoodBlocked": "2/20",
+    "plusJevUnavailable": "0/40",
+    "expectedMet": "40/40"
+  },
+  "checks": {
+    "pnpm install --frozen-lockfile": "passed; lockfile unchanged; pnpm 10.34.5",
+    "pnpm typecheck": "passed",
+    "pnpm test": "188 passed, 0 failed",
+    "pnpm bench:review": "passed; scripted mock values, not Jev measurements",
+    "pnpm build": "passed; Next.js 16.3.5 production build",
+    "model pin regression": "4 intended failing tests before the fix; all 12 payload tests passed after it",
+    "question type regression": "1 intended failing test before the fix; all 14 payload tests passed after it",
+    "cancellation regression": "2 intended failing tests before the fix; all 16 payload tests passed after it"
+  },
+  "sourceAdaptations": [
+    "Import paths and types are local; strict optional and indexed-access types omit absent patch keys and check decoded paths.",
+    "The hardened decide, types and input modules are retained byte-for-byte from the dependency branch; no table, model pin, threshold, question version or execution semantics changed.",
+    "Question and fixture metadata are frozen. V1 sends instruction-only noul questions, matching the original post-validation wire body; explicitly supplied generic noul criteria are preserved and malformed criteria rejected.",
+    "Request builders and validation require the exact model pin. Real-source replies with absent or mismatched model metadata become unavailable; source mock retains mock-scripted provenance.",
+    "Review parsing uses the hardened plain-data checks and an injected latency clock; fixture runner calls the benchmark-only base helper explicitly.",
+    "The Node-only fixture loader resolves relative to its module; the bench script omits upstream live provider mode.",
+    "Question types must be exact noul, choice or score strings; arrays and other non-string values are rejected without coercion.",
+    "Review cancellation is checked before transport and after it resolves; ignored or raced abort signals yield null answers and unavailable through the existing decision table."
+  ],
+  "consumerStatus": "open: playground consuming a pinned shared revision remains a separate delivery step",
+  "extractedSourceSha256": {
+    "src/contract/validate.ts": "578afe9320101b76ea70e0588480e3afdf15c52151e2f4c983667284300bc451",
+    "src/contract/diff.ts": "54f29729703a3189321b9d18d70896e7995d7b5b534b2b22344797b43f47ae8c",
+    "src/contract/payload.ts": "17bb4e1672e6c01d4600d3d3138b6746918bf093ce9b195e9294d74547be871e",
+    "src/contract/review.ts": "30efe4a3f640c0bb5c3114931f81d57dad4b018b63ca9ba6e16a673a0fffa383",
+    "src/benchmark/run.ts": "702f925de89740e1563a97d72a3b4cc74c9156898f0bea3ae89dbc853ed93bca",
+    "src/benchmark/proposer.ts": "904e9ee045761bc431272b5bb90ba34058e8bdce7b63062219d4304a32c1a972",
+    "src/benchmark/mock.ts": "46051b83f4df8c8098e6d871531b171c1c21d6aa544532a9847798ead85f50ee",
+    "src/benchmark/fixtures.ts": "4bd9338c50b60457313cef248df7a9ba64c34bfd6863fef954585a901231a613",
+    "src/benchmark/load.ts": "0a88ee3c53c93645df7b9d99c6cc3fe858876538b28635dbcfdf9fb5911c623c",
+    "src/benchmark/bench.ts": "4b07913061795bda1c5ac36914fa953b3812af9b907adb801a5d9490ba43f2f1",
+    "scripts/bench-review.ts": "a0c34b48cec3fc25ebfa86dbf83f4dca36b43dbefe09537ae24837535d962979"
+  }
+}

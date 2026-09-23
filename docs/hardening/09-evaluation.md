@@ -1,8 +1,9 @@
 # Evaluation accounting and blinding (adversarial finding 9)
 
 `src/benchmark/evaluation.ts` is an offline helper, not a live benchmark runner.
-It does not import or recreate the unextracted upstream fixtures. Tests use
-original synthetic arithmetic examples and make no new Jev performance claims.
+It does not consume the extracted proposal-review fixtures or the fixture bench
+in `src/benchmark/bench.ts`. Tests use original synthetic arithmetic examples
+and make no new Jev performance claims.
 
 ## Denominators and labels
 

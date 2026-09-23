@@ -9,7 +9,7 @@ This package is not a full agent runtime. No proposal executes here.
 | Role | Owner | Boundary |
 | --- | --- | --- |
 | Proposer | Scripted fixture or host-supplied model | Cannot grant itself permission or create trusted provenance |
-| Proposal validator | Host; full extraction pending | Checks actual schema, scope, paths, and diff before provider calls |
+| Proposal validator | `src/contract/validate.ts`, run by the host | Pure checks of schema, scope, paths, and diff against a host-supplied file snapshot, before provider calls |
 | Semantic reviewer | Host transport using Jev | Supplies probabilities, not authority; sees only approved-for-egress context |
 | Decision | `src/contract/decide.ts` | Pure runtime checks and deterministic verdicts; no I/O |
 | Evidence audit | Optional `src/audit/receipt.ts` | Node hashing and offline replay; no authentication or persistence |
@@ -22,10 +22,15 @@ read grant does not automatically allow uploading that file to a provider.
 ## Implemented pipeline and pending pieces
 
 The root exports shared types, `decide`, `unfavorable`, threshold, and immutable
-question/direction/tool metadata, plus the pure routing API. It checks a host-supplied validation result;
-it does not prove the host performed filesystem validation. The proposal
-validator, review payload builder, live transport integration, original fixture
-suite, and full runner remain pending extraction from the playground.
+question/direction/tool metadata, plus the pure routing API. It also exports the
+phase 1 pieces re-diffed against merged playground PR #41 at
+`6fe5967dc020521a0731682b06c4d8eeeab95ffb`: `validateProposal` (zod schema, path, and single-file diff checks
+against a snapshot the caller passes in), `buildReviewPayload`,
+`validateReviewPayload`, `parseReviewAnswers`, and `reviewProposal` over an
+injected `JevTransport`. None of these read files, call a network, or read the
+environment. `decide()` still checks a supplied validation result; it cannot
+prove the host ran the validator. A live transport and durable log store are
+not part of this package.
 
 The intended host sequence is proposal -> validation -> permitted egress/review
 -> decision -> receipt -> independent host policy. The host must avoid provider
@@ -44,7 +49,31 @@ optional `criteria` with true/false descriptions. Historical stripping in the
 playground was a local validation behavior, not an API-wide restriction.
 [Wire-contract acceptance](hardening/07-noul-contract.md) requires testing the
 actual post-validation request and versioning effective semantic changes.
-This branch corrects guidance without changing a live request or version pin.
+`buildReviewPayload` sends question set v1 as it historically reached the wire:
+type and instructions, no criteria. The playground authored criteria text but
+its payload validator dropped noul criteria before sending, so no recorded run
+used them. That text is kept as `REVIEW_QUESTION_CRITERIA` and is not sent;
+sending it would change effective semantics and needs a new question-set
+version. `validateReviewPayload` preserves explicitly supplied `{ true, false }`
+criteria and rejects malformed criteria instead of dropping them. Question
+types must be exact `noul`, `choice`, or `score` strings; arrays and other
+non-string values are rejected without coercion. Both the
+builder and validator require the exact `JEV_MODEL` pin: aliases, other
+versions, empty strings, and padded values throw before transport. An omitted
+builder/review option still defaults to the pin; a request payload missing its
+model is invalid. For `source: "jev"`, a reply missing the exact pinned model
+returns null answers and an error, so the unchanged decision table returns
+`unavailable`. Explicitly labeled mock replies retain `mock-scripted` model
+provenance. This deliberately tightens the source implementation, which
+accepted overrides and substituted the requested model for missing response
+metadata. `tests/review-payload.test.ts` checks the request sent to transport
+and both response paths. No fixture verdicts or question semantics change.
+
+`reviewProposal` checks cancellation before dispatch and again after the
+transport resolves. A pre-aborted signal makes no transport call; a transport
+that ignores cancellation cannot return usable answers after the signal is
+aborted. Both paths return null answers and a cancellation error, yielding
+`unavailable` through the existing decision table.
 
 Given probability of yes `p`, derive answer from `p >= 0.5` and confidence from
 `Math.max(p, 1 - p)`. Confidence is not correctness. The threshold 0.8 remains
@@ -112,6 +141,16 @@ iterators or getters. `prepareProposerInput` whitelists and copies
 only task/files/evidence before a `BlindedProposer` sees them. The original
 labeled `Proposer` remains a scripted-fixture interface, not a blinded study
 contract. These helpers do not run a benchmark or authenticate labels.
+
+The extracted fixture bench lives beside them: `fixtures.ts` (zod fixture
+schema), `proposer.ts` (scripted `FixtureProposer`), `mock.ts` (labeled mock
+transport keyed by the proposal in the request state), `run.ts` (one pass of
+propose, validate, review, decide, receipt), `bench.ts` (pure aggregation),
+and the Node-only `load.ts`, which is not re-exported. The runner's base mode
+uses the benchmark `decideBase`; it never substitutes for a failed review, and
+no receipt it produces records an applied change. `pnpm bench:review` runs the
+20 synthetic fixtures offline with the mock transport and prints scripted
+totals, not measurements.
 
 ## Host seams and acceptance
 

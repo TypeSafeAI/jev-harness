@@ -13,25 +13,40 @@ Dates and phases are planning targets, not delivery promises.
 - [ ] Signed hardening commits and passing pinned checks on each current PR head before merge
 
 These additions do not constitute a full validator, transport, runner, live
-benchmark, durable log store, or production host. See the
+benchmark, durable log store, or production host. Phase 1 below extracts the
+validator, payload builder, and offline fixture bench; a live transport,
+durable log store, and production host remain out of scope. See the
 [hardening index](hardening/README.md) for the ten separate findings and limits.
 
 ## 1 · Extract the rest of the Week 1 harness
 
-Source: `typesafe-playground/lib/harness/` on `feat/proposal-review`. Do this
-**after PR #41 merges** so there is one canonical history to extract from.
+Source: `typesafe-playground/lib/harness/`, re-diffed against canonical merged
+`main` commit `6fe5967dc020521a0731682b06c4d8eeeab95ffb` (playground PR #41).
+The [offline extraction check](verification/phase1-extraction-2026-09-23.json)
+confirms all original 20 fixtures and normalized v1 requests remain unchanged. The
+[hardened extraction adaptations](architecture.md#question-set-v1) retain the
+existing decision table and require the exact model pin before transport and
+on real-source replies. The original historical run links remain pinned to
+the revisions that produced them.
 
-- [ ] `validate.ts` and its pinned schema dependency, reviewed separately
-- [ ] `review.ts`: question set, `buildReviewPayload`, injected transport, and request types
-- [ ] `run.ts`, `proposer.ts`, `mock.ts`, `fixtures.ts`, `load.ts`, and `bench.ts`
-- [ ] Original 20 synthetic fixture files and applicable proposal-review tests
+- [x] `validate.ts` and its pinned schema dependency (`zod` 4.6.5), reviewed separately; the playground's diff parser is extracted as `src/contract/diff.ts`
+- [x] `review.ts`: question set, `buildReviewPayload`, injected transport, and request types (`src/contract/payload.ts`)
+- [x] `run.ts`, `proposer.ts`, `mock.ts`, `fixtures.ts`, `load.ts`, and `bench.ts` (under `src/benchmark/`; `load.ts` is Node-only)
+- [x] Original 20 synthetic fixture files and applicable proposal-review tests (the route test stays in the playground)
 - [ ] Playground consumes the shared package or a pinned vendored revision
-- [ ] Preserve the hardening changes rather than replacing them with an older decision table
-- [ ] Test the exact post-validation wire payload, including supported criteria and absent labels
+- [x] Preserve the hardening changes rather than replacing them with an older decision table
+- [x] Test the exact post-validation wire payload, including supported criteria and absent labels
 
 Exit: reproduce the original mock pipeline totals, retaining the ambiguity
 label history and separating legitimate abstentions. These scripted outcomes
 are not new live measurements. Apply the [evaluation plan](hardening/09-evaluation.md).
+
+Mock pipeline totals ([offline run](verification/phase1-extraction-2026-09-23.json), `pnpm bench:review`, asserted in
+`tests/proposal-review-bench.test.ts`): base catches 7/20 bad proposals (the
+validation rejects), base+Jev catches 20/20, and base+Jev holds 2/20 good
+proposals, both on the two `ambiguous` fixtures whose good arm expects
+`proposal_only` because asking is the correct move. These match the playground
+at the extraction SHA. They are scripted mock values, not measurements of Jev.
 
 ## 2 · Host seams
 

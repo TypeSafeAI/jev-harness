@@ -37,6 +37,7 @@
     "tests",
     "examples",
     "scripts/bench-routing.ts",
+    "scripts/bench-review.ts",
     "scripts/analyze-review-runs.ts",
     "scripts/experiment-routing.ts",
     ".next/types/**/*.ts",
