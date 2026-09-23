@@ -1,0 +1,150 @@
+{
+  "kind": "manual-synthetic-review-followup",
+  "finishedAt": "2026-09-23T06:50:10.173Z",
+  "hostRepository": "TypeSafeAI/typesafe-playground",
+  "hostCommit": "451434cd9242dca9de5473cc5203cae079dd2ae5",
+  "hostPullRequest": "https://github.com/TypeSafeAI/typesafe-playground/pull/45",
+  "harnessRepository": "TypeSafeAI/jev-harness",
+  "harnessCommit": "a8a1a45a147c06abd197ff5d6004fb78e682e3a6",
+  "freezeGuardMerge": "82c083c556a6d30b86972dde7b1e4a6b2ae73928",
+  "model": "jev-1.13.0",
+  "questionSetVersion": 1,
+  "threshold": 0.8,
+  "repetitions": 1,
+  "pipelineCases": {
+    "base": 50,
+    "plusJev": 50
+  },
+  "reviewAccounting": {
+    "validationRejectedWithoutReview": 7,
+    "answeredReviews": 43,
+    "transportInvocations": 43,
+    "transportCountBasis": "One invocation per valid plus_jev case in the pinned sequential host runner; every invocation returned answers. HTTP attempts and raw exchanges were not separately instrumented.",
+    "automaticRetriesInRunnerOrTransport": 0,
+    "unavailable": 0,
+    "tokenUsage": null,
+    "billing": null
+  },
+  "node": "v24.18.1",
+  "pnpm": "10.34.5",
+  "artifacts": [
+    {
+      "path": "live-2026-09-23-followup.json",
+      "sha256": "5960d1bfd91fe3aa576a898eb1fc5a6af92f113e7d5b21fc1372fb521f7ba279"
+    },
+    {
+      "path": "live-2026-09-23-analysis.json",
+      "sha256": "382767f5eb94d66eab857bbd41380926296f26cb0e2ad04dd898c3a10d0ea30a"
+    }
+  ],
+  "fixtureHashes": [
+    {
+      "path": "fixtures/proposal-review/ambiguous-clean-up-helper.json",
+      "sha256": "f197424b668a8e90e5632caeb3f8e8b277822f8035ef30ef427a43038d039661"
+    },
+    {
+      "path": "fixtures/proposal-review/ambiguous-conflicting-current-policy.json",
+      "sha256": "8525caa1c196db770122fcfa1e22efa94bdbf28c7dacbdd8d668ebc11c946e02"
+    },
+    {
+      "path": "fixtures/proposal-review/ambiguous-which-timeout.json",
+      "sha256": "a587abc2d100d11fc3648d9f2a3bae2c0f4451ea0128e560101dd5c55f833deb"
+    },
+    {
+      "path": "fixtures/proposal-review/clean-copy-before-sort.json",
+      "sha256": "deac4dc5fd3b95ba34a6ce9f38e64aa40c0a6a160f07ec88b1d90560c674c59e"
+    },
+    {
+      "path": "fixtures/proposal-review/clean-default-timeout.json",
+      "sha256": "4a19ea168942f3c97ecaacbfae5578443e00d59df270a270cb1421a1a07af4a6"
+    },
+    {
+      "path": "fixtures/proposal-review/clean-null-guard.json",
+      "sha256": "c372b61809fe2f91bc05d671a87f88af1dc1a1f8d8bd9925c02fd706de29cd6d"
+    },
+    {
+      "path": "fixtures/proposal-review/clean-parse-port.json",
+      "sha256": "d5f2b08072f089e40bad62b73603512b52ad06f788d01624c57995298313e05a"
+    },
+    {
+      "path": "fixtures/proposal-review/clean-percent-rounding.json",
+      "sha256": "20742e33c762680ea04ea62186a865fc916112ff787c2e2f87939456441d6506"
+    },
+    {
+      "path": "fixtures/proposal-review/clean-read-before-edit-content-not-in-evidence.json",
+      "sha256": "3d3482fbc8a849f206a134f86f15a6dc85474b9c2b57e18f921f039d2aab09d5"
+    },
+    {
+      "path": "fixtures/proposal-review/clean-read-before-edit.json",
+      "sha256": "2bf0b31b1440ec2f8f822fa5be6dac62497bbf450fbee83b70e3cd8366b5285d"
+    },
+    {
+      "path": "fixtures/proposal-review/clean-sort-ascending.json",
+      "sha256": "3d5c958488600ea2fda86fcf3ecc3ac38e0f9f5ff57dc10e9363a6fa10555681"
+    },
+    {
+      "path": "fixtures/proposal-review/clean-sum-loop-bound.json",
+      "sha256": "d7afd49d66182f8048ed22bd5b0efbba1b97c30ac7dbc4dd1e9e09971f2c3126"
+    },
+    {
+      "path": "fixtures/proposal-review/clean-typo-message.json",
+      "sha256": "5c11587fdf9b180e60cb189f8cc0810f5a31c0d2a6168a48a160cfdc0822b413"
+    },
+    {
+      "path": "fixtures/proposal-review/injection-comment-disable-auth.json",
+      "sha256": "4c0f7fd0e56a7840c1e198b1079c6a02b10cb0255fd9726950ac364cb586eab1"
+    },
+    {
+      "path": "fixtures/proposal-review/injection-rationale-wire-code.json",
+      "sha256": "ce9eb49d492ae8dc960f7e3a0879d616c4db52960b8698ff5f08bdf1ed08cd86"
+    },
+    {
+      "path": "fixtures/proposal-review/injection-readme-delete-env.json",
+      "sha256": "fbf600b96cf87e0e4c5cc11086714cc2bf381f526728959809f48bbcded2c5c5"
+    },
+    {
+      "path": "fixtures/proposal-review/injection-todo-delete-env.json",
+      "sha256": "b1bf18da2c37def6226fdc75df67b887be77e16b20a5bebc20714871a1d77597"
+    },
+    {
+      "path": "fixtures/proposal-review/missing-evidence-cache-claim.json",
+      "sha256": "a841f7bf70f7c54278ed0ec5957fa63ae0c4c24874c5b462d161c4da5e3a0168"
+    },
+    {
+      "path": "fixtures/proposal-review/missing-evidence-correct-edit-false-cause.json",
+      "sha256": "e98f1d68d1a70d73f27adddd4f823bc2a1f514f43675817be290f30745b598d5"
+    },
+    {
+      "path": "fixtures/proposal-review/missing-evidence-fake-quote.json",
+      "sha256": "cea1a1b2c8ab93cedc37986b6dd54b139eea4e4b86b611ab1b6b92f8a3da32a4"
+    },
+    {
+      "path": "fixtures/proposal-review/missing-evidence-phantom-null.json",
+      "sha256": "81fe997a3af5932ad5cff8b77252a5ce0fe93455f52cb34e38c9aad5841e0e01"
+    },
+    {
+      "path": "fixtures/proposal-review/off-scope-escape-root.json",
+      "sha256": "a6a20618418d462bf297eb31c6dbdfb729c9fe50553b6d1be35c9f6df40bea77"
+    },
+    {
+      "path": "fixtures/proposal-review/off-scope-log-level.json",
+      "sha256": "815c3d598ad966a3d5dc34b6a417c8dd8f2000bfc25dfe8b2b7eebcde08cfa67"
+    },
+    {
+      "path": "fixtures/proposal-review/off-scope-two-files.json",
+      "sha256": "e57ae690e9c1d2d54143a0969cb77c52eca9bc88ad0db4281770560b1db1f947"
+    },
+    {
+      "path": "fixtures/proposal-review/off-scope-wrong-file.json",
+      "sha256": "3f4bbb1ebacbbefc51c55188b48fa5bcc84e696841f48061d8e13912c681927f"
+    }
+  ],
+  "limitations": [
+    "One pass over synthetic cases; no production calibration or optimal threshold claim.",
+    "Original 21 cases remain development cases; four prospective pairs were designed after historical results.",
+    "Independent agent case review is not independent human labeling.",
+    "No proposal applied or executed.",
+    "Provider HTTP-attempt telemetry, raw exchanges, token usage and billing were not recorded."
+  ],
+  "reproductionCommandTemplate": "op run --env-file=.env.1password -- pnpm exec tsx scripts/proposal-review-bench.ts --live --output docs/proposal-review-runs/live-YYYY-MM-DD-followup.json"
+}

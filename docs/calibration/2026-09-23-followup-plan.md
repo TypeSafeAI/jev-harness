@@ -48,3 +48,9 @@ cases to fit observed answers.
 
 Link the live artifact and follow-up analysis before closing issue #5. Until
 then, live outcomes remain pending and the threshold remains uncalibrated.
+
+## Recorded follow-up
+
+The separately recorded [live pass and analysis](2026-09-23-followup.md) now
+complete the planned investigation. The pre-measurement design above and all
+fixture bytes and labels remain unchanged; the threshold remains uncalibrated.

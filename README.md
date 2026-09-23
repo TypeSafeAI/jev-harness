@@ -41,7 +41,9 @@ Signed commits and the existing secret guards remain required.
 
 Four [prospective fixture pairs](docs/calibration/2026-09-23-followup-plan.md)
 extend coverage for issue #5 without changing the original 21 cases or the fixed
-`0.8` threshold. Live outcomes remain pending; this expansion is not calibration.
+`0.8` threshold. The [live follow-up](docs/calibration/2026-09-23-followup.md)
+records a confidence-only catch and unexpected good holds; it does not
+establish calibration.
 
 The optional Next.js demo starts offline and offers explicit live routing through
 its separate loopback example host. `/arena` runs Codex against synthetic MCP fixtures.
