@@ -7,10 +7,11 @@
  * transport and an injectable clock used only for latency bookkeeping.
  *
  * Extracted from TypeSafeAI/typesafe-playground `lib/harness/review.ts` at
- * 2c6cac903ee3887eb72548e012c14a7aefe4f3bd and adapted to the hardened
+ * 6fe5967dc020521a0731682b06c4d8eeeab95ffb and adapted to the hardened
  * contract: `JEV_MODEL` and `REVIEW_QUESTION_SET_VERSION` stay in ./types,
  * policy objects are frozen, and every request passes `validateReviewPayload`
- * before the transport sees it.
+ * before the transport sees it. Requests and real-source replies must use the
+ * exact model pin; only explicitly labeled mock replies may report a mock model.
  */
 import { dataRecord } from "./input";
 import { validateReviewPayload, type NoulCriteria, type Question, type RunPayload } from "./payload";
@@ -90,6 +91,8 @@ export function buildReviewPayload(
   proposal: Proposal,
   model: string = JEV_MODEL,
 ): RunPayload {
+  if (model !== JEV_MODEL)
+    throw Error(`Request needs the exact pinned model ${JEV_MODEL}.`);
   return {
     model,
     state: {
@@ -135,6 +138,7 @@ const defaultClock = () =>
 
 export interface ReviewOptions {
   signal?: AbortSignal;
+  /** When supplied, must equal `JEV_MODEL`; aliases and other versions throw. */
   model?: string;
   source?: JevSource;
   /** Milliseconds for latency bookkeeping only; inject for deterministic tests. */
@@ -143,8 +147,9 @@ export interface ReviewOptions {
 
 /**
  * Build and validate the payload, call the injected transport once, and read
- * the reply. An empty model throws before any call; every transport failure
- * returns `answers: null`, which `decide()` maps to `unavailable`.
+ * the reply. An unpinned request model throws before any call. A real-source
+ * reply must report the exact pin; missing or mismatched models and transport
+ * failures return `answers: null`, which `decide()` maps to `unavailable`.
  */
 export async function reviewProposal(
   fixture: Pick<Fixture, "task" | "files" | "evidence">,
@@ -152,7 +157,7 @@ export async function reviewProposal(
   transport: JevTransport<RunPayload>,
   options: ReviewOptions = {},
 ): Promise<JevReview & { payload: RunPayload; raw: unknown }> {
-  const model = options.model ?? JEV_MODEL;
+  const model = options.model === undefined ? JEV_MODEL : options.model;
   const payload = validateReviewPayload(buildReviewPayload(fixture, proposal, model));
   const source = options.source ?? "jev";
   const clock = options.clock ?? defaultClock;
@@ -160,8 +165,10 @@ export async function reviewProposal(
   let raw: unknown = null;
   try {
     raw = await transport(payload, options.signal);
-    const answers = parseReviewAnswers(raw);
     const reported = dataRecord(raw)?.model;
+    if (source === "jev" && reported !== JEV_MODEL)
+      throw Error(`Response must report the exact pinned model ${JEV_MODEL}.`);
+    const answers = parseReviewAnswers(raw);
     return {
       model: typeof reported === "string" && reported.length > 0 ? reported : model,
       answers,

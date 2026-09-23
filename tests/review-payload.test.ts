@@ -9,13 +9,14 @@ import {
   REVIEW_QUESTION_CRITERIA,
   UNTRUSTED_NOTE,
   buildReviewPayload,
+  decide,
   reviewProposal,
   validateReviewPayload,
   type Proposal,
   type RunPayload,
 } from "../src";
 import { loadFixtures } from "../src/benchmark/load";
-import { createMockTransport } from "../src/benchmark/mock";
+import { createMockTransport, MOCK_MODEL } from "../src/benchmark/mock";
 import { FixtureProposer } from "../src/benchmark/proposer";
 import { runProposalReview } from "../src/benchmark/run";
 
@@ -153,11 +154,67 @@ test("malformed noul criteria fail validation instead of being dropped", () => {
     assert.throws(() => validateReviewPayload(withCriteria(criteria)), /criteria/, JSON.stringify(criteria));
 });
 
-test("the payload validator never substitutes a model alias", () => {
+const unpinnedModels = ["jev-latest", "jev-preview", "jev-1.12.0", "jev-1.14.0", "", " ", ` ${JEV_MODEL} `];
+
+test("the payload validator accepts only the exact model pin, including at runtime", () => {
   const base = buildReviewPayload(fixture, proposal);
-  assert.throws(() => validateReviewPayload({ ...base, model: "" }), /pinned model/);
-  assert.throws(() => validateReviewPayload({ ...base, model: undefined }), /pinned model/);
+  for (const model of [...unpinnedModels, undefined, null, 113])
+    assert.throws(() => validateReviewPayload({ ...base, model }), /pinned model/, String(model));
+  const { model: _model, ...missingModel } = base;
+  assert.throws(() => validateReviewPayload(missingModel), /pinned model/);
   assert.equal(validateReviewPayload(base).model, JEV_MODEL);
+});
+
+test("the payload builder rejects every explicit unpinned model", () => {
+  for (const model of unpinnedModels)
+    assert.throws(() => buildReviewPayload(fixture, proposal, model), /pinned model/, model);
+  assert.equal(buildReviewPayload(fixture, proposal, JEV_MODEL).model, JEV_MODEL);
+  assert.equal(buildReviewPayload(fixture, proposal).model, JEV_MODEL);
+});
+
+test("review options cannot send an unpinned request to the transport", async () => {
+  const { sent, transport } = capture();
+  for (const model of unpinnedModels)
+    await assert.rejects(reviewProposal(fixture, proposal, transport, { model }), /pinned model/);
+  assert.deepEqual(sent, []);
+  const review = await reviewProposal(fixture, proposal, transport, { model: JEV_MODEL });
+  assert.equal(review.error, null);
+  assert.equal(review.model, JEV_MODEL);
+  assert.equal(sent.length, 1);
+});
+
+const favorableReply = {
+  answers: {
+    addresses_task: { type: "noul", noul: 0.95 },
+    evidence_supports: { type: "noul", noul: 0.95 },
+    unrelated_changes: { type: "noul", noul: 0.05 },
+    needs_clarification: { type: "noul", noul: 0.05 },
+  },
+};
+
+test("real replies with an absent or unexpected model are unavailable despite favorable answers", async () => {
+  for (const raw of [
+    favorableReply,
+    ...[...unpinnedModels, MOCK_MODEL, undefined, null, 113].map((model) => ({ ...favorableReply, model })),
+  ]) {
+    const review = await reviewProposal(fixture, proposal, async () => raw, { source: "jev", clock: () => 0 });
+    assert.equal(review.answers, null, JSON.stringify(raw));
+    assert.match(review.error!, /pinned model/);
+    assert.equal(review.source, "jev");
+    assert.equal(review.raw, raw);
+    assert.equal(decide({ ok: true, errors: [] }, review).verdict, "unavailable");
+  }
+});
+
+test("the pinned real model and explicitly labeled scripted mock retain favorable evidence", async () => {
+  for (const [source, model] of [["jev", JEV_MODEL], ["mock", MOCK_MODEL]] as const) {
+    const review = await reviewProposal(fixture, proposal, async () => ({ ...favorableReply, model }), { source });
+    assert.equal(review.error, null);
+    assert.equal(review.model, model);
+    assert.equal(review.source, source);
+    assert.equal(review.payload.model, JEV_MODEL);
+    assert.equal(decide({ ok: true, errors: [] }, review).verdict, "permit");
+  }
 });
 
 test("policy objects are frozen", () => {

@@ -3,7 +3,7 @@
  * the pure root or `src/benchmark/index.ts`; import it explicitly.
  *
  * Extracted from TypeSafeAI/typesafe-playground `lib/harness/load.ts` at
- * 2c6cac903ee3887eb72548e012c14a7aefe4f3bd. The default directory resolves
+ * 6fe5967dc020521a0731682b06c4d8eeeab95ffb. The default directory resolves
  * from this file rather than `process.cwd()`.
  */
 import { readdirSync, readFileSync } from "node:fs";

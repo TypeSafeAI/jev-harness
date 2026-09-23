@@ -23,8 +23,8 @@ read grant does not automatically allow uploading that file to a provider.
 
 The root exports shared types, `decide`, `unfavorable`, threshold, and immutable
 question/direction/tool metadata, plus the pure routing API. It also exports the
-phase 1 pieces extracted from playground PR #41 at `2c6cac9` (not yet merged
-upstream): `validateProposal` (zod schema, path, and single-file diff checks
+phase 1 pieces re-diffed against merged playground PR #41 at
+`6fe5967dc020521a0731682b06c4d8eeeab95ffb`: `validateProposal` (zod schema, path, and single-file diff checks
 against a snapshot the caller passes in), `buildReviewPayload`,
 `validateReviewPayload`, `parseReviewAnswers`, and `reviewProposal` over an
 injected `JevTransport`. None of these read files, call a network, or read the
@@ -55,9 +55,17 @@ its payload validator dropped noul criteria before sending, so no recorded run
 used them. That text is kept as `REVIEW_QUESTION_CRITERIA` and is not sent;
 sending it would change effective semantics and needs a new question-set
 version. `validateReviewPayload` preserves explicitly supplied `{ true, false }`
-criteria, rejects malformed criteria instead of dropping them, and refuses an
-empty model instead of substituting an alias. `tests/review-payload.test.ts`
-checks the exact request the injected transport receives.
+criteria and rejects malformed criteria instead of dropping them. Both the
+builder and validator require the exact `JEV_MODEL` pin: aliases, other
+versions, empty strings, and padded values throw before transport. An omitted
+builder/review option still defaults to the pin; a request payload missing its
+model is invalid. For `source: "jev"`, a reply missing the exact pinned model
+returns null answers and an error, so the unchanged decision table returns
+`unavailable`. Explicitly labeled mock replies retain `mock-scripted` model
+provenance. This deliberately tightens the source implementation, which
+accepted overrides and substituted the requested model for missing response
+metadata. `tests/review-payload.test.ts` checks the request sent to transport
+and both response paths. No fixture verdicts or question semantics change.
 
 Given probability of yes `p`, derive answer from `p >= 0.5` and confidence from
 `Math.max(p, 1 - p)`. Confidence is not correctness. The threshold 0.8 remains
@@ -136,12 +144,24 @@ no receipt it produces records an applied change. `pnpm bench:review` runs the
 21 synthetic fixtures offline with the mock transport and prints scripted
 totals, not measurements.
 
+The `clean-read-before-edit-content-not-in-evidence` fixture pairs a read with an
+unsupported guessed edit: the bad proposal claims an ignored legacy field
+controls upload retries, contradicting the inline documentation. Question set
+v1 supplies all fixture files to Jev, even when quoted evidence contains only
+the task. It cannot establish the proposer's read history or enforce read before
+edit. Only the scripted mock isolates an `evidence_supports` miss; a live review
+may flag other questions too.
+
 ## Host seams and acceptance
 
 The routing contract and offline synthetic comparison are implemented; live
 integration and measurements remain pending. Planned host work includes the Rust
 `ProposalReview` seam and `ContextScorer` (relevance per chunk). A context-scoring experiment needs an egress policy and a
-cost model comparing scoring/re-prefill with forfeited prefix-cache reuse.
+cost model comparing scoring/re-prefill with forfeited prefix-cache reuse. The
+[ContextScorer cost model](context-scoring-cost-model.md) records a no-go for
+integration code and a conditional go for a synthetic shadow experiment: with
+cache reads at 0.1× input price, a stable context block breaks even only when
+scoring drops at least `s·(1 − r) + ρ·(1 + ε)` of it.
 The planned Rust seam does not put provider HTTP clients into a pure crate;
 transport stays in an appropriate host adapter.
 
@@ -160,4 +180,11 @@ authorization, or isolated execution. Future evaluation must follow the
 
 `src/routing/` supplies a pure catalog, injected `ToolRouter` seam, deterministic selection policy and schema context assembly. It does not change proposal-review decisions. `examples/routing/` contains synthetic evidence and paired context evaluation. See [Routing evidence and dynamic tool context](routing.md) for outcome semantics, host adapter mapping, cost assumptions and the live-measurement gate.
 
-The optional demo is a Next.js App Router host (`app/`, `components/`, `examples/host/`). The Arena is the sole application page, with Compare/History views, native radio example cards and modal detail drawers. React retains key controls and the usage dialog. A browser-only adapter outside `src/` stores bounded, versioned run snapshots. Pure history helpers validate stored data and restrict trend pairs to complete lanes with matching fixture contents and setup revision; missing metrics remain unknown. This cache is inspectable evidence, not authenticated provenance or execution authority. The host adapter is not exported by `src/`. Explicit live requests rebuild the fixed choice payload and validate evidence before browser policy/context assembly. The arena uses the same routing core to choose the MCP tool list for a fresh Codex CLI process; its host can read synthetic fixtures and record pending proposals, never apply or execute them. Server credentials remain server-only; personal overrides follow the playground's masked origin-local storage behavior. See [the demo guide](routing-demo.md) for credentials, process isolation, egress, usage and failure boundaries.
+The optional demo is a Next.js App Router host (`app/`, `components/`, `examples/host/`). The Arena is the sole application page, with Compare/History/Integrate views, native radio example cards and modal detail drawers. React retains key controls and the usage dialog. A browser-only adapter outside `src/` stores bounded, versioned run snapshots. Pure history helpers validate stored data and restrict trend pairs to complete lanes with matching fixture contents and setup revision; missing metrics remain unknown. This cache is inspectable evidence, not authenticated provenance or execution authority. The host adapter is not exported by `src/`. Explicit live requests rebuild the fixed choice payload and validate evidence before browser policy/context assembly. The arena uses the same routing core to choose the MCP tool list for a fresh Codex CLI process; its host can read synthetic fixtures and record pending proposals, never apply or execute them. Server credentials remain server-only; personal overrides follow the playground's masked origin-local storage behavior. See [the demo guide](routing-demo.md) for credentials, process isolation, egress, usage and failure boundaries.
+
+`examples/arena/lessons.ts` derives versioned observations and testable recommendations from a settled `ArenaRun`. It uses reported scalar metrics, routing outcome and both tool traces, never treats an answer or rationale as instructions, and makes no I/O or policy changes. Paired input/time deltas require a complete run and complete lanes; integrated totals include Jev. Invalid or missing numbers remain unknown. Rejected calls, absent tool evidence and truncated traces in either lane precede performance tuning. The UI derives lessons for current or reopened snapshots and attaches the analysis version and source run id to downloads; it does not change the stored run schema or infer correctness, causal effects or monetary savings.
+
+
+`prepareToolContext` is an additive routing composition API, not a runtime or dispatcher. It snapshots the requested mode and previous context before awaiting `routeTools` once, then computes full and lean contexts from that same previous state. The explicitly requested shadow mode selects full context even after failed routing; lean selects only routed schemas. Cancellation leaves active context empty in either mode while retaining comparison evidence. Hosts must consume `context`, discard stale handoffs and independently enforce dispatch policy. The standalone synthetic integration example demonstrates outcomes and availability changes without provider or tool calls.
+
+Human answer assessments use a separate versioned, bounded browser store keyed by run ID. They never alter `ArenaRun`, Jev evidence or policy. History filters only its chart subset, preserving every run in the list and reporting review coverage; passing annotations do not establish correctness. Failed writes retain prior data and edited drafts; conflicting external edits require an explicit reload. Comparison downloads label annotations as human-supplied. The static integration prompt contains no run content, credential or annotation. See [host adoption and measurement](integration.md).

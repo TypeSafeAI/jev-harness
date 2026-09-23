@@ -50,6 +50,10 @@ The original report and its threshold sweep are development evidence, not a
 held-out calibration or a production false-permit estimate. Do not overwrite
 historical artifacts with relabeled or retuned results.
 
+A per-question reading of those four runs, with the run-1 label conflict made
+explicit, is in [the 2026-09-22 per-question note](../calibration/2026-09-22-per-question.md)
+(issue #5). It finds no per-question floor separation and changes no constant.
+
 ## Blinded real-proposer input
 
 Use `prepareProposerInput` and `BlindedProposer` for future real-model studies.

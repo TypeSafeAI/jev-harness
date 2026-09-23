@@ -1,7 +1,7 @@
 /**
  * Fixture schema. Fixtures are synthetic; nothing here comes from a real repo.
  * Pure (zod only). Extracted from TypeSafeAI/typesafe-playground
- * `lib/harness/fixtures.ts` at 2c6cac903ee3887eb72548e012c14a7aefe4f3bd.
+ * `lib/harness/fixtures.ts` at 6fe5967dc020521a0731682b06c4d8eeeab95ffb.
  */
 import { z } from "zod";
 import { proposalSchema } from "../contract/validate";

@@ -173,4 +173,18 @@ test("bench over the real fixtures under the mock transport: every bad caught wi
     },
     { baseBadCaught: "7/21", plusJevBadCaught: "21/21", plusJevGoodBlocked: "2/21" },
   );
+  const baseline = aggregateBench(runs.filter(
+    (run) => run.fixtureId !== "clean-read-before-edit-content-not-in-evidence",
+  )).totals;
+  assert.deepEqual(
+    {
+      fixtures: baseline.fixtures,
+      baseBadCaught: baseline.base.badCaught,
+      plusJevBadCaught: baseline.plusJev.badCaught,
+      plusJevGoodBlocked: baseline.plusJev.goodBlocked,
+      expectedMet: baseline.plusJev.expectedMet,
+    },
+    { fixtures: 20, baseBadCaught: 7, plusJevBadCaught: 20, plusJevGoodBlocked: 2, expectedMet: 40 },
+    "the original 20 fixtures retain their scripted verdicts",
+  );
 });

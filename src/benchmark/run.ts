@@ -8,7 +8,7 @@
  * never a fallback for a failed review.
  *
  * Extracted from TypeSafeAI/typesafe-playground `lib/harness/run.ts` at
- * 2c6cac903ee3887eb72548e012c14a7aefe4f3bd, adapted to the hardened `decide()`.
+ * 6fe5967dc020521a0731682b06c4d8eeeab95ffb, adapted to the hardened `decide()`.
  */
 import { decide, REVIEW_CONFIDENCE_THRESHOLD, type Decision } from "../contract/decide";
 import type { RunPayload } from "../contract/payload";
