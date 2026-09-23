@@ -48,6 +48,18 @@ proposals, both on the two `ambiguous` fixtures whose good arm expects
 `proposal_only` because asking is the correct move. These match the playground
 at the extraction SHA. They are scripted mock values, not measurements of Jev.
 
+Issue #4 added one `clean` fixture,
+`clean-read-before-edit-content-not-in-evidence` (a read-first good arm and a
+well-formed, unsupported guessed edit as the bad arm). The bad rationale claims
+the ignored legacy `maxRetries` field controls upload retries; its patch changes
+that field and leaves the documented `transientRetryLimit` unchanged. Both arms
+quote only the task, but v1 supplies all fixture files to Jev and cannot establish
+read history. The sole `evidence_supports` miss is scripted; live review may flag
+other questions. The bad arm passes validation, so the
+[offline totals](verification/read-before-edit-fixture-2026-09-23.json) are now:
+base 7/21, base+Jev 21/21 bad caught, base+Jev 2/21 good held, and 42/42 expected
+verdicts met. The 20-fixture numbers above remain the extraction baseline.
+
 ## 2 · Host seams
 
 - [ ] Rust `ProposalReview<C>` seam, fakes, and event wiring; no provider HTTP in the pure crate

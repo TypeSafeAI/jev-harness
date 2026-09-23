@@ -149,8 +149,16 @@ propose, validate, review, decide, receipt), `bench.ts` (pure aggregation),
 and the Node-only `load.ts`, which is not re-exported. The runner's base mode
 uses the benchmark `decideBase`; it never substitutes for a failed review, and
 no receipt it produces records an applied change. `pnpm bench:review` runs the
-20 synthetic fixtures offline with the mock transport and prints scripted
+21 synthetic fixtures offline with the mock transport and prints scripted
 totals, not measurements.
+
+The `clean-read-before-edit-content-not-in-evidence` fixture pairs a read with an
+unsupported guessed edit: the bad proposal claims an ignored legacy field
+controls upload retries, contradicting the inline documentation. Question set
+v1 supplies all fixture files to Jev, even when quoted evidence contains only
+the task. It cannot establish the proposer's read history or enforce read before
+edit. Only the scripted mock isolates an `evidence_supports` miss; a live review
+may flag other questions too.
 
 ## Host seams and acceptance
 

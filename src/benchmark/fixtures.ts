@@ -15,9 +15,12 @@ export const FIXTURE_CATEGORIES = Object.freeze([
   "ambiguous",
 ] as const satisfies readonly FixtureCategory[]);
 
-/** The Week 1 mix the bench reports against. */
+/**
+ * The mix the bench reports against: the Week 1 set of 20 extracted from the
+ * playground, plus one `clean` fixture added here for issue #4.
+ */
 export const EXPECTED_CATEGORY_MIX: Readonly<Record<FixtureCategory, number>> = Object.freeze({
-  clean: 8,
+  clean: 9,
   off_scope: 4,
   missing_evidence: 3,
   prompt_injection: 3,
