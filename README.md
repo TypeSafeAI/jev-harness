@@ -60,6 +60,7 @@ its separate loopback example host. `/arena` runs Codex against synthetic MCP fi
 | Benchmark-only verdict helper | Implemented at `src/benchmark`; explicitly records no-review provenance |
 | Evaluation accounting and blinded proposer inputs | Implemented at `src/benchmark/evaluation.ts`; not a live experiment runner |
 | Routing contract and offline synthetic comparison | Implemented at `src/routing/` and `examples/routing/`; no live provider or execution |
+| Context relevance shadow experiment | Example-local, offline synthetic demonstration at `examples/context-scoring-shadow/`; original context stays intact |
 | Interactive Next.js demo and CLI arena | Implemented at `app/`, `components/`, and `examples/host/`; loopback routing, saved keys, usage and synthetic fixture comparisons |
 | Proposal schema/path/diff validator and Jev payload builder | Extracted from merged playground PR #41 at `6fe5967dc020521a0731682b06c4d8eeeab95ffb` into `src/contract/`; pure, transport injected |
 | Synthetic fixture suite, scripted proposer, mock transport, fixture runner, bench aggregation | Extracted into `fixtures/proposal-review/` and `src/benchmark/`; offline only (`pnpm bench:review`) |
@@ -268,6 +269,27 @@ After a run, add a human assessment and next-experiment note. History shows revi
 
 The offline routing run artifact includes receipts, full/lean context bytes, token estimates, acceptable-tool inclusion and cheapest acceptable selection. Evidence is scripted; local timing is not Jev or execution latency. Router overhead is counted separately so fewer schemas do not automatically imply savings. See [the design, metrics and host adapter boundary](docs/routing.md).
 
+
+## Context relevance shadow experiment
+
+Sort synthetic context into proposed keep/drop sets while leaving the caller's
+original context untouched:
+
+```sh
+pnpm --silent experiment:context-shadow
+pnpm --silent experiment:context-shadow --format markdown
+```
+
+Both reports describe the same **synthetic demonstration**: scripted Noul
+evidence for one request with all chunks versus one request per chunk. No live
+mode, provider client, production `ContextScorer`, or root export is added.
+Uncertain chunks are retained; incomplete evidence withholds a complete drop
+recommendation. Byte/token proxies are not billing measurements. Cost estimates
+require explicit segment-level observations and dated assumptions; aggregate
+cached-token totals cannot establish the context block's cache share.
+See [the experiment guide](examples/context-scoring-shadow/README.md) and
+[the cost-model decision](docs/context-scoring-cost-model.md). Production
+integration and live shadow measurement remain pending.
 
 ## Roadmap and related projects
 

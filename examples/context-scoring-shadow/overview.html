@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <title>Sort the notes. Keep the stack.</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        background: #0f1012;
+        color: #f4f4f5;
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+      }
+      * { box-sizing: border-box; }
+      html, body { width: 100%; min-height: 100%; margin: 0; }
+      body { min-height: 100svh; display: grid; place-items: center; background: #0f1012; }
+      main { width: min(100vw, calc(100svh * 16 / 9), 1280px); aspect-ratio: 16 / 9; }
+      svg { display: block; width: 100%; height: 100%; }
+      @media print {
+        body { min-height: 0; }
+        main { width: 100%; max-width: 1280px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-labelledby="context-shadow-title context-shadow-desc" preserveAspectRatio="xMidYMid meet">
+        <title id="context-shadow-title">Sort the notes. Keep the stack.</title>
+        <desc id="context-shadow-desc">Offline synthetic demonstration of relevance scoring for three context notes. For the task “Why does this request time out?”, timeout_config receives scripted p equals 0.94 and would be kept as relevant; timeout_caller receives p equals 0.68 and would be kept as uncertain; button_styles receives p equals 0.08 and would be dropped. The probabilities are scripted in demo.ts and are never live. Illustrative cutoffs: below 0.2 would drop, 0.2 through 0.8 is uncertain and retained, and above 0.8 is relevant and retained. Incomplete evidence retains all notes and proposes no drops. Bundled demo costs are unknown. The original context keeps all three notes unchanged; no agent runs and no replacement context is returned.</desc>
+        <style>
+          .sans { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+          .mono { font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+          .eyebrow { fill: #f386a1; font-size: 11px; font-weight: 600; letter-spacing: 1.25px; }
+          .headline { fill: #f4f4f5; font-size: 34px; font-weight: 600; letter-spacing: -1.1px; }
+          .task-label, .column-label { fill: #9b9ba4; font-size: 11px; font-weight: 550; letter-spacing: 0.7px; }
+          .task { fill: #f4f4f5; font-size: 16px; font-weight: 500; }
+          .note-id { fill: #f4f4f5; font-size: 13px; font-weight: 500; }
+          .note-copy { fill: #9b9ba4; font-size: 13px; font-weight: 400; }
+          .score { fill: #f4f4f5; font-size: 17px; font-weight: 500; }
+          .outcome { fill: #f4f4f5; font-size: 14px; font-weight: 600; }
+          .outcome-detail { fill: #9b9ba4; font-size: 12px; font-weight: 400; }
+          .arrow-label { fill: #9b9ba4; font-size: 10px; font-weight: 450; letter-spacing: 0.2px; }
+          .caption { fill: #9b9ba4; font-size: 12px; font-weight: 400; }
+          .caption-strong { fill: #f4f4f5; font-weight: 550; }
+          .callout-title { fill: #f4f4f5; font-size: 20px; font-weight: 600; letter-spacing: -0.25px; }
+          .callout-copy { fill: #c4c4cb; font-size: 15px; font-weight: 400; }
+          .connector { fill: none; stroke: #9b9ba4; stroke-width: 1.5; }
+          .note-box { fill: #17181b; stroke: #2b2c32; stroke-width: 1; }
+          .score-box { fill: #202125; stroke: #2b2c32; stroke-width: 1; }
+          .outcome-box { fill: #17181b; stroke: #2b2c32; stroke-width: 1; }
+        </style>
+        <defs>
+          <marker id="context-shadow-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+            <path d="M0 0 L8 4 L0 8 Z" fill="#9b9ba4"/>
+          </marker>
+          <marker id="context-shadow-arrow-accent" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+            <path d="M0 0 L8 4 L0 8 Z" fill="#f386a1"/>
+          </marker>
+          <marker id="context-shadow-arrow-link" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+            <path d="M0 0 L8 4 L0 8 Z" fill="#9b9ba4"/>
+          </marker>
+        </defs>
+
+        <rect width="1280" height="720" fill="#0f1012"/>
+
+        <text class="sans eyebrow" x="64" y="48">SYNTHETIC DEMONSTRATION · OFFLINE ONLY</text>
+        <text class="sans headline" x="64" y="94">Sort the notes. Keep the stack.</text>
+        <text class="sans task-label" x="64" y="145">TASK</text>
+        <text class="sans task" x="116" y="145">Why does this request time out?</text>
+
+        <text class="sans column-label" x="64" y="190">NOTES IN ORIGINAL CONTEXT</text>
+        <text class="sans column-label" x="622" y="190">SCRIPTED PROBABILITY</text>
+        <text class="mono" x="622" y="207" fill="#9b9ba4" font-size="10" font-weight="400">demo.ts · never live</text>
+        <text class="sans column-label" x="922" y="190">PROPOSED OUTCOME</text>
+
+        <!-- Six straight connectors, each separated into its own row. -->
+        <path class="connector" d="M498 256 H616" marker-end="url(#context-shadow-arrow)"/>
+        <path class="connector" d="M788 256 H916" marker-end="url(#context-shadow-arrow)"/>
+        <path class="connector" d="M498 342 H616" marker-end="url(#context-shadow-arrow)"/>
+        <path class="connector" d="M788 342 H916" marker-end="url(#context-shadow-arrow)"/>
+        <path class="connector" d="M498 428 H616" marker-end="url(#context-shadow-arrow)"/>
+        <path class="connector" d="M788 428 H916" marker-end="url(#context-shadow-arrow)"/>
+
+        <!-- Opaque labels sit above their lines with clear separation. -->
+        <rect x="535" y="226" width="46" height="14" rx="4" fill="#0f1012"/>
+        <text class="sans arrow-label" x="558" y="237" text-anchor="middle">score</text>
+        <rect x="824" y="226" width="58" height="14" rx="4" fill="#0f1012"/>
+        <text class="sans arrow-label" x="853" y="237" text-anchor="middle">cutoff</text>
+        <rect x="535" y="312" width="46" height="14" rx="4" fill="#0f1012"/>
+        <text class="sans arrow-label" x="558" y="323" text-anchor="middle">score</text>
+        <rect x="824" y="312" width="58" height="14" rx="4" fill="#0f1012"/>
+        <text class="sans arrow-label" x="853" y="323" text-anchor="middle">cutoff</text>
+        <rect x="535" y="398" width="46" height="14" rx="4" fill="#0f1012"/>
+        <text class="sans arrow-label" x="558" y="409" text-anchor="middle">score</text>
+        <rect x="824" y="398" width="58" height="14" rx="4" fill="#0f1012"/>
+        <text class="sans arrow-label" x="853" y="409" text-anchor="middle">cutoff</text>
+
+        <!-- Three synthetic input notes. -->
+        <rect class="note-box" x="64" y="220" width="434" height="72" rx="8"/>
+        <text class="mono note-id" x="84" y="246">timeout_config</text>
+        <text class="sans note-copy" x="84" y="271">requestTimeoutMs: 250 · retryCount: 0</text>
+
+        <rect class="note-box" x="64" y="306" width="434" height="72" rx="8"/>
+        <text class="mono note-id" x="84" y="332">timeout_caller</text>
+        <text class="sans note-copy" x="84" y="357">waits for profile lookup before returning</text>
+
+        <rect class="note-box" x="64" y="392" width="434" height="72" rx="8"/>
+        <text class="mono note-id" x="84" y="418">button_styles</text>
+        <text class="sans note-copy" x="84" y="443">settings page uses a rounded blue button</text>
+
+        <!-- Scripted p values, kept visually separate from the proposed labels. -->
+        <rect class="score-box" x="622" y="220" width="166" height="72" rx="8"/>
+        <text class="mono score" x="705" y="262" text-anchor="middle">p = 0.94</text>
+
+        <rect class="score-box" x="622" y="306" width="166" height="72" rx="8"/>
+        <text class="mono score" x="705" y="348" text-anchor="middle">p = 0.68</text>
+
+        <rect class="score-box" x="622" y="392" width="166" height="72" rx="8"/>
+        <text class="mono score" x="705" y="434" text-anchor="middle">p = 0.08</text>
+
+        <!-- Proposed outcomes; labels carry meaning without relying on color. -->
+        <rect class="outcome-box" x="922" y="220" width="294" height="72" rx="8"/>
+        <text class="sans outcome" x="944" y="249">Would keep</text>
+        <text class="sans outcome-detail" x="944" y="271">relevant</text>
+
+        <rect class="outcome-box" x="922" y="306" width="294" height="72" rx="8"/>
+        <text class="sans outcome" x="944" y="335">Would keep</text>
+        <text class="sans outcome-detail" x="944" y="357">uncertain</text>
+
+        <rect class="outcome-box" x="922" y="392" width="294" height="72" rx="8"/>
+        <text class="sans outcome" x="944" y="421">Would drop</text>
+        <text class="sans outcome-detail" x="944" y="443">below 0.2</text>
+
+        <text class="sans caption" x="64" y="497">
+          <tspan class="caption-strong">Illustrative cutoffs</tspan>
+          <tspan dx="10">p &lt; 0.2: drop · 0.2–0.8: uncertain and retained · p &gt; 0.8: relevant and retained</tspan>
+        </text>
+        <text class="sans caption" x="64" y="521">Incomplete evidence: retain all notes and propose no drops.</text>
+        <text class="sans caption" x="1216" y="521" text-anchor="end">Bundled demo cost: unknown.</text>
+
+        <rect x="64" y="548" width="1152" height="112" rx="8" fill="#17181b" stroke="#f386a1" stroke-opacity="0.58" stroke-width="1.2"/>
+        <text class="sans callout-title" x="88" y="594">Original context keeps all 3 notes unchanged.</text>
+        <text class="sans callout-copy" x="88" y="623">No agent is run and no replacement context is returned.</text>
+      </svg>
+    </main>
+  </body>
+</html>

@@ -1,8 +1,10 @@
 # ContextScorer cost model and go/no-go (roadmap phase 4)
 
 Status: decision record for [issue #3](https://github.com/TypeSafeAI/jev-harness/issues/3).
-No `ContextScorer` code exists in this repository, and this document does not
-add any. It uses only recorded run artifacts and official public documentation.
+No production `ContextScorer` exists in this repository. The later
+[offline shadow experiment kit](../examples/context-scoring-shadow/README.md)
+is a synthetic demonstration and does not change this integration decision.
+This decision record uses only recorded run artifacts and official public documentation.
 No provider was called to write it.
 
 ## Decision
@@ -307,12 +309,15 @@ current arena fixtures are too small to be useful.
 Record per turn:
 
 - `C`, `k` and `K`
-- the baseline proposer's input tokens, `cached_tokens` and cache-write tokens, which gives the real `s`
+- segment-level input, cache-read and cache-write observations for the context block, static prefix and any suffix, for both baseline and counterfactual layouts; aggregate proposer `cached_tokens` alone cannot establish the context block's `s`
 - Jev `usage.input_tokens`, wall-clock latency, and state size for both the fan-out and the per-chunk layout
 - the drop set at a frozen threshold, and so the would-be `d`
 - recall against independently labeled relevant chunks
 
-Compute the counterfactual cost with the formulas above. Do not change the
+Use dated price assumptions and explicit scoring token observations when
+computing counterfactual cost; missing segment observations mean unknown cost,
+not zero savings. Byte/token proxies cannot fill this gap. Compute the
+counterfactual cost with the formulas above. Do not change the
 proposer's context during the shadow run. Only if the conditions for go hold
 should a paired live comparison follow, with repeated trials and the
 [evaluation plan](hardening/09-evaluation.md)'s accounting. Link every run

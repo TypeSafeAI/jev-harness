@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "experimentVersion": 1,
+  "model": "jev-1.13.0",
+  "questionSetVersion": "context-relevance-v1",
+  "provenance": {
+    "label": "synthetic demonstration",
+    "adapter": "scripted_fake",
+    "live": false
+  },
+  "thresholds": {
+    "dropBelow": 0.2,
+    "relevantAbove": 0.8
+  },
+  "input": {
+    "task": "Why does this request time out?",
+    "chunks": [
+      {
+        "id": "timeout_config",
+        "text": "Synthetic config: requestTimeoutMs is set to 250, and retryCount is 0.",
+        "relevant": true
+      },
+      {
+        "id": "timeout_caller",
+        "text": "Synthetic caller: the request waits for the profile lookup before returning.",
+        "relevant": true
+      },
+      {
+        "id": "button_styles",
+        "text": "Synthetic styling note: the settings page uses a rounded blue button.",
+        "relevant": false
+      }
+    ],
+    "cacheObservations": {
+      "aggregateCachedInputTokens": 1200
+    }
+  },
+  "layouts": {
+    "fan_out": {
+      "layout": "fan_out",
+      "status": "complete",
+      "failures": [],
+      "evidence": [
+        {
+          "chunkId": "timeout_config",
+          "probability": 0.94,
+          "classification": "relevant_retained"
+        },
+        {
+          "chunkId": "timeout_caller",
+          "probability": 0.68,
+          "classification": "uncertain_retained"
+        },
+        {
+          "chunkId": "button_styles",
+          "probability": 0.08,
+          "classification": "would_drop"
+        }
+      ],
+      "proposedKeepIds": [
+        "timeout_config",
+        "timeout_caller"
+      ],
+      "proposedDropIds": [
+        "button_styles"
+      ],
+      "uncertainIds": [
+        "timeout_caller"
+      ],
+      "relevanceRecall": 1,
+      "scoreRequestTokenObservations": [],
+      "metrics": {
+        "originalContextBytes": 217,
+        "proposedContextBytes": 147,
+        "originalContextTokenProxy": 55,
+        "proposedContextTokenProxy": 37,
+        "plannedRequestCount": 1,
+        "plannedRequestBytes": 1879,
+        "plannedRequestTokenProxy": 470
+      },
+      "costEstimate": {
+        "status": "unknown",
+        "reason": "dated price assumptions are missing or malformed",
+        "assumptions": null,
+        "baselineProposerUsd": null,
+        "counterfactualProposerUsd": null,
+        "scoringUsd": null,
+        "netSavingsUsd": null
+      }
+    },
+    "per_chunk": {
+      "layout": "per_chunk",
+      "status": "complete",
+      "failures": [],
+      "evidence": [
+        {
+          "chunkId": "timeout_config",
+          "probability": 0.94,
+          "classification": "relevant_retained"
+        },
+        {
+          "chunkId": "timeout_caller",
+          "probability": 0.68,
+          "classification": "uncertain_retained"
+        },
+        {
+          "chunkId": "button_styles",
+          "probability": 0.08,
+          "classification": "would_drop"
+        }
+      ],
+      "proposedKeepIds": [
+        "timeout_config",
+        "timeout_caller"
+      ],
+      "proposedDropIds": [
+        "button_styles"
+      ],
+      "uncertainIds": [
+        "timeout_caller"
+      ],
+      "relevanceRecall": 1,
+      "scoreRequestTokenObservations": [],
+      "metrics": {
+        "originalContextBytes": 217,
+        "proposedContextBytes": 147,
+        "originalContextTokenProxy": 55,
+        "proposedContextTokenProxy": 37,
+        "plannedRequestCount": 3,
+        "plannedRequestBytes": 1951,
+        "plannedRequestTokenProxy": 489
+      },
+      "costEstimate": {
+        "status": "unknown",
+        "reason": "dated price assumptions are missing or malformed",
+        "assumptions": null,
+        "baselineProposerUsd": null,
+        "counterfactualProposerUsd": null,
+        "scoringUsd": null,
+        "netSavingsUsd": null
+      }
+    }
+  },
+  "originalContextPreserved": true
+}
