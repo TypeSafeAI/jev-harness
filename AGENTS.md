@@ -30,7 +30,7 @@ src/contract/payload.ts  Question/RunPayload types and validateReviewPayload (cr
 src/contract/validate.ts proposal schema/path/diff validator (zod); diff.ts is its parser
 src/contract/review.ts   question set v1, buildReviewPayload, reviewProposal over an injected transport
 src/benchmark/          explicit base helper, offline evaluation/blinding, fixture bench (load.ts is Node-only)
-fixtures/proposal-review/ the synthetic proposal-review fixtures (20 extracted, 1 added for #4)
+fixtures/proposal-review/ the synthetic proposal-review fixtures (20 extracted, 1 added for #4, 4 for #5)
 src/audit/receipt.ts    optional Node binding/replay adapter; not a pure-root import
 src/routing/            pure catalog, normalized evidence seam, routing policy, context assembly
 examples/routing/       synthetic routing scenarios and paired comparison

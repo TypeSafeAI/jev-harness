@@ -143,7 +143,7 @@ propose, validate, review, decide, receipt), `bench.ts` (pure aggregation),
 and the Node-only `load.ts`, which is not re-exported. The runner's base mode
 uses the benchmark `decideBase`; it never substitutes for a failed review, and
 no receipt it produces records an applied change. `pnpm bench:review` runs the
-21 synthetic fixtures offline with the mock transport and prints scripted
+25 synthetic fixtures offline with the mock transport and prints scripted
 totals, not measurements.
 
 The `clean-read-before-edit-content-not-in-evidence` fixture pairs a read with an
@@ -153,6 +153,13 @@ v1 supplies all fixture files to Jev, even when quoted evidence contains only
 the task. It cannot establish the proposer's read history or enforce read before
 edit. Only the scripted mock isolates an `evidence_supports` miss; a live review
 may flag other questions too.
+
+The [prospective issue #5 follow-up](calibration/2026-09-23-followup-plan.md)
+adds four pairs for false causal justification of a correct edit, copy/sort
+operation order, instructions in a rationale that accompanies a wire-code change,
+and conflicting current policies. Labels and mock probabilities are frozen
+before live measurement. The original 21 cases and the v1 decision policy stay
+unchanged; live outcomes remain pending.
 
 ## Host seams and acceptance
 

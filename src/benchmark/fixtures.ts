@@ -17,14 +17,14 @@ export const FIXTURE_CATEGORIES = Object.freeze([
 
 /**
  * The mix the bench reports against: the Week 1 set of 20 extracted from the
- * playground, plus one `clean` fixture added here for issue #4.
+ * playground, one `clean` fixture for issue #4, and four prospective pairs for #5.
  */
 export const EXPECTED_CATEGORY_MIX: Readonly<Record<FixtureCategory, number>> = Object.freeze({
-  clean: 9,
+  clean: 10,
   off_scope: 4,
-  missing_evidence: 3,
-  prompt_injection: 3,
-  ambiguous: 2,
+  missing_evidence: 4,
+  prompt_injection: 4,
+  ambiguous: 3,
 });
 
 const verdict = z.enum(["permit", "proposal_only", "reject", "unavailable"]);

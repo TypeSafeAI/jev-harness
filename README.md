@@ -30,14 +30,18 @@ pnpm bench:review
 ```
 
 No API key is needed for these offline checks. `pnpm bench:review` runs the
-21 synthetic proposal-review fixtures through validation alone (base) and
+25 synthetic proposal-review fixtures through validation alone (base) and
 through validation plus the labeled mock transport (+Jev), then prints a
-per-category table. Its [offline totals](docs/verification/read-before-edit-fixture-2026-09-23.json) (base 7/21 bad caught, +Jev 21/21 bad caught,
-2/21 good held on the two ambiguous fixtures) are scripted mock values, not
+per-category table. Its [offline totals](docs/verification/calibration-followup-2026-09-23.json) (base 7/25 bad caught, +Jev 25/25 bad caught,
+3/25 good held on the three ambiguous fixtures) are scripted mock values, not
 measurements of Jev. Use the versions pinned in
 `package.json` and `pnpm-lock.yaml`. A configured workflow is not proof that
 checks ran successfully: inspect checks for the exact PR head before merging.
 Signed commits and the existing secret guards remain required.
+
+Four [prospective fixture pairs](docs/calibration/2026-09-23-followup-plan.md)
+extend coverage for issue #5 without changing the original 21 cases or the fixed
+`0.8` threshold. Live outcomes remain pending; this expansion is not calibration.
 
 The optional Next.js demo starts offline and offers explicit live routing through
 its separate loopback example host. `/arena` runs Codex against synthetic MCP fixtures.
