@@ -5,13 +5,14 @@
  * `Question` and `RunPayload` mirror TypeSafeAI/typesafe-playground
  * `lib/api.ts` at 6fe5967dc020521a0731682b06c4d8eeeab95ffb, defined locally so
  * nothing here imports the playground. `validateReviewPayload` is adapted from
- * that file's `validatePayload` with two deliberate differences:
+ * that file's `validatePayload` with deliberate differences:
  *
  * - Explicitly supplied `noul` criteria (`{ true, false }`) are preserved, per
  *   the official Noul contract (docs/hardening/07-noul-contract.md). The
  *   playground dropped them. Malformed criteria fail instead of being dropped.
  * - Only the exact `JEV_MODEL` pin is accepted. Missing models, aliases, and
  *   other versions throw instead of defaulting to the playground's alias.
+ * - Question types must be exact strings from the closed set, without coercion.
  */
 import { dataArray, dataRecord } from "./input";
 import { JEV_MODEL } from "./types";
@@ -75,7 +76,8 @@ export function validateReviewPayload(value: unknown): RunPayload {
       questions.has(key.trim()) ||
       !q ||
       !nonempty(q.instructions) ||
-      !["noul", "choice", "score"].includes(String(q.type))
+      typeof q.type !== "string" ||
+      !["noul", "choice", "score"].includes(q.type)
     )
       throw Error("Every question needs a unique name, valid type, and instructions.");
     const instructions = q.instructions.trim();
