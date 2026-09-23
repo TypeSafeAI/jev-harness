@@ -69,6 +69,12 @@ accepted overrides and substituted the requested model for missing response
 metadata. `tests/review-payload.test.ts` checks the request sent to transport
 and both response paths. No fixture verdicts or question semantics change.
 
+`reviewProposal` checks cancellation before dispatch and again after the
+transport resolves. A pre-aborted signal makes no transport call; a transport
+that ignores cancellation cannot return usable answers after the signal is
+aborted. Both paths return null answers and a cancellation error, yielding
+`unavailable` through the existing decision table.
+
 Given probability of yes `p`, derive answer from `p >= 0.5` and confidence from
 `Math.max(p, 1 - p)`. Confidence is not correctness. The threshold 0.8 remains
 uncalibrated; a model pin is for reproducibility, not calibration.
@@ -156,8 +162,10 @@ may flag other questions too.
 
 ## Host seams and acceptance
 
-The routing contract and offline synthetic comparison are implemented; live
-integration and measurements remain pending. Planned host work includes the Rust
+The routing contract, offline comparison, and optional synthetic live example
+host are implemented. The [initial repeated live experiment](routing-evaluation/2026-09-23.md)
+records token usage and tool calls, including the top-1 multi-step regression;
+production integration remains pending. Planned host work includes the Rust
 `ProposalReview` seam and `ContextScorer` (relevance per chunk). A context-scoring experiment needs an egress policy and a
 cost model comparing scoring/re-prefill with forfeited prefix-cache reuse. The
 [ContextScorer cost model](context-scoring-cost-model.md) records a no-go for

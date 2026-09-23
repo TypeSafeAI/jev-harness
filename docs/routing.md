@@ -1,6 +1,6 @@
 # Routing evidence and dynamic tool context
 
-This is an offline demonstration of a host boundary, not an agent runtime. A host supplies a catalog and current availability, a routing adapter supplies evidence, and code selects descriptors to show to a proposer. No tool, specialist, model proposer, patch, or proposed code executes.
+The pure routing contract defines a host boundary. A host supplies a catalog and current availability, a routing adapter supplies evidence, and code selects descriptors to show to a proposer. The contract launches nothing. The separate example host can explicitly call live Jev and Codex against synthetic fixtures; proposed patches and code never execute.
 
 ## Review of the proposed direction
 
@@ -11,9 +11,9 @@ This is an offline demonstration of a host boundary, not an agent runtime. A hos
 | Cost-aware routing | Probability floor and relevance window establish eligibility; estimated cost orders eligible tools, then probability and id break ties. |
 | Load and compact context | Full mode includes all available schemas; lean mode includes selected schemas. Explicit load/eviction transitions permit reloading. No semantic compaction or context scoring. |
 | Transparent chat UI | A separate synthetic browser host can display the same receipts, descriptors and context comparison. |
-| Measure efficiency and speed | Record schema bytes, estimated tokens, acceptable-tool inclusion, cheapest acceptable selection and local comparison time. Live model accuracy, billed tokens, cache effects, dollars and execution latency remain unmeasured. |
+| Measure efficiency and speed | Record schema bytes, estimated tokens, acceptable-tool inclusion, cheapest acceptable selection and local comparison time. The [live experiment](routing-evaluation/2026-09-23.md) adds provider-reported usage and observed tool calls; answer quality, dollars and execution latency remain unmeasured. |
 
-The original description assumed a loop and tool executor already existed. They do not, and adding them would cross this repository's evidence/authority boundary. Phase 1 extraction still waits for playground PR #41 to merge. This independent routing experiment does not reconstruct that pending code.
+The original description assumed a loop and tool executor already existed. They do not, and adding them would cross this repository's evidence/authority boundary. Playground PR #41 is now merged; phase 1 extraction uses that canonical history. This independent routing experiment does not reconstruct that code.
 
 ## Contract
 
@@ -69,7 +69,7 @@ A live paired experiment must use the same synthetic tasks, actual proposer outc
 
 ## Experiment protocol: N tools in context vs Jev top-k
 
-Roadmap phase 3, [issue #2](https://github.com/TypeSafeAI/jev-harness/issues/2). The runner and results format have landed and are verified offline with fakes. No live result exists yet; the roadmap item stays open until a live artifact is linked.
+Roadmap phase 3, [issue #2](https://github.com/TypeSafeAI/jev-harness/issues/2). The runner is verified offline with fakes. The [2026-09-23 live report](routing-evaluation/2026-09-23.md) links three repetitions and a separate pilot: input usage decreased, but top-1 selection lost tool use on multi-step tasks. The report separates expected clarification from that regression and records reproduction limits.
 
 **Hypothesis.** For a task and a permitted catalog of size N, routing through Jev (`choice` over the available ids plus `needs_clarification`, with the demo confidence floor and cost policy) and exposing only the selected schemas gives a proposer fewer input tokens per task without lowering the correct-tool rate, and the gap grows with N.
 
