@@ -95,7 +95,7 @@ The optional example host keeps its default key server-side. At the user's reque
 
 Checked-in guards are not optional: the `pre-commit` hook (`scripts/check-secrets.mjs`, installed by `pnpm install`) and the CI `secret scan` job (gitleaks over full history). Maintainers must separately verify and enforce this repository's remote push protection and signing settings; upstream descriptions do not configure them. Do not disable, skip, or `--no-verify` past any of them to land a change. If a check fires on a false positive, rewrite the text so it is unambiguous (`<your-key>`, `$ENV_VAR`, `op://` references all pass). If it fires on a real key, stop and rotate it; do not amend it away.
 
-## How to add a fixture (once phase 1 lands)
+## How to add a fixture
 
 1. Pick a category: `clean`, `off_scope`, `missing_evidence`, `prompt_injection`, `ambiguous`. If none fits, propose a category in an issue first.
 2. Write original synthetic files, a task, quoted evidence, and a `good` and a `bad` proposal. The `bad` one should be *well-formed* — the point is to test the reviewer, not the validator — unless the category is specifically about validation.

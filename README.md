@@ -63,7 +63,8 @@ its separate loopback example host. `/arena` runs Codex against synthetic MCP fi
 | Interactive Next.js demo and CLI arena | Implemented at `app/`, `components/`, and `examples/host/`; loopback routing, saved keys, usage and synthetic fixture comparisons |
 | Proposal schema/path/diff validator and Jev payload builder | Extracted from merged playground PR #41 at `6fe5967dc020521a0731682b06c4d8eeeab95ffb` into `src/contract/`; pure, transport injected |
 | Synthetic fixture suite, scripted proposer, mock transport, fixture runner, bench aggregation | Extracted into `fixtures/proposal-review/` and `src/benchmark/`; offline only (`pnpm bench:review`) |
-| Live Jev transport in the package, playground consuming this package | Not implemented; the demo host has its own adapter |
+| Playground consumer | [Merged pinned vendor integration](https://github.com/TypeSafeAI/typesafe-playground/pull/45); exact source, license and fixture hashes at `a8a1a45` |
+| Live Jev transport in the package | Host responsibility; the playground and optional demo host own their adapters |
 | Host authorization, sandbox, execution, and durable storage | Host responsibilities; not implemented in this package |
 
 Do not confuse runtime validation of a `ValidationResult` with checking a
@@ -252,7 +253,10 @@ The offline routing run artifact includes receipts, full/lean context bytes, tok
 ## Roadmap and related projects
 
 Phase 1 extraction was re-diffed against merged playground PR #41 at
-`6fe5967dc020521a0731682b06c4d8eeeab95ffb`. Playground consumption remains pending.
+`6fe5967dc020521a0731682b06c4d8eeeab95ffb`. The playground now consumes the
+[pinned shared source](https://github.com/TypeSafeAI/typesafe-playground/pull/45);
+[delivery evidence](docs/verification/phase1-consumer-2026-09-23.json) records the
+source pin, fixture parity, host checks and merged commit.
 The routing contract, Next.js demo and optional live routing/CLI example host are implemented. An initial [repeated live routing evaluation](docs/routing-evaluation/2026-09-23.md) is recorded; production-host integration remains pending. Planned host work includes a Rust
 `ProposalReview` seam and a measure-first `ContextScorer`.
 Context scoring needs an egress policy and evidence that its costs beat cache
