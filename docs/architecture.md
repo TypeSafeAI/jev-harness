@@ -165,7 +165,8 @@ adds four pairs for false causal justification of a correct edit, copy/sort
 operation order, instructions in a rationale that accompanies a wire-code change,
 and conflicting current policies. Labels and mock probabilities are frozen
 before live measurement. The original 21 cases and the v1 decision policy stay
-unchanged; live outcomes remain pending.
+unchanged. The [live follow-up](calibration/2026-09-23-followup.md) records the
+expanded suite and retains the uncalibrated 0.8 floor.
 
 ## Host seams and acceptance
 

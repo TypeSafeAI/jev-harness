@@ -69,8 +69,10 @@ pass structural validation. The
 [25-fixture offline run](verification/calibration-followup-2026-09-23.json)
 reports base 7/25 bad caught, base+Jev 25/25 bad caught, 3/25 good held for
 clarification, and 50/50 expected verdicts met. These are scripted mock outcomes.
-Live measurement and analysis remain pending; issue #5 stays open and the fixed
-`0.8` threshold remains uncalibrated.
+The separately recorded [live follow-up](calibration/2026-09-23-followup.md)
+completes the issue #5 investigation. Its confidence-only catch and unexpected
+good holds support retaining the fixed `0.8` floor as uncalibrated, not selecting
+an optimum from this sample.
 
 ## 2 · Host seams
 
