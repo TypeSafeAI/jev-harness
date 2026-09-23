@@ -55,7 +55,9 @@ its payload validator dropped noul criteria before sending, so no recorded run
 used them. That text is kept as `REVIEW_QUESTION_CRITERIA` and is not sent;
 sending it would change effective semantics and needs a new question-set
 version. `validateReviewPayload` preserves explicitly supplied `{ true, false }`
-criteria and rejects malformed criteria instead of dropping them. Both the
+criteria and rejects malformed criteria instead of dropping them. Question
+types must be exact `noul`, `choice`, or `score` strings; arrays and other
+non-string values are rejected without coercion. Both the
 builder and validator require the exact `JEV_MODEL` pin: aliases, other
 versions, empty strings, and padded values throw before transport. An omitted
 builder/review option still defaults to the pin; a request payload missing its

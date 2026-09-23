@@ -154,6 +154,27 @@ test("malformed noul criteria fail validation instead of being dropped", () => {
     assert.throws(() => validateReviewPayload(withCriteria(criteria)), /criteria/, JSON.stringify(criteria));
 });
 
+test("question types must be exact closed-set strings without coercion", () => {
+  const base = buildReviewPayload(fixture, proposal);
+  for (const type of [["noul"], ["choice"], ["score"], null, undefined, 1, true, {}, "Noul", " score ", "unknown"]) {
+    const payload = {
+      ...base,
+      questions: { synthetic: { type, instructions: "synthetic", criteria: ["low", "high"] } },
+    };
+    assert.throws(() => validateReviewPayload(payload), /valid type/, JSON.stringify(type));
+  }
+});
+
+test("valid noul, choice, and score strings retain their question types", () => {
+  const questions = {
+    binary: { type: "noul", instructions: "synthetic" },
+    choice: { type: "choice", instructions: "synthetic", criteria: { low: "low", high: "high" } },
+    score: { type: "score", instructions: "synthetic", criteria: ["low", "high"] },
+  };
+  const payload = validateReviewPayload({ ...buildReviewPayload(fixture, proposal), questions });
+  assert.deepEqual(payload.questions, questions);
+});
+
 const unpinnedModels = ["jev-latest", "jev-preview", "jev-1.12.0", "jev-1.14.0", "", " ", ` ${JEV_MODEL} `];
 
 test("the payload validator accepts only the exact model pin, including at runtime", () => {

@@ -3,7 +3,7 @@
   "date": "2026-09-23",
   "source": "mock",
   "liveProviderCalls": 0,
-  "testedBaseCommit": "5c89610a03b8a19616505968359295e54817a97d",
+  "testedBaseCommit": "e3a3be50bf759aeb83caab328502c2a75f639107",
   "mergedDependencyCommit": "30cab0d673db2eff6e2814be66215557c21c0ef5",
   "sourceRevision": "6fe5967dc020521a0731682b06c4d8eeeab95ffb",
   "sourceClean": true,
@@ -106,10 +106,11 @@
   "checks": {
     "pnpm install --frozen-lockfile": "passed; lockfile unchanged; pnpm 10.34.5",
     "pnpm typecheck": "passed",
-    "pnpm test": "184 passed, 0 failed",
+    "pnpm test": "186 passed, 0 failed",
     "pnpm bench:review": "passed; scripted mock values, not Jev measurements",
     "pnpm build": "passed; Next.js 16.3.5 production build",
-    "model pin regression": "4 intended failing tests before the fix; all 12 payload tests passed after it"
+    "model pin regression": "4 intended failing tests before the fix; all 12 payload tests passed after it",
+    "question type regression": "1 intended failing test before the fix; all 14 payload tests passed after it"
   },
   "sourceAdaptations": [
     "Import paths and types are local; strict optional and indexed-access types omit absent patch keys and check decoded paths.",
@@ -117,13 +118,14 @@
     "Question and fixture metadata are frozen. V1 sends instruction-only noul questions, matching the original post-validation wire body; explicitly supplied generic noul criteria are preserved and malformed criteria rejected.",
     "Request builders and validation require the exact model pin. Real-source replies with absent or mismatched model metadata become unavailable; source mock retains mock-scripted provenance.",
     "Review parsing uses the hardened plain-data checks and an injected latency clock; fixture runner calls the benchmark-only base helper explicitly.",
-    "The Node-only fixture loader resolves relative to its module; the bench script omits upstream live provider mode."
+    "The Node-only fixture loader resolves relative to its module; the bench script omits upstream live provider mode.",
+    "Question types must be exact noul, choice or score strings; arrays and other non-string values are rejected without coercion."
   ],
   "consumerStatus": "open: playground consuming a pinned shared revision remains a separate delivery step",
   "extractedSourceSha256": {
     "src/contract/validate.ts": "578afe9320101b76ea70e0588480e3afdf15c52151e2f4c983667284300bc451",
     "src/contract/diff.ts": "54f29729703a3189321b9d18d70896e7995d7b5b534b2b22344797b43f47ae8c",
-    "src/contract/payload.ts": "1b82d5387ac2359a5f7f98c7089d6bafd9dc879bf60f90e614b303db4c5282a0",
+    "src/contract/payload.ts": "17bb4e1672e6c01d4600d3d3138b6746918bf093ce9b195e9294d74547be871e",
     "src/contract/review.ts": "06e8e724998823b84b7add5dd2a5c122b9edf80c10a38a68173ce784551a2514",
     "src/benchmark/run.ts": "702f925de89740e1563a97d72a3b4cc74c9156898f0bea3ae89dbc853ed93bca",
     "src/benchmark/proposer.ts": "904e9ee045761bc431272b5bb90ba34058e8bdce7b63062219d4304a32c1a972",
