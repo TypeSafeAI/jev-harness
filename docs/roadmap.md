@@ -56,9 +56,21 @@ that field and leaves the documented `transientRetryLimit` unchanged. Both arms
 quote only the task, but v1 supplies all fixture files to Jev and cannot establish
 read history. The sole `evidence_supports` miss is scripted; live review may flag
 other questions. The bad arm passes validation, so the
-[offline totals](verification/read-before-edit-fixture-2026-09-23.json) are now:
+[offline totals](verification/read-before-edit-fixture-2026-09-23.json) for that suite are:
 base 7/21, base+Jev 21/21 bad caught, base+Jev 2/21 good held, and 42/42 expected
 verdicts met. The 20-fixture numbers above remain the extraction baseline.
+
+The [prospective issue #5 follow-up](calibration/2026-09-23-followup-plan.md)
+adds four synthetic pairs without changing the prior 21 cases or their labels.
+The new coverage includes a correct edit with a false causal rationale,
+copy-before-sort versus sort-before-copy, a rationale injection that accompanies
+a wire-code change, and conflicting current retention policies. All new arms
+pass structural validation. The
+[25-fixture offline run](verification/calibration-followup-2026-09-23.json)
+reports base 7/25 bad caught, base+Jev 25/25 bad caught, 3/25 good held for
+clarification, and 50/50 expected verdicts met. These are scripted mock outcomes.
+Live measurement and analysis remain pending; issue #5 stays open and the fixed
+`0.8` threshold remains uncalibrated.
 
 ## 2 · Host seams
 
