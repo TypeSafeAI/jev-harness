@@ -115,8 +115,10 @@ contract. These helpers do not run a benchmark or authenticate labels.
 
 ## Host seams and acceptance
 
-The routing contract and offline synthetic comparison are implemented; live
-integration and measurements remain pending. Planned host work includes the Rust
+The routing contract, offline comparison, and optional synthetic live example
+host are implemented. The [initial repeated live experiment](routing-evaluation/2026-09-23.md)
+records token usage and tool calls, including the top-1 multi-step regression;
+production integration remains pending. Planned host work includes the Rust
 `ProposalReview` seam and `ContextScorer` (relevance per chunk). A context-scoring experiment needs an egress policy and a
 cost model comparing scoring/re-prefill with forfeited prefix-cache reuse. The
 [ContextScorer cost model](context-scoring-cost-model.md) records a no-go for

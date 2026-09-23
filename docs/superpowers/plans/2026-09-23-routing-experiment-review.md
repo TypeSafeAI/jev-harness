@@ -15,6 +15,6 @@
 - [x] Wire SIGINT/SIGTERM through an AbortController to `main` and `ExperimentDeps.signal`. Await host teardown, save partial evidence marked cancelled, and return a nonzero exit. Test with an injected fetch and synthetic detached CLI; no provider calls.
 - [x] Run focused tests after each fix, then frozen install, typecheck, all tests, production build, secret/diff checks and the offline CLI/table round trip.
 - [x] Independently review the fixes; all spec and quality findings addressed.
-- [ ] Publish a signed follow-up, resolve only addressed discussions and merge after exact-head CI/review completes.
+- [x] Publish signed follow-ups, resolve addressed discussions, and merge after exact-head CI/review. [PR #31](https://github.com/TypeSafeAI/jev-harness/pull/31) merged at `2507473`; checks and secret scan passed on both its head and main.
 
 No threshold, question, model pin, permission or proposal-execution changes. A completed fake run is not the live experiment requested by issue #2.
