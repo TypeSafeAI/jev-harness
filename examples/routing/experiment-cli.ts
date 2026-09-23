@@ -4,7 +4,7 @@
  * refused under CI. The key is passed only to the Jev transport and is never printed or stored.
  */
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
 import { DEMO_POLICY } from "./scenarios.js";
 import { EXPERIMENT_LABELS, SIZE_TIERS, type SizeTier } from "./experiment-tasks.js";
 import { buildArtifact, codexProposer, fakeProposer, fakeRouterFor, parseExperimentArtifact, runExperiment, type ExperimentDeps } from "./experiment.js";
@@ -59,7 +59,7 @@ export async function main(argv: readonly string[], io: CliIo): Promise<number> 
   const cwd = io.cwd ?? process.cwd();
 
   if (options.table) {
-    try { io.stdout(renderExperimentTable(await parseExperimentArtifact(JSON.parse(await readFile(join(cwd, options.table), "utf8"))))); return 0; }
+    try { io.stdout(renderExperimentTable(await parseExperimentArtifact(JSON.parse(await readFile(resolve(cwd, options.table), "utf8"))))); return 0; }
     catch (error) { io.stderr(`${(error as Error).message}\n`); return 1; }
   }
 
@@ -82,7 +82,7 @@ export async function main(argv: readonly string[], io: CliIo): Promise<number> 
   const command = ["pnpm experiment:routing", ...argv.filter(a => a !== "--")].join(" ");
   const outPath = options.out ?? (options.live ? join("examples", "routing", "runs", `${date.toISOString().slice(0, 10)}-experiment.json`) : null);
   if (outPath) {
-    try { await readFile(join(cwd, outPath)); io.stderr(`${outPath} already exists; pass --out to choose another path.\n`); return 2; } catch { /* Absent: continue. */ }
+    try { await readFile(resolve(cwd, outPath)); io.stderr(`${outPath} already exists; pass --out to choose another path.\n`); return 2; } catch { /* Absent: continue. */ }
   }
 
   const trials = await runExperiment({ runs: options.runs, sizes: options.sizes, policy }, deps);
@@ -90,8 +90,8 @@ export async function main(argv: readonly string[], io: CliIo): Promise<number> 
     proposer: options.live ? "codex-cli (default model, isolated arena host)" : "fake-scripted", labels: EXPERIMENT_LABELS, status: io.signal?.aborted ? "cancelled" : "complete" });
   const json = JSON.stringify(artifact, null, 2) + "\n";
   if (outPath) {
-    await mkdir(dirname(join(cwd, outPath)), { recursive: true });
-    await writeFile(join(cwd, outPath), json, { flag: "wx" });
+    await mkdir(dirname(resolve(cwd, outPath)), { recursive: true });
+    await writeFile(resolve(cwd, outPath), json, { flag: "wx" });
     io.stderr(`Wrote ${outPath}\n`);
   }
   io.stdout(options.format === "json" && !options.live ? json : renderExperimentTable(artifact));

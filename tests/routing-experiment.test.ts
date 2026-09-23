@@ -303,6 +303,17 @@ test("CLI abort stops further trials and preserves cancelled partial evidence", 
   assert.match(output.out, /Cancelled.*partial/i);
 });
 
+test("CLI writes and reads absolute artifact paths", async t => {
+  const dir = await mkdtemp(join(tmpdir(), "jev-experiment-path-"));
+  t.after(() => rm(dir, { recursive: true, force: true }));
+  const path = join(dir, "absolute.json"), output = collect();
+  assert.equal(await main(["--sizes", "small", "--out", path], { ...output.io, env: {}, cwd: dir }), 0);
+  const artifact = await parseExperimentArtifact(JSON.parse(await readFile(path, "utf8")));
+  const table = collect();
+  assert.equal(await main(["--table", path], { ...table.io, env: {}, cwd: dir }), 0);
+  assert.equal(table.out, renderExperimentTable(artifact));
+});
+
 test("CLI process signals await detached child cleanup and save partial evidence", { skip: process.platform === "win32" }, async t => {
   for (const signal of ["SIGINT", "SIGTERM"] as const) await t.test(signal, async t => {
     const dir = await mkdtemp(join(tmpdir(), "jev-experiment-signal-"));
