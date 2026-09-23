@@ -2,7 +2,7 @@
   "kind": "offline-prospective-fixture-verification",
   "date": "2026-09-23",
   "issue": "https://github.com/TypeSafeAI/jev-harness/issues/5",
-  "testedBaseCommit": "dbb51fbf3c16ee8439e8dd63d3ecb91d3b66ecf3",
+  "testedBaseCommit": "bb42c2ea366a2743d8f27108b33f9a4a58060a66",
   "source": "mock",
   "liveProviderCalls": 0,
   "liveOutcomes": "pending; issue #5 requires linked live analysis before closure",
@@ -143,7 +143,7 @@
     "regressionRed": "18 of 25 focused tests passed; seven intended failures identified absent follow-up cases and expected expanded counts",
     "regressionGreen": "25 of 25 focused tests passed",
     "pnpm typecheck": "passed",
-    "pnpm test": "195 passed, 0 failed",
+    "pnpm test": "197 passed, 0 failed",
     "pnpm bench:review": "passed; scripted demonstration values, not measurements of Jev",
     "pnpm build": "passed; Next.js 16.3.5 production build"
   },

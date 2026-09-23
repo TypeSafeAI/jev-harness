@@ -150,6 +150,7 @@ export interface ReviewOptions {
  * the reply. An unpinned request model throws before any call. A real-source
  * reply must report the exact pin; missing or mismatched models and transport
  * failures return `answers: null`, which `decide()` maps to `unavailable`.
+ * Cancellation is checked before dispatch and after the transport resolves.
  */
 export async function reviewProposal(
   fixture: Pick<Fixture, "task" | "files" | "evidence">,
@@ -164,7 +165,9 @@ export async function reviewProposal(
   const started = clock();
   let raw: unknown = null;
   try {
+    if (options.signal?.aborted) throw Error("Review cancelled.");
     raw = await transport(payload, options.signal);
+    if (options.signal?.aborted) throw Error("Review cancelled.");
     const reported = dataRecord(raw)?.model;
     if (source === "jev" && reported !== JEV_MODEL)
       throw Error(`Response must report the exact pinned model ${JEV_MODEL}.`);

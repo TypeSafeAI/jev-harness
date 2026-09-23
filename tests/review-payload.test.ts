@@ -213,6 +213,41 @@ const favorableReply = {
   },
 };
 
+test("a pre-aborted review is unavailable without calling the transport", async () => {
+  const controller = new AbortController();
+  controller.abort();
+  let calls = 0;
+  const review = await reviewProposal(fixture, proposal, async () => {
+    calls++;
+    return { ...favorableReply, model: JEV_MODEL };
+  }, { signal: controller.signal });
+  assert.equal(calls, 0);
+  assert.equal(review.answers, null);
+  assert.match(review.error!, /cancelled/);
+  assert.equal(review.raw, null);
+  assert.equal(decide({ ok: true, errors: [] }, review).verdict, "unavailable");
+});
+
+test("cancellation with an ignoring pending transport cannot turn favorable answers into evidence", async () => {
+  const controller = new AbortController();
+  const raw = { ...favorableReply, model: JEV_MODEL };
+  let respond!: (value: typeof raw) => void;
+  const pending = new Promise<typeof raw>((resolve) => { respond = resolve; });
+  let calls = 0;
+  const reviewing = reviewProposal(fixture, proposal, async () => {
+    calls++;
+    return pending;
+  }, { signal: controller.signal });
+  assert.equal(calls, 1);
+  controller.abort();
+  respond(raw);
+  const review = await reviewing;
+  assert.equal(review.answers, null);
+  assert.match(review.error!, /cancelled/);
+  assert.equal(review.raw, raw);
+  assert.equal(decide({ ok: true, errors: [] }, review).verdict, "unavailable");
+});
+
 test("real replies with an absent or unexpected model are unavailable despite favorable answers", async () => {
   for (const raw of [
     favorableReply,

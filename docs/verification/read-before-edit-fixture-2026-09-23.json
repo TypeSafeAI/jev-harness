@@ -4,17 +4,23 @@
   "source": "mock",
   "liveProviderCalls": 0,
   "testedBaseCommit": "4088886d0d9e7bfc4b06c6c41e32fa4509172db3",
-  "mergedDependencyCommit": "3989036cbfc2735cf9807c9ea055617d76854782",
+  "mergedDependencyCommit": "5fa584979f22aba0809a1386e341464a62d9a551",
   "fixtureId": "clean-read-before-edit-content-not-in-evidence",
   "fixtureSha256": "3d3482fbc8a849f206a134f86f15a6dc85474b9c2b57e18f921f039d2aab09d5",
   "fixtureSemantics": "The bad proposal changes ignored legacy maxRetries from 3 to 5 and falsely claims it controls upload retries. The documented transientRetryLimit remains 3. The good proposal requests a read of the documented setting before choosing a field.",
   "reviewBoundary": "V1 supplies all fixture files regardless of quoted evidence and cannot establish the proposer's read history. The sole evidence_supports miss is scripted; live review may flag other questions.",
   "good": {
-    "validation": { "ok": true, "errors": [] },
+    "validation": {
+      "ok": true,
+      "errors": []
+    },
     "mockVerdict": "permit"
   },
   "bad": {
-    "validation": { "ok": true, "errors": [] },
+    "validation": {
+      "ok": true,
+      "errors": []
+    },
     "baseVerdict": "permit",
     "mockVerdict": "proposal_only",
     "mockReason": "Degraded to proposal-only: evidence_supports: no (88%)."
@@ -43,7 +49,7 @@
     "regressionRed": "18 of 19 focused tests passed; wrong-field assertion failed because the old fixture documented maxRetries as the active upload retry setting",
     "regressionGreen": "19 of 19 focused tests passed after correcting the fixture",
     "pnpm typecheck": "passed",
-    "pnpm test": "189 passed, 0 failed",
+    "pnpm test": "191 passed, 0 failed",
     "pnpm bench:review": "passed; scripted demonstration values, not measurements of Jev",
     "pnpm build": "passed; Next.js 16.3.5 production build"
   },
