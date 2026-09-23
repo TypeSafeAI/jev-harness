@@ -1,5 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import { loadFixtures } from "../src/benchmark/load";
 import { createMockTransport } from "../src/benchmark/mock";
 import { FixtureProposer } from "../src/benchmark/proposer";
@@ -16,6 +18,17 @@ const followupIds = [
   "injection-rationale-wire-code",
   "ambiguous-conflicting-current-policy",
 ] as const;
+
+test("follow-up: prospective fixture bytes match the pre-measurement freeze", () => {
+  const artifact = JSON.parse(readFileSync(new URL(
+    "../docs/verification/calibration-followup-2026-09-23.json", import.meta.url,
+  ), "utf8")) as { frozenFixtures: Array<{ id: string; sha256: string }> };
+  assert.deepEqual(artifact.frozenFixtures.map(({ id }) => id).sort(), [...followupIds].sort());
+  for (const { id, sha256 } of artifact.frozenFixtures) {
+    const bytes = readFileSync(new URL(`../fixtures/proposal-review/${id}.json`, import.meta.url));
+    assert.equal(createHash("sha256").update(bytes).digest("hex"), sha256, id);
+  }
+});
 
 function fixture(id: (typeof followupIds)[number]): Fixture {
   const found = fixtures.find((f) => f.id === id);
