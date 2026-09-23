@@ -56,7 +56,7 @@ pnpm test
 pnpm --silent bench:routing > routing-run.json
 ```
 
-The output is the run artifact: command, timestamp, labels, paired contexts, metrics, local comparison duration and every routing receipt. Link that artifact whenever reporting numbers. Scenario values are scripted demonstrations, not Jev measurements, calibration, a quality benchmark or proof of savings. Expected acceptable ids are used only after routing for evaluation. These routing scenarios do not extend the proposal-review fixture categories.
+The output is the run artifact: command, timestamp, labels, paired contexts, metrics, local comparison duration and every routing receipt. Link that artifact whenever reporting numbers. An archived example from 2026-09-22 (`source: mock`, scripted evidence) is kept at `examples/routing/runs/2026-09-22-routing-run.json`; the root `routing-run.json` is ignored so reruns do not show as changes. Scenario values are scripted demonstrations, not Jev measurements, calibration, a quality benchmark or proof of savings. Expected acceptable ids are used only after routing for evaluation. These routing scenarios do not extend the proposal-review fixture categories.
 
 - **Schema/context bytes:** actual UTF-8 length of serialized task plus tool descriptors/schemas.
 - **Estimated tokens:** `ceil(UTF-8 bytes / 4)` per serialized payload; a proxy, not provider usage.
