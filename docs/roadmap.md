@@ -45,13 +45,13 @@ are not new live measurements. Apply the [evaluation plan](hardening/09-evaluati
 - [x] `ToolRouter` contract: intent + host-available tool ids → top-k descriptors, clarification, confidence/probability floors, deterministic cost policy
 - [x] Offline synthetic comparison: full vs selected schemas, explicit load/eviction state, receipts and cost/token proxies (`pnpm bench:routing`)
 - [x] Interactive synthetic browser demonstration: Next.js dark full-width UI, progressive disclosure, key override, reported usage, responsive layouts, paired metrics and receipt export; `pnpm demo`
-- [ ] Experiment: N tools in context vs Jev top-k, measured on token cost and correct-tool rate
-  - Runner landed and verified offline with fakes: `pnpm experiment:routing` (see the [experiment protocol](routing.md#experiment-protocol-n-tools-in-context-vs-jev-top-k)). Stays open until a live artifact is linked.
-- [x] Optional local live-routing example host, separate from the exported pure package: persisted personal-key override, explicit provider calls, measured usage and failure handling. [Manual smoke receipt](verification/live-routing-2026-09-22.json); the multi-task quality/cost experiment remains open.
+- [x] Experiment: N tools in context vs Jev top-k, measured on provider-reported tokens and correct-tool rate. [Three-repetition live report](routing-evaluation/2026-09-23.md): aggregate input reduction accompanies a multi-step tool-use regression; no dollar-cost or task-quality claim.
+  - Runner and artifact parsing are verified offline with fakes: `pnpm experiment:routing` (see the [experiment protocol](routing.md#experiment-protocol-n-tools-in-context-vs-jev-top-k)). The linked live report keeps its measured results separate from mock checks.
+- [x] Optional local live-routing example host, separate from the exported pure package: persisted personal-key override, explicit provider calls, measured usage and failure handling. [Manual smoke receipt](verification/live-routing-2026-09-22.json); the multi-task experiment is linked above.
 
 - [x] Local Codex CLI arena with four selectable synthetic examples; synthetic MCP tools, full versus Jev-selected exposure, actual call/usage records. This does not complete the repeated cost/quality experiment above.
 
-- [x] Arena-only interface with overlay evidence, local run snapshots and matching-task performance history. Storage/unknown-value behavior is covered by [offline verification](verification/arena-history-2026-09-22.json); repeated live evaluation remains open.
+- [x] Arena-only interface with overlay evidence, local run snapshots and matching-task performance history. Storage/unknown-value behavior is covered by [offline verification](verification/arena-history-2026-09-22.json); [live routing evidence](routing-evaluation/2026-09-23.md) is separate from those UI checks.
 
 - [x] Local lessons from each settled Arena simulation: measured tradeoffs, evidence-first recommendations, repeat-run evaluation guidance and versioned export. [Offline verification](verification/arena-lessons-2026-09-22.json); this is not automated quality evaluation.
 

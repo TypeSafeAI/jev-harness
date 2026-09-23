@@ -223,7 +223,7 @@ Completed and interrupted comparisons are saved in this browser, up to 30 runs w
 
 Each settled Arena run also includes **Lessons learned**: a local takeaway, supporting measurements and prioritized experiments for improving the Jev-integrated path. Reopened runs and downloads retain the connection to that run’s evidence. Recommendations count routing overhead and require answer review and repeated measurements; they make no extra API calls.
 
-For the repeatable N-tools-in-context vs Jev top-k experiment (paired arms, three catalog sizes, repetitions, reported usage kept apart from proxies), run `pnpm experiment:routing`. It is offline with scripted fakes unless `--live` is passed; see the [experiment protocol](docs/routing.md#experiment-protocol-n-tools-in-context-vs-jev-top-k).
+For the repeatable N-tools-in-context vs Jev top-k experiment (paired arms, three catalog sizes, repetitions, reported usage kept apart from proxies), run `pnpm experiment:routing`. It is offline with scripted fakes unless `--live` is passed; see the [experiment protocol](docs/routing.md#experiment-protocol-n-tools-in-context-vs-jev-top-k). The [live report](docs/routing-evaluation/2026-09-23.md) finds lower reported input alongside lost tool use on multi-step tasks; keep those tasks in shadow mode while testing capability bundles.
 
 Open **Integrate** for a copyable coding-agent brief and a staged baseline → shadow → lean workflow. The reusable `prepareToolContext` helper and [offline host example](examples/integration/host.ts) compose routing with schema loading; the host retains validation, permissions and execution. Read the [integration and improvement guide](docs/integration.md).
 
@@ -234,8 +234,8 @@ The offline routing run artifact includes receipts, full/lean context bytes, tok
 
 ## Roadmap and related projects
 
-The full extraction remains gated on the canonical upstream playground history.
-The routing contract, Next.js demo and optional live routing/CLI example host are implemented. Repeated live evaluation and production-host integration remain pending. Planned host work includes a Rust
+Playground PR #41 is merged; the full extraction is being reconciled with that canonical history.
+The routing contract, Next.js demo and optional live routing/CLI example host are implemented. An initial [repeated live routing evaluation](docs/routing-evaluation/2026-09-23.md) is recorded; production-host integration remains pending. Planned host work includes a Rust
 `ProposalReview` seam and a measure-first `ContextScorer`.
 Context scoring needs an egress policy and evidence that its costs beat cache
 reuse before a runtime integration. See [architecture](docs/architecture.md)
