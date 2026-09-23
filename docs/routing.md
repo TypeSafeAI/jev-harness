@@ -66,3 +66,50 @@ The output is the run artifact: command, timestamp, labels, paired contexts, met
 - **Local timing:** the offline comparison including JS work, not provider or tool execution latency. Provider tokens and execution latency are null.
 
 A live paired experiment must use the same synthetic tasks, actual proposer outcomes, pinned models, repeated trials, provider usage and latency, routing overhead, pricing, and cache/re-prefill effects. Context scoring remains gated on its separate cost model. Real repository content requires a reviewed egress policy before any provider integration.
+
+## Experiment protocol: N tools in context vs Jev top-k
+
+Roadmap phase 3, [issue #2](https://github.com/TypeSafeAI/jev-harness/issues/2). The runner and results format have landed and are verified offline with fakes. No live result exists yet; the roadmap item stays open until a live artifact is linked.
+
+**Hypothesis.** For a task and a permitted catalog of size N, routing through Jev (`choice` over the available ids plus `needs_clarification`, with the demo confidence floor and cost policy) and exposing only the selected schemas gives a proposer fewer input tokens per task without lowering the correct-tool rate, and the gap grows with N.
+
+**Arms**, run on the same task in the same repetition, in alternating order per (run, task):
+
+- **A · all N schemas.** Every permitted schema goes to the proposer. No Jev call.
+- **B · Jev top-k.** `routeTools()` makes one Jev call; only the selected schemas go to the proposer. A routed clarification or no-match asks the user and makes no proposer call. An unavailable route selects nothing and is counted as unavailable; it is never replaced by the full catalog.
+
+**Tasks.** `examples/routing/experiment-tasks.ts`. The five non-failure routing scenarios (read, patch, inspect, ambiguous, uncertain) run at three catalog sizes: small (N = 3, the demo catalog, comparable with the arena), medium (N = 8) and large (N = 20). Two synthetic intents target non-demo descriptors (search, test draft) at medium and large. That makes 19 tasks per run. The extra descriptors are synthetic and have no fixture handler; a call to one is recorded by the fixture host and answered with an error. Nothing executes.
+
+**Label separation.** Tasks carry only an id, size, intent and synthetic files. Evaluation labels (`EXPERIMENT_LABELS`, copied from the scenario labels where reused) are a separate table. The runner never receives them; scoring joins them after all trials finish. Scripted fake distributions and the fake proposer script are separate tables again. Jev receives the pinned model, the untrusted-data note, the available descriptions and the clarification option. The proposer receives a frozen copy of the task text, the synthetic files and the exposed schemas, nothing else.
+
+**Proposer.** Live mode reuses the arena's isolated Codex CLI host (`runCodex`): auth-only temporary home, read-only sandbox, disabled external tools, the bounded synthetic MCP fixture host. The approval list is the exposed descriptor ids so a call to a handler-less descriptor reaches the fixture host and is recorded instead of being declined unseen. Live Jev calls go through the same `choice` transport as the local `/api/route` host (`examples/host/jev-choice.ts`).
+
+**Metrics**, per trial, per arm, per catalog size and paired per task:
+
+- **Correct tool.** Task labelled *selected*: the proposer completed and called at least one acceptable id. Task labelled *clarify*: no tool was called (routed clarification, or a proposer answer with no call). The answer text is not graded, so a no-call refusal also counts as asking. *First call correct* is reported separately.
+- **Reported usage.** Proposer input, cached input and output tokens as reported by the CLI, plus Jev input and output as reported by the provider. A trial total exists only when every called component reported that metric. Input and output have independent unknown counts. Unknown is never counted as zero.
+- **Proxies.** `ceil(UTF-8 bytes / 4)` of the arena prompt plus exposed schemas, and of the exact Jev request body. They are labelled as proxies, kept apart from reported usage, and exclude the CLI's own system prompt and tool framing.
+- **Jev calls and latency.** Call count and wall time around each routing call on the host.
+- **Failures.** Routing unavailable, proposer failed or cancelled, routed clarification or no-match, and no-call answers are counted separately. Failed and cancelled attempts remain incorrect in the accuracy denominator, even if their trace was truncated. A completed truncated trace with no observed acceptable call is unknown; it cannot prove there was no acceptable call.
+
+**What a result can claim.** Paired correct-tool rates and reported token totals on these 19 synthetic tasks, with this catalog, `jev-1.13.0`, the Codex CLI's default model on the day and this policy. **What it cannot claim.** One run is a signal, not a calibration. Proxies are not provider savings. The tasks are synthetic, so the result says nothing about real repositories. It does not measure dollars (Codex and Jev price differently), cache effects across trials, answer quality, or execution speed. Top-1 routing can starve a task that needs two tools (read, then patch); that shows up as a correct-tool miss in arm B and is part of the result, not noise.
+
+**Run it offline** (default; scripted fakes, no network, no key):
+
+```sh
+pnpm experiment:routing                         # markdown table, clearly marked FAKE
+pnpm --silent experiment:routing --format json  # artifact JSON
+pnpm experiment:routing --table examples/routing/runs/<file>.json  # table from any artifact
+```
+
+**Run it live** (explicit; Val's decision, never automated). Prerequisites: `codex login` on the host with file-based sign-in, and `TYPESAFE_API_KEY` exported in the shell from your own secret store. The key is read only from the environment, passed only to the Jev transport, and never printed or written. Live mode is refused under `CI`.
+
+```sh
+pnpm --silent experiment:routing --live --runs 3
+```
+
+This writes `examples/routing/runs/<date>-experiment.json` (it refuses to overwrite) and prints the table, which can be regenerated with `--table`. Three runs make 57 Jev calls and up to 114 Codex CLI runs (fewer when Jev routes to clarification), sequentially, so expect tens of minutes and both providers' usage. Use `--sizes small,large` or `--runs 1` for a smaller first pass, and `--top-k 2` to test the two-tool starvation case. Commit the artifact and link it next to any number quoted from it.
+
+Ctrl-C or termination aborts the active request or Codex child, waits for cleanup, and saves completed and interrupted trials with `status: "cancelled"`. The table labels these as partial results; planned repetitions are not completed repetitions. The CLI exits with 130 for SIGINT or 143 for SIGTERM.
+
+`--table` checks canonical task/catalog metadata, pinned request fields, finite measurements and consistent trial outcomes before recomputing its summary. Invalid or contradictory artifacts are rejected. These checks establish structural consistency, not the provenance or authenticity of a claimed live run.

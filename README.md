@@ -223,6 +223,8 @@ Completed and interrupted comparisons are saved in this browser, up to 30 runs w
 
 Each settled Arena run also includes **Lessons learned**: a local takeaway, supporting measurements and prioritized experiments for improving the Jev-integrated path. Reopened runs and downloads retain the connection to that run’s evidence. Recommendations count routing overhead and require answer review and repeated measurements; they make no extra API calls.
 
+For the repeatable N-tools-in-context vs Jev top-k experiment (paired arms, three catalog sizes, repetitions, reported usage kept apart from proxies), run `pnpm experiment:routing`. It is offline with scripted fakes unless `--live` is passed; see the [experiment protocol](docs/routing.md#experiment-protocol-n-tools-in-context-vs-jev-top-k).
+
 Open **Integrate** for a copyable coding-agent brief and a staged baseline → shadow → lean workflow. The reusable `prepareToolContext` helper and [offline host example](examples/integration/host.ts) compose routing with schema loading; the host retains validation, permissions and execution. Read the [integration and improvement guide](docs/integration.md).
 
 After a run, add a human assessment and next-experiment note. History shows review coverage and can chart pairs marked **Meets task**, while retaining all run evidence. Downloads keep annotations separate from Jev receipts and derived lessons; quality is not scored automatically.
