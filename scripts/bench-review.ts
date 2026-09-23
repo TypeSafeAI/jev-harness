@@ -9,7 +9,7 @@
  * measurements of Jev. Nothing is applied or executed.
  *
  * Adapted from TypeSafeAI/typesafe-playground `scripts/proposal-review-bench.ts`
- * at 2c6cac903ee3887eb72548e012c14a7aefe4f3bd without its `--live` mode.
+ * at 6fe5967dc020521a0731682b06c4d8eeeab95ffb without its `--live` mode.
  */
 import { JEV_MODEL, REVIEW_CONFIDENCE_THRESHOLD, REVIEW_QUESTION_SET_VERSION } from "../src/contract/index.js";
 import { aggregateBench, benchRun, renderBenchTable, type BenchRun } from "../src/benchmark/bench.js";

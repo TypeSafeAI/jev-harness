@@ -6,7 +6,7 @@ import type { Fixture, Proposal, Proposer, ReviewArm } from "../contract/types";
  * `prepareProposerInput` from ./evaluation instead.
  *
  * Extracted from TypeSafeAI/typesafe-playground `lib/harness/proposer.ts` at
- * 2c6cac903ee3887eb72548e012c14a7aefe4f3bd.
+ * 6fe5967dc020521a0731682b06c4d8eeeab95ffb.
  */
 export class FixtureProposer implements Proposer {
   readonly name = "fixture";

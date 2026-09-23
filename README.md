@@ -32,7 +32,7 @@ pnpm bench:review
 No API key is needed for these offline checks. `pnpm bench:review` runs the
 20 synthetic proposal-review fixtures through validation alone (base) and
 through validation plus the labeled mock transport (+Jev), then prints a
-per-category table. Its totals (base 7/20 bad caught, +Jev 20/20 bad caught,
+per-category table. Its [offline totals](docs/verification/phase1-extraction-2026-09-23.json) (base 7/20 bad caught, +Jev 20/20 bad caught,
 2/20 good held on the two ambiguous fixtures) are scripted mock values, not
 measurements of Jev. Use the versions pinned in
 `package.json` and `pnpm-lock.yaml`. A configured workflow is not proof that
@@ -55,7 +55,7 @@ its separate loopback example host. `/arena` runs Codex against synthetic MCP fi
 | Evaluation accounting and blinded proposer inputs | Implemented at `src/benchmark/evaluation.ts`; not a live experiment runner |
 | Routing contract and offline synthetic comparison | Implemented at `src/routing/` and `examples/routing/`; no live provider or execution |
 | Interactive Next.js demo and CLI arena | Implemented at `app/`, `components/`, and `examples/host/`; loopback routing, saved keys, usage and synthetic fixture comparisons |
-| Proposal schema/path/diff validator and Jev payload builder | Extracted from playground PR #41 at `2c6cac9` into `src/contract/`; pure, transport injected |
+| Proposal schema/path/diff validator and Jev payload builder | Extracted from merged playground PR #41 at `6fe5967dc020521a0731682b06c4d8eeeab95ffb` into `src/contract/`; pure, transport injected |
 | Synthetic fixture suite, scripted proposer, mock transport, fixture runner, bench aggregation | Extracted into `fixtures/proposal-review/` and `src/benchmark/`; offline only (`pnpm bench:review`) |
 | Live Jev transport in the package, playground consuming this package | Not implemented; the demo host has its own adapter |
 | Host authorization, sandbox, execution, and durable storage | Host responsibilities; not implemented in this package |
@@ -232,12 +232,21 @@ The root page compares parallel Codex CLI runs with full versus Jev-selected syn
 
 Completed and interrupted comparisons are saved in this browser, up to 30 runs within 2 MB. **History** reopens evidence and compares input tokens or duration for matching tasks and harness setups, including Jev overhead. Unknown measurements remain unknown; a run is not a benchmark. The old `/arena` URL redirects to `/`; the Routing room and Example lab pages have been removed. See [the demo guide and browser verification](docs/routing-demo.md).
 
-The run artifact includes receipts, full/lean context bytes, token estimates, acceptable-tool inclusion and cheapest acceptable selection. Evidence is scripted; local timing is not Jev or execution latency. Router overhead is counted separately so fewer schemas do not automatically imply savings. See [the design, metrics and host adapter boundary](docs/routing.md).
+Each settled Arena run also includes **Lessons learned**: a local takeaway, supporting measurements and prioritized experiments for improving the Jev-integrated path. Reopened runs and downloads retain the connection to that run’s evidence. Recommendations count routing overhead and require answer review and repeated measurements; they make no extra API calls.
+
+For the repeatable N-tools-in-context vs Jev top-k experiment (paired arms, three catalog sizes, repetitions, reported usage kept apart from proxies), run `pnpm experiment:routing`. It is offline with scripted fakes unless `--live` is passed; see the [experiment protocol](docs/routing.md#experiment-protocol-n-tools-in-context-vs-jev-top-k).
+
+Open **Integrate** for a copyable coding-agent brief and a staged baseline → shadow → lean workflow. The reusable `prepareToolContext` helper and [offline host example](examples/integration/host.ts) compose routing with schema loading; the host retains validation, permissions and execution. Read the [integration and improvement guide](docs/integration.md).
+
+After a run, add a human assessment and next-experiment note. History shows review coverage and can chart pairs marked **Meets task**, while retaining all run evidence. Downloads keep annotations separate from Jev receipts and derived lessons; quality is not scored automatically.
+
+The offline routing run artifact includes receipts, full/lean context bytes, token estimates, acceptable-tool inclusion and cheapest acceptable selection. Evidence is scripted; local timing is not Jev or execution latency. Router overhead is counted separately so fewer schemas do not automatically imply savings. See [the design, metrics and host adapter boundary](docs/routing.md).
 
 
 ## Roadmap and related projects
 
-Phase 1 extraction is from the unmerged playground PR #41 head and must be re-diffed once it merges.
+Phase 1 extraction was re-diffed against merged playground PR #41 at
+`6fe5967dc020521a0731682b06c4d8eeeab95ffb`. Playground consumption remains pending.
 The routing contract, Next.js demo and optional live routing/CLI example host are implemented. Repeated live evaluation and production-host integration remain pending. Planned host work includes a Rust
 `ProposalReview` seam and a measure-first `ContextScorer`.
 Context scoring needs an egress policy and evidence that its costs beat cache

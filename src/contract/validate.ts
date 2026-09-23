@@ -4,8 +4,9 @@
  * files are passed in, nothing is read from disk.
  *
  * Extracted from TypeSafeAI/typesafe-playground `lib/harness/validate.ts` at
- * 2c6cac903ee3887eb72548e012c14a7aefe4f3bd. The only change is the diff parser
- * import, now the local `parseUnifiedDiff` (see ./diff.ts).
+ * 6fe5967dc020521a0731682b06c4d8eeeab95ffb. The parser is the local
+ * `parseUnifiedDiff` (see ./diff.ts); absent optional patch keys are omitted
+ * for this package's exact optional property types.
  */
 import { z } from "zod";
 import { parseUnifiedDiff } from "./diff";

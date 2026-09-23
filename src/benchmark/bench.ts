@@ -12,7 +12,7 @@
  * Mock-transport totals are scripted demonstration values, not measurements.
  *
  * Extracted from TypeSafeAI/typesafe-playground `lib/harness/bench.ts` at
- * 2c6cac903ee3887eb72548e012c14a7aefe4f3bd.
+ * 6fe5967dc020521a0731682b06c4d8eeeab95ffb.
  */
 import { FIXTURE_CATEGORIES } from "./fixtures";
 import type {

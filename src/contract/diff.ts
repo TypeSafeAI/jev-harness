@@ -2,7 +2,7 @@
  * Unified-diff parsing used by the proposal validator. Pure; no I/O.
  *
  * Extracted from TypeSafeAI/typesafe-playground `src/pr-review/parse.ts`
- * (`parsePullRequest`) at 2c6cac903ee3887eb72548e012c14a7aefe4f3bd, which the
+ * (`parsePullRequest`) at 6fe5967dc020521a0731682b06c4d8eeeab95ffb, which the
  * playground validator imports. Only the diff handling is kept: the pull-request
  * title/description fields are not part of a proposal. Parsing logic, limits,
  * and hunk issue messages are unchanged so reject reasons stay identical.

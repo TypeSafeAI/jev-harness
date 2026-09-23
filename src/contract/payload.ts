@@ -3,17 +3,18 @@
  * an injected transport. Pure: no fetch, no fs, no environment.
  *
  * `Question` and `RunPayload` mirror TypeSafeAI/typesafe-playground
- * `lib/api.ts` at 2c6cac903ee3887eb72548e012c14a7aefe4f3bd, defined locally so
+ * `lib/api.ts` at 6fe5967dc020521a0731682b06c4d8eeeab95ffb, defined locally so
  * nothing here imports the playground. `validateReviewPayload` is adapted from
  * that file's `validatePayload` with two deliberate differences:
  *
  * - Explicitly supplied `noul` criteria (`{ true, false }`) are preserved, per
  *   the official Noul contract (docs/hardening/07-noul-contract.md). The
  *   playground dropped them. Malformed criteria fail instead of being dropped.
- * - A missing model throws. The playground defaulted to `jev-latest`, which
- *   this package never sends.
+ * - Only the exact `JEV_MODEL` pin is accepted. Missing models, aliases, and
+ *   other versions throw instead of defaulting to the playground's alias.
  */
 import { dataArray, dataRecord } from "./input";
+import { JEV_MODEL } from "./types";
 
 export type QuestionType = "noul" | "choice" | "score";
 
@@ -57,8 +58,8 @@ function noulCriteria(value: unknown): NoulCriteria {
 export function validateReviewPayload(value: unknown): RunPayload {
   const payload = dataRecord(value);
   if (!payload) throw Error("Request must be an object.");
-  if (!nonempty(payload.model))
-    throw Error("Request needs an explicit, pinned model.");
+  if (payload.model !== JEV_MODEL)
+    throw Error(`Request needs the exact pinned model ${JEV_MODEL}.`);
   const state = payload.state;
   if (!(nonempty(state) || dataRecord(state) !== null || dataArray(state) !== null))
     throw Error("Add source text or structured state.");
@@ -104,5 +105,5 @@ export function validateReviewPayload(value: unknown): RunPayload {
       questions.set(key.trim(), { type: "score", instructions, criteria: levels.map((v) => v.trim()) });
     }
   }
-  return { model: payload.model.trim(), state, questions: Object.fromEntries(questions) };
+  return { model: payload.model, state, questions: Object.fromEntries(questions) };
 }

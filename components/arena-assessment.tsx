@@ -1,0 +1,29 @@
+"use client";
+import { useEffect, useRef, useState } from "react";
+import type { Assessment, AnswerAssessment } from "../examples/arena/assessments";
+import type { ArenaRun } from "../examples/arena/history";
+import { DetailPanel } from "./detail-panel";
+export function ArenaAssessment({ run, assessment, error, canSave, onSave, onClear }: { run: ArenaRun; assessment?: Assessment | undefined; error: string | null; canSave: boolean; onSave: (value: Assessment) => Promise<boolean>; onClear: () => Promise<boolean> }) {
+  const [baseline, setBaseline] = useState<AnswerAssessment>(assessment?.baseline ?? "unreviewed"), [integrated, setIntegrated] = useState<AnswerAssessment>(assessment?.integrated ?? "unreviewed"), [note, setNote] = useState(assessment?.note ?? ""), [notice, setNotice] = useState(""), [saving, setSaving] = useState(false), [confirmClear, setConfirmClear] = useState(false), [conflict, setConflict] = useState(false);
+  const incoming = JSON.stringify([assessment?.baseline ?? "unreviewed", assessment?.integrated ?? "unreviewed", assessment?.note ?? ""]);
+  const expectedLocal = useRef<string | null>(null);
+  const synced = useRef(incoming), draft = useRef(incoming); draft.current = JSON.stringify([baseline, integrated, note]);
+  function restore(clearNotice = true) { setBaseline(assessment?.baseline ?? "unreviewed"); setIntegrated(assessment?.integrated ?? "unreviewed"); setNote(assessment?.note ?? ""); synced.current = incoming; setConflict(false); if (clearNotice) setNotice(""); }
+  useEffect(() => {
+    if (incoming === expectedLocal.current) { synced.current = incoming; setConflict(false); return; }
+    if (incoming === synced.current) return;
+    if (draft.current !== synced.current && draft.current !== incoming) { setConflict(true); return; }
+    restore(draft.current !== incoming);
+  }, [incoming]);
+  const labels = { unreviewed: "Not reviewed", pass: "Meets task", fail: "Needs work" };
+  return <section className="arena-assessment" aria-label="Human answer assessment"><DetailPanel title="Assess this comparison" onClose={() => restore()} trigger={<span><strong>{assessment ? "Your answer assessment" : "Check the answers before comparing performance"}</strong><small>{assessment ? `Without Jev: ${labels[assessment.baseline]} · With Jev: ${labels[assessment.integrated]}` : "Add a human review and a next experiment. No automatic score."}</small></span>}>
+    <p>Compare each answer with the task and fixture: does it address the request, cite sufficient evidence and preserve required behavior? A proposed patch has not been applied or tested by this demo.</p><p className="assessment-task">{run.fixture.task}</p>
+    <form onSubmit={async event => { event.preventDefault(); if (!canSave || saving || conflict) return; setSaving(true); setNotice(""); try { const saved = await onSave({ runId: run.id, baseline, integrated, note, updatedAt: new Date().toISOString() }); if (saved) setNotice("Assessment saved locally. It is included in downloads and History."); } finally { setSaving(false); } }}>
+      {conflict && <div className="cache-error" role="alert"><p>This assessment changed in another tab. Your draft is still here. Reload the saved assessment before making further edits.</p><button className="quiet" type="button" onClick={() => restore()}>Reload saved assessment</button></div>}
+      <div className="assessment-lanes">{([['baseline', 'Without Jev', baseline, setBaseline], ['integrated', 'With Jev', integrated, setIntegrated]] as const).map(([id, title, value, set]) => <fieldset key={id}><legend>{title}</legend><p className="hint">{run.lanes[id]?.result.status ?? "No returned result"}</p>{(["unreviewed", "pass", "fail"] as const).map(option => <label key={option}><input type="radio" name={`assessment-${id}`} checked={value === option} onChange={() => { set(option); setNotice(""); }} disabled={saving || (option === "pass" && run.lanes[id]?.result.status !== "completed")} />{labels[option]}</label>)}</fieldset>)}</div>
+      <label htmlFor={`experiment-note-${run.id}`}>Next experiment or evidence note</label><textarea id={`experiment-note-${run.id}`} className="assessment-note" maxLength={1000} value={note} onChange={event => { setNote(event.target.value); setNotice(""); }} placeholder="What would you change, and what evidence would show improvement?" disabled={saving} /><p className="hint">{note.length}/1,000 characters · stored only in this browser and included in explicit downloads. Never sent to Jev.</p>
+      {!canSave && <p className="cache-error">Save this run in History before attaching an assessment. If storage is unavailable, download the comparison to keep its evidence.</p>}<div className="integration-actions"><button className="primary" disabled={!canSave || saving || conflict} type="submit">{saving ? "Saving…" : "Save assessment"}</button></div><p role="alert" className="cache-error">{error}</p><p role="status" className="hint">{notice}</p>
+      {error && (confirmClear ? <div className="assessment-recovery"><p>Clear all local assessments? Saved run evidence, usage and keys are retained.</p><button type="button" className="quiet" onClick={async () => { const empty = JSON.stringify(["unreviewed", "unreviewed", ""]); expectedLocal.current = empty; if (await onClear()) { synced.current = empty; setConflict(false); setConfirmClear(false); setNotice("Assessments cleared. Your draft is retained; you can save it again."); } expectedLocal.current = null; }}>Clear assessments</button><button type="button" className="quiet" onClick={() => setConfirmClear(false)}>Keep assessments</button></div> : <button type="button" className="quiet" onClick={() => setConfirmClear(true)}>Clear local assessments…</button>)}
+    </form><p className="hint">These are your annotations, not a Jev verdict or proof of correctness. Original run evidence stays unchanged.</p>
+  </DetailPanel></section>;
+}

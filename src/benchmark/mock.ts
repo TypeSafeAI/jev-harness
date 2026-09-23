@@ -7,7 +7,7 @@
  * fixture side of this table and are never added to the payload.
  *
  * Extracted from TypeSafeAI/typesafe-playground `lib/harness/mock.ts` at
- * 2c6cac903ee3887eb72548e012c14a7aefe4f3bd.
+ * 6fe5967dc020521a0731682b06c4d8eeeab95ffb.
  */
 import type { RunPayload } from "../contract/payload";
 import { REVIEW_QUESTION_IDS, type Fixture, type JevTransport, type MockAnswers } from "../contract/types";

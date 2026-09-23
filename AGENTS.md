@@ -41,7 +41,7 @@ docs/roadmap.md          phases and exit criteria; update it when a phase lands
 .githooks/ scripts/      pre-commit secret check (dependency-free) installed by pnpm's prepare step
 ```
 
-`src/contract/` was extracted from `TypeSafeAI/typesafe-playground` `lib/harness/` (branch `feat/proposal-review`, commit `245167d`). The phase 1 validator, review payload builder, mock transport, fixtures, and bench were extracted from commit `2c6cac9` of the same branch (PR #41, not yet merged); re-diff them against the merged playground history when it lands. Do not reimplement playground behavior here from memory; extract it so the two stay identical, except where the hardened contract deliberately differs.
+`src/contract/` was extracted from `TypeSafeAI/typesafe-playground` `lib/harness/` (branch `feat/proposal-review`, commit `245167d`). The phase 1 validator, review payload builder, mock transport, fixtures, and bench were re-diffed against canonical merged playground commit `6fe5967dc020521a0731682b06c4d8eeeab95ffb` (PR #41). Do not reimplement playground behavior here from memory; extract it so the two stay identical, except where the hardened contract deliberately differs.
 
 ## Package manager
 
