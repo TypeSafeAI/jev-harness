@@ -32,6 +32,14 @@ environment. `decide()` still checks a supplied validation result; it cannot
 prove the host ran the validator. A live transport and durable log store are
 not part of this package.
 
+The playground consumes a byte-for-byte vendored subset of merged harness
+revision `a8a1a45a147c06abd197ff5d6004fb78e682e3a6`, with the MIT license and a
+full revision/hash manifest. Thin compatibility exports preserve its host import
+paths. Provider transport, keys, routes, UI and the Node fixture loader stay in
+the playground; its ordinary barrel excludes the base decision helper. The
+[consumer delivery record](verification/phase1-consumer-2026-09-23.json) links
+the merged integration and its offline, production and browser checks.
+
 The intended host sequence is proposal -> validation -> permitted egress/review
 -> decision -> receipt -> independent host policy. The host must avoid provider
 calls on validation rejection; a pure result consumer cannot enforce call order.

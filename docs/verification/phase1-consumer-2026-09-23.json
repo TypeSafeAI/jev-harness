@@ -1,0 +1,60 @@
+{
+  "kind": "phase1-extraction-consumer-delivery",
+  "date": "2026-09-23",
+  "issue": "https://github.com/TypeSafeAI/jev-harness/issues/1",
+  "sourceExtraction": {
+    "repository": "TypeSafeAI/typesafe-playground",
+    "merge": "6fe5967dc020521a0731682b06c4d8eeeab95ffb",
+    "pullRequest": "https://github.com/TypeSafeAI/typesafe-playground/pull/41"
+  },
+  "harness": {
+    "extractionPullRequest": "https://github.com/TypeSafeAI/jev-harness/pull/32",
+    "consumerPin": "a8a1a45a147c06abd197ff5d6004fb78e682e3a6",
+    "fixtureFreezeGuard": "https://github.com/TypeSafeAI/jev-harness/pull/39"
+  },
+  "consumer": {
+    "repository": "TypeSafeAI/typesafe-playground",
+    "pullRequest": "https://github.com/TypeSafeAI/typesafe-playground/pull/45",
+    "testedHead": "a88b91ca63717f73a67b7aaeaeb42763948fa9a6",
+    "merge": "e5fc697f4a7b995b045000c0e3f915df5a7df198",
+    "manifest": "lib/vendor/jev-harness/manifest.json",
+    "manifestEntries": 40,
+    "typescriptModules": 14,
+    "license": "MIT",
+    "fixtures": 25,
+    "originalFixtureBytesUnchanged": 20,
+    "mergedAt": "2026-09-23T07:29:28Z",
+    "mergedTreeMatchesTestedHead": true
+  },
+  "verification": {
+    "artifact": "https://github.com/TypeSafeAI/typesafe-playground/blob/451434cd9242dca9de5473cc5203cae079dd2ae5/docs/verification/shared-harness-consumer-2026-09-23.json",
+    "unitTests": {
+      "javascript": 39,
+      "typescript": 566,
+      "python": 26
+    },
+    "typecheck": "passed",
+    "productionBuild": "passed",
+    "productionMockArms": 50,
+    "productionMockExpected": 50,
+    "productionDesktopMobileAudits": 2,
+    "traceUniqueFixtureCountPerPageAndApi": 25,
+    "historicalArtifactsUnchanged": 5,
+    "historicalVarianceOutput": "byte-identical",
+    "fullHostedBrowserSuite": {
+      "passed": 373,
+      "skipped": 16,
+      "failed": 0,
+      "durationMinutes": 26.4,
+      "job": "https://github.com/TypeSafeAI/typesafe-playground/actions/runs/35829406886/job/107078316717"
+    },
+    "hostedRuns": [
+      "https://github.com/TypeSafeAI/typesafe-playground/actions/runs/35829406886",
+      "https://github.com/TypeSafeAI/typesafe-playground/actions/runs/35829403799"
+    ],
+    "hostedMatrix": "Both Python 3.10 and 3.13 jobs passed on exact head a88b91ca63717f73a67b7aaeaeb42763948fa9a6 for push and pull_request runs.",
+    "reviewThreads": "All addressed threads resolved before merge; model-boundary observation answered with upstream contract and host pipeline evidence."
+  },
+  "boundary": "Evidence only; package has no provider HTTP client, proposal execution or host authorization. Playground owns transport, keys, routes and UI. Shared decide receives evidence; reviewProposal and host model/source checks enforce the live pin.",
+  "scope": "Records extraction and pinned consumer delivery. Production host conformance and calibration remain separate work."
+}

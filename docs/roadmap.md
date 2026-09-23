@@ -33,13 +33,19 @@ the revisions that produced them.
 - [x] `review.ts`: question set, `buildReviewPayload`, injected transport, and request types (`src/contract/payload.ts`)
 - [x] `run.ts`, `proposer.ts`, `mock.ts`, `fixtures.ts`, `load.ts`, and `bench.ts` (under `src/benchmark/`; `load.ts` is Node-only)
 - [x] Original 20 synthetic fixture files and applicable proposal-review tests (the route test stays in the playground)
-- [ ] Playground consumes the shared package or a pinned vendored revision
+- [x] Playground consumes a pinned vendored revision: [PR #45](https://github.com/TypeSafeAI/typesafe-playground/pull/45), merged at `e5fc697f4a7b995b045000c0e3f915df5a7df198`; source pin `a8a1a45a147c06abd197ff5d6004fb78e682e3a6`
 - [x] Preserve the hardening changes rather than replacing them with an older decision table
 - [x] Test the exact post-validation wire payload, including supported criteria and absent labels
 
 Exit: reproduce the original mock pipeline totals, retaining the ambiguity
 label history and separating legitimate abstentions. These scripted outcomes
 are not new live measurements. Apply the [evaluation plan](hardening/09-evaluation.md).
+
+Phase 1 is complete. The [consumer delivery evidence](verification/phase1-consumer-2026-09-23.json)
+records byte-identical source and original fixtures, exact HTTP payload and
+cancellation checks, both production fixture traces, all mock API arms and the
+full hosted browser suite. Host authorization, production conformance and
+calibration remain separate work.
 
 Mock pipeline totals ([offline run](verification/phase1-extraction-2026-09-23.json), `pnpm bench:review`, asserted in
 `tests/proposal-review-bench.test.ts`): base catches 7/20 bad proposals (the
