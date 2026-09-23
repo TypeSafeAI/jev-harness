@@ -50,6 +50,7 @@ export interface CliIo {
   codexExecutable?: string;
   now?: () => Date;
   cwd?: string;
+  signal?: AbortSignal;
 }
 
 export async function main(argv: readonly string[], io: CliIo): Promise<number> {
@@ -58,7 +59,7 @@ export async function main(argv: readonly string[], io: CliIo): Promise<number> 
   const cwd = io.cwd ?? process.cwd();
 
   if (options.table) {
-    try { io.stdout(renderExperimentTable(parseExperimentArtifact(JSON.parse(await readFile(join(cwd, options.table), "utf8"))))); return 0; }
+    try { io.stdout(renderExperimentTable(await parseExperimentArtifact(JSON.parse(await readFile(join(cwd, options.table), "utf8"))))); return 0; }
     catch (error) { io.stderr(`${(error as Error).message}\n`); return 1; }
   }
 
@@ -76,6 +77,8 @@ export async function main(argv: readonly string[], io: CliIo): Promise<number> 
         routerFor: () => { const jev = createJevChoiceRouter({ key: key!, ...(io.fetch ? { fetch: io.fetch } : {}) }); return { router: jev.router, measurement: () => jev.state.measurement }; } }
     : { source: "fake", proposer: fakeProposer, routerFor: fakeRouterFor };
 
+  if (io.signal) deps.signal = io.signal;
+
   const command = ["pnpm experiment:routing", ...argv.filter(a => a !== "--")].join(" ");
   const outPath = options.out ?? (options.live ? join("examples", "routing", "runs", `${date.toISOString().slice(0, 10)}-experiment.json`) : null);
   if (outPath) {
@@ -84,7 +87,7 @@ export async function main(argv: readonly string[], io: CliIo): Promise<number> 
 
   const trials = await runExperiment({ runs: options.runs, sizes: options.sizes, policy }, deps);
   const artifact = buildArtifact(trials, { source: deps.source, command, generatedAt: date.toISOString(), policy, runs: options.runs, sizes: options.sizes,
-    proposer: options.live ? "codex-cli (default model, isolated arena host)" : "fake-scripted", labels: EXPERIMENT_LABELS });
+    proposer: options.live ? "codex-cli (default model, isolated arena host)" : "fake-scripted", labels: EXPERIMENT_LABELS, status: io.signal?.aborted ? "cancelled" : "complete" });
   const json = JSON.stringify(artifact, null, 2) + "\n";
   if (outPath) {
     await mkdir(dirname(join(cwd, outPath)), { recursive: true });
@@ -92,5 +95,16 @@ export async function main(argv: readonly string[], io: CliIo): Promise<number> 
     io.stderr(`Wrote ${outPath}\n`);
   }
   io.stdout(options.format === "json" && !options.live ? json : renderExperimentTable(artifact));
-  return 0;
+  return io.signal?.aborted ? 130 : 0;
+}
+
+/** CLI lifecycle: abort active provider/child work, await teardown and keep partial evidence. */
+export async function runCli(argv: readonly string[], io: Omit<CliIo, "signal">): Promise<number> {
+  const controller = new AbortController();
+  let interrupted: number | null = null;
+  const interrupt = () => { interrupted ??= 130; controller.abort(); };
+  const terminate = () => { interrupted ??= 143; controller.abort(); };
+  process.on("SIGINT", interrupt); process.on("SIGTERM", terminate);
+  try { const result = await main(argv, { ...io, signal: controller.signal }); return interrupted ?? result; }
+  finally { process.off("SIGINT", interrupt); process.off("SIGTERM", terminate); }
 }

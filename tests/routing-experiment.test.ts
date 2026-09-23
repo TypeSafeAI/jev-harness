@@ -1,8 +1,11 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, resolve } from "node:path";
+import { spawn } from "node:child_process";
+import { pathToFileURL } from "node:url";
+import { setTimeout as delay } from "node:timers/promises";
 import { CLARIFICATION_ID, ROUTING_UNTRUSTED_DATA_NOTE, type RoutingRequest } from "../src/routing/index.js";
 import { DEMO_POLICY } from "../examples/routing/scenarios.js";
 import { EXPERIMENT_CATALOG, EXPERIMENT_LABELS, EXPERIMENT_TASKS, TIER_AVAILABLE_IDS, type ExperimentLabel } from "../examples/routing/experiment-tasks.js";
@@ -129,16 +132,16 @@ test("truncated proposer traces keep first-call scoring but exclude unknown corr
 
 test("artifact schema round-trips and rejects tampering", async () => {
   const artifact = meta(await runExperiment({ runs: 1, policy: DEMO_POLICY }, fakeDeps()));
-  const parsed = parseExperimentArtifact(JSON.parse(JSON.stringify(artifact)));
+  const parsed = await parseExperimentArtifact(JSON.parse(JSON.stringify(artifact)));
   assert.equal(parsed.schemaVersion, 1); assert.equal(parsed.kind, "routing-experiment"); assert.equal(parsed.models.jev, "jev-1.13.0");
   assert.deepEqual(parsed.catalog.ids, EXPERIMENT_CATALOG.map(t => t.id));
   const tamper = (edit: (a: any) => void) => { const copy = structuredClone(artifact) as any; edit(copy); return () => parseExperimentArtifact(copy); };
-  assert.throws(tamper(a => { a.models.jev = "jev-latest"; }), /model pin/);
-  assert.throws(tamper(a => { a.schemaVersion = 2; }));
-  assert.throws(tamper(a => { a.trials[0].outcome = "applied"; }));
-  assert.throws(tamper(a => { a.trials.find((t: Trial) => t.arm === "all_tools").routing = { jevCalls: 1, latencyMs: 1, reported: null }; }), /mismatch/);
-  assert.throws(tamper(a => { a.trials[0].proxies.totalInputTokens = -1; }));
-  assert.throws(tamper(a => { delete a.labels.read; }));
+  await assert.rejects(tamper(a => { a.models.jev = "jev-latest"; }), /model pin/);
+  await assert.rejects(tamper(a => { a.schemaVersion = 2; }));
+  await assert.rejects(tamper(a => { a.trials[0].outcome = "applied"; }));
+  await assert.rejects(tamper(a => { a.trials.find((t: Trial) => t.arm === "all_tools").routing = { jevCalls: 1, latencyMs: 1, reported: null }; }), /mismatch/);
+  await assert.rejects(tamper(a => { a.trials[0].proxies.totalInputTokens = -1; }));
+  await assert.rejects(tamper(a => { delete a.labels.read; }));
 });
 
 test("table is recomputed from trials, labels fake runs and never prints unknown usage as zero", async () => {
@@ -209,7 +212,7 @@ process.stdin.on("end", () => {
   const text = await readFile(path, "utf8");
   assert.ok(!text.includes("synthetic-test-credential") && !run.out.includes("synthetic-test-credential") && !run.err.includes("synthetic-test-credential"));
   assert.ok(authorizations.every(value => value === "Bearer synthetic-test-credential"));
-  const artifact = parseExperimentArtifact(JSON.parse(text));
+  const artifact = await parseExperimentArtifact(JSON.parse(text));
   assert.equal(artifact.source, "live");
   assert.equal(artifact.trials.length, 10);
   assert.equal(authorizations.length, 5);
@@ -232,4 +235,103 @@ test("Codex approval list defaults to the fixture handlers and only accepts cata
   assert.ok(args.includes('mcp_servers.arena.tools.inspect_agent.approval_mode="approve"'));
   assert.ok(codexArguments("/w", "m", "t", ["search_text"]).includes('mcp_servers.arena.tools.search_text.approval_mode="approve"'));
   assert.throws(() => codexArguments("/w", "m", "t", ['x".approval_mode="approve"']));
+});
+
+test("reported input and output retain independent missing-value counts", async () => {
+  const trials = await runExperiment({ runs: 1, sizes: ["small"], policy: DEMO_POLICY }, fakeDeps());
+  const trial = structuredClone(trials.find(t => t.arm === "all_tools")!);
+  trial.proposer!.reported = { input: 100, output: null, cachedInput: 0 };
+  const summary = summarizeExperiment([trial], EXPERIMENT_LABELS).byArm.all_tools;
+  assert.equal(summary.reportedInputKnown, 1);
+  assert.equal(summary.reportedOutputKnown, 0);
+  const line = renderExperimentTable(meta([trial])).split("\n").find(line => line.startsWith("| A · all N schemas |"))!;
+  assert.match(line, /\| 100 \| unknown \(1\/1\) \|/);
+});
+
+test("truncated failed and cancelled attempts remain incorrect in the denominator", async () => {
+  const trials = await runExperiment({ runs: 1, sizes: ["small"], policy: DEMO_POLICY }, fakeDeps());
+  for (const status of ["failed", "cancelled"] as const) {
+    const trial = structuredClone(trials.find(t => t.arm === "all_tools" && t.baseId === "read")!);
+    trial.outcome = "proposer_failed"; trial.proposer!.status = status; trial.proposer!.traceTruncated = true;
+    assert.equal(scoreTrial(trial, EXPERIMENT_LABELS.read!).correct, false);
+    const summary = summarizeExperiment([trial], EXPERIMENT_LABELS).byArm.all_tools;
+    assert.equal(summary.correctKnown, 1); assert.equal(summary.correct, 0); assert.equal(summary.failed, 1);
+  }
+});
+
+test("artifact validation rejects contradictory scoring and non-finite measurements", async () => {
+  const artifact = meta(await runExperiment({ runs: 1, policy: DEMO_POLICY }, fakeDeps()));
+  const bad = async (edit: (a: any) => void) => { const copy = structuredClone(artifact); edit(copy); await assert.rejects(() => parseExperimentArtifact(copy), /Invalid experiment artifact/); };
+  await bad(a => { a.trials.find((t: Trial) => t.outcome === "tool_called").proposer.status = "failed"; });
+  await bad(a => { a.trials[0].proxies.totalInputTokens = Infinity; });
+  await bad(a => { a.trials.find((t: Trial) => t.proposer).proposer.durationMs = -1; });
+  await bad(a => { a.trials[0].firstToolId = "invented"; });
+  await bad(a => { a.trials[0].order = 7; });
+  await bad(a => { a.trials.push(a.trials[0]); });
+  await bad(a => { a.routingQuestionSetVersion = 999; });
+  await bad(a => { a.untrustedDataNote = "changed"; });
+  await bad(a => { a.models.proposer = null; });
+  await bad(a => { a.catalog.ids = []; });
+  await bad(a => { a.policy.probabilityFloor = 2; });
+  await bad(a => { a.labels.read.acceptableIds = ["not-a-descriptor"]; });
+  await bad(a => { a.trials.find((t: Trial) => t.arm === "jev_top_k").routing.outcome = "applied"; });
+  await bad(a => { a.trials[0].taskId = "read-large"; });
+  await bad(a => { a.trials[0].exposedToolIds = [42]; });
+  await bad(a => { a.trials[0].catalogSize = 100; });
+  await bad(a => { a.trials = a.trials.slice(0, 1); });
+  await bad(a => { a.policy.confidenceFloor = 1; });
+  await bad(a => { a.trials.find((t: Trial) => t.routing?.outcome === "selected").routing.jevCalls = 0; });
+  await bad(a => { const trial = a.trials.find((t: Trial) => t.outcome === "no_tool_call"); trial.proposer.traceTruncated = true; });
+  await bad(a => { const trial = a.trials.find((t: Trial) => t.taskId === "read-small" && t.arm === "jev_top_k"); trial.proposer.calledToolIds = ["inspect_agent"]; trial.firstToolId = "inspect_agent"; });
+  const partial = structuredClone(artifact); partial.status = "cancelled"; partial.trials = partial.trials.slice(0, 1);
+  assert.equal((await parseExperimentArtifact(partial)).status, "cancelled");
+});
+
+test("CLI abort stops further trials and preserves cancelled partial evidence", async t => {
+  const dir = await mkdtemp(join(tmpdir(), "jev-experiment-abort-")); t.after(() => rm(dir, { recursive: true, force: true }));
+  const controller = new AbortController(); let calls = 0;
+  const fetch = (async (_url: string | URL | Request, init?: RequestInit) => {
+    calls++; const body = JSON.parse(String(init?.body)); const ids = Object.keys(body.questions.tool.criteria);
+    controller.abort();
+    return Response.json({ model: "jev-1.13.0", answers: { tool: { type: "choice", choice: "read_file", confidence: .9, probabilities: Object.fromEntries(ids.map(id => [id, id === "read_file" ? .9 : .1 / (ids.length - 1)])) } } });
+  }) as typeof globalThis.fetch;
+  const output = collect();
+  const code = await main(["--live", "--sizes", "small", "--out", "cancelled.json"], { ...output.io, env: { TYPESAFE_API_KEY: "synthetic-test-credential" }, fetch, signal: controller.signal, codexExecutable: join(dir, "nonexistent-synthetic-cli"), cwd: dir });
+  assert.equal(code, 130); assert.equal(calls, 1);
+  const artifact = await parseExperimentArtifact(JSON.parse(await readFile(join(dir, "cancelled.json"), "utf8")));
+  assert.equal(artifact.status, "cancelled"); assert.equal(artifact.trials.length, 1); assert.equal(artifact.trials[0]!.proposer, null);
+  assert.match(output.out, /Cancelled.*partial/i);
+});
+
+test("CLI process signals await detached child cleanup and save partial evidence", { skip: process.platform === "win32" }, async t => {
+  for (const signal of ["SIGINT", "SIGTERM"] as const) await t.test(signal, async t => {
+    const dir = await mkdtemp(join(tmpdir(), "jev-experiment-signal-"));
+    const marker = join(dir, "child.json"), cli = join(dir, "fake-codex"), driver = join(dir, "driver.mjs");
+    await writeFile(cli, `#!/usr/bin/env node
+const fs = require("node:fs");
+fs.writeFileSync(${JSON.stringify(marker)}, JSON.stringify({ pid: process.pid, directory: process.cwd() }));
+setInterval(() => {}, 1000);
+`, { mode: 0o700 });
+    await writeFile(driver, `import { runCli } from ${JSON.stringify(pathToFileURL(resolve("examples/routing/experiment-cli.ts")).href)};
+const fakeFetch = async (_url, init) => { const ids = Object.keys(JSON.parse(init.body).questions.tool.criteria); return Response.json({ model: "jev-1.13.0", answers: { tool: { type: "choice", choice: "read_file", confidence: .9, probabilities: Object.fromEntries(ids.map(id => [id, id === "read_file" ? .9 : .1 / (ids.length - 1)])) } } }); };
+process.exitCode = await runCli(["--live", "--sizes", "small", "--out", "partial.json"], { env: { TYPESAFE_API_KEY: "synthetic-test-credential" }, fetch: fakeFetch, codexExecutable: ${JSON.stringify(cli)}, cwd: ${JSON.stringify(dir)}, stdout: () => {}, stderr: () => {} });
+`);
+    const child = spawn(process.execPath, ["--import", "tsx", driver], { cwd: process.cwd(), stdio: ["ignore", "ignore", "pipe"] });
+    let error = "", observed: { pid: number; directory: string } | null = null;
+    child.stderr.on("data", data => { error += String(data); });
+    const ended = new Promise<{ code: number | null; signal: string | null }>(resolve => child.once("close", (code, signal) => resolve({ code, signal })));
+    t.after(async () => { child.kill("SIGKILL"); if (observed) { try { process.kill(-observed.pid, "SIGKILL"); } catch {} } await rm(dir, { recursive: true, force: true }); });
+    const deadline = Date.now() + 15_000;
+    while (!observed && Date.now() < deadline) { try { observed = JSON.parse(await readFile(marker, "utf8")); } catch { await delay(20); } if (child.exitCode !== null) break; }
+    assert.ok(observed, `synthetic child did not start: ${error}`);
+    child.kill(signal);
+    const watchdog = setTimeout(() => child.kill("SIGKILL"), 10_000);
+    const result = await ended; clearTimeout(watchdog);
+    assert.deepEqual(result, { code: signal === "SIGINT" ? 130 : 143, signal: null });
+    assert.throws(() => process.kill(observed!.pid, 0), { code: "ESRCH" });
+    await assert.rejects(stat(observed.directory), { code: "ENOENT" });
+    const artifact = await parseExperimentArtifact(JSON.parse(await readFile(join(dir, "partial.json"), "utf8")));
+    assert.equal(artifact.status, "cancelled"); assert.equal(artifact.trials.length, 1);
+    assert.equal(artifact.trials[0]!.proposer!.status, "cancelled");
+  });
 });

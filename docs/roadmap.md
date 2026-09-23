@@ -55,6 +55,8 @@ are not new live measurements. Apply the [evaluation plan](hardening/09-evaluati
 
 - [x] Local lessons from each settled Arena simulation: measured tradeoffs, evidence-first recommendations, repeat-run evaluation guidance and versioned export. [Offline verification](verification/arena-lessons-2026-09-22.json); this is not automated quality evaluation.
 
+- [x] Harness adoption workflow: explicit shadow/lean context preparation, runnable synthetic adapter, copyable coding-agent handoff and separate human assessments for repeated-run inspection. This is integration scaffolding; each production host still needs conformance and measured quality/overhead evidence. See [integration](integration.md).
+
 ## 4 · Context scoring
 
 - [x] Compare scoring/re-prefill costs with forfeited prefix-cache reuse. [Cost model](context-scoring-cost-model.md): no-go for integration code; conditional go for a synthetic shadow experiment

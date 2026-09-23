@@ -37,6 +37,8 @@ These are routing outcomes, not additions to `ReviewVerdict`. A `RoutingReceipt`
 
 `assembleContext(receipt, mode, previousState?)` serializes the task and actual tool schemas. It reports newly loaded and evicted ids. An evicted schema remains in the catalog and can be loaded again. This state is only schema inclusion, not a conversation, identity, cache, permission grant or semantic summary. Full mode includes available schemas even on a failed route because it represents the no-routing baseline; that never indicates permission to use them. Lean mode includes none after a failed route.
 
+`prepareToolContext({ catalog, input, policy, router, mode, previous?, signal? })` composes one routing request with both context snapshots. Explicit `shadow` mode returns the full available menu as its active `context`; `lean` returns only selected schemas. Cancellation empties the active handoff in both modes, while comparison snapshots retain evidence. This helper does not implement transport, caching, a deadline, a session or authorization. See the [integration guide and runnable example](integration.md) for host freshness checks and a staged evaluation workflow.
+
 ## Host adapter and reuse
 
 Reuse [`typesafe-router`'s routing engine](https://github.com/TypeSafeAI/typesafe-router/blob/main/lib/jevRouter.ts) on the host where appropriate. It currently lives in a Next.js source tree, imports application aliases, and has provider defaults and logging; importing that engine into the pure contract would bring host behavior with it. This package therefore owns only the normalization boundary and context-selection policy.
@@ -54,7 +56,7 @@ pnpm test
 pnpm --silent bench:routing > routing-run.json
 ```
 
-The output is the run artifact: command, timestamp, labels, paired contexts, metrics, local comparison duration and every routing receipt. Link that artifact whenever reporting numbers. Scenario values are scripted demonstrations, not Jev measurements, calibration, a quality benchmark or proof of savings. Expected acceptable ids are used only after routing for evaluation. These routing scenarios do not extend the proposal-review fixture categories.
+The output is the run artifact: command, timestamp, labels, paired contexts, metrics, local comparison duration and every routing receipt. Link that artifact whenever reporting numbers. An archived example from 2026-09-22 (`source: mock`, scripted evidence) is kept at `examples/routing/runs/2026-09-22-routing-run.json`; the root `routing-run.json` is ignored so reruns do not show as changes. Scenario values are scripted demonstrations, not Jev measurements, calibration, a quality benchmark or proof of savings. Expected acceptable ids are used only after routing for evaluation. These routing scenarios do not extend the proposal-review fixture categories.
 
 - **Schema/context bytes:** actual UTF-8 length of serialized task plus tool descriptors/schemas.
 - **Estimated tokens:** `ceil(UTF-8 bytes / 4)` per serialized payload; a proxy, not provider usage.
@@ -85,10 +87,10 @@ Roadmap phase 3, [issue #2](https://github.com/TypeSafeAI/jev-harness/issues/2).
 **Metrics**, per trial, per arm, per catalog size and paired per task:
 
 - **Correct tool.** Task labelled *selected*: the proposer completed and called at least one acceptable id. Task labelled *clarify*: no tool was called (routed clarification, or a proposer answer with no call). The answer text is not graded, so a no-call refusal also counts as asking. *First call correct* is reported separately.
-- **Reported usage.** Proposer input, cached input and output tokens as reported by the CLI, plus Jev input and output as reported by the provider. A trial total exists only when every called component reported. Unknown is never counted as zero.
+- **Reported usage.** Proposer input, cached input and output tokens as reported by the CLI, plus Jev input and output as reported by the provider. A trial total exists only when every called component reported that metric. Input and output have independent unknown counts. Unknown is never counted as zero.
 - **Proxies.** `ceil(UTF-8 bytes / 4)` of the arena prompt plus exposed schemas, and of the exact Jev request body. They are labelled as proxies, kept apart from reported usage, and exclude the CLI's own system prompt and tool framing.
 - **Jev calls and latency.** Call count and wall time around each routing call on the host.
-- **Failures.** Routing unavailable, proposer failed or cancelled, routed clarification or no-match, and no-call answers are counted separately.
+- **Failures.** Routing unavailable, proposer failed or cancelled, routed clarification or no-match, and no-call answers are counted separately. Failed and cancelled attempts remain incorrect in the accuracy denominator, even if their trace was truncated. A completed truncated trace with no observed acceptable call is unknown; it cannot prove there was no acceptable call.
 
 **What a result can claim.** Paired correct-tool rates and reported token totals on these 19 synthetic tasks, with this catalog, `jev-1.13.0`, the Codex CLI's default model on the day and this policy. **What it cannot claim.** One run is a signal, not a calibration. Proxies are not provider savings. The tasks are synthetic, so the result says nothing about real repositories. It does not measure dollars (Codex and Jev price differently), cache effects across trials, answer quality, or execution speed. Top-1 routing can starve a task that needs two tools (read, then patch); that shows up as a correct-tool miss in arm B and is part of the result, not noise.
 
@@ -107,3 +109,7 @@ pnpm --silent experiment:routing --live --runs 3
 ```
 
 This writes `examples/routing/runs/<date>-experiment.json` (it refuses to overwrite) and prints the table, which can be regenerated with `--table`. Three runs make 57 Jev calls and up to 114 Codex CLI runs (fewer when Jev routes to clarification), sequentially, so expect tens of minutes and both providers' usage. Use `--sizes small,large` or `--runs 1` for a smaller first pass, and `--top-k 2` to test the two-tool starvation case. Commit the artifact and link it next to any number quoted from it.
+
+Ctrl-C or termination aborts the active request or Codex child, waits for cleanup, and saves completed and interrupted trials with `status: "cancelled"`. The table labels these as partial results; planned repetitions are not completed repetitions. The CLI exits with 130 for SIGINT or 143 for SIGTERM.
+
+`--table` checks canonical task/catalog metadata, pinned request fields, finite measurements and consistent trial outcomes before recomputing its summary. Invalid or contradictory artifacts are rejected. These checks establish structural consistency, not the provenance or authenticity of a claimed live run.

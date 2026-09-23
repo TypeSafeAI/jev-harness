@@ -9,7 +9,7 @@
  * The runner never receives evaluation labels. Scoring joins labels afterwards. Nothing proposed is applied.
  */
 import { JEV_MODEL } from "../../src/contract/types.js";
-import { CLARIFICATION_ID, ROUTING_QUESTION_SET_VERSION, ROUTING_UNTRUSTED_DATA_NOTE, routeTools, type RoutingPolicy, type RoutingReceipt, type RoutingRequest, type ToolDefinition, type ToolRouter } from "../../src/routing/index.js";
+import { CLARIFICATION_ID, ROUTING_QUESTION_SET_VERSION, ROUTING_UNTRUSTED_DATA_NOTE, routeTools, type RoutingEvidence, type RoutingPolicy, type RoutingReceipt, type RoutingRequest, type ToolDefinition, type ToolRouter } from "../../src/routing/index.js";
 import { arenaPrompt, runCodex } from "../host/codex.js";
 import { jevChoiceBody, type JevMeasurement } from "../host/jev-choice.js";
 import { EXPERIMENT_CATALOG, EXPERIMENT_TASKS, FAKE_PROPOSER_SCRIPT, EXPERIMENT_MOCKS, SIZE_TIERS, TIER_AVAILABLE_IDS, type ExperimentLabel, type ExperimentTask, type SizeTier } from "./experiment-tasks.js";
@@ -186,6 +186,7 @@ export function codexProposer(executable = "codex"): Proposer {
  * A no-call answer is treated as asking; the answer text is not graded. Unavailable and failed trials are incorrect.
  */
 export function scoreTrial(trial: Trial, label: ExperimentLabel) {
+  if (trial.outcome === "proposer_failed" || trial.outcome === "routing_unavailable") return { correct: false, firstCallCorrect: false };
   const acceptableCalled = trial.outcome === "tool_called" && trial.proposer!.calledToolIds.some(id => label.acceptableIds.includes(id));
   const correct = label.expectedOutcome === "needs_clarification"
     ? trial.outcome === "routed_clarification" || trial.outcome === "no_tool_call"
@@ -213,7 +214,7 @@ export interface ArmSummary {
   trials: number; correct: number; correctKnown: number; correctRate: number | null; firstCallCorrect: number;
   routedClarifications: number; noToolCalls: number; unavailable: number; failed: number;
   jevCalls: number; jevLatencyMedianMs: number | null;
-  reportedInputMean: number | null; reportedOutputMean: number | null; reportedInputKnown: number; reportedUnknown: number;
+  reportedInputMean: number | null; reportedOutputMean: number | null; reportedInputKnown: number; reportedOutputKnown: number; reportedUnknown: number;
   proxyInputMean: number | null; exposedToolsMean: number | null;
 }
 function summarizeArm(trials: readonly Trial[], labels: Readonly<Record<string, ExperimentLabel>>): ArmSummary {
@@ -228,7 +229,7 @@ function summarizeArm(trials: readonly Trial[], labels: Readonly<Record<string, 
     routedClarifications: trials.filter(t => t.outcome === "routed_clarification").length, noToolCalls: trials.filter(t => t.outcome === "no_tool_call").length,
     unavailable: trials.filter(t => t.outcome === "routing_unavailable").length, failed: trials.filter(t => t.outcome === "proposer_failed").length,
     jevCalls: sum(trials.map(t => t.routing?.jevCalls ?? 0)), jevLatencyMedianMs: median(trials.flatMap(t => t.routing?.latencyMs == null ? [] : [t.routing.latencyMs])),
-    reportedInputMean: mean(inputs), reportedOutputMean: mean(outputs), reportedInputKnown: inputs.length, reportedUnknown: reported.filter(r => r.input === null || r.output === null).length,
+    reportedInputMean: mean(inputs), reportedOutputMean: mean(outputs), reportedInputKnown: inputs.length, reportedOutputKnown: outputs.length, reportedUnknown: reported.filter(r => r.input === null || r.output === null).length,
     proxyInputMean: mean(trials.map(t => t.proxies.totalInputTokens)), exposedToolsMean: mean(trials.map(t => t.exposedToolIds.length)),
   };
 }
@@ -254,7 +255,7 @@ export function summarizeExperiment(trials: readonly Trial[], labels: Readonly<R
 // ---------------------------------------------------------------- artifact
 
 export interface ExperimentArtifact {
-  schemaVersion: 1; kind: "routing-experiment"; generatedAt: string; command: string; source: "fake" | "live";
+  schemaVersion: 1; kind: "routing-experiment"; status: "complete" | "cancelled"; generatedAt: string; command: string; source: "fake" | "live";
   models: { jev: typeof JEV_MODEL; proposer: string };
   routingQuestionSetVersion: typeof ROUTING_QUESTION_SET_VERSION; untrustedDataNote: string;
   policy: RoutingPolicy; runs: number; sizes: SizeTier[];
@@ -278,10 +279,10 @@ export const LIVE_NOTES = [
   "Jev latency is wall time around the routing call on this host; proposer duration includes CLI start-up.",
 ];
 
-export function buildArtifact(trials: Trial[], meta: { source: "fake" | "live"; command: string; generatedAt: string; policy: RoutingPolicy; runs: number; sizes: readonly SizeTier[]; proposer: string; labels: Readonly<Record<string, ExperimentLabel>> }): ExperimentArtifact {
+export function buildArtifact(trials: Trial[], meta: { source: "fake" | "live"; status?: "complete" | "cancelled"; command: string; generatedAt: string; policy: RoutingPolicy; runs: number; sizes: readonly SizeTier[]; proposer: string; labels: Readonly<Record<string, ExperimentLabel>> }): ExperimentArtifact {
   const labels = structuredClone(Object.fromEntries(Object.entries(meta.labels).map(([k, v]) => [k, { acceptableIds: [...v.acceptableIds], expectedOutcome: v.expectedOutcome }])));
   return {
-    schemaVersion: 1, kind: "routing-experiment", generatedAt: meta.generatedAt, command: meta.command, source: meta.source,
+    schemaVersion: 1, kind: "routing-experiment", status: meta.status ?? "complete", generatedAt: meta.generatedAt, command: meta.command, source: meta.source,
     models: { jev: JEV_MODEL, proposer: meta.proposer }, routingQuestionSetVersion: ROUTING_QUESTION_SET_VERSION, untrustedDataNote: ROUTING_UNTRUSTED_DATA_NOTE,
     policy: { ...meta.policy }, runs: meta.runs, sizes: [...meta.sizes],
     catalog: { ids: EXPERIMENT_CATALOG.map(t => t.id), tierAvailableIds: Object.fromEntries(SIZE_TIERS.map(s => [s, [...TIER_AVAILABLE_IDS[s]]])) as Record<SizeTier, string[]> },
@@ -291,35 +292,82 @@ export function buildArtifact(trials: Trial[], meta: { source: "fake" | "live"; 
 }
 
 const isObj = (v: unknown): v is Record<string, unknown> => v !== null && typeof v === "object" && !Array.isArray(v);
-const nullableCount = (v: unknown) => v === null || (typeof v === "number" && Number.isFinite(v) && v >= 0);
+const finite = (v: unknown): v is number => typeof v === "number" && Number.isFinite(v) && v >= 0;
+const count = (v: unknown): v is number => finite(v) && Number.isSafeInteger(v);
+const nullableCount = (v: unknown) => v === null || count(v);
+const unit = (v: unknown): v is number => finite(v) && v <= 1;
+const text = (v: unknown): v is string => typeof v === "string" && v.trim().length > 0;
+const ids = (v: unknown, allowed?: readonly string[], unique = true): v is string[] => Array.isArray(v) && Array.from(v).every(x => text(x) && x.length <= 128 && (!allowed || allowed.includes(x))) && (!unique || new Set(v).size === v.length);
+const sameIds = (a: readonly string[], b: readonly string[]) => a.length === b.length && a.every((id, i) => id === b[i]);
 const OUTCOMES: readonly TrialOutcome[] = ["tool_called", "no_tool_call", "routed_clarification", "routing_unavailable", "proposer_failed"];
 
-/** Validate an artifact read from disk before rendering it. Throws on anything unexpected. */
-export function parseExperimentArtifact(raw: unknown): ExperimentArtifact {
+/** Validate disk artifacts before scoring; structure and internal consistency are not authenticated provenance. */
+export async function parseExperimentArtifact(raw: unknown): Promise<ExperimentArtifact> {
   const fail = (why: string): never => { throw Error(`Invalid experiment artifact: ${why}.`); };
-  if (!isObj(raw)) fail("not an object");
-  const a = raw as Record<string, unknown>;
+  if (!isObj(raw)) return fail("not an object");
+  const a = raw;
   if (a.schemaVersion !== EXPERIMENT_SCHEMA_VERSION || a.kind !== "routing-experiment") fail("unsupported schema");
   if (a.source !== "fake" && a.source !== "live") fail("source");
-  if (!isObj(a.models) || a.models.jev !== JEV_MODEL) fail("Jev model pin");
-  if (typeof a.generatedAt !== "string" || !Number.isFinite(Date.parse(a.generatedAt)) || typeof a.command !== "string") fail("metadata");
-  if (!Number.isInteger(a.runs) || !Array.isArray(a.notes) || !a.notes.every(x => typeof x === "string") || !Array.isArray(a.trials) || !isObj(a.labels)) fail("structure");
-  if (!Array.isArray(a.sizes) || !a.sizes.every(x => SIZE_TIERS.includes(x as SizeTier)) || !isObj(a.policy) || !Number.isInteger(a.policy.topK) || typeof a.policy.confidenceFloor !== "number") fail("sizes or policy");
-  const labels = a.labels as Record<string, unknown>;
-  for (const [id, label] of Object.entries(labels)) {
-    if (!isObj(label) || !Array.isArray(label.acceptableIds) || !label.acceptableIds.every(x => typeof x === "string") || (label.expectedOutcome !== "selected" && label.expectedOutcome !== "needs_clarification")) fail(`label ${id}`);
+  if (a.status !== "complete" && a.status !== "cancelled") fail("completion status");
+  if (!isObj(a.models) || a.models.jev !== JEV_MODEL || !text(a.models.proposer)) fail("model pin or proposer");
+  if (a.routingQuestionSetVersion !== ROUTING_QUESTION_SET_VERSION || a.untrustedDataNote !== ROUTING_UNTRUSTED_DATA_NOTE) fail("routing metadata");
+  if (typeof a.generatedAt !== "string" || !Number.isFinite(Date.parse(a.generatedAt)) || !text(a.command)) fail("metadata");
+  if (!count(a.runs) || a.runs < 1 || a.runs > 50 || !Array.isArray(a.notes) || !a.notes.every(x => typeof x === "string") || !Array.isArray(a.trials) || a.trials.length > 2 * a.runs * EXPERIMENT_TASKS.length || !isObj(a.labels)) return fail("structure");
+  if (!ids(a.sizes, SIZE_TIERS) || !a.sizes.length) fail("sizes");
+  const sizes = a.sizes as SizeTier[];
+  if (a.status === "complete" && a.trials.length !== 2 * a.runs * EXPERIMENT_TASKS.filter(task => sizes.includes(task.size)).length) fail("incomplete trial set marked complete");
+  const policy = a.policy;
+  if (!isObj(policy) || !count(policy.topK) || policy.topK < 1 || policy.topK > 20 || !unit(policy.confidenceFloor) || !unit(policy.probabilityFloor) || !unit(policy.relevanceWindow) || !finite(policy.maxCostUnits)) return fail("policy");
+  const catalogIds = EXPERIMENT_CATALOG.map(t => t.id);
+  if (!isObj(a.catalog) || !ids(a.catalog.ids) || !sameIds(a.catalog.ids, catalogIds) || !isObj(a.catalog.tierAvailableIds)) return fail("catalog");
+  for (const size of SIZE_TIERS) {
+    const available = a.catalog.tierAvailableIds[size];
+    if (!ids(available) || !sameIds(available, TIER_AVAILABLE_IDS[size])) fail("catalog tiers");
   }
-  for (const [i, t] of (a.trials as unknown[]).entries()) {
-    if (!isObj(t)) fail(`trial ${i}`);
-    const trial = t as Record<string, unknown>;
-    if (!Number.isInteger(trial.run) || typeof trial.taskId !== "string" || typeof trial.baseId !== "string" || !Object.hasOwn(labels, trial.baseId) || !SIZE_TIERS.includes(trial.size as SizeTier)
-      || !ARMS.includes(trial.arm as Arm) || !OUTCOMES.includes(trial.outcome as TrialOutcome) || !Array.isArray(trial.exposedToolIds) || !Number.isInteger(trial.catalogSize)) fail(`trial ${i} fields`);
-    if (!isObj(trial.proxies) || ![trial.proxies.proposerInputTokens, trial.proxies.jevRequestTokens, trial.proxies.totalInputTokens].every(v => typeof v === "number" && v >= 0)) fail(`trial ${i} proxies`);
-    const proposer = trial.proposer, routing = trial.routing;
-    if (proposer !== null && (!isObj(proposer) || !Array.isArray(proposer.calledToolIds) || typeof proposer.traceTruncated !== "boolean" || !isObj(proposer.reported) || ![proposer.reported.input, proposer.reported.cachedInput, proposer.reported.output].every(nullableCount))) fail(`trial ${i} proposer`);
-    if (routing !== null && (!isObj(routing) || !Number.isInteger(routing.jevCalls) || !nullableCount(routing.latencyMs) || (routing.reported !== null && (!isObj(routing.reported) || ![routing.reported.input, routing.reported.output].every(nullableCount))))) fail(`trial ${i} routing`);
-    if ((trial.arm === "all_tools") !== (routing === null)) fail(`trial ${i} arm/routing mismatch`);
-    if ((trial.outcome === "tool_called" || trial.outcome === "no_tool_call" || trial.outcome === "proposer_failed") !== (proposer !== null)) fail(`trial ${i} outcome/proposer mismatch`);
+  const labels = a.labels;
+  for (const [id, label] of Object.entries(labels)) {
+    if (!EXPERIMENT_TASKS.some(t => t.baseId === id) || !isObj(label) || !ids(label.acceptableIds, catalogIds) || (label.expectedOutcome !== "selected" && label.expectedOutcome !== "needs_clarification")) fail(`label ${id}`);
+  }
+  const seen = new Set<string>(), orders = new Set<string>();
+  for (const [i, t] of a.trials.entries()) {
+    if (!isObj(t)) return fail(`trial ${i}`);
+    const task = EXPERIMENT_TASKS.find(task => task.id === t.taskId);
+    if (!task || task.baseId !== t.baseId || task.size !== t.size || !sizes.includes(task.size) || !Object.hasOwn(labels, task.baseId) || !count(t.run) || t.run < 1 || t.run > a.runs || !ARMS.includes(t.arm as Arm) || !OUTCOMES.includes(t.outcome as TrialOutcome) || (t.order !== 1 && t.order !== 2)) return fail(`trial ${i} identity`);
+    const key = `${t.run}/${task.id}/${t.arm}`, position = `${t.run}/${task.id}/${t.order}`;
+    if (seen.has(key) || orders.has(position)) fail(`trial ${i} duplicate`);
+    seen.add(key); orders.add(position);
+    const available = TIER_AVAILABLE_IDS[task.size];
+    if (t.catalogSize !== available.length || !ids(t.exposedToolIds, available)) return fail(`trial ${i} exposure`);
+    const exposedIds = t.exposedToolIds;
+    if (!isObj(t.proxies) || ![t.proxies.proposerInputTokens, t.proxies.jevRequestTokens, t.proxies.totalInputTokens].every(count) || t.proxies.totalInputTokens !== Number(t.proxies.proposerInputTokens) + Number(t.proxies.jevRequestTokens)) fail(`trial ${i} proxies`);
+    const proposer = t.proposer, routing = t.routing;
+    if (proposer !== null) {
+      if (!isObj(proposer) || !["completed", "failed", "cancelled"].includes(proposer.status as string) || !ids(proposer.calledToolIds, undefined, false) || proposer.calledToolIds.length > 100 || typeof proposer.traceTruncated !== "boolean" || !finite(proposer.durationMs) || !isObj(proposer.reported) || ![proposer.reported.input, proposer.reported.cachedInput, proposer.reported.output].every(nullableCount) || (proposer.error !== null && typeof proposer.error !== "string")) return fail(`trial ${i} proposer`);
+      if (proposer.reported.input !== null && proposer.reported.cachedInput !== null && Number(proposer.reported.cachedInput) > Number(proposer.reported.input)) fail(`trial ${i} cached usage`);
+      if (proposer.traceTruncated && proposer.calledToolIds.length !== 100) fail(`trial ${i} truncated trace length`);
+      if (proposer.calledToolIds.some(id => id !== "unknown" && !exposedIds.includes(id))) fail(`trial ${i} unexposed tool call`);
+      const outcome = proposer.status !== "completed" ? "proposer_failed" : proposer.calledToolIds.length ? "tool_called" : "no_tool_call";
+      if (t.outcome !== outcome || t.firstToolId !== (proposer.calledToolIds[0] ?? null)) fail(`trial ${i} outcome/proposer mismatch`);
+    } else if (t.firstToolId !== null || !["routed_clarification", "routing_unavailable"].includes(t.outcome as string) || !isObj(t.proxies) || t.proxies.proposerInputTokens !== 0) fail(`trial ${i} absent proposer`);
+    if (t.arm === "all_tools") {
+      if (routing !== null || proposer === null || !sameIds(t.exposedToolIds, available) || !isObj(t.proxies) || t.proxies.jevRequestTokens !== 0) fail(`trial ${i} arm/routing mismatch`);
+      continue;
+    }
+    if (!isObj(routing) || !["selected", "needs_clarification", "no_match", "unavailable"].includes(routing.outcome as string) || !ids(routing.selectedIds, available) || !ids(routing.optionIds) || !sameIds(routing.optionIds, [...available, CLARIFICATION_ID]) || routing.source !== (a.source === "fake" ? "mock" : "jev") || !text(routing.reason) || !count(routing.jevCalls) || routing.jevCalls > 1 || !(routing.latencyMs === null || finite(routing.latencyMs)) || (routing.reported !== null && (!isObj(routing.reported) || ![routing.reported.input, routing.reported.output].every(nullableCount)))) return fail(`trial ${i} routing`);
+    if ((routing.outcome === "selected") !== (proposer !== null) || routing.selectedIds.length > policy.topK || !sameIds(t.exposedToolIds, available.filter(id => (routing.selectedIds as string[]).includes(id))) || (routing.outcome === "selected" ? routing.selectedIds.length === 0 : routing.selectedIds.length !== 0)) fail(`trial ${i} routing/exposure mismatch`);
+    if (proposer === null && t.outcome !== (routing.outcome === "unavailable" ? "routing_unavailable" : "routed_clarification")) fail(`trial ${i} routing/outcome mismatch`);
+    const evidence = routing.evidence;
+    if (routing.outcome === "unavailable") { if (evidence !== null) fail(`trial ${i} unavailable evidence`); }
+    else {
+      if (routing.jevCalls !== 1) fail(`trial ${i} evidence without a routing call`);
+      if (!isObj(evidence) || evidence.model !== JEV_MODEL || typeof evidence.choice !== "string" || !routing.optionIds.includes(evidence.choice) || !unit(evidence.confidence) || !isObj(evidence.probabilities) || !sameIds(Object.keys(evidence.probabilities).sort(), [...routing.optionIds].sort()) || !Object.values(evidence.probabilities).every(unit)) return fail(`trial ${i} evidence`);
+      const probabilities = Object.values(evidence.probabilities) as number[];
+      if (Math.abs(sum(probabilities) - 1) > 1e-6 || evidence.probabilities[evidence.choice] !== Math.max(...probabilities)) fail(`trial ${i} probabilities`);
+      // Reuse the policy implementation with recorded evidence only; no provider is consulted.
+      const replay = await routeTools(EXPERIMENT_CATALOG, { intent: task.intent, availableIds: available }, policy as unknown as RoutingPolicy,
+        { source: a.source === "fake" ? "mock" : "jev", review: async () => evidence as unknown as RoutingEvidence });
+      if (routing.outcome !== replay.outcome || !sameIds(routing.selectedIds, replay.selectedIds)) fail(`trial ${i} policy mismatch`);
+    }
   }
   return raw as unknown as ExperimentArtifact;
 }

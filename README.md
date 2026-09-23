@@ -225,6 +225,10 @@ Each settled Arena run also includes **Lessons learned**: a local takeaway, supp
 
 For the repeatable N-tools-in-context vs Jev top-k experiment (paired arms, three catalog sizes, repetitions, reported usage kept apart from proxies), run `pnpm experiment:routing`. It is offline with scripted fakes unless `--live` is passed; see the [experiment protocol](docs/routing.md#experiment-protocol-n-tools-in-context-vs-jev-top-k).
 
+Open **Integrate** for a copyable coding-agent brief and a staged baseline → shadow → lean workflow. The reusable `prepareToolContext` helper and [offline host example](examples/integration/host.ts) compose routing with schema loading; the host retains validation, permissions and execution. Read the [integration and improvement guide](docs/integration.md).
+
+After a run, add a human assessment and next-experiment note. History shows review coverage and can chart pairs marked **Meets task**, while retaining all run evidence. Downloads keep annotations separate from Jev receipts and derived lessons; quality is not scored automatically.
+
 The offline routing run artifact includes receipts, full/lean context bytes, token estimates, acceptable-tool inclusion and cheapest acceptable selection. Evidence is scripted; local timing is not Jev or execution latency. Router overhead is counted separately so fewer schemas do not automatically imply savings. See [the design, metrics and host adapter boundary](docs/routing.md).
 
 

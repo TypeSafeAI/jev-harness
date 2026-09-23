@@ -4,7 +4,7 @@ import { ARMS, summarizeExperiment, type Arm, type ArmSummary, type ExperimentAr
 const ARM_LABEL: Record<Arm, string> = { all_tools: "A · all N schemas", jev_top_k: "B · Jev top-k" };
 const n = (v: number | null, digits = 0) => v === null ? "n/a" : v.toFixed(digits);
 const pct = (s: ArmSummary) => s.correctRate === null ? "n/a" : `${s.correct}/${s.correctKnown} (${(s.correctRate * 100).toFixed(0)}%)${s.correctKnown === s.trials ? "" : ` · ${s.trials - s.correctKnown} unknown`}`;
-const reported = (s: ArmSummary, v: number | null) => v === null ? `unknown (${s.reportedUnknown}/${s.trials})` : s.reportedUnknown ? `${n(v)} (${s.reportedUnknown} unknown)` : n(v);
+const reported = (s: ArmSummary, v: number | null, known = s.reportedInputKnown) => { const missing = s.trials - known; return v === null ? `unknown (${missing}/${s.trials})` : missing ? `${n(v)} (${missing} unknown)` : n(v); };
 const row = (cells: readonly string[]) => `| ${cells.join(" | ")} |`;
 
 export function renderExperimentTable(artifact: ExperimentArtifact): string {
@@ -16,12 +16,13 @@ export function renderExperimentTable(artifact: ExperimentArtifact): string {
   lines.push(`### Routing experiment: N tools in context vs Jev top-k`, "", banner, "",
     `Generated ${artifact.generatedAt} · \`${artifact.command}\` · runs: ${artifact.runs} · sizes: ${artifact.sizes.join(", ")} · topK ${artifact.policy.topK}, confidence floor ${artifact.policy.confidenceFloor}`, "");
 
+  if (artifact.status === "cancelled") lines.push("> **Cancelled: partial results only. Planned runs did not finish.**", "");
   lines.push("#### Totals by arm", "",
     row(["Arm", "Trials", "Correct tool", "First call correct", "Routed clarify / no-match", "No tool call", "Unavailable", "Failed", "Jev calls", "Jev latency median (ms)", "Reported input mean", "Reported output mean", "Proxy input mean", "Tools exposed mean"]),
     row(Array(14).fill("---")));
   for (const arm of ARMS) {
     const s = summary.byArm[arm];
-    lines.push(row([ARM_LABEL[arm], String(s.trials), pct(s), String(s.firstCallCorrect), String(s.routedClarifications), String(s.noToolCalls), String(s.unavailable), String(s.failed), String(s.jevCalls), n(s.jevLatencyMedianMs, 1), reported(s, s.reportedInputMean), reported(s, s.reportedOutputMean), n(s.proxyInputMean), n(s.exposedToolsMean, 1)]));
+    lines.push(row([ARM_LABEL[arm], String(s.trials), pct(s), String(s.firstCallCorrect), String(s.routedClarifications), String(s.noToolCalls), String(s.unavailable), String(s.failed), String(s.jevCalls), n(s.jevLatencyMedianMs, 1), reported(s, s.reportedInputMean), reported(s, s.reportedOutputMean, s.reportedOutputKnown), n(s.proxyInputMean), n(s.exposedToolsMean, 1)]));
   }
 
   lines.push("", "#### By catalog size", "", row(["Size", "N", "Arm", "Correct tool", "Reported input mean", "Proxy input mean"]), row(Array(6).fill("---")));
