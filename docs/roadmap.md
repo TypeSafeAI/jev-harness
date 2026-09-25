@@ -115,6 +115,9 @@ candidates are not held-out calibration.
 
 - [x] Host-declared tool prerequisites: a routed patch can retain fixture-read access without changing Jev's selected roots or granting execution authority. The Arena records the complete menu, and the repeatable experiment opts in with `--with-prerequisites`. [Offline verification](verification/tool-prerequisites-2026-09-25.json) covers bundle withholding, artifact replay, live progress and saved-run exposure. Live effectiveness remains a separate experiment.
 
+- [x] [Fixture host revision 1](routing.md#fixture-host-revision-1): bounded literal search and retained, unevaluated test drafts, with shared recording limits and artifact/history provenance. Default Arena exposure, routing semantics, frozen fixtures, labels and mocks stay unchanged.
+- [ ] Measure this host capability candidate separately and assess retained test source offline without executing it. A recorded draft does not establish task correctness; live effectiveness remains pending.
+
 ## 4 · Context scoring
 
 - [x] Compare scoring/re-prefill costs with forfeited prefix-cache reuse. [Cost model](context-scoring-cost-model.md): no-go for integration code; conditional go for a synthetic shadow experiment
