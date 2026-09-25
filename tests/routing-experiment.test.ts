@@ -184,6 +184,7 @@ test("live mode end to end with fake Jev and fake CLI writes a dated artifact wi
   // Fake CLI: reads the fixture manifest and trace from its MCP args, "calls" the first exposed tool, reports usage.
   await writeFile(cli, `#!/usr/bin/env node
 const fs = require("node:fs");
+if (process.argv[process.argv.indexOf("--model") + 1] !== "gpt-6-sol" || !process.argv.includes('model_reasoning_effort="medium"')) process.exit(2);
 const arg = process.argv.find(a => a.startsWith("mcp_servers.arena.args="));
 const [, manifest, trace] = JSON.parse(arg.slice("mcp_servers.arena.args=".length));
 const tools = JSON.parse(fs.readFileSync(manifest, "utf8")).tools;
@@ -207,13 +208,14 @@ process.stdin.on("end", () => {
   }) as typeof globalThis.fetch;
   const run = collect();
   const io = { ...run.io, env: { TYPESAFE_API_KEY: "synthetic-test-credential" }, fetch, codexExecutable: cli, cwd: dir, now: () => new Date("2026-09-22T12:00:00Z") };
-  assert.equal(await main(["--live", "--sizes", "small"], io), 0);
+  assert.equal(await main(["--live", "--model", "gpt-6-sol", "--sizes", "small"], io), 0);
   const path = join(dir, "examples/routing/runs/2026-09-22-experiment.json");
   const text = await readFile(path, "utf8");
   assert.ok(!text.includes("synthetic-test-credential") && !run.out.includes("synthetic-test-credential") && !run.err.includes("synthetic-test-credential"));
   assert.ok(authorizations.every(value => value === "Bearer synthetic-test-credential"));
   const artifact = await parseExperimentArtifact(JSON.parse(text));
   assert.equal(artifact.source, "live");
+  assert.match(artifact.models.proposer, /requested gpt-6-sol, reasoning medium/);
   assert.equal(artifact.trials.length, 10);
   assert.equal(authorizations.length, 5);
   const a = artifact.trials.find(t => t.taskId === "read-small" && t.arm === "all_tools")!;
@@ -235,6 +237,52 @@ test("Codex approval list defaults to the fixture handlers and only accepts cata
   assert.ok(args.includes('mcp_servers.arena.tools.inspect_agent.approval_mode="approve"'));
   assert.ok(codexArguments("/w", "m", "t", ["search_text"]).includes('mcp_servers.arena.tools.search_text.approval_mode="approve"'));
   assert.throws(() => codexArguments("/w", "m", "t", ['x".approval_mode="approve"']));
+});
+
+test("experiment pins the requested proposer model without changing CLI isolation", () => {
+  assert.equal(parseCliArgs(["--model", "gpt-6-sol"]).model, "gpt-6-sol");
+  const args = codexArguments("/w", "m", "t", ["read_file"], "gpt-6-sol");
+  assert.equal(args[args.indexOf("--model") + 1], "gpt-6-sol");
+  assert.ok(args.includes("read-only"));
+  assert.ok(args.includes("--ignore-user-config"));
+  assert.ok(args.includes('model_reasoning_effort="medium"'));
+  assert.throws(() => parseCliArgs(["--model", "bad model"]), /model/);
+  assert.throws(() => codexArguments("/w", "m", "t", [], ""), /model/);
+});
+
+test("routing diagnostics explain unusable evidence without retaining provider text", async () => {
+  const { createJevChoiceRouter } = await import("../examples/host/jev-choice.js");
+  const { routeTools } = await import("../src/routing/index.js");
+  const handle = createJevChoiceRouter({ key: "synthetic-test-credential", fetch: async () => Response.json({
+    model: "unexpected-provider-text", answers: { tool: { type: "choice", choice: "unexpected-provider-text", confidence: 0.8, probabilities: { read_file: 0.8, "unexpected-provider-text": 0.2 } } },
+  }) });
+  const receipt = await routeTools(EXPERIMENT_CATALOG, { intent: "Read the synthetic file.", availableIds: TIER_AVAILABLE_IDS.small }, DEMO_POLICY, handle.router);
+  assert.equal(receipt.outcome, "unavailable");
+  assert.deepEqual(handle.state.measurement?.diagnostic, {
+    modelMatches: false, answerTypeMatches: true, confidenceValid: true,
+    missingOptions: 3, unexpectedOptions: 1, probabilitySum: 1, choiceInSet: false, leadingChoice: false,
+  });
+  assert.doesNotMatch(JSON.stringify(handle.state), /unexpected-provider-text|synthetic-test-credential/);
+});
+
+test("experiment preserves bounded answers and call outcomes for separate quality assessment", async () => {
+  const deps = fakeDeps();
+  deps.proposer = { source: "fake", async propose(input) {
+    const id = input.tools[0]!.id;
+    return { status: "completed", calledToolIds: [id], traceTruncated: false, inputTokens: 5, cachedInputTokens: 0, outputTokens: 2, error: null,
+      answer: "Synthetic answer", toolCalls: [{ tool: id, status: "rejected", at: "2026-09-24T00:00:00Z" }] };
+  } };
+  const trials = await runExperiment({ runs: 1, sizes: ["small"], policy: DEMO_POLICY }, deps);
+  assert.equal(trials[0]!.proposer?.answer, "Synthetic answer");
+  assert.equal(trials[0]!.proposer?.toolCalls?.[0]?.status, "rejected");
+  const artifact = buildArtifact(trials, { source: "fake", command: "pnpm experiment:routing", generatedAt: "2026-09-24T00:00:00Z", policy: DEMO_POLICY, runs: 1, sizes: ["small"], proposer: "fake-scripted", labels: EXPERIMENT_LABELS });
+  await parseExperimentArtifact(artifact);
+  const mismatch = structuredClone(artifact);
+  mismatch.trials[0]!.proposer!.toolCalls![0]!.tool = "propose_patch";
+  await assert.rejects(parseExperimentArtifact(mismatch), /call trace/);
+  const oversized = structuredClone(artifact);
+  oversized.trials[0]!.proposer!.answer = "a".repeat(20_001);
+  await assert.rejects(parseExperimentArtifact(oversized), /answer/);
 });
 
 test("reported input and output retain independent missing-value counts", async () => {

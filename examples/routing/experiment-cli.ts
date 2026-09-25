@@ -14,13 +14,13 @@ import { createJevChoiceRouter } from "../host/jev-choice.js";
 export const USAGE = `Usage:
   pnpm experiment:routing [--runs N] [--sizes small,medium,large] [--top-k K] [--format table|json] [--out FILE]
       Offline: scripted fake Jev and fake proposer. Prints the table (default) or artifact JSON; --out also writes the artifact.
-  pnpm experiment:routing --live [--runs N] [--sizes ...] [--top-k K] [--out FILE]
+  pnpm experiment:routing --live [--model MODEL] [--runs N] [--sizes ...] [--top-k K] [--out FILE]
       Live: reads TYPESAFE_API_KEY from the environment and runs the Codex CLI arena host.
       Writes examples/routing/runs/<date>-experiment.json (refuses to overwrite) and prints the table.
   pnpm experiment:routing --table FILE
       Render the markdown table from an existing artifact.`;
 
-export interface CliOptions { live: boolean; runs: number; sizes: SizeTier[]; topK: number; format: "table" | "json"; out: string | null; table: string | null }
+export interface CliOptions { live: boolean; runs: number; sizes: SizeTier[]; topK: number; format: "table" | "json"; out: string | null; table: string | null; model?: string }
 
 export function parseCliArgs(argv: readonly string[]): CliOptions {
   const options: CliOptions = { live: false, runs: 1, sizes: [...SIZE_TIERS], topK: DEMO_POLICY.topK, format: "table", out: null, table: null };
@@ -29,6 +29,7 @@ export function parseCliArgs(argv: readonly string[]): CliOptions {
     const flag = argv[i]!;
     if (flag === "--") continue;
     else if (flag === "--live") options.live = true;
+    else if (flag === "--model") { options.model = value(i++, flag); if (!/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$/.test(options.model)) throw Error("Invalid proposer model identifier."); }
     else if (flag === "--runs") { options.runs = Number(value(i++, flag)); if (!Number.isInteger(options.runs) || options.runs < 1 || options.runs > 50) throw Error("--runs must be an integer from 1 to 50."); }
     else if (flag === "--top-k") { options.topK = Number(value(i++, flag)); if (!Number.isInteger(options.topK) || options.topK < 1 || options.topK > 20) throw Error("--top-k must be an integer from 1 to 20."); }
     else if (flag === "--sizes") { const sizes = value(i++, flag).split(","); if (!sizes.length || sizes.some(s => !SIZE_TIERS.includes(s as SizeTier)) || new Set(sizes).size !== sizes.length) throw Error("--sizes takes a comma list of small, medium, large."); options.sizes = SIZE_TIERS.filter(s => sizes.includes(s)); }
@@ -73,7 +74,7 @@ export async function main(argv: readonly string[], io: CliIo): Promise<number> 
   const date = (io.now ?? (() => new Date()))();
   const policy = { ...DEMO_POLICY, topK: options.topK };
   const deps: ExperimentDeps = options.live
-    ? { source: "live", proposer: codexProposer(io.codexExecutable ?? "codex"), onProgress: line => io.stderr(`${line}\n`),
+    ? { source: "live", proposer: codexProposer(io.codexExecutable ?? "codex", options.model), onProgress: line => io.stderr(`${line}\n`),
         routerFor: () => { const jev = createJevChoiceRouter({ key: key!, ...(io.fetch ? { fetch: io.fetch } : {}) }); return { router: jev.router, measurement: () => jev.state.measurement }; } }
     : { source: "fake", proposer: fakeProposer, routerFor: fakeRouterFor };
 
@@ -87,7 +88,7 @@ export async function main(argv: readonly string[], io: CliIo): Promise<number> 
 
   const trials = await runExperiment({ runs: options.runs, sizes: options.sizes, policy }, deps);
   const artifact = buildArtifact(trials, { source: deps.source, command, generatedAt: date.toISOString(), policy, runs: options.runs, sizes: options.sizes,
-    proposer: options.live ? "codex-cli (default model, isolated arena host)" : "fake-scripted", labels: EXPERIMENT_LABELS, status: io.signal?.aborted ? "cancelled" : "complete" });
+    proposer: options.live ? options.model ? `codex-cli (requested ${options.model}, reasoning medium, isolated arena host)` : "codex-cli (default model, isolated arena host)" : "fake-scripted", labels: EXPERIMENT_LABELS, status: io.signal?.aborted ? "cancelled" : "complete" });
   const json = JSON.stringify(artifact, null, 2) + "\n";
   if (outPath) {
     await mkdir(dirname(resolve(cwd, outPath)), { recursive: true });
