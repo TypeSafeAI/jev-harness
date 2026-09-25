@@ -24,8 +24,8 @@
 
 - [x] Inspect current code, historical failures, fixtures, policy, and host isolation.
 - [x] Create isolated worktree and verify clean baseline.
-- [x] Start optimization dev preview on port 4200 (session 5256).
-- [ ] Add tested measurement controls: explicit proposer model and review experiment attempt/usage accounting.
+- [x] Start optimization dev preview on port 4200 (server-key session 57149 replaces initial session 5256).
+- [x] Add tested measurement controls: explicit proposer model and review experiment attempt/usage accounting (signed `e75b77a`, `cbf916e`; PR #44).
 - [ ] Record fresh frozen routing and review baselines.
 - [ ] Routing candidate: retain host-declared read prerequisites for patch/test tools, with availability/cost/cancellation checks; test before measurement.
 - [ ] Investigate inspect-task routing misses from sanitized evidence diagnostics; fix semantics only with a new version when justified.
@@ -40,3 +40,6 @@
 - Historical routing: `docs/routing-evaluation/2026-09-23.md` and linked raw artifacts (multi-step capability loss; inspect misses).
 - Historical review: `docs/calibration/2026-09-23-followup.md` and raw receipts (47/50 labels, three unexpected good holds, zero bad permits).
 - Existing unrelated PR #43 concerns a context-scoring shadow experiment; leave its branch and files untouched.
+- Fresh review baseline: `/tmp/jev-performance-2026-09-24/review-baseline.json`, clean `cbf916e`; 50 cases, 43 provider attempts, no retries or unavailable results, 47 expected verdicts met. All bad arms remain held. The three unexpected good holds match the historical failure categories. Exact requests, answers, file hashes and timing are retained in the artifact.
+- Frozen routing baseline: clean `e75b77a`, requested `gpt-6-sol` with medium reasoning, 57 paired cases planned; log and provenance under `/tmp/jev-performance-2026-09-24/`. No source edits while running.
+- Prerequisite candidate offline proof: [verification](../../verification/tool-prerequisites-2026-09-25.json). The browser regression also checks that opening incomplete history clears another run's transient menu. A passing fake run is not a live performance result.

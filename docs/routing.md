@@ -78,6 +78,38 @@ Roadmap phase 3, [issue #2](https://github.com/TypeSafeAI/jev-harness/issues/2).
 - **A · all N schemas.** Every permitted schema goes to the proposer. No Jev call.
 - **B · Jev top-k.** `routeTools()` makes one Jev call; only the selected schemas go to the proposer. A routed clarification or no-match asks the user and makes no proposer call. An unavailable route selects nothing and is counted as unavailable; it is never replaced by the full catalog.
 
+**Optional host prerequisites.** Pass `--with-prerequisites` to test a routing arm
+that exposes each selected root and its host-declared prerequisites:
+
+```sh
+pnpm experiment:routing --with-prerequisites --format json
+```
+
+The fixed host map in `examples/routing/experiment.ts` declares that
+`propose_patch` and `draft_test_proposal` each require `read_file`. It is
+independent of evaluation labels and is never sent to Jev. `topK` still limits
+selected roots. A top-1 patch route therefore exposes the read and patch schemas,
+while `routing.selectedIds` still contains only `propose_patch`. The all-tools
+arm, routing request, policy, and question set remain unchanged. Without the
+flag, the experiment retains its historical selected-only behavior.
+
+`assembleToolBundle()` checks the closed catalog, current availability, and
+existing per-tool cost limit for every prerequisite. A missing or over-budget
+prerequisite withholds the entire handoff; cancellation also exposes no schemas.
+A selected route whose handoff is withheld records `context_withheld`, makes no
+proposer call, and counts as incorrect. The table reports this as **Host withheld**,
+separately from provider unavailability. Clarification and unavailable routes
+retain their existing outcomes. The summed estimated cost is bookkeeping, not a
+new total-budget policy. No prerequisite grants permission or executes a tool.
+
+Opted-in artifacts retain `toolContext` with dependency version 1 and the full
+host map. Each routed trial retains `bundle` status, root and prerequisite ids,
+blocked ids, estimated cost, reason, and cancellation state; `exposedToolIds`
+records the actual proposer menu. Replay recomputes the policy and bundle and
+rejects inconsistent provenance or exposure. Historical v1 artifacts without
+`toolContext` remain selected-only. Compare these configurations explicitly when
+reporting results; combining them would hide the treatment being measured.
+
 **Tasks.** `examples/routing/experiment-tasks.ts`. The five non-failure routing scenarios (read, patch, inspect, ambiguous, uncertain) run at three catalog sizes: small (N = 3, the demo catalog, comparable with the arena), medium (N = 8) and large (N = 20). Two synthetic intents target non-demo descriptors (search, test draft) at medium and large. That makes 19 tasks per run. The extra descriptors are synthetic and have no fixture handler; a call to one is recorded by the fixture host and answered with an error. Nothing executes.
 
 **Label separation.** Tasks carry only an id, size, intent and synthetic files. Evaluation labels (`EXPERIMENT_LABELS`, copied from the scenario labels where reused) are a separate table. The runner never receives them; scoring joins them after all trials finish. Scripted fake distributions and the fake proposer script are separate tables again. Jev receives the pinned model, the untrusted-data note, the available descriptions and the clarification option. The proposer receives a frozen copy of the task text, the synthetic files and the exposed schemas, nothing else.

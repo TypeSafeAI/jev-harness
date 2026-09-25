@@ -104,6 +104,8 @@ an optimum from this sample.
 
 - [x] Harness adoption workflow: explicit shadow/lean context preparation, runnable synthetic adapter, copyable coding-agent handoff and separate human assessments for repeated-run inspection. This is integration scaffolding; each production host still needs conformance and measured quality/overhead evidence. See [integration](integration.md).
 
+- [x] Host-declared tool prerequisites: a routed patch can retain fixture-read access without changing Jev's selected roots or granting execution authority. The Arena records the complete menu, and the repeatable experiment opts in with `--with-prerequisites`. [Offline verification](verification/tool-prerequisites-2026-09-25.json) covers bundle withholding, artifact replay, live progress and saved-run exposure. Live effectiveness remains a separate experiment.
+
 ## 4 · Context scoring
 
 - [x] Compare scoring/re-prefill costs with forfeited prefix-cache reuse. [Cost model](context-scoring-cost-model.md): no-go for integration code; conditional go for a synthetic shadow experiment
