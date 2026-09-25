@@ -1,5 +1,9 @@
 # Routing optimization development ledger
 
+Follow-up: [routing v4 measurements](2026-09-25-routing-v4.md) record the next
+frozen instruction experiment. This ledger preserves the earlier development
+state and assessments.
+
 Four matched routing comparisons and their blinded output assessments are
 complete; further instruction measurements remain pending. This ledger retains setup
 failures and cancelled runs alongside successful measurements; none are silently
