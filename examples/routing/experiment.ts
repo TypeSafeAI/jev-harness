@@ -2,14 +2,15 @@
  * Repeatable N-tools-in-context vs Jev top-k experiment (roadmap phase 3, issue #2).
  *
  * Arm `all_tools`: every permitted schema goes to the proposer; no Jev call.
- * Arm `jev_top_k`: `routeTools()` asks Jev once, then only the selected schemas go to the proposer.
+ * Arm `jev_top_k`: `routeTools()` asks Jev once, then the selected schemas go to the proposer,
+ *   optionally extended by explicit host prerequisites without changing the selected roots.
  *   A routed clarification or no-match asks the user without a proposer call; an unavailable route
  *   selects nothing and is counted, never replaced by the full catalog.
  *
  * The runner never receives evaluation labels. Scoring joins labels afterwards. Nothing proposed is applied.
  */
 import { JEV_MODEL } from "../../src/contract/types.js";
-import { CLARIFICATION_ID, ROUTING_QUESTION_SET_VERSION, ROUTING_UNTRUSTED_DATA_NOTE, routeTools, type RoutingEvidence, type RoutingPolicy, type RoutingReceipt, type RoutingRequest, type ToolDefinition, type ToolRouter } from "../../src/routing/index.js";
+import { assembleToolBundle, CLARIFICATION_ID, ROUTING_QUESTION_SET_VERSION, ROUTING_UNTRUSTED_DATA_NOTE, routeTools, type RoutingEvidence, type RoutingPolicy, type RoutingReceipt, type RoutingRequest, type ToolDefinition, type ToolDependencies, type ToolRouter } from "../../src/routing/index.js";
 import { arenaPrompt, runCodex, type ToolCall } from "../host/codex.js";
 import { jevChoiceBody, type JevMeasurement, type RoutingDiagnostic } from "../host/jev-choice.js";
 import { EXPERIMENT_CATALOG, EXPERIMENT_TASKS, FAKE_PROPOSER_SCRIPT, EXPERIMENT_MOCKS, SIZE_TIERS, TIER_AVAILABLE_IDS, type ExperimentLabel, type ExperimentTask, type SizeTier } from "./experiment-tasks.js";
@@ -17,6 +18,23 @@ import { EXPERIMENT_CATALOG, EXPERIMENT_TASKS, FAKE_PROPOSER_SCRIPT, EXPERIMENT_
 export const EXPERIMENT_SCHEMA_VERSION = 1;
 export type Arm = "all_tools" | "jev_top_k";
 export const ARMS: readonly Arm[] = ["all_tools", "jev_top_k"];
+
+/** Host mechanics, independent of labels and router evidence. No descriptor executes here. */
+export const EXPERIMENT_TOOL_DEPENDENCIES: ToolDependencies = Object.freeze({
+  propose_patch: Object.freeze(["read_file"]),
+  draft_test_proposal: Object.freeze(["read_file"]),
+});
+export interface ExperimentToolContext {
+  mode: "with_prerequisites";
+  dependencyVersion: 1;
+  dependencies: ToolDependencies;
+}
+export type ExperimentBundle = Omit<ReturnType<typeof assembleToolBundle>, "context"> & { cancelled: boolean };
+
+function bundleFor(receipt: RoutingReceipt, signal?: AbortSignal) {
+  const { context, ...provenance } = assembleToolBundle(receipt, EXPERIMENT_TOOL_DEPENDENCIES, signal ? { signal } : {});
+  return { context, bundle: { ...provenance, cancelled: signal?.aborted ?? false } };
+}
 
 const bytes = (value: string) => new TextEncoder().encode(value).length;
 /** Explicit proxy only: ceil(UTF-8 bytes / 4). Not a provider tokenizer. */
@@ -51,12 +69,14 @@ export interface ExperimentDeps {
   signal?: AbortSignal;
   onProgress?: (line: string) => void;
 }
-export interface ExperimentOptions { runs: number; sizes?: readonly SizeTier[]; policy: RoutingPolicy; tasks?: readonly ExperimentTask[] }
+export interface ExperimentOptions { runs: number; sizes?: readonly SizeTier[]; policy: RoutingPolicy; tasks?: readonly ExperimentTask[]; withPrerequisites?: boolean }
 
-export type TrialOutcome = "tool_called" | "no_tool_call" | "routed_clarification" | "routing_unavailable" | "proposer_failed";
+export type TrialOutcome = "tool_called" | "no_tool_call" | "routed_clarification" | "routing_unavailable" | "proposer_failed" | "context_withheld";
 export interface Trial {
   run: number; taskId: string; baseId: string; size: SizeTier; catalogSize: number; arm: Arm; order: 1 | 2;
   exposedToolIds: string[];
+  /** Present only for the explicitly opted-in routing arm; selected roots remain in routing. */
+  bundle?: ExperimentBundle;
   routing: null | {
     outcome: RoutingReceipt["outcome"]; selectedIds: string[]; reason: string; source: "mock" | "jev";
     evidence: RoutingReceipt["evidence"]; optionIds: string[];
@@ -92,7 +112,7 @@ function proposerOutcome(p: NonNullable<Trial["proposer"]>): TrialOutcome {
   return p.status !== "completed" ? "proposer_failed" : p.calledToolIds.length ? "tool_called" : "no_tool_call";
 }
 
-export async function runTrial(task: ExperimentTask, arm: Arm, run: number, order: 1 | 2, policy: RoutingPolicy, deps: ExperimentDeps): Promise<Trial> {
+export async function runTrial(task: ExperimentTask, arm: Arm, run: number, order: 1 | 2, policy: RoutingPolicy, deps: ExperimentDeps, withPrerequisites = false): Promise<Trial> {
   const now = deps.now ?? (() => performance.now());
   const availableIds = TIER_AVAILABLE_IDS[task.size];
   const available = EXPERIMENT_CATALOG.filter(t => availableIds.includes(t.id));
@@ -118,15 +138,22 @@ export async function runTrial(task: ExperimentTask, arm: Arm, run: number, orde
     optionIds: receipt.request.options.map(o => o.id), jevCalls, latencyMs,
     ...(measurement?.diagnostic ? { diagnostic: { ...measurement.diagnostic } } : {}),
     reported: jevCalls === 0 ? { input: 0, output: 0 } : measurement ? { input: measurement.inputTokens, output: measurement.outputTokens } : null };
+  const handoff = withPrerequisites ? bundleFor(receipt, deps.signal) : null;
+  const bundle = handoff ? { bundle: handoff.bundle } : {};
   if (receipt.outcome !== "selected") {
-    return { ...base, exposedToolIds: [], routing, proposer: null, outcome: receipt.outcome === "unavailable" ? "routing_unavailable" : "routed_clarification", firstToolId: null,
+    return { ...base, ...bundle, exposedToolIds: [], routing, proposer: null, outcome: receipt.outcome === "unavailable" ? "routing_unavailable" : "routed_clarification", firstToolId: null,
       proxies: { proposerInputTokens: 0, jevRequestTokens, totalInputTokens: jevRequestTokens } };
   }
-  const selected = EXPERIMENT_CATALOG.filter(t => receipt.selectedIds.includes(t.id));
+  if (handoff?.bundle.status === "withheld") {
+    return { ...base, ...bundle, exposedToolIds: [], routing, proposer: null, outcome: "context_withheld", firstToolId: null,
+      proxies: { proposerInputTokens: 0, jevRequestTokens, totalInputTokens: jevRequestTokens } };
+  }
+  const selectedIds = handoff?.context.state.loadedIds ?? receipt.selectedIds;
+  const selected = EXPERIMENT_CATALOG.filter(t => selectedIds.includes(t.id));
   const input = proposerInput(task, selected);
   const proposer = await runProposer(deps, input, now);
   const proposerInputTokens = proposerProxy(input);
-  return { ...base, exposedToolIds: selected.map(t => t.id), routing, proposer, outcome: proposerOutcome(proposer), firstToolId: proposer.calledToolIds[0] ?? null,
+  return { ...base, ...bundle, exposedToolIds: selected.map(t => t.id), routing, proposer, outcome: proposerOutcome(proposer), firstToolId: proposer.calledToolIds[0] ?? null,
     proxies: { proposerInputTokens, jevRequestTokens, totalInputTokens: proposerInputTokens + jevRequestTokens } };
 }
 
@@ -142,7 +169,7 @@ export async function runExperiment(options: ExperimentOptions, deps: Experiment
       for (const [position, arm] of arms.entries()) {
         if (deps.signal?.aborted) return trials;
         deps.onProgress?.(`run ${run}/${options.runs} · ${task.id} · ${arm}`);
-        trials.push(await runTrial(task, arm, run, position === 0 ? 1 : 2, options.policy, deps));
+        trials.push(await runTrial(task, arm, run, position === 0 ? 1 : 2, options.policy, deps, options.withPrerequisites));
       }
     }
   }
@@ -193,7 +220,7 @@ export function codexProposer(executable = "codex", model?: string): Proposer {
  * A no-call answer is treated as asking; the answer text is not graded. Unavailable and failed trials are incorrect.
  */
 export function scoreTrial(trial: Trial, label: ExperimentLabel) {
-  if (trial.outcome === "proposer_failed" || trial.outcome === "routing_unavailable") return { correct: false, firstCallCorrect: false };
+  if (trial.outcome === "proposer_failed" || trial.outcome === "routing_unavailable" || trial.outcome === "context_withheld") return { correct: false, firstCallCorrect: false };
   const acceptableCalled = trial.outcome === "tool_called" && trial.proposer!.calledToolIds.some(id => label.acceptableIds.includes(id));
   const correct = label.expectedOutcome === "needs_clarification"
     ? trial.outcome === "routed_clarification" || trial.outcome === "no_tool_call"
@@ -220,6 +247,8 @@ export function reportedTotals(trial: Trial) {
 export interface ArmSummary {
   trials: number; correct: number; correctKnown: number; correctRate: number | null; firstCallCorrect: number;
   routedClarifications: number; noToolCalls: number; unavailable: number; failed: number;
+  /** Omitted for historical selected-only trials. Host withholding is not provider unavailability. */
+  withheld?: number;
   jevCalls: number; jevLatencyMedianMs: number | null;
   reportedInputMean: number | null; reportedOutputMean: number | null; reportedInputKnown: number; reportedOutputKnown: number; reportedUnknown: number;
   proxyInputMean: number | null; exposedToolsMean: number | null;
@@ -235,6 +264,7 @@ function summarizeArm(trials: readonly Trial[], labels: Readonly<Record<string, 
     trials: trials.length, correct, correctKnown: known.length, correctRate: known.length ? correct / known.length : null, firstCallCorrect: scores.filter(s => s.firstCallCorrect).length,
     routedClarifications: trials.filter(t => t.outcome === "routed_clarification").length, noToolCalls: trials.filter(t => t.outcome === "no_tool_call").length,
     unavailable: trials.filter(t => t.outcome === "routing_unavailable").length, failed: trials.filter(t => t.outcome === "proposer_failed").length,
+    ...(trials.some(t => t.bundle || t.outcome === "context_withheld") ? { withheld: trials.filter(t => t.outcome === "context_withheld").length } : {}),
     jevCalls: sum(trials.map(t => t.routing?.jevCalls ?? 0)), jevLatencyMedianMs: median(trials.flatMap(t => t.routing?.latencyMs == null ? [] : [t.routing.latencyMs])),
     reportedInputMean: mean(inputs), reportedOutputMean: mean(outputs), reportedInputKnown: inputs.length, reportedOutputKnown: outputs.length, reportedUnknown: reported.filter(r => r.input === null || r.output === null).length,
     proxyInputMean: mean(trials.map(t => t.proxies.totalInputTokens)), exposedToolsMean: mean(trials.map(t => t.exposedToolIds.length)),
@@ -266,6 +296,8 @@ export interface ExperimentArtifact {
   models: { jev: typeof JEV_MODEL; proposer: string };
   routingQuestionSetVersion: typeof ROUTING_QUESTION_SET_VERSION; untrustedDataNote: string;
   policy: RoutingPolicy; runs: number; sizes: SizeTier[];
+  /** Absence retains historical selected-only semantics. */
+  toolContext?: ExperimentToolContext;
   catalog: { ids: string[]; tierAvailableIds: Record<SizeTier, string[]> };
   notes: string[];
   /** Evaluation labels, applied only when scoring; never sent to Jev or the proposer. */
@@ -286,12 +318,13 @@ export const LIVE_NOTES = [
   "Jev latency is wall time around the routing call on this host; proposer duration includes CLI start-up.",
 ];
 
-export function buildArtifact(trials: Trial[], meta: { source: "fake" | "live"; status?: "complete" | "cancelled"; command: string; generatedAt: string; policy: RoutingPolicy; runs: number; sizes: readonly SizeTier[]; proposer: string; labels: Readonly<Record<string, ExperimentLabel>> }): ExperimentArtifact {
+export function buildArtifact(trials: Trial[], meta: { source: "fake" | "live"; status?: "complete" | "cancelled"; command: string; generatedAt: string; policy: RoutingPolicy; runs: number; sizes: readonly SizeTier[]; proposer: string; labels: Readonly<Record<string, ExperimentLabel>>; withPrerequisites?: boolean }): ExperimentArtifact {
   const labels = structuredClone(Object.fromEntries(Object.entries(meta.labels).map(([k, v]) => [k, { acceptableIds: [...v.acceptableIds], expectedOutcome: v.expectedOutcome }])));
   return {
     schemaVersion: 1, kind: "routing-experiment", status: meta.status ?? "complete", generatedAt: meta.generatedAt, command: meta.command, source: meta.source,
     models: { jev: JEV_MODEL, proposer: meta.proposer }, routingQuestionSetVersion: ROUTING_QUESTION_SET_VERSION, untrustedDataNote: ROUTING_UNTRUSTED_DATA_NOTE,
     policy: { ...meta.policy }, runs: meta.runs, sizes: [...meta.sizes],
+    ...(meta.withPrerequisites ? { toolContext: { mode: "with_prerequisites" as const, dependencyVersion: 1 as const, dependencies: structuredClone(EXPERIMENT_TOOL_DEPENDENCIES) } } : {}),
     catalog: { ids: EXPERIMENT_CATALOG.map(t => t.id), tierAvailableIds: Object.fromEntries(SIZE_TIERS.map(s => [s, [...TIER_AVAILABLE_IDS[s]]])) as Record<SizeTier, string[]> },
     notes: meta.source === "fake" ? [...FAKE_NOTES] : [...LIVE_NOTES],
     labels, trials, summary: summarizeExperiment(trials, labels),
@@ -306,7 +339,7 @@ const unit = (v: unknown): v is number => finite(v) && v <= 1;
 const text = (v: unknown): v is string => typeof v === "string" && v.trim().length > 0;
 const ids = (v: unknown, allowed?: readonly string[], unique = true): v is string[] => Array.isArray(v) && Array.from(v).every(x => text(x) && x.length <= 128 && (!allowed || allowed.includes(x))) && (!unique || new Set(v).size === v.length);
 const sameIds = (a: readonly string[], b: readonly string[]) => a.length === b.length && a.every((id, i) => id === b[i]);
-const OUTCOMES: readonly TrialOutcome[] = ["tool_called", "no_tool_call", "routed_clarification", "routing_unavailable", "proposer_failed"];
+const OUTCOMES: readonly TrialOutcome[] = ["tool_called", "no_tool_call", "routed_clarification", "routing_unavailable", "proposer_failed", "context_withheld"];
 
 /** Validate disk artifacts before scoring; structure and internal consistency are not authenticated provenance. */
 export async function parseExperimentArtifact(raw: unknown): Promise<ExperimentArtifact> {
@@ -325,6 +358,13 @@ export async function parseExperimentArtifact(raw: unknown): Promise<ExperimentA
   if (a.status === "complete" && a.trials.length !== 2 * a.runs * EXPERIMENT_TASKS.filter(task => sizes.includes(task.size)).length) fail("incomplete trial set marked complete");
   const policy = a.policy;
   if (!isObj(policy) || !count(policy.topK) || policy.topK < 1 || policy.topK > 20 || !unit(policy.confidenceFloor) || !unit(policy.probabilityFloor) || !unit(policy.relevanceWindow) || !finite(policy.maxCostUnits)) return fail("policy");
+  const toolContext = a.toolContext;
+  if (toolContext !== undefined) {
+    if (!isObj(toolContext) || toolContext.mode !== "with_prerequisites" || toolContext.dependencyVersion !== 1 || !isObj(toolContext.dependencies) || !sameIds(Object.keys(toolContext.dependencies).sort(), Object.keys(EXPERIMENT_TOOL_DEPENDENCIES).sort())) return fail("tool context config");
+    for (const [id, prerequisites] of Object.entries(EXPERIMENT_TOOL_DEPENDENCIES)) {
+      if (!ids(toolContext.dependencies[id]) || !sameIds(toolContext.dependencies[id], prerequisites)) fail("tool prerequisite config");
+    }
+  }
   const catalogIds = EXPERIMENT_CATALOG.map(t => t.id);
   if (!isObj(a.catalog) || !ids(a.catalog.ids) || !sameIds(a.catalog.ids, catalogIds) || !isObj(a.catalog.tierAvailableIds)) return fail("catalog");
   for (const size of SIZE_TIERS) {
@@ -367,9 +407,9 @@ export async function parseExperimentArtifact(raw: unknown): Promise<ExperimentA
       if (proposer.calledToolIds.some(id => id !== "unknown" && !exposedIds.includes(id))) fail(`trial ${i} unexposed tool call`);
       const outcome = proposer.status !== "completed" ? "proposer_failed" : proposer.calledToolIds.length ? "tool_called" : "no_tool_call";
       if (t.outcome !== outcome || t.firstToolId !== (proposer.calledToolIds[0] ?? null)) fail(`trial ${i} outcome/proposer mismatch`);
-    } else if (t.firstToolId !== null || !["routed_clarification", "routing_unavailable"].includes(t.outcome as string) || !isObj(t.proxies) || t.proxies.proposerInputTokens !== 0) fail(`trial ${i} absent proposer`);
+    } else if (t.firstToolId !== null || !["routed_clarification", "routing_unavailable", "context_withheld"].includes(t.outcome as string) || !isObj(t.proxies) || t.proxies.proposerInputTokens !== 0) fail(`trial ${i} absent proposer`);
     if (t.arm === "all_tools") {
-      if (routing !== null || proposer === null || !sameIds(t.exposedToolIds, available) || !isObj(t.proxies) || t.proxies.jevRequestTokens !== 0) fail(`trial ${i} arm/routing mismatch`);
+      if (routing !== null || proposer === null || t.bundle !== undefined || !sameIds(t.exposedToolIds, available) || !isObj(t.proxies) || t.proxies.jevRequestTokens !== 0) fail(`trial ${i} arm/routing mismatch`);
       continue;
     }
     if (!isObj(routing) || !["selected", "needs_clarification", "no_match", "unavailable"].includes(routing.outcome as string) || !ids(routing.selectedIds, available) || !ids(routing.optionIds) || !sameIds(routing.optionIds, [...available, CLARIFICATION_ID]) || routing.source !== (a.source === "fake" ? "mock" : "jev") || !text(routing.reason) || !count(routing.jevCalls) || routing.jevCalls > 1 || !(routing.latencyMs === null || finite(routing.latencyMs)) || (routing.reported !== null && (!isObj(routing.reported) || ![routing.reported.input, routing.reported.output].every(nullableCount)))) return fail(`trial ${i} routing`);
@@ -377,8 +417,7 @@ export async function parseExperimentArtifact(raw: unknown): Promise<ExperimentA
       const d = routing.diagnostic;
       if (!isObj(d) || ![d.modelMatches, d.answerTypeMatches, d.confidenceValid, d.choiceInSet, d.leadingChoice].every(v => typeof v === "boolean") || !count(d.missingOptions) || !count(d.unexpectedOptions) || !(d.probabilitySum === null || finite(d.probabilitySum))) fail(`trial ${i} routing diagnostic`);
     }
-    if ((routing.outcome === "selected") !== (proposer !== null) || routing.selectedIds.length > policy.topK || !sameIds(t.exposedToolIds, available.filter(id => (routing.selectedIds as string[]).includes(id))) || (routing.outcome === "selected" ? routing.selectedIds.length === 0 : routing.selectedIds.length !== 0)) fail(`trial ${i} routing/exposure mismatch`);
-    if (proposer === null && t.outcome !== (routing.outcome === "unavailable" ? "routing_unavailable" : "routed_clarification")) fail(`trial ${i} routing/outcome mismatch`);
+    if (routing.selectedIds.length > policy.topK || (routing.outcome === "selected" ? routing.selectedIds.length === 0 : routing.selectedIds.length !== 0)) fail(`trial ${i} selected roots`);
     const evidence = routing.evidence;
     if (routing.outcome === "unavailable") { if (evidence !== null) fail(`trial ${i} unavailable evidence`); }
     else {
@@ -386,11 +425,25 @@ export async function parseExperimentArtifact(raw: unknown): Promise<ExperimentA
       if (!isObj(evidence) || evidence.model !== JEV_MODEL || typeof evidence.choice !== "string" || !routing.optionIds.includes(evidence.choice) || !unit(evidence.confidence) || !isObj(evidence.probabilities) || !sameIds(Object.keys(evidence.probabilities).sort(), [...routing.optionIds].sort()) || !Object.values(evidence.probabilities).every(unit)) return fail(`trial ${i} evidence`);
       const probabilities = Object.values(evidence.probabilities) as number[];
       if (Math.abs(sum(probabilities) - 1) > 1e-6 || evidence.probabilities[evidence.choice] !== Math.max(...probabilities)) fail(`trial ${i} probabilities`);
-      // Reuse the policy implementation with recorded evidence only; no provider is consulted.
-      const replay = await routeTools(EXPERIMENT_CATALOG, { intent: task.intent, availableIds: available }, policy as unknown as RoutingPolicy,
-        { source: a.source === "fake" ? "mock" : "jev", review: async () => evidence as unknown as RoutingEvidence });
-      if (routing.outcome !== replay.outcome || !sameIds(routing.selectedIds, replay.selectedIds)) fail(`trial ${i} policy mismatch`);
     }
+    // Reuse policy and host bundle assembly with recorded evidence only; no provider is consulted.
+    const replay = await routeTools(EXPERIMENT_CATALOG, { intent: task.intent, availableIds: available }, policy as unknown as RoutingPolicy,
+      { source: a.source === "fake" ? "mock" : "jev", review: async () => { if (evidence === null) throw Error("Recorded unavailable route."); return evidence as unknown as RoutingEvidence; } });
+    if (routing.outcome !== replay.outcome || !sameIds(routing.selectedIds, replay.selectedIds)) fail(`trial ${i} policy mismatch`);
+    let handoffReady = routing.outcome === "selected";
+    let expectedIds: readonly string[] = available.filter(id => (routing.selectedIds as string[]).includes(id));
+    if (toolContext !== undefined) {
+      const recorded = t.bundle;
+      if (!isObj(recorded) || typeof recorded.cancelled !== "boolean" || (recorded.cancelled && a.status !== "cancelled")) return fail(`trial ${i} bundle cancellation`);
+      const handoff = bundleFor(replay, recorded.cancelled ? AbortSignal.abort() : undefined);
+      const expected = handoff.bundle;
+      if (!sameIds(Object.keys(recorded).sort(), Object.keys(expected).sort()) || recorded.status !== expected.status || recorded.reason !== expected.reason || recorded.estimatedCostUnits !== expected.estimatedCostUnits ||
+        !ids(recorded.rootIds) || !sameIds(recorded.rootIds, expected.rootIds) || !ids(recorded.prerequisiteIds) || !sameIds(recorded.prerequisiteIds, expected.prerequisiteIds) || !ids(recorded.blockedIds) || !sameIds(recorded.blockedIds, expected.blockedIds)) fail(`trial ${i} bundle provenance`);
+      handoffReady = expected.status === "ready";
+      expectedIds = handoff.context.state.loadedIds;
+    } else if (t.bundle !== undefined) fail(`trial ${i} bundle without config`);
+    if (handoffReady !== (proposer !== null) || !sameIds(t.exposedToolIds, expectedIds)) fail(`trial ${i} routing/exposure mismatch`);
+    if (proposer === null && t.outcome !== (routing.outcome === "unavailable" ? "routing_unavailable" : routing.outcome === "selected" ? "context_withheld" : "routed_clarification")) fail(`trial ${i} routing/outcome mismatch`);
   }
   return raw as unknown as ExperimentArtifact;
 }

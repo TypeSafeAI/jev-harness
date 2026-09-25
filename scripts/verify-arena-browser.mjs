@@ -81,11 +81,56 @@ export async function verifyArena(page, baseURL) {
   } finally { await page.unroute("**/api/arena"); }
 }
 
-/** Held streams verify visible progress/cancellation without a CLI or provider. Use a fresh page. */
-export async function verifyArenaProgress(page, baseURL) {
+/** Prerequisite menus must survive completion, history reload and export. */
+export async function verifyArenaBundle(page, baseURL, screenshotDir) {
   const checks = [];
   const check = (ok, label) => { if (!ok) throw Error(label); checks.push(label); };
-  await page.addInitScript(({ receipt }) => {
+  const at = "2026-09-24T00:00:00Z";
+  let missingReceipt = false;
+  const result = { status: "completed", answer: "Read the synthetic helper and recorded a pending proposal. No patch was applied.", durationMs: 1000, inputTokens: 1000, cachedInputTokens: 0, outputTokens: 50, toolCallCount: 2, traceTruncated: false, toolCalls: [{ tool: "read_file", status: "returned", at }, { tool: "propose_patch", status: "returned", at }], error: null };
+  await page.route("**/api/arena", route => route.fulfill({ contentType: "application/x-ndjson", body: [
+    { type: "usage", attempted: true, measurement: { inputTokens: 100, outputTokens: 10, requestBytes: 400, responseBytes: 40, latencyMs: 200 } },
+    { type: "routing", receipt: missingReceipt ? null : browserReceipt(["propose_patch"]) },
+    { type: "result", lane: "baseline", tools: ["read_file", "propose_patch", "inspect_agent"], result },
+    { type: "result", lane: "integrated", tools: ["read_file", "propose_patch"], result },
+    { type: "done" },
+  ].map(event => JSON.stringify(event)).join("\n") + "\n" }));
+  try {
+    await page.goto(baseURL);
+    await page.getByRole("button", { name: "Run comparison" }).click();
+    await page.getByText("3 tools → 2 exposed with Jev", { exact: true }).waitFor();
+    await page.waitForFunction(() => !document.querySelector(".arena-controls button.primary").disabled);
+    for (const width of [320, 390, 768, 1440, 1920]) {
+      await page.setViewportSize({ width, height: 900 });
+      check(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `bundle comparison fits ${width}px`);
+      check(await page.getByText("Selected + prerequisites", { exact: true }).isVisible(), `bundle exposure clear at ${width}px`);
+      if (screenshotDir && [390, 1440].includes(width)) await page.screenshot({ path: `${screenshotDir}/arena-bundle-${width}.png`, fullPage: true });
+    }
+    await page.reload();
+    await page.getByText("3 tools → 2 exposed with Jev", { exact: true }).waitFor();
+    check((await page.locator(".integrated .lane-metrics dd strong").first().textContent()) === "2", "history keeps actual bundled exposure");
+    await page.locator(".run-inspector > .detail-trigger").click();
+    const download = page.waitForEvent("download"); await page.getByRole("button", { name: "Download comparison" }).click();
+    const stream = await (await download).createReadStream(); let raw = ""; for await (const chunk of stream) raw += chunk;
+    const exported = JSON.parse(raw);
+    check(JSON.stringify(exported.receipt.selectedIds) === JSON.stringify(["propose_patch"]), "download preserves Jev root selection");
+    check(JSON.stringify(exported.lanes.integrated.tools) === JSON.stringify(["read_file", "propose_patch"]), "download records the host's expanded menu");
+    check(exported.setupVersion === 2 && exported.applied === false, "new setup is identifiable and remains nonexecuting");
+    await page.getByRole("button", { name: "Close details" }).click();
+    missingReceipt = true;
+    await page.getByRole("button", { name: "Run comparison" }).click();
+    await page.getByText("Reported tool menu", { exact: true }).waitFor();
+    check(await page.getByText("Selected + prerequisites", { exact: true }).count() === 0, "missing routing evidence never implies prerequisite expansion");
+    check((await page.locator(".integrated .lane-metrics dd strong").first().textContent()) === "2", "reported exposure remains visible without a routing receipt");
+    return { checks, count: checks.length, providerCalls: 0, humanAccessibilityAcceptance: "not performed" };
+  } finally { await page.unroute("**/api/arena"); }
+}
+
+/** Held streams verify visible progress/cancellation without a CLI or provider. Use a fresh page. */
+export async function verifyArenaProgress(page, baseURL, withPrerequisites = false) {
+  const checks = [];
+  const check = (ok, label) => { if (!ok) throw Error(label); checks.push(label); };
+  await page.addInitScript(({ receipt, withPrerequisites }) => {
     const original = window.fetch;
     window.fetch = async (input, init) => {
       if (input !== "/api/arena") return original(input, init);
@@ -94,18 +139,27 @@ export async function verifyArenaProgress(page, baseURL) {
         emit({ type: "usage", attempted: true, measurement: { inputTokens: 20, outputTokens: 3, latencyMs: 2, requestBytes: 100, responseBytes: 20 } });
         emit({ type: "routing", receipt });
         emit({ type: "stage", value: "Both agents are running in parallel." });
+        if (withPrerequisites) {
+          emit({ type: "lane", lane: "baseline", phase: "starting", tools: ["read_file", "propose_patch", "inspect_agent"] });
+          emit({ type: "lane", lane: "integrated", phase: "starting", tools: ["read_file", "propose_patch"] });
+        }
         emit({ type: "lane", lane: "baseline", phase: "working" });
         emit({ type: "lane", lane: "integrated", phase: "calling" });
         window.finishArenaBaseline = (zero = false) => emit({ type: "result", lane: "baseline", tools: ["read_file", "propose_patch", "inspect_agent"], result: { status: "completed", answer: "First lane finished.", durationMs: 1000, inputTokens: 100, outputTokens: 10, cachedInputTokens: 0, toolCallCount: zero ? 0 : 1, traceTruncated: false, toolCalls: zero ? [] : [{ tool: "read_file", status: "returned", at: "2026-09-22T00:00:00Z" }], error: null } });
         init.signal.addEventListener("abort", () => controller.error(new DOMException("Aborted", "AbortError")), { once: true });
       } }), { headers: { "Content-Type": "application/x-ndjson" } });
     };
-  }, { receipt: browserReceipt() });
+  }, { receipt: browserReceipt(withPrerequisites ? ["propose_patch"] : ["read_file"]), withPrerequisites });
   await page.goto(baseURL + "/arena");
   await page.getByRole("button", { name: "Run comparison" }).click();
   await page.getByText("Both agents are running in parallel.", { exact: true }).waitFor();
   check((await page.locator(".baseline .lane-status").textContent()).includes("Agent is working"), "baseline shows independent working state");
   check((await page.locator(".integrated .lane-status").textContent()).includes("Calling a fixture tool"), "integrated shows independent tool activity");
+  if (withPrerequisites) {
+    check(await page.getByText("3 tools → 2 exposed with Jev", { exact: true }).isVisible(), "pending exposure includes prerequisites after later phase events");
+    check((await page.locator(".integrated .lane-metrics dd strong").first().textContent()) === "2", "pending integrated metric reports actual host menu");
+    check(await page.getByText("Selected + prerequisites", { exact: true }).isVisible(), "dependency exposure is distinguished from routed selection");
+  }
   await page.waitForFunction(() => [...document.querySelectorAll(".lane-status small")].every(e => parseInt(e.textContent) >= 1));
   check(await page.locator(".lane-status small").count() === 2, "both elapsed timers advance while pending");
   check(await page.getByRole("button", { name: "Comparing…", exact: true }).isDisabled(), "run button communicates pending state");
@@ -141,6 +195,12 @@ export async function verifyArenaProgress(page, baseURL) {
   await page.getByRole("button", { name: "Close details" }).click();
   await page.waitForFunction(() => JSON.parse(localStorage.getItem("jev-arena-history-v1")).runs.length === 1);
   check(await page.evaluate(() => { const run = JSON.parse(localStorage.getItem("jev-arena-history-v1")).runs[0]; return run.status === "cancelled" && run.lanes.baseline.result.answer === "First lane finished." && !run.lanes.integrated; }), "cancelled run saves the returned evidence exactly once");
+  if (withPrerequisites) {
+    await page.getByRole("tab", { name: /^History/ }).click();
+    await page.locator(".history-run").first().click();
+    check(await page.getByText("1 selected · tool access not reported", { exact: true }).isVisible(), "reopening an incomplete run does not reuse transient tool exposure");
+    check((await page.locator(".integrated .lane-metrics dd strong").first().textContent()) === "—", "missing historical lane does not inherit another run's menu");
+  }
   await page.getByRole("button", { name: "Run comparison" }).click();
   await page.getByText("Both agents are running in parallel.", { exact: true }).waitFor();
   await page.evaluate(() => window.dispatchEvent(new Event("jev-key-change")));

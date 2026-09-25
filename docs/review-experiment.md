@@ -24,6 +24,9 @@ Requests run sequentially without retries. The output path must be absent:
 the CLI reserves it before sending requests and never overwrites prior evidence.
 Interrupting the CLI cancels its request and writes the completed and interrupted
 cases with partial status. Cases not started remain explicitly counted.
+Settled receipts retain their answered or unavailable attempt status if a later
+interrupt stops the batch. A request cancelled before its review settles retains
+an unavailable receipt and a cancelled attempt.
 
 The artifact includes source revision and file hashes, exact questions and
 profile hash, frozen fixture/label metadata, receipts, indexed repetitions,

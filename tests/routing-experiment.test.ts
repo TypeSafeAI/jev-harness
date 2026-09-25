@@ -56,6 +56,124 @@ test("runner pairs both arms per task across catalog sizes and repetitions under
   assert.equal(summary.paired.length, EXPERIMENT_TASKS.length);
 });
 
+test("opt-in prerequisites expose a complete patch menu while preserving roots and baseline", async () => {
+  const baseline = await runExperiment({ runs: 1, policy: DEMO_POLICY }, fakeDeps());
+  const capture = { requests: [] as RoutingRequest[], inputs: [] as ProposerInput[] };
+  const bundled = await runExperiment({ runs: 1, policy: DEMO_POLICY, withPrerequisites: true }, fakeDeps(capture));
+  assert.deepEqual(bundled.filter(t => t.arm === "all_tools"), baseline.filter(t => t.arm === "all_tools"));
+  assert.ok(baseline.every(t => t.bundle === undefined));
+  for (const tier of ["small", "medium", "large"]) {
+    const before = baseline.find(t => t.taskId === `patch-${tier}` && t.arm === "jev_top_k")!;
+    const after = bundled.find(t => t.taskId === `patch-${tier}` && t.arm === "jev_top_k")!;
+    assert.deepEqual(after.routing, before.routing);
+    assert.deepEqual(after.routing!.selectedIds, ["propose_patch"]);
+    assert.deepEqual(before.exposedToolIds, ["propose_patch"]);
+    assert.deepEqual(before.proposer!.calledToolIds, []);
+    assert.deepEqual(after.exposedToolIds, ["read_file", "propose_patch"]);
+    assert.deepEqual(after.proposer!.calledToolIds, ["read_file", "propose_patch"]);
+    assert.deepEqual(after.bundle?.rootIds, ["propose_patch"]);
+    assert.deepEqual(after.bundle?.prerequisiteIds, ["read_file"]);
+    assert.equal(after.bundle?.estimatedCostUnits, 4);
+    assert.equal(after.bundle?.status, "ready");
+  }
+  const draft = bundled.find(t => t.taskId === "test_draft-medium" && t.arm === "jev_top_k")!;
+  assert.deepEqual(draft.routing!.selectedIds, ["draft_test_proposal"]);
+  assert.deepEqual(draft.exposedToolIds, ["read_file", "draft_test_proposal"]);
+  for (const request of capture.requests) assert.doesNotMatch(JSON.stringify(request), /dependencies|prerequisite|acceptable|expected/);
+  for (const input of capture.inputs) assert.deepEqual(Object.keys(input).sort(), ["files", "task", "tools"]);
+});
+
+test("prerequisite config and provenance replay, while historical artifacts retain selected-only semantics", async () => {
+  const trials = await runExperiment({ runs: 1, policy: DEMO_POLICY, withPrerequisites: true }, fakeDeps());
+  const artifact = buildArtifact(trials, { source: "fake", command: "pnpm experiment:routing --with-prerequisites", generatedAt: "2026-09-24T00:00:00Z", policy: DEMO_POLICY, runs: 1, sizes: ["small", "medium", "large"], proposer: "fake-scripted", labels: EXPERIMENT_LABELS, withPrerequisites: true });
+  assert.deepEqual(artifact.toolContext, { mode: "with_prerequisites", dependencyVersion: 1, dependencies: { propose_patch: ["read_file"], draft_test_proposal: ["read_file"] } });
+  assert.deepEqual(await parseExperimentArtifact(JSON.parse(JSON.stringify(artifact))), artifact);
+  const tamper = async (edit: (a: any) => void) => { const copy = structuredClone(artifact); edit(copy); await assert.rejects(parseExperimentArtifact(copy), /Invalid experiment artifact/); };
+  await tamper(a => { delete a.toolContext; });
+  await tamper(a => { a.toolContext.dependencies.propose_patch = ["inspect_agent"]; });
+  await tamper(a => { a.toolContext.dependencyVersion = 2; });
+  await tamper(a => { a.toolContext.mode = "selected_only"; });
+  const patch = (a: any) => a.trials.find((t: Trial) => t.taskId === "patch-small" && t.arm === "jev_top_k");
+  await tamper(a => { patch(a).bundle.rootIds = ["read_file"]; });
+  await tamper(a => { patch(a).bundle.prerequisiteIds = []; });
+  await tamper(a => { patch(a).bundle.estimatedCostUnits = 0; });
+  await tamper(a => { patch(a).bundle.blockedIds = ["read_file"]; });
+  await tamper(a => { patch(a).bundle.cancelled = true; });
+  await tamper(a => { delete patch(a).bundle; });
+  await tamper(a => { patch(a).exposedToolIds.push("inspect_agent"); });
+  await tamper(a => { a.trials.find((t: Trial) => t.arm === "all_tools").bundle = patch(a).bundle; });
+  const historical = JSON.parse(await readFile("examples/routing/runs/2026-09-23-routing-r3.json", "utf8"));
+  assert.equal(historical.toolContext, undefined);
+  assert.deepEqual(await parseExperimentArtifact(historical), historical);
+  const legacy = meta(await runExperiment({ runs: 1, policy: DEMO_POLICY }, fakeDeps()));
+  assert.equal(legacy.toolContext, undefined);
+  assert.equal(legacy.summary.byArm.jev_top_k.withheld, undefined);
+  assert.doesNotMatch(renderExperimentTable(legacy), /Host withheld|host prerequisites/);
+  assert.match(renderExperimentTable(artifact), /Host withheld/);
+  assert.match(renderExperimentTable(artifact), /host prerequisites/);
+});
+
+test("cancellation between routing and prerequisite handoff withholds without a proposer fallback", async () => {
+  const controller = new AbortController();
+  const deps = fakeDeps();
+  deps.signal = controller.signal;
+  deps.routerFor = taskId => {
+    const handle = fakeRouterFor(taskId);
+    return { router: handle.router, measurement: () => { controller.abort(); return null; } };
+  };
+  deps.proposer = { source: "fake", propose: async () => { assert.fail("cancelled handoff must never dispatch a proposer"); } };
+  const trials = await runExperiment({ runs: 1, policy: DEMO_POLICY, withPrerequisites: true }, deps);
+  assert.equal(trials.length, 1);
+  const trial = trials[0]!;
+  assert.equal(trial.routing!.outcome, "selected");
+  assert.equal(trial.bundle?.status, "withheld");
+  assert.equal(trial.bundle?.cancelled, true);
+  assert.equal(trial.outcome, "context_withheld");
+  assert.equal(trial.proposer, null);
+  assert.deepEqual(trial.exposedToolIds, []);
+  assert.equal(scoreTrial(trial, EXPERIMENT_LABELS.read!).correct, false);
+  const artifact = buildArtifact(trials, { source: "fake", status: "cancelled", command: "pnpm experiment:routing --with-prerequisites", generatedAt: "2026-09-24T00:00:00Z", policy: DEMO_POLICY, runs: 1, sizes: ["small", "medium", "large"], proposer: "fake-scripted", labels: EXPERIMENT_LABELS, withPrerequisites: true });
+  assert.equal(artifact.summary.byArm.jev_top_k.withheld, 1);
+  assert.equal(artifact.summary.byArm.jev_top_k.unavailable, 0);
+  await parseExperimentArtifact(artifact);
+  const complete = structuredClone(artifact); complete.status = "complete";
+  await assert.rejects(parseExperimentArtifact(complete));
+});
+
+test("prerequisite mode preserves provider failure and clarification outcomes", async () => {
+  const deps = fakeDeps();
+  const trials = await runExperiment({ runs: 1, policy: DEMO_POLICY, withPrerequisites: true }, deps);
+  for (const trial of trials.filter(t => t.routing?.outcome === "needs_clarification")) {
+    assert.equal(trial.outcome, "routed_clarification");
+    assert.equal(trial.bundle?.status, "withheld");
+    assert.equal(trial.proposer, null);
+    assert.deepEqual(trial.exposedToolIds, []);
+  }
+  deps.routerFor = () => ({ measurement: () => null, router: { source: "mock", review: async () => { throw Error("synthetic failure"); } } });
+  const failed = await runExperiment({ runs: 1, policy: DEMO_POLICY, withPrerequisites: true }, deps);
+  for (const trial of failed.filter(t => t.arm === "jev_top_k")) {
+    assert.equal(trial.outcome, "routing_unavailable");
+    assert.equal(trial.bundle?.status, "withheld");
+    assert.equal(trial.proposer, null);
+    assert.deepEqual(trial.exposedToolIds, []);
+  }
+  const artifact = buildArtifact(failed, { source: "fake", command: "pnpm experiment:routing --with-prerequisites", generatedAt: "2026-09-24T00:00:00Z", policy: DEMO_POLICY, runs: 1, sizes: ["small", "medium", "large"], proposer: "fake-scripted", labels: EXPERIMENT_LABELS, withPrerequisites: true });
+  await parseExperimentArtifact(artifact);
+  assert.equal(artifact.summary.byArm.jev_top_k.withheld, 0);
+  assert.equal(artifact.summary.byArm.jev_top_k.unavailable, 19);
+});
+
+test("CLI prerequisites require explicit opt-in and are retained in fake artifacts", async () => {
+  assert.equal(parseCliArgs([]).withPrerequisites, false);
+  assert.equal(parseCliArgs(["--with-prerequisites"]).withPrerequisites, true);
+  assert.throws(() => parseCliArgs(["--table", "file.json", "--with-prerequisites"]), /only renders/);
+  const output = collect();
+  assert.equal(await main(["--with-prerequisites", "--format", "json", "--sizes", "small"], { ...output.io, env: {}, fetch: async () => { assert.fail("fake mode must not use network"); } }), 0);
+  const artifact = await parseExperimentArtifact(JSON.parse(output.out));
+  assert.equal(artifact.toolContext?.mode, "with_prerequisites");
+  assert.deepEqual(artifact.trials.find(t => t.taskId === "patch-small" && t.arm === "jev_top_k")!.exposedToolIds, ["read_file", "propose_patch"]);
+});
+
 test("labels never reach payloads and only change scoring", async () => {
   for (const task of EXPERIMENT_TASKS) assert.deepEqual(Object.keys(task).sort(), ["baseId", "files", "id", "intent", "size"]);
   const first = { requests: [] as RoutingRequest[], inputs: [] as ProposerInput[] };
@@ -240,7 +358,7 @@ test("Codex approval list defaults to the fixture handlers and only accepts cata
 });
 
 test("experiment pins the requested proposer model without changing CLI isolation", () => {
-  assert.equal(parseCliArgs(["--model", "gpt-6-sol"]).model, "gpt-6-sol");
+  assert.equal(parseCliArgs(["--live", "--model", "gpt-6-sol"]).model, "gpt-6-sol");
   const args = codexArguments("/w", "m", "t", ["read_file"], "gpt-6-sol");
   assert.equal(args[args.indexOf("--model") + 1], "gpt-6-sol");
   assert.ok(args.includes("read-only"));
@@ -248,6 +366,16 @@ test("experiment pins the requested proposer model without changing CLI isolatio
   assert.ok(args.includes('model_reasoning_effort="medium"'));
   assert.throws(() => parseCliArgs(["--model", "bad model"]), /model/);
   assert.throws(() => codexArguments("/w", "m", "t", [], ""), /model/);
+});
+
+test("CLI rejects ignored model options in offline and table modes", async () => {
+  assert.throws(() => parseCliArgs(["--model", "gpt-6-sol"]), /--model requires --live/);
+  assert.throws(() => parseCliArgs(["--table", "recorded.json", "--model", "gpt-6-sol"]), /only renders/);
+  assert.throws(() => parseCliArgs(["--table", "recorded.json", "--live", "--model", "gpt-6-sol"]), /only renders/);
+  const output = collect();
+  assert.equal(await main(["--model", "gpt-6-sol", "--format", "json"], { ...output.io, env: {}, fetch: async () => { assert.fail("invalid options must not dispatch"); } }), 2);
+  assert.equal(output.out, "");
+  assert.match(output.err, /--model requires --live/);
 });
 
 test("routing diagnostics explain unusable evidence without retaining provider text", async () => {

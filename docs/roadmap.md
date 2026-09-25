@@ -84,9 +84,10 @@ The [question set v4 candidate](architecture.md#question-sets) changes evidence
 support to distinguish a requested change from a defect claim while checking
 every material factual or causal claim. It retains v1, v2 and v3 questions as
 frozen provenance and changes no fixture,
-label, model pin, threshold or decision rule. Offline wire-contract checks do
-not establish semantic improvement; a separate live comparison remains pending.
-These adaptive development candidates are not held-out calibration.
+label, model pin, threshold or decision rule. The [live development comparison](calibration/2026-09-25-question-set-v4.md)
+retains all candidates and the separate frozen confirmation. Offline wire-contract
+checks do not establish semantic improvement. These adaptive development
+candidates are not held-out calibration.
 
 ## 2 · Host seams
 
@@ -111,6 +112,8 @@ These adaptive development candidates are not held-out calibration.
 - [x] Local lessons from each settled Arena simulation: measured tradeoffs, evidence-first recommendations, repeat-run evaluation guidance and versioned export. [Offline verification](verification/arena-lessons-2026-09-22.json); this is not automated quality evaluation.
 
 - [x] Harness adoption workflow: explicit shadow/lean context preparation, runnable synthetic adapter, copyable coding-agent handoff and separate human assessments for repeated-run inspection. This is integration scaffolding; each production host still needs conformance and measured quality/overhead evidence. See [integration](integration.md).
+
+- [x] Host-declared tool prerequisites: a routed patch can retain fixture-read access without changing Jev's selected roots or granting execution authority. The Arena records the complete menu, and the repeatable experiment opts in with `--with-prerequisites`. [Offline verification](verification/tool-prerequisites-2026-09-25.json) covers bundle withholding, artifact replay, live progress and saved-run exposure. Live effectiveness remains a separate experiment.
 
 ## 4 · Context scoring
 

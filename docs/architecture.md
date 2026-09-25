@@ -81,7 +81,9 @@ The phase 1 extraction used v1. Its instructions remain frozen as
 Prior measurements must retain their original question-set versions rather
 than being attributed to v4. Offline tests
 check the exact serialized questions and unchanged instructions, not the
-semantic correctness of the model's answers. V4 needs a separate live comparison.
+semantic correctness of the model's answers. The [v4 live development comparison](calibration/2026-09-25-question-set-v4.md)
+retains every candidate and a separate frozen confirmation, without a held-out
+calibration claim.
 
 The [official Noul contract](https://docs.typesafe.ai/primitives/noul) supports
 optional `criteria` with true/false descriptions. Historical stripping in the
@@ -251,3 +253,15 @@ The optional demo is a Next.js App Router host (`app/`, `components/`, `examples
 `prepareToolContext` is an additive routing composition API, not a runtime or dispatcher. It snapshots the requested mode and previous context before awaiting `routeTools` once, then computes full and lean contexts from that same previous state. The explicitly requested shadow mode selects full context even after failed routing; lean selects only routed schemas. Cancellation leaves active context empty in either mode while retaining comparison evidence. Hosts must consume `context`, discard stale handoffs and independently enforce dispatch policy. The standalone synthetic integration example demonstrates outcomes and availability changes without provider or tool calls.
 
 Human answer assessments use a separate versioned, bounded browser store keyed by run ID. They never alter `ArenaRun`, Jev evidence or policy. History filters only its chart subset, preserving every run in the list and reporting review coverage; passing annotations do not establish correctness. Failed writes retain prior data and edited drafts; conflicting external edits require an explicit reload. Comparison downloads label annotations as human-supplied. The static integration prompt contains no run content, credential or annotation. See [host adoption and measurement](integration.md).
+
+`assembleToolBundle` is an optional pure handoff helper for host-declared tool
+dependencies. It leaves Jev's receipt and selected roots unchanged, expands a
+validated acyclic dependency graph, and assembles only available descriptors
+within the existing per-tool cost limit. Missing or over-budget prerequisites,
+non-selection and cancellation expose no schemas. `topK` still limits routed
+roots; prerequisites add exposure and their costs are reported separately from
+the unchanged routing evidence. Neither selection nor a dependency grants
+permission. The Arena host declares `propose_patch → read_file`, records the
+actual menu per lane, and uses setup revision 2 so older runs do not enter its
+comparison trends. Review verdicts, routing questions and decision policy do
+not change.

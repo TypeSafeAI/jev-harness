@@ -40,7 +40,8 @@ The other three questions remain byte-identical to v3.
 Historical v1, v2 and v3 runs retain their original meaning and question bytes. A v4
 comparison must record its own questions and profile; do not relabel or pool
 different question-set versions. Wire-contract tests establish serialization, not model
-correctness. Live evidence for this candidate remains pending. These adaptive
+correctness. The [v4 live comparison](../calibration/2026-09-25-question-set-v4.md)
+retains all development attempts and a frozen confirmation. These adaptive
 development candidates are not held-out calibration.
 
 ## Wire-contract acceptance checks
