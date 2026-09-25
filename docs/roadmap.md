@@ -109,6 +109,9 @@ an optimum from this sample.
 - [x] [Routing semantics v2](routing.md#inspector-semantics-v2): describe the deterministic inspector's source-context capability and generalize its grounding note. Preserve exact v1 wire semantics, catalog replay, prerequisite artifacts, and readable Arena history; new runs use setup revision 3.
 - [ ] Measure the inspector candidate separately with frozen tasks, labels, mocks, thresholds, cost policy, and prerequisites. Assess answers alongside the unchanged tool-use score; offline tests do not establish live effectiveness.
 
+- [x] [Fixture host revision 1](routing.md#fixture-host-revision-1): bounded literal search and retained, unevaluated test drafts, with shared recording limits and artifact/history provenance. Default Arena exposure, routing semantics, frozen fixtures, labels and mocks stay unchanged.
+- [ ] Measure this host capability candidate separately and assess retained test source offline without executing it. A recorded draft does not establish task correctness; live effectiveness remains pending.
+
 ## 4 · Context scoring
 
 - [x] Compare scoring/re-prefill costs with forfeited prefix-cache reuse. [Cost model](context-scoring-cost-model.md): no-go for integration code; conditional go for a synthetic shadow experiment

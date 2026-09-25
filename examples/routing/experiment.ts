@@ -12,6 +12,8 @@
 import { JEV_MODEL } from "../../src/contract/types.js";
 import { assembleToolBundle, CLARIFICATION_ID, ROUTING_QUESTION_SET_VERSION, ROUTING_UNTRUSTED_DATA_NOTE, routeTools, type RoutingEvidence, type RoutingPolicy, type RoutingQuestionSetVersion, type RoutingReceipt, type RoutingRequest, type ToolDefinition, type ToolDependencies, type ToolRouter } from "../../src/routing/index.js";
 import { arenaPrompt, runCodex, type ToolCall } from "../host/codex.js";
+import { FIXTURE_HOST_REVISION } from "../host/fixture-tools.mjs";
+import { parseFixtureHostRevision, parseFixtureToolCalls } from "../host/fixture-records.js";
 import { jevChoiceBody, type JevMeasurement, type RoutingDiagnostic } from "../host/jev-choice.js";
 import { EXPERIMENT_CATALOG, EXPERIMENT_CATALOGS, EXPERIMENT_TASKS, FAKE_PROPOSER_SCRIPT, EXPERIMENT_MOCKS, SIZE_TIERS, TIER_AVAILABLE_IDS, type ExperimentLabel, type ExperimentTask, type SizeTier } from "./experiment-tasks.js";
 
@@ -295,6 +297,8 @@ export interface ExperimentArtifact {
   schemaVersion: 1; kind: "routing-experiment"; status: "complete" | "cancelled"; generatedAt: string; command: string; source: "fake" | "live";
   models: { jev: typeof JEV_MODEL; proposer: string };
   routingQuestionSetVersion: RoutingQuestionSetVersion; untrustedDataNote: string;
+  /** Absence means the historical host without search/test-draft handlers. */
+  fixtureHostRevision?: typeof FIXTURE_HOST_REVISION;
   policy: RoutingPolicy; runs: number; sizes: SizeTier[];
   /** Absence retains historical selected-only semantics. */
   toolContext?: ExperimentToolContext;
@@ -322,7 +326,7 @@ export function buildArtifact(trials: Trial[], meta: { source: "fake" | "live"; 
   const labels = structuredClone(Object.fromEntries(Object.entries(meta.labels).map(([k, v]) => [k, { acceptableIds: [...v.acceptableIds], expectedOutcome: v.expectedOutcome }])));
   return {
     schemaVersion: 1, kind: "routing-experiment", status: meta.status ?? "complete", generatedAt: meta.generatedAt, command: meta.command, source: meta.source,
-    models: { jev: JEV_MODEL, proposer: meta.proposer }, routingQuestionSetVersion: ROUTING_QUESTION_SET_VERSION, untrustedDataNote: ROUTING_UNTRUSTED_DATA_NOTE,
+    models: { jev: JEV_MODEL, proposer: meta.proposer }, routingQuestionSetVersion: ROUTING_QUESTION_SET_VERSION, untrustedDataNote: ROUTING_UNTRUSTED_DATA_NOTE, fixtureHostRevision: FIXTURE_HOST_REVISION,
     policy: { ...meta.policy }, runs: meta.runs, sizes: [...meta.sizes],
     ...(meta.withPrerequisites ? { toolContext: { mode: "with_prerequisites" as const, dependencyVersion: 1 as const, dependencies: structuredClone(EXPERIMENT_TOOL_DEPENDENCIES) } } : {}),
     catalog: { ids: EXPERIMENT_CATALOG.map(t => t.id), tierAvailableIds: Object.fromEntries(SIZE_TIERS.map(s => [s, [...TIER_AVAILABLE_IDS[s]]])) as Record<SizeTier, string[]> },
@@ -353,6 +357,8 @@ export async function parseExperimentArtifact(raw: unknown): Promise<ExperimentA
   const questionSetVersion = a.routingQuestionSetVersion;
   if ((questionSetVersion !== 1 && questionSetVersion !== 2) || a.untrustedDataNote !== ROUTING_UNTRUSTED_DATA_NOTE) return fail("routing metadata");
   const catalog = EXPERIMENT_CATALOGS[questionSetVersion];
+  let fixtureHostRevision: typeof FIXTURE_HOST_REVISION | undefined;
+  try { fixtureHostRevision = parseFixtureHostRevision(a.fixtureHostRevision); } catch { return fail("fixture host revision"); }
   if (typeof a.generatedAt !== "string" || !Number.isFinite(Date.parse(a.generatedAt)) || !text(a.command)) fail("metadata");
   if (!count(a.runs) || a.runs < 1 || a.runs > 50 || !Array.isArray(a.notes) || !a.notes.every(x => typeof x === "string") || !Array.isArray(a.trials) || a.trials.length > 2 * a.runs * EXPERIMENT_TASKS.length || !isObj(a.labels)) return fail("structure");
   if (!ids(a.sizes, SIZE_TIERS) || !a.sizes.length) fail("sizes");
@@ -398,12 +404,9 @@ export async function parseExperimentArtifact(raw: unknown): Promise<ExperimentA
       if (proposer.toolCalls !== undefined) {
         const calls = proposer.toolCalls;
         if (!Array.isArray(calls) || calls.length !== proposer.calledToolIds.length) return fail(`trial ${i} call trace`);
+        try { parseFixtureToolCalls(calls, task.files, fixtureHostRevision); } catch { return fail(`trial ${i} recorded proposal or call trace`); }
         for (const [index, call] of calls.entries()) {
           if (!isObj(call) || call.tool !== proposer.calledToolIds[index] || !["returned", "rejected"].includes(String(call.status)) || typeof call.at !== "string" || !Number.isFinite(Date.parse(call.at))) return fail(`trial ${i} call trace`);
-          if (call.proposal !== undefined) {
-            const p = call.proposal;
-            if (call.tool !== "propose_patch" || call.status !== "returned" || !isObj(p) || p.applied !== false || typeof p.path !== "string" || !Object.hasOwn(task.files, p.path) || typeof p.patch !== "string" || p.patch.length > 16_000 || typeof p.rationale !== "string" || p.rationale.length > 16_000) fail(`trial ${i} recorded proposal`);
-          }
         }
       }
       if (proposer.calledToolIds.some(id => id !== "unknown" && !exposedIds.includes(id))) fail(`trial ${i} unexposed tool call`);

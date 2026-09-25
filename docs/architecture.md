@@ -236,3 +236,13 @@ artifact parsing uses the matching catalog for policy and prerequisite checks.
 Arena history preserves v1 and v2 receipts. Unsupported question versions are
 rejected. Live effectiveness and answer quality remain pending; see
 [inspector semantics](routing.md#inspector-semantics-v2).
+
+Fixture host revision 1 adds literal bounded search over supplied synthetic
+files and exact, unevaluated test-source recording in a separate
+`ToolCall.testProposal` field. New experiment artifacts and Arena snapshots
+record `fixtureHostRevision: 1`; absence retains historical host provenance.
+Pure host helpers outside `src/` share path, argument and combined patch/test
+recording limits with artifact and history readers. Proposed source is never
+parsed, imported, executed or written, and no contract verdict changes. The
+default Arena menu and routing question semantics remain unchanged. See
+[fixture host bounds and assessment limits](routing.md#fixture-host-revision-1).

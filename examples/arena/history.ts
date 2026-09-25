@@ -1,4 +1,6 @@
-import type { CliResult, ToolCall } from "../host/codex";
+import type { CliResult } from "../host/codex";
+import { FIXTURE_HOST_REVISION } from "../host/fixture-tools.mjs";
+import { parseFixtureHostRevision, parseFixtureToolCalls } from "../host/fixture-records";
 import type { RouterMeasurement } from "../routing/live-client";
 import type { RoutingReceipt, RoutingPolicy, ToolDefinition } from "../../src/routing";
 
@@ -11,6 +13,7 @@ export interface SavedFixture { id: string; title: string; task: string; files: 
 export interface SavedLane { tools: string[]; result: CliResult }
 export interface ArenaRun {
   schemaVersion: 1; id: string; startedAt: string; finishedAt: string; setupVersion: number;
+  fixtureHostRevision?: typeof FIXTURE_HOST_REVISION;
   fixture: SavedFixture; status: "complete" | "partial" | "cancelled" | "failed"; message: string;
   lanes: Partial<Record<"baseline" | "integrated", SavedLane>>;
   receipt: RoutingReceipt | null; jevUsage: RouterMeasurement | null;
@@ -50,14 +53,9 @@ function receipt(value: unknown): RoutingReceipt | null {
     outcome: literal(v.outcome, ["selected", "needs_clarification", "no_match", "unavailable"]), selectedIds: list(v.selectedIds, text), reason: text(v.reason), execution: { applied: unapplied(record(v.execution).applied) },
   };
 }
-function call(value: unknown): ToolCall {
-  const v = record(value), result: ToolCall = { tool: text(v.tool), status: literal(v.status, ["returned", "rejected"]), at: date(v.at) };
-  if (v.proposal !== undefined) { const p = record(v.proposal); result.proposal = { path: text(p.path), patch: text(p.patch), rationale: text(p.rationale), applied: unapplied(p.applied) }; }
-  return result;
-}
-function lane(value: unknown): SavedLane {
+function lane(value: unknown, files: SavedFixture["files"], revision: typeof FIXTURE_HOST_REVISION | undefined): SavedLane {
   const v = record(value), r = record(v.result);
-  return { tools: list(v.tools, text), result: { status: literal(r.status, ["completed", "failed", "cancelled"]), answer: text(r.answer), durationMs: duration(r.durationMs), inputTokens: nullable(r.inputTokens), cachedInputTokens: nullable(r.cachedInputTokens), outputTokens: nullable(r.outputTokens), toolCallCount: integer(r.toolCallCount), traceTruncated: bool(r.traceTruncated), toolCalls: list(r.toolCalls, call), error: r.error === null ? null : text(r.error) } };
+  return { tools: list(v.tools, text), result: { status: literal(r.status, ["completed", "failed", "cancelled"]), answer: text(r.answer), durationMs: duration(r.durationMs), inputTokens: nullable(r.inputTokens), cachedInputTokens: nullable(r.cachedInputTokens), outputTokens: nullable(r.outputTokens), toolCallCount: integer(r.toolCallCount), traceTruncated: bool(r.traceTruncated), toolCalls: parseFixtureToolCalls(r.toolCalls, files, revision), error: r.error === null ? null : text(r.error) } };
 }
 function measurement(value: unknown): RouterMeasurement | null {
   if (value === null) return null;
@@ -69,13 +67,16 @@ function parseRun(value: unknown): ArenaRun {
   const id = text(v.id); if (!id || id.length > 100) throw Error();
   const startedAt = date(v.startedAt), finishedAt = date(v.finishedAt);
   if (Date.parse(finishedAt) < Date.parse(startedAt)) throw Error();
+  const fixtureHostRevision = parseFixtureHostRevision(v.fixtureHostRevision);
+  const files = Object.fromEntries(Object.entries(record(f.files)).map(([key, value]) => [key, text(value)]));
   return { schemaVersion: 1, id, startedAt, finishedAt, setupVersion: integer(v.setupVersion),
-    fixture: { id: text(f.id), title: text(f.title), task: text(f.task), files: Object.fromEntries(Object.entries(record(f.files)).map(([key, value]) => [key, text(value)])) },
+    ...(fixtureHostRevision === undefined ? {} : { fixtureHostRevision }),
+    fixture: { id: text(f.id), title: text(f.title), task: text(f.task), files },
     status: literal(v.status, ["complete", "partial", "cancelled", "failed"]), message: text(v.message),
-    lanes: { ...(lanes.baseline ? { baseline: lane(lanes.baseline) } : {}), ...(lanes.integrated ? { integrated: lane(lanes.integrated) } : {}) }, receipt: receipt(v.receipt), jevUsage: measurement(v.jevUsage),
+    lanes: { ...(lanes.baseline ? { baseline: lane(lanes.baseline, files, fixtureHostRevision) } : {}), ...(lanes.integrated ? { integrated: lane(lanes.integrated, files, fixtureHostRevision) } : {}) }, receipt: receipt(v.receipt), jevUsage: measurement(v.jevUsage),
   };
 }
-export function createRun(value: Omit<ArenaRun, "schemaVersion" | "setupVersion">): ArenaRun { return parseRun({ ...value, schemaVersion: 1, setupVersion: ARENA_SETUP_VERSION }); }
+export function createRun(value: Omit<ArenaRun, "schemaVersion" | "setupVersion" | "fixtureHostRevision">): ArenaRun { return parseRun({ ...value, schemaVersion: 1, setupVersion: ARENA_SETUP_VERSION, fixtureHostRevision: FIXTURE_HOST_REVISION }); }
 export function retainRuns(runs: readonly ArenaRun[]): ArenaRun[] {
   const unique = [...new Map(runs.map(run => [run.id, run])).values()].sort((a, b) => Date.parse(b.finishedAt) - Date.parse(a.finishedAt)).slice(0, MAX_RUNS);
   while (unique.length && bytes(encode(unique)) > MAX_BYTES) unique.pop();

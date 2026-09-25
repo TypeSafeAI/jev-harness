@@ -15,7 +15,7 @@ const tool = (id: string, description: string, estimatedCostUnits: number, prope
   inputSchema: { type: "object", properties: Object.fromEntries(Object.entries(properties).map(([name, text]) => [name, { type: "string" as const, description: text }])), required, additionalProperties: false },
 });
 
-/** Synthetic descriptors with no fixture handler. A call is recorded and answered with an error; nothing runs. */
+/** Synthetic descriptors; only search_text and draft_test_proposal have additional fixture handlers. */
 const SYNTHETIC_DESCRIPTORS: ToolDefinition[] = [
   tool("list_directory", "List the file names in one synthetic workspace directory without reading their contents.", 1, { directory: "Relative synthetic directory path." }),
   tool("search_text", "Find lines that contain a literal string across the synthetic workspace files.", 2, { query: "Literal text to find; not a regular expression." }),
