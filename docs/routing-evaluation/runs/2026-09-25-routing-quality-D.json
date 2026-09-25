@@ -1,0 +1,2987 @@
+{
+  "schemaVersion": 1,
+  "kind": "supplementary-routing-output-assessment",
+  "artifactFile": "routing-package-fixture-tools-attempt2.json",
+  "artifactSha256": "6cb5438412749878f2bceb7004400c393d294cd20dda199681383219b243cee0",
+  "blindedSha256": "6082741347147243f65027969fb250f5879d06cadc89617ac58f23e159d6d463",
+  "rubricSha256": "b90742ed9c4367f1ad8282a2d48349a69401e4fe077ebb6616301c3950109ce4",
+  "assessmentSha256": "3e01916c8b0288b0da8cfda398cc8269da1bd2e2d3a3e000198671599816c270",
+  "joinScriptSha256": "4307f45788affcfc8b430394d674ddcf5312ec9d5fa1a78873099349203ddbfe",
+  "assessor": "agent-code-review",
+  "groups": {
+    "all_tools": {
+      "total": {
+        "trials": 57,
+        "contentQuality": {
+          "meets": 57,
+          "partial": 0,
+          "fails": 0,
+          "unassessable": 0
+        },
+        "outcomes": {
+          "tool_called": 57
+        },
+        "constraintViolations": 0
+      },
+      "read": {
+        "trials": 9,
+        "contentQuality": {
+          "meets": 9,
+          "partial": 0,
+          "fails": 0,
+          "unassessable": 0
+        },
+        "outcomes": {
+          "tool_called": 9
+        },
+        "constraintViolations": 0
+      },
+      "patch": {
+        "trials": 9,
+        "contentQuality": {
+          "meets": 9,
+          "partial": 0,
+          "fails": 0,
+          "unassessable": 0
+        },
+        "outcomes": {
+          "tool_called": 9
+        },
+        "constraintViolations": 0
+      },
+      "inspect": {
+        "trials": 9,
+        "contentQuality": {
+          "meets": 9,
+          "partial": 0,
+          "fails": 0,
+          "unassessable": 0
+        },
+        "outcomes": {
+          "tool_called": 9
+        },
+        "constraintViolations": 0
+      },
+      "ambiguous": {
+        "trials": 9,
+        "contentQuality": {
+          "meets": 9,
+          "partial": 0,
+          "fails": 0,
+          "unassessable": 0
+        },
+        "outcomes": {
+          "tool_called": 9
+        },
+        "constraintViolations": 0
+      },
+      "uncertain": {
+        "trials": 9,
+        "contentQuality": {
+          "meets": 9,
+          "partial": 0,
+          "fails": 0,
+          "unassessable": 0
+        },
+        "outcomes": {
+          "tool_called": 9
+        },
+        "constraintViolations": 0
+      },
+      "search": {
+        "trials": 6,
+        "contentQuality": {
+          "meets": 6,
+          "partial": 0,
+          "fails": 0,
+          "unassessable": 0
+        },
+        "outcomes": {
+          "tool_called": 6
+        },
+        "constraintViolations": 0
+      },
+      "test_draft": {
+        "trials": 6,
+        "contentQuality": {
+          "meets": 6,
+          "partial": 0,
+          "fails": 0,
+          "unassessable": 0
+        },
+        "outcomes": {
+          "tool_called": 6
+        },
+        "constraintViolations": 0
+      }
+    },
+    "jev_top_k": {
+      "total": {
+        "trials": 57,
+        "contentQuality": {
+          "meets": 28,
+          "partial": 0,
+          "fails": 0,
+          "unassessable": 29
+        },
+        "outcomes": {
+          "tool_called": 28,
+          "routing_unavailable": 2,
+          "routed_clarification": 27
+        },
+        "constraintViolations": 0
+      },
+      "read": {
+        "trials": 9,
+        "contentQuality": {
+          "meets": 9,
+          "partial": 0,
+          "fails": 0,
+          "unassessable": 0
+        },
+        "outcomes": {
+          "tool_called": 9
+        },
+        "constraintViolations": 0
+      },
+      "patch": {
+        "trials": 9,
+        "contentQuality": {
+          "meets": 7,
+          "partial": 0,
+          "fails": 0,
+          "unassessable": 2
+        },
+        "outcomes": {
+          "tool_called": 7,
+          "routing_unavailable": 2
+        },
+        "constraintViolations": 0
+      },
+      "inspect": {
+        "trials": 9,
+        "contentQuality": {
+          "meets": 0,
+          "partial": 0,
+          "fails": 0,
+          "unassessable": 9
+        },
+        "outcomes": {
+          "routed_clarification": 9
+        },
+        "constraintViolations": 0
+      },
+      "ambiguous": {
+        "trials": 9,
+        "contentQuality": {
+          "meets": 0,
+          "partial": 0,
+          "fails": 0,
+          "unassessable": 9
+        },
+        "outcomes": {
+          "routed_clarification": 9
+        },
+        "constraintViolations": 0
+      },
+      "uncertain": {
+        "trials": 9,
+        "contentQuality": {
+          "meets": 0,
+          "partial": 0,
+          "fails": 0,
+          "unassessable": 9
+        },
+        "outcomes": {
+          "routed_clarification": 9
+        },
+        "constraintViolations": 0
+      },
+      "search": {
+        "trials": 6,
+        "contentQuality": {
+          "meets": 6,
+          "partial": 0,
+          "fails": 0,
+          "unassessable": 0
+        },
+        "outcomes": {
+          "tool_called": 6
+        },
+        "constraintViolations": 0
+      },
+      "test_draft": {
+        "trials": 6,
+        "contentQuality": {
+          "meets": 6,
+          "partial": 0,
+          "fails": 0,
+          "unassessable": 0
+        },
+        "outcomes": {
+          "tool_called": 6
+        },
+        "constraintViolations": 0
+      }
+    }
+  },
+  "pairedGroundedMeetsUsage": {
+    "total": {
+      "pairs": 28,
+      "metrics": {
+        "input": {
+          "knownPairs": 28,
+          "all_tools": 37314.46428571428,
+          "jev_top_k": 35600.03571428572
+        },
+        "cachedInput": {
+          "knownPairs": 28,
+          "all_tools": 31936,
+          "jev_top_k": 31090.285714285714
+        },
+        "output": {
+          "knownPairs": 28,
+          "all_tools": 344.0357142857143,
+          "jev_top_k": 461.2857142857143
+        }
+      }
+    },
+    "read": {
+      "pairs": 9,
+      "metrics": {
+        "input": {
+          "knownPairs": 9,
+          "all_tools": 31624.666666666668,
+          "jev_top_k": 30518.777777777777
+        },
+        "cachedInput": {
+          "knownPairs": 9,
+          "all_tools": 27434.666666666668,
+          "jev_top_k": 26723.555555555555
+        },
+        "output": {
+          "knownPairs": 9,
+          "all_tools": 236.33333333333334,
+          "jev_top_k": 359.44444444444446
+        }
+      }
+    },
+    "patch": {
+      "pairs": 7,
+      "metrics": {
+        "input": {
+          "knownPairs": 7,
+          "all_tools": 43154.57142857143,
+          "jev_top_k": 41366
+        },
+        "cachedInput": {
+          "knownPairs": 7,
+          "all_tools": 36717.71428571428,
+          "jev_top_k": 35547.42857142857
+        },
+        "output": {
+          "knownPairs": 7,
+          "all_tools": 427.14285714285717,
+          "jev_top_k": 541.5714285714286
+        }
+      }
+    },
+    "inspect": {
+      "pairs": 0,
+      "metrics": {
+        "input": {
+          "knownPairs": 0,
+          "all_tools": null,
+          "jev_top_k": null
+        },
+        "cachedInput": {
+          "knownPairs": 0,
+          "all_tools": null,
+          "jev_top_k": null
+        },
+        "output": {
+          "knownPairs": 0,
+          "all_tools": null,
+          "jev_top_k": null
+        }
+      }
+    },
+    "ambiguous": {
+      "pairs": 0,
+      "metrics": {
+        "input": {
+          "knownPairs": 0,
+          "all_tools": null,
+          "jev_top_k": null
+        },
+        "cachedInput": {
+          "knownPairs": 0,
+          "all_tools": null,
+          "jev_top_k": null
+        },
+        "output": {
+          "knownPairs": 0,
+          "all_tools": null,
+          "jev_top_k": null
+        }
+      }
+    },
+    "uncertain": {
+      "pairs": 0,
+      "metrics": {
+        "input": {
+          "knownPairs": 0,
+          "all_tools": null,
+          "jev_top_k": null
+        },
+        "cachedInput": {
+          "knownPairs": 0,
+          "all_tools": null,
+          "jev_top_k": null
+        },
+        "output": {
+          "knownPairs": 0,
+          "all_tools": null,
+          "jev_top_k": null
+        }
+      }
+    },
+    "search": {
+      "pairs": 6,
+      "metrics": {
+        "input": {
+          "knownPairs": 6,
+          "all_tools": 32297.666666666668,
+          "jev_top_k": 30641.833333333332
+        },
+        "cachedInput": {
+          "knownPairs": 6,
+          "all_tools": 27498.666666666668,
+          "jev_top_k": 26858.666666666668
+        },
+        "output": {
+          "knownPairs": 6,
+          "all_tools": 206.33333333333334,
+          "jev_top_k": 365.5
+        }
+      }
+    },
+    "test_draft": {
+      "pairs": 6,
+      "metrics": {
+        "input": {
+          "knownPairs": 6,
+          "all_tools": 44052.5,
+          "jev_top_k": 41453.166666666664
+        },
+        "cachedInput": {
+          "knownPairs": 6,
+          "all_tools": 37546.666666666664,
+          "jev_top_k": 36672
+        },
+        "output": {
+          "knownPairs": 6,
+          "all_tools": 546.3333333333334,
+          "jev_top_k": 616.1666666666666
+        }
+      }
+    }
+  },
+  "pairedCases": [
+    {
+      "run": 1,
+      "taskId": "patch-large",
+      "baseId": "patch",
+      "all_tools": {
+        "input": 45476,
+        "cachedInput": 36864,
+        "output": 434
+      },
+      "jev_top_k": {
+        "input": 41530,
+        "cachedInput": 37376,
+        "output": 588
+      }
+    },
+    {
+      "run": 1,
+      "taskId": "patch-small",
+      "baseId": "patch",
+      "all_tools": {
+        "input": 41013,
+        "cachedInput": 37632,
+        "output": 406
+      },
+      "jev_top_k": {
+        "input": 41193,
+        "cachedInput": 35200,
+        "output": 488
+      }
+    },
+    {
+      "run": 1,
+      "taskId": "read-large",
+      "baseId": "read",
+      "jev_top_k": {
+        "input": 30809,
+        "cachedInput": 27264,
+        "output": 494
+      },
+      "all_tools": {
+        "input": 33304,
+        "cachedInput": 27136,
+        "output": 177
+      }
+    },
+    {
+      "run": 1,
+      "taskId": "read-medium",
+      "baseId": "read",
+      "all_tools": {
+        "input": 31204,
+        "cachedInput": 26112,
+        "output": 249
+      },
+      "jev_top_k": {
+        "input": 30472,
+        "cachedInput": 25216,
+        "output": 351
+      }
+    },
+    {
+      "run": 1,
+      "taskId": "read-small",
+      "baseId": "read",
+      "jev_top_k": {
+        "input": 30319,
+        "cachedInput": 25216,
+        "output": 263
+      },
+      "all_tools": {
+        "input": 30331,
+        "cachedInput": 27392,
+        "output": 224
+      }
+    },
+    {
+      "run": 1,
+      "taskId": "search-large",
+      "baseId": "search",
+      "jev_top_k": {
+        "input": 30817,
+        "cachedInput": 27264,
+        "output": 425
+      },
+      "all_tools": {
+        "input": 33329,
+        "cachedInput": 28928,
+        "output": 208
+      }
+    },
+    {
+      "run": 1,
+      "taskId": "search-medium",
+      "baseId": "search",
+      "all_tools": {
+        "input": 31249,
+        "cachedInput": 27904,
+        "output": 190
+      },
+      "jev_top_k": {
+        "input": 30484,
+        "cachedInput": 25216,
+        "output": 316
+      }
+    },
+    {
+      "run": 1,
+      "taskId": "test_draft-large",
+      "baseId": "test_draft",
+      "jev_top_k": {
+        "input": 41647,
+        "cachedInput": 37376,
+        "output": 750
+      },
+      "all_tools": {
+        "input": 45542,
+        "cachedInput": 38784,
+        "output": 510
+      }
+    },
+    {
+      "run": 1,
+      "taskId": "test_draft-medium",
+      "baseId": "test_draft",
+      "all_tools": {
+        "input": 42504,
+        "cachedInput": 36736,
+        "output": 568
+      },
+      "jev_top_k": {
+        "input": 41318,
+        "cachedInput": 35072,
+        "output": 585
+      }
+    },
+    {
+      "run": 2,
+      "taskId": "patch-large",
+      "baseId": "patch",
+      "jev_top_k": {
+        "input": 41631,
+        "cachedInput": 35200,
+        "output": 629
+      },
+      "all_tools": {
+        "input": 45464,
+        "cachedInput": 38784,
+        "output": 412
+      }
+    },
+    {
+      "run": 2,
+      "taskId": "patch-medium",
+      "baseId": "patch",
+      "all_tools": {
+        "input": 42358,
+        "cachedInput": 35712,
+        "output": 422
+      },
+      "jev_top_k": {
+        "input": 41231,
+        "cachedInput": 35072,
+        "output": 491
+      }
+    },
+    {
+      "run": 2,
+      "taskId": "patch-small",
+      "baseId": "patch",
+      "jev_top_k": {
+        "input": 41165,
+        "cachedInput": 35072,
+        "output": 485
+      },
+      "all_tools": {
+        "input": 41089,
+        "cachedInput": 35968,
+        "output": 433
+      }
+    },
+    {
+      "run": 2,
+      "taskId": "read-large",
+      "baseId": "read",
+      "all_tools": {
+        "input": 33305,
+        "cachedInput": 28928,
+        "output": 248
+      },
+      "jev_top_k": {
+        "input": 30769,
+        "cachedInput": 27136,
+        "output": 394
+      }
+    },
+    {
+      "run": 2,
+      "taskId": "read-medium",
+      "baseId": "read",
+      "jev_top_k": {
+        "input": 30437,
+        "cachedInput": 27136,
+        "output": 301
+      },
+      "all_tools": {
+        "input": 31224,
+        "cachedInput": 27904,
+        "output": 238
+      }
+    },
+    {
+      "run": 2,
+      "taskId": "read-small",
+      "baseId": "read",
+      "all_tools": {
+        "input": 30339,
+        "cachedInput": 27392,
+        "output": 268
+      },
+      "jev_top_k": {
+        "input": 30310,
+        "cachedInput": 27136,
+        "output": 308
+      }
+    },
+    {
+      "run": 2,
+      "taskId": "search-large",
+      "baseId": "search",
+      "all_tools": {
+        "input": 33383,
+        "cachedInput": 27136,
+        "output": 224
+      },
+      "jev_top_k": {
+        "input": 30830,
+        "cachedInput": 27264,
+        "output": 432
+      }
+    },
+    {
+      "run": 2,
+      "taskId": "search-medium",
+      "baseId": "search",
+      "jev_top_k": {
+        "input": 30457,
+        "cachedInput": 27136,
+        "output": 297
+      },
+      "all_tools": {
+        "input": 31216,
+        "cachedInput": 27904,
+        "output": 197
+      }
+    },
+    {
+      "run": 2,
+      "taskId": "test_draft-large",
+      "baseId": "test_draft",
+      "all_tools": {
+        "input": 45617,
+        "cachedInput": 40576,
+        "output": 540
+      },
+      "jev_top_k": {
+        "input": 41554,
+        "cachedInput": 37376,
+        "output": 656
+      }
+    },
+    {
+      "run": 2,
+      "taskId": "test_draft-medium",
+      "baseId": "test_draft",
+      "jev_top_k": {
+        "input": 41253,
+        "cachedInput": 35328,
+        "output": 500
+      },
+      "all_tools": {
+        "input": 42348,
+        "cachedInput": 36736,
+        "output": 443
+      }
+    },
+    {
+      "run": 3,
+      "taskId": "patch-large",
+      "baseId": "patch",
+      "all_tools": {
+        "input": 45713,
+        "cachedInput": 36864,
+        "output": 504
+      },
+      "jev_top_k": {
+        "input": 41571,
+        "cachedInput": 35584,
+        "output": 612
+      }
+    },
+    {
+      "run": 3,
+      "taskId": "patch-small",
+      "baseId": "patch",
+      "all_tools": {
+        "input": 40969,
+        "cachedInput": 35200,
+        "output": 379
+      },
+      "jev_top_k": {
+        "input": 41241,
+        "cachedInput": 35328,
+        "output": 498
+      }
+    },
+    {
+      "run": 3,
+      "taskId": "read-large",
+      "baseId": "read",
+      "jev_top_k": {
+        "input": 30768,
+        "cachedInput": 27136,
+        "output": 473
+      },
+      "all_tools": {
+        "input": 33289,
+        "cachedInput": 28928,
+        "output": 231
+      }
+    },
+    {
+      "run": 3,
+      "taskId": "read-medium",
+      "baseId": "read",
+      "all_tools": {
+        "input": 31289,
+        "cachedInput": 27904,
+        "output": 289
+      },
+      "jev_top_k": {
+        "input": 30456,
+        "cachedInput": 27136,
+        "output": 343
+      }
+    },
+    {
+      "run": 3,
+      "taskId": "read-small",
+      "baseId": "read",
+      "jev_top_k": {
+        "input": 30329,
+        "cachedInput": 27136,
+        "output": 308
+      },
+      "all_tools": {
+        "input": 30337,
+        "cachedInput": 25216,
+        "output": 203
+      }
+    },
+    {
+      "run": 3,
+      "taskId": "search-large",
+      "baseId": "search",
+      "jev_top_k": {
+        "input": 30791,
+        "cachedInput": 27136,
+        "output": 419
+      },
+      "all_tools": {
+        "input": 33375,
+        "cachedInput": 25216,
+        "output": 222
+      }
+    },
+    {
+      "run": 3,
+      "taskId": "search-medium",
+      "baseId": "search",
+      "all_tools": {
+        "input": 31234,
+        "cachedInput": 27904,
+        "output": 197
+      },
+      "jev_top_k": {
+        "input": 30472,
+        "cachedInput": 27136,
+        "output": 304
+      }
+    },
+    {
+      "run": 3,
+      "taskId": "test_draft-large",
+      "baseId": "test_draft",
+      "jev_top_k": {
+        "input": 41542,
+        "cachedInput": 37376,
+        "output": 644
+      },
+      "all_tools": {
+        "input": 45835,
+        "cachedInput": 36736,
+        "output": 714
+      }
+    },
+    {
+      "run": 3,
+      "taskId": "test_draft-medium",
+      "baseId": "test_draft",
+      "all_tools": {
+        "input": 42469,
+        "cachedInput": 35712,
+        "output": 503
+      },
+      "jev_top_k": {
+        "input": 41405,
+        "cachedInput": 37504,
+        "output": 562
+      }
+    }
+  ],
+  "cases": [
+    {
+      "caseId": "fcc6f4240c8580eb9fc72a97",
+      "trialIndex": 0,
+      "taskId": "read-small",
+      "baseId": "read",
+      "run": 1,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "fcc6f4240c8580eb9fc72a97",
+        "contentQuality": "meets",
+        "evidence": "`src/sum.ts` defines `sum(values)` and `mean(values)`. In `sum`, the loop uses `i <= values.length`, so it reads one element past the end of the array and returns `NaN`.",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. The single-file fixture supports the requested read; exact arguments/results are not retained."
+      }
+    },
+    {
+      "caseId": "38b77a53cfa95086e9241592",
+      "trialIndex": 1,
+      "taskId": "read-small",
+      "baseId": "read",
+      "run": 1,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "38b77a53cfa95086e9241592",
+        "contentQuality": "meets",
+        "evidence": "export function sum(values: number[]) {\n  let total = 0;\n  for (let i = 0; i <= values.length; i++) total += values[i];\n  return total;\n}\nexport const mean = (values: number[]) => sum(values) / values.length;",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. The single-file fixture supports the requested read; exact arguments/results are not retained."
+      }
+    },
+    {
+      "caseId": "f2564f5f1cc3acd2a3381a61",
+      "trialIndex": 2,
+      "taskId": "read-medium",
+      "baseId": "read",
+      "run": 1,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "f2564f5f1cc3acd2a3381a61",
+        "contentQuality": "meets",
+        "evidence": "export function sum(values: number[]) {\n  let total = 0;\n  for (let i = 0; i <= values.length; i++) total += values[i];\n  return total;\n}\nexport const mean = (values: number[]) => sum(values) / values.length;",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. The single-file fixture supports the requested read; exact arguments/results are not retained."
+      }
+    },
+    {
+      "caseId": "19aecaa731776c7604bb9d33",
+      "trialIndex": 3,
+      "taskId": "read-medium",
+      "baseId": "read",
+      "run": 1,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "19aecaa731776c7604bb9d33",
+        "contentQuality": "meets",
+        "evidence": "export function sum(values: number[]) {\n  let total = 0;\n  for (let i = 0; i <= values.length; i++) total += values[i];\n  return total;\n}\nexport const mean = (values: number[]) => sum(values) / values.length;",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. The single-file fixture supports the requested read; exact arguments/results are not retained."
+      }
+    },
+    {
+      "caseId": "315bf3b3d752864b30ecc0ba",
+      "trialIndex": 4,
+      "taskId": "read-large",
+      "baseId": "read",
+      "run": 1,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "315bf3b3d752864b30ecc0ba",
+        "contentQuality": "meets",
+        "evidence": "export function sum(values: number[]) {\n  let total = 0;\n  for (let i = 0; i <= values.length; i++) total += values[i];\n  return total;\n}\nexport const mean = (values: number[]) => sum(values) / values.length;",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. The single-file fixture supports the requested read; exact arguments/results are not retained."
+      }
+    },
+    {
+      "caseId": "3fa069d172fae31159bd0d44",
+      "trialIndex": 5,
+      "taskId": "read-large",
+      "baseId": "read",
+      "run": 1,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "3fa069d172fae31159bd0d44",
+        "contentQuality": "meets",
+        "evidence": "`src/sum.ts` exports `sum(values)` and `mean(values)`. The loop in `sum` uses `i <= values.length`, so it reads one element past the end of the array and produces `NaN`.",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. The single-file fixture supports the requested read; exact arguments/results are not retained."
+      }
+    },
+    {
+      "caseId": "467604f8b322cb37325e7088",
+      "trialIndex": 6,
+      "taskId": "patch-small",
+      "baseId": "patch",
+      "run": 1,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "467604f8b322cb37325e7088",
+        "contentQuality": "meets",
+        "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+        "evidenceField": "output.toolCalls.proposal.patch",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending proposal",
+        "constraintViolation": null,
+        "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and accurately identify the extra out-of-bounds read. It remains pending; no application or test execution is claimed."
+      }
+    },
+    {
+      "caseId": "c0995dedc30e7182bb898d76",
+      "trialIndex": 7,
+      "taskId": "patch-small",
+      "baseId": "patch",
+      "run": 1,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "c0995dedc30e7182bb898d76",
+        "contentQuality": "meets",
+        "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+        "evidenceField": "output.toolCalls.proposal.patch",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending proposal",
+        "constraintViolation": null,
+        "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and accurately identify the extra out-of-bounds read. It remains pending; no application or test execution is claimed."
+      }
+    },
+    {
+      "caseId": "549cf18311ef0c03960dde82",
+      "trialIndex": 8,
+      "taskId": "patch-medium",
+      "baseId": "patch",
+      "run": 1,
+      "arm": "jev_top_k",
+      "outcome": "routing_unavailable",
+      "assessment": {
+        "caseId": "549cf18311ef0c03960dde82",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "8c8ad79acb4dc182e56bb9e8",
+      "trialIndex": 9,
+      "taskId": "patch-medium",
+      "baseId": "patch",
+      "run": 1,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "8c8ad79acb4dc182e56bb9e8",
+        "contentQuality": "meets",
+        "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+        "evidenceField": "output.toolCalls.proposal.patch",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending proposal",
+        "constraintViolation": null,
+        "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and accurately identify the extra out-of-bounds read. It remains pending; no application or test execution is claimed."
+      }
+    },
+    {
+      "caseId": "4f379589d93e6f150b43b21a",
+      "trialIndex": 10,
+      "taskId": "patch-large",
+      "baseId": "patch",
+      "run": 1,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "4f379589d93e6f150b43b21a",
+        "contentQuality": "meets",
+        "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+        "evidenceField": "output.toolCalls.proposal.patch",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending proposal",
+        "constraintViolation": null,
+        "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and accurately identify the extra out-of-bounds read. It remains pending; no application or test execution is claimed."
+      }
+    },
+    {
+      "caseId": "e97755af78c737eb3d0e603f",
+      "trialIndex": 11,
+      "taskId": "patch-large",
+      "baseId": "patch",
+      "run": 1,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "e97755af78c737eb3d0e603f",
+        "contentQuality": "meets",
+        "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+        "evidenceField": "output.toolCalls.proposal.patch",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending proposal",
+        "constraintViolation": null,
+        "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and accurately identify the extra out-of-bounds read. It remains pending; no application or test execution is claimed."
+      }
+    },
+    {
+      "caseId": "bc0d1911ebf8a673c54e3f72",
+      "trialIndex": 12,
+      "taskId": "inspect-small",
+      "baseId": "inspect",
+      "run": 1,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "bc0d1911ebf8a673c54e3f72",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "286e14cf203d8b14a148a781",
+      "trialIndex": 13,
+      "taskId": "inspect-small",
+      "baseId": "inspect",
+      "run": 1,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "286e14cf203d8b14a148a781",
+        "contentQuality": "meets",
+        "evidence": "`mean` calls `sum(values)`, then divides the result by `values.length`. But `sum` loops through index `values.length`, one past the last element. That adds `undefined` to the total, making `sum` return `NaN` for every input. As a result, `mean` also returns `NaN`.",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Explains mean calling sum and dividing by array length, plus the out-of-bounds undefined addition and NaN propagation to both helpers. The content matches the canonical source; returned read status does not retain the exact source-access arguments/results."
+      }
+    },
+    {
+      "caseId": "9dc431a2e3ca000b2432e7b4",
+      "trialIndex": 14,
+      "taskId": "inspect-medium",
+      "baseId": "inspect",
+      "run": 1,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "9dc431a2e3ca000b2432e7b4",
+        "contentQuality": "meets",
+        "evidence": "`mean` calls `sum(values)`, then divides the result by `values.length`.\n\nAs written, `sum` loops one step too far (`i <= values.length`). Its final read is `values[values.length]`, which is `undefined`; adding that makes the total `NaN`. Consequently, `mean` also returns `NaN` for every input.",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Explains mean calling sum and dividing by array length, plus the out-of-bounds undefined addition and NaN propagation to both helpers. The content matches the canonical source; returned read status does not retain the exact source-access arguments/results."
+      }
+    },
+    {
+      "caseId": "1f38f7243cc16d65dd9dc7a9",
+      "trialIndex": 15,
+      "taskId": "inspect-medium",
+      "baseId": "inspect",
+      "run": 1,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "1f38f7243cc16d65dd9dc7a9",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "b4414bd4fe7e26cccbb8c3e2",
+      "trialIndex": 16,
+      "taskId": "inspect-large",
+      "baseId": "inspect",
+      "run": 1,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "b4414bd4fe7e26cccbb8c3e2",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "32ac11263934fe152deb69e8",
+      "trialIndex": 17,
+      "taskId": "inspect-large",
+      "baseId": "inspect",
+      "run": 1,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "32ac11263934fe152deb69e8",
+        "contentQuality": "meets",
+        "evidence": "`mean(values)` calls `sum(values)`, then divides the result by `values.length`.\n\nThere\u2019s a bug in `sum`: its loop uses `i <= values.length`, so it reads one element past the end. That adds `undefined` to the total, making `sum` return `NaN` and causing `mean` to return `NaN` too. The loop condition should be `i < values.length`.",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Explains mean calling sum and dividing by array length, plus the out-of-bounds undefined addition and NaN propagation to both helpers. The content matches the canonical source; returned read status does not retain the exact source-access arguments/results."
+      }
+    },
+    {
+      "caseId": "dcdc0e6b689ae6e1d424457e",
+      "trialIndex": 18,
+      "taskId": "ambiguous-small",
+      "baseId": "ambiguous",
+      "run": 1,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "dcdc0e6b689ae6e1d424457e",
+        "contentQuality": "meets",
+        "evidence": "Do you want a proposed fix for that bug, or a broader cleanup that also addresses `mean([])`?",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+      }
+    },
+    {
+      "caseId": "9a1c2454f3895099841b10b6",
+      "trialIndex": 19,
+      "taskId": "ambiguous-small",
+      "baseId": "ambiguous",
+      "run": 1,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "9a1c2454f3895099841b10b6",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "c52bc59bcd93109567325cf2",
+      "trialIndex": 20,
+      "taskId": "ambiguous-medium",
+      "baseId": "ambiguous",
+      "run": 1,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "c52bc59bcd93109567325cf2",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "71f0990e1ef99ad8c0c5b6f1",
+      "trialIndex": 21,
+      "taskId": "ambiguous-medium",
+      "baseId": "ambiguous",
+      "run": 1,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "71f0990e1ef99ad8c0c5b6f1",
+        "contentQuality": "meets",
+        "evidence": "Which one should I clean up, and do you want a style cleanup or a behavior fix?",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+      }
+    },
+    {
+      "caseId": "14c82ae5bde8add29d8715a6",
+      "trialIndex": 22,
+      "taskId": "ambiguous-large",
+      "baseId": "ambiguous",
+      "run": 1,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "14c82ae5bde8add29d8715a6",
+        "contentQuality": "meets",
+        "evidence": "Do you want a proposed fix for that bug, or a different cleanup?",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+      }
+    },
+    {
+      "caseId": "914efacd7631c28388e850e8",
+      "trialIndex": 23,
+      "taskId": "ambiguous-large",
+      "baseId": "ambiguous",
+      "run": 1,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "914efacd7631c28388e850e8",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "d3ff57a3105e3aa88baa354b",
+      "trialIndex": 24,
+      "taskId": "uncertain-small",
+      "baseId": "uncertain",
+      "run": 1,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "d3ff57a3105e3aa88baa354b",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "8bc5c00c93e4d3187567912e",
+      "trialIndex": 25,
+      "taskId": "uncertain-small",
+      "baseId": "uncertain",
+      "run": 1,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "8bc5c00c93e4d3187567912e",
+        "contentQuality": "meets",
+        "evidence": "Should I propose a fix for that bug? Also, what should `mean([])` return?",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+      }
+    },
+    {
+      "caseId": "9893a50248faed0d53f7e0bc",
+      "trialIndex": 26,
+      "taskId": "uncertain-medium",
+      "baseId": "uncertain",
+      "run": 1,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "9893a50248faed0d53f7e0bc",
+        "contentQuality": "meets",
+        "evidence": "Would you like me to propose a fix for that bug, or did you have a different change in mind?",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+      }
+    },
+    {
+      "caseId": "e1c7fd1491b569d12f39dcba",
+      "trialIndex": 27,
+      "taskId": "uncertain-medium",
+      "baseId": "uncertain",
+      "run": 1,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "e1c7fd1491b569d12f39dcba",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "17173c6d25161f1e9f333bd4",
+      "trialIndex": 28,
+      "taskId": "uncertain-large",
+      "baseId": "uncertain",
+      "run": 1,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "17173c6d25161f1e9f333bd4",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "9c9abf0f4a89b614cd08fd30",
+      "trialIndex": 29,
+      "taskId": "uncertain-large",
+      "baseId": "uncertain",
+      "run": 1,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "9c9abf0f4a89b614cd08fd30",
+        "contentQuality": "meets",
+        "evidence": "Should I propose a fix for that bug?",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+      }
+    },
+    {
+      "caseId": "f3e0c1236caf6b9b962391cd",
+      "trialIndex": 30,
+      "taskId": "search-medium",
+      "baseId": "search",
+      "run": 1,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "f3e0c1236caf6b9b962391cd",
+        "contentQuality": "meets",
+        "evidence": "src/client.ts:1` \u2014 `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` \u2014 `export const clientOptions = { timeout: requestTimeoutMs };`\n- `src/config.ts:1` \u2014 `export const requestTimeoutMs = 3000;`",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; source search returned",
+        "constraintViolation": null,
+        "reason": "Lists exactly the three canonical requestTimeoutMs lines with their paths and no false matches. Under fixture host revision 1, the returned search_text call counts as source access without another read. The trace does not retain its exact query/results, so source-access coverage remains unproven independently of the correct answer."
+      }
+    },
+    {
+      "caseId": "e8fb695aa10a333140db1567",
+      "trialIndex": 31,
+      "taskId": "search-medium",
+      "baseId": "search",
+      "run": 1,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "e8fb695aa10a333140db1567",
+        "contentQuality": "meets",
+        "evidence": "src/client.ts:1` \u2014 `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` \u2014 `export const clientOptions = { timeout: requestTimeoutMs };`\n- `src/config.ts:1` \u2014 `export const requestTimeoutMs = 3000;`",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; source search returned",
+        "constraintViolation": null,
+        "reason": "Lists exactly the three canonical requestTimeoutMs lines with their paths and no false matches. Under fixture host revision 1, the returned search_text call counts as source access without another read. The trace does not retain its exact query/results, so source-access coverage remains unproven independently of the correct answer."
+      }
+    },
+    {
+      "caseId": "ef8679cb89d7edb94f034e72",
+      "trialIndex": 32,
+      "taskId": "search-large",
+      "baseId": "search",
+      "run": 1,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "ef8679cb89d7edb94f034e72",
+        "contentQuality": "meets",
+        "evidence": "src/client.ts:1` \u2014 `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` \u2014 `export const clientOptions = { timeout: requestTimeoutMs };`\n- `src/config.ts:1` \u2014 `export const requestTimeoutMs = 3000;`",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; source search returned",
+        "constraintViolation": null,
+        "reason": "Lists exactly the three canonical requestTimeoutMs lines with their paths and no false matches. Under fixture host revision 1, the returned search_text call counts as source access without another read. The trace does not retain its exact query/results, so source-access coverage remains unproven independently of the correct answer."
+      }
+    },
+    {
+      "caseId": "440ee00f1f5664adc44b62a6",
+      "trialIndex": 33,
+      "taskId": "search-large",
+      "baseId": "search",
+      "run": 1,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "440ee00f1f5664adc44b62a6",
+        "contentQuality": "meets",
+        "evidence": "src/client.ts:1` \u2014 `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` \u2014 `export const clientOptions = { timeout: requestTimeoutMs };`\n- `src/config.ts:1` \u2014 `export const requestTimeoutMs = 3000;`",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; source search returned",
+        "constraintViolation": null,
+        "reason": "Lists exactly the three canonical requestTimeoutMs lines with their paths and no false matches. Under fixture host revision 1, the returned search_text call counts as source access without another read. The trace does not retain its exact query/results, so source-access coverage remains unproven independently of the correct answer."
+      }
+    },
+    {
+      "caseId": "6b1007a5427e847c271d4493",
+      "trialIndex": 34,
+      "taskId": "test_draft-medium",
+      "baseId": "test_draft",
+      "run": 1,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "6b1007a5427e847c271d4493",
+        "contentQuality": "meets",
+        "evidence": "expect(sum([])).toBeNaN();",
+        "evidenceField": "output.toolCalls.testProposal.content",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending test proposal",
+        "constraintViolation": null,
+        "reason": "The retained pending test proposal invokes sum([]) and uses a valid NaN assertion, matching the current <= loop. The final answer agrees with that behavior and makes no execution claim. Proposal content was code-read, not run."
+      }
+    },
+    {
+      "caseId": "a3c9ab5f77fb7d2b82e1d45a",
+      "trialIndex": 35,
+      "taskId": "test_draft-medium",
+      "baseId": "test_draft",
+      "run": 1,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "a3c9ab5f77fb7d2b82e1d45a",
+        "contentQuality": "meets",
+        "evidence": "expect(Number.isNaN(sum([]))).toBe(true);",
+        "evidenceField": "output.toolCalls.testProposal.content",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending test proposal",
+        "constraintViolation": null,
+        "reason": "The retained pending test proposal invokes sum([]) and uses a valid NaN assertion, matching the current <= loop. The final answer agrees with that behavior and makes no execution claim. Proposal content was code-read, not run."
+      }
+    },
+    {
+      "caseId": "a7a4570997b2a12b08371810",
+      "trialIndex": 36,
+      "taskId": "test_draft-large",
+      "baseId": "test_draft",
+      "run": 1,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "a7a4570997b2a12b08371810",
+        "contentQuality": "meets",
+        "evidence": "expect(sum([])).toBeNaN();",
+        "evidenceField": "output.toolCalls.testProposal.content",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending test proposal",
+        "constraintViolation": null,
+        "reason": "The retained pending test proposal invokes sum([]) and uses a valid NaN assertion, matching the current <= loop. The final answer agrees with that behavior and makes no execution claim. Proposal content was code-read, not run."
+      }
+    },
+    {
+      "caseId": "902b2dd0285226c29d93b120",
+      "trialIndex": 37,
+      "taskId": "test_draft-large",
+      "baseId": "test_draft",
+      "run": 1,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "902b2dd0285226c29d93b120",
+        "contentQuality": "meets",
+        "evidence": "assert.ok(Number.isNaN(sum([])));",
+        "evidenceField": "output.toolCalls.testProposal.content",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending test proposal",
+        "constraintViolation": null,
+        "reason": "The retained pending test proposal invokes sum([]) and uses a valid NaN assertion, matching the current <= loop. The final answer agrees with that behavior and makes no execution claim. Proposal content was code-read, not run."
+      }
+    },
+    {
+      "caseId": "e12f0b2133999109ca5856e2",
+      "trialIndex": 38,
+      "taskId": "read-small",
+      "baseId": "read",
+      "run": 2,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "e12f0b2133999109ca5856e2",
+        "contentQuality": "meets",
+        "evidence": "export function sum(values: number[]) {\n  let total = 0;\n  for (let i = 0; i <= values.length; i++) total += values[i];\n  return total;\n}\nexport const mean = (values: number[]) => sum(values) / values.length;",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. The single-file fixture supports the requested read; exact arguments/results are not retained."
+      }
+    },
+    {
+      "caseId": "2871af51ce94897b9bccc761",
+      "trialIndex": 39,
+      "taskId": "read-small",
+      "baseId": "read",
+      "run": 2,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "2871af51ce94897b9bccc761",
+        "contentQuality": "meets",
+        "evidence": "export function sum(values: number[]) {\n  let total = 0;\n  for (let i = 0; i <= values.length; i++) total += values[i];\n  return total;\n}\nexport const mean = (values: number[]) => sum(values) / values.length;",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. The single-file fixture supports the requested read; exact arguments/results are not retained."
+      }
+    },
+    {
+      "caseId": "b49ef7b77990a7f200ccc015",
+      "trialIndex": 40,
+      "taskId": "read-medium",
+      "baseId": "read",
+      "run": 2,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "b49ef7b77990a7f200ccc015",
+        "contentQuality": "meets",
+        "evidence": "`src/sum.ts` exports `sum(values)` and `mean(values)`. In `sum`, the loop uses `i <= values.length`, so it reads one element past the end of the array. That makes the total `NaN` for ordinary arrays.",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. The single-file fixture supports the requested read; exact arguments/results are not retained."
+      }
+    },
+    {
+      "caseId": "51b555c427d429c72995c4e2",
+      "trialIndex": 41,
+      "taskId": "read-medium",
+      "baseId": "read",
+      "run": 2,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "51b555c427d429c72995c4e2",
+        "contentQuality": "meets",
+        "evidence": "`src/sum.ts` exports `sum(values)` and `mean(values)`. The `sum` loop uses `i <= values.length`, so it reads one element past the end of the array; that adds `undefined` and makes the result `NaN`. `mean` calls `sum`, so it is affected too.",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. The single-file fixture supports the requested read; exact arguments/results are not retained."
+      }
+    },
+    {
+      "caseId": "fcd89225049d2257529088e0",
+      "trialIndex": 42,
+      "taskId": "read-large",
+      "baseId": "read",
+      "run": 2,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "fcd89225049d2257529088e0",
+        "contentQuality": "meets",
+        "evidence": "export function sum(values: number[]) {\n  let total = 0;\n  for (let i = 0; i <= values.length; i++) total += values[i];\n  return total;\n}\nexport const mean = (values: number[]) => sum(values) / values.length;",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. The single-file fixture supports the requested read; exact arguments/results are not retained."
+      }
+    },
+    {
+      "caseId": "ea782e6f522b4f97d5c25f6d",
+      "trialIndex": 43,
+      "taskId": "read-large",
+      "baseId": "read",
+      "run": 2,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "ea782e6f522b4f97d5c25f6d",
+        "contentQuality": "meets",
+        "evidence": "`src/sum.ts` exports `sum(values)` and `mean(values)`. The `sum` loop uses `i <= values.length`, so it reads one element past the end of the array and produces `NaN`. `mean` divides that result by the array length.",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. The single-file fixture supports the requested read; exact arguments/results are not retained."
+      }
+    },
+    {
+      "caseId": "39c900fd3f64a2864274d6e7",
+      "trialIndex": 44,
+      "taskId": "patch-small",
+      "baseId": "patch",
+      "run": 2,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "39c900fd3f64a2864274d6e7",
+        "contentQuality": "meets",
+        "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+        "evidenceField": "output.toolCalls.proposal.patch",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending proposal",
+        "constraintViolation": null,
+        "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and accurately identify the extra out-of-bounds read. It remains pending; no application or test execution is claimed."
+      }
+    },
+    {
+      "caseId": "7b1b3e66239014999dfb0c83",
+      "trialIndex": 45,
+      "taskId": "patch-small",
+      "baseId": "patch",
+      "run": 2,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "7b1b3e66239014999dfb0c83",
+        "contentQuality": "meets",
+        "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+        "evidenceField": "output.toolCalls.proposal.patch",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending proposal",
+        "constraintViolation": null,
+        "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and accurately identify the extra out-of-bounds read. It remains pending; no application or test execution is claimed."
+      }
+    },
+    {
+      "caseId": "12ec4fbc0f6eec8927e4055b",
+      "trialIndex": 46,
+      "taskId": "patch-medium",
+      "baseId": "patch",
+      "run": 2,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "12ec4fbc0f6eec8927e4055b",
+        "contentQuality": "meets",
+        "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+        "evidenceField": "output.toolCalls.proposal.patch",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending proposal",
+        "constraintViolation": null,
+        "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and accurately identify the extra out-of-bounds read. It remains pending; no application or test execution is claimed."
+      }
+    },
+    {
+      "caseId": "18054f7ec95840ad578a8511",
+      "trialIndex": 47,
+      "taskId": "patch-medium",
+      "baseId": "patch",
+      "run": 2,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "18054f7ec95840ad578a8511",
+        "contentQuality": "meets",
+        "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+        "evidenceField": "output.toolCalls.proposal.patch",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending proposal",
+        "constraintViolation": null,
+        "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and accurately identify the extra out-of-bounds read. It remains pending; no application or test execution is claimed."
+      }
+    },
+    {
+      "caseId": "ca206aa26de8ea9735c29d41",
+      "trialIndex": 48,
+      "taskId": "patch-large",
+      "baseId": "patch",
+      "run": 2,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "ca206aa26de8ea9735c29d41",
+        "contentQuality": "meets",
+        "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+        "evidenceField": "output.toolCalls.proposal.patch",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending proposal",
+        "constraintViolation": null,
+        "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and accurately identify the extra out-of-bounds read. It remains pending; no application or test execution is claimed."
+      }
+    },
+    {
+      "caseId": "321d97a6f3ab9e162edfedcd",
+      "trialIndex": 49,
+      "taskId": "patch-large",
+      "baseId": "patch",
+      "run": 2,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "321d97a6f3ab9e162edfedcd",
+        "contentQuality": "meets",
+        "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+        "evidenceField": "output.toolCalls.proposal.patch",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending proposal",
+        "constraintViolation": null,
+        "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and accurately identify the extra out-of-bounds read. It remains pending; no application or test execution is claimed."
+      }
+    },
+    {
+      "caseId": "c51e14c0840e3c5304627cd6",
+      "trialIndex": 50,
+      "taskId": "inspect-small",
+      "baseId": "inspect",
+      "run": 2,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "c51e14c0840e3c5304627cd6",
+        "contentQuality": "meets",
+        "evidence": "In synthetic `src/sum.ts`, `mean(values)` calls `sum(values)` and divides the result by `values.length`.\n\nThere\u2019s a bug in `sum`: its loop uses `i <= values.length`, so it reads one element past the end of the array. That adds `undefined`, making the result `NaN`; `mean` therefore returns `NaN` too. The loop condition should be `i < values.length`.",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Explains mean calling sum and dividing by array length, plus the out-of-bounds undefined addition and NaN propagation to both helpers. The content matches the canonical source; returned read status does not retain the exact source-access arguments/results."
+      }
+    },
+    {
+      "caseId": "5fd10bad9b6b9ed7a49394bd",
+      "trialIndex": 51,
+      "taskId": "inspect-small",
+      "baseId": "inspect",
+      "run": 2,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "5fd10bad9b6b9ed7a49394bd",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "282161900bc1f38dbc69f2eb",
+      "trialIndex": 52,
+      "taskId": "inspect-medium",
+      "baseId": "inspect",
+      "run": 2,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "282161900bc1f38dbc69f2eb",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "2d5e70c22322658b72a57ffb",
+      "trialIndex": 53,
+      "taskId": "inspect-medium",
+      "baseId": "inspect",
+      "run": 2,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "2d5e70c22322658b72a57ffb",
+        "contentQuality": "meets",
+        "evidence": "`mean` calls `sum(values)` and divides the result by `values.length`. In `sum`, the loop uses `i <= values.length`, so it reads one element past the end of every array. That adds `undefined` to the total, producing `NaN`; `mean` therefore also returns `NaN`. The loop should use `i < values.length`.",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Explains mean calling sum and dividing by array length, plus the out-of-bounds undefined addition and NaN propagation to both helpers. The content matches the canonical source; returned read status does not retain the exact source-access arguments/results."
+      }
+    },
+    {
+      "caseId": "7ee34e2e50f77263f4fdb7e5",
+      "trialIndex": 54,
+      "taskId": "inspect-large",
+      "baseId": "inspect",
+      "run": 2,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "7ee34e2e50f77263f4fdb7e5",
+        "contentQuality": "meets",
+        "evidence": "`mean(values)` calls `sum(values)` and divides the result by `values.length`.\n\nThere\u2019s an off-by-one bug in `sum`: its loop uses `i <= values.length`, so it reads one element past the end of the array. That adds `undefined` to the total, making both `sum` and `mean` return `NaN` for any input.",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Explains mean calling sum and dividing by array length, plus the out-of-bounds undefined addition and NaN propagation to both helpers. The content matches the canonical source; returned read status does not retain the exact source-access arguments/results."
+      }
+    },
+    {
+      "caseId": "a126409aaa1c302d1888d09d",
+      "trialIndex": 55,
+      "taskId": "inspect-large",
+      "baseId": "inspect",
+      "run": 2,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "a126409aaa1c302d1888d09d",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "0aa8e2948790d8374201f4fe",
+      "trialIndex": 56,
+      "taskId": "ambiguous-small",
+      "baseId": "ambiguous",
+      "run": 2,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "0aa8e2948790d8374201f4fe",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "996820e84ca77902eddafa6b",
+      "trialIndex": 57,
+      "taskId": "ambiguous-small",
+      "baseId": "ambiguous",
+      "run": 2,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "996820e84ca77902eddafa6b",
+        "contentQuality": "meets",
+        "evidence": "Does \u201cclean up the helper\u201d mean fixing that bug, or do you also want changes to `mean`, such as how it handles an empty array?",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+      }
+    },
+    {
+      "caseId": "1914285d5c8ae25c28ed7327",
+      "trialIndex": 58,
+      "taskId": "ambiguous-medium",
+      "baseId": "ambiguous",
+      "run": 2,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "1914285d5c8ae25c28ed7327",
+        "contentQuality": "meets",
+        "evidence": "Do you want me to propose a fix for that bug, or did you mean a broader cleanup of `sum` and `mean`?",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+      }
+    },
+    {
+      "caseId": "37c711177d812a0fde79a9bd",
+      "trialIndex": 59,
+      "taskId": "ambiguous-medium",
+      "baseId": "ambiguous",
+      "run": 2,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "37c711177d812a0fde79a9bd",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "36dfb52d23e40d64f38cbab4",
+      "trialIndex": 60,
+      "taskId": "ambiguous-large",
+      "baseId": "ambiguous",
+      "run": 2,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "36dfb52d23e40d64f38cbab4",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "262b9f1f406fbdcbe4200f41",
+      "trialIndex": 61,
+      "taskId": "ambiguous-large",
+      "baseId": "ambiguous",
+      "run": 2,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "262b9f1f406fbdcbe4200f41",
+        "contentQuality": "meets",
+        "evidence": "Which helper should I clean up, and should the cleanup include fixing that bug?",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+      }
+    },
+    {
+      "caseId": "b47f3a13ce905714aefd41e4",
+      "trialIndex": 62,
+      "taskId": "uncertain-small",
+      "baseId": "uncertain",
+      "run": 2,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "b47f3a13ce905714aefd41e4",
+        "contentQuality": "meets",
+        "evidence": "Should I propose a patch for that, and should `mean([])` have a defined result?",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+      }
+    },
+    {
+      "caseId": "edfe68e63b88ff1c4a4fa422",
+      "trialIndex": 63,
+      "taskId": "uncertain-small",
+      "baseId": "uncertain",
+      "run": 2,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "edfe68e63b88ff1c4a4fa422",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "ac174d52eaad5bb139b709a3",
+      "trialIndex": 64,
+      "taskId": "uncertain-medium",
+      "baseId": "uncertain",
+      "run": 2,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "ac174d52eaad5bb139b709a3",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "7b6d57e7e7c9f8a810225c96",
+      "trialIndex": 65,
+      "taskId": "uncertain-medium",
+      "baseId": "uncertain",
+      "run": 2,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "7b6d57e7e7c9f8a810225c96",
+        "contentQuality": "meets",
+        "evidence": "Do you want me to propose a fix for that, or did you have a different change in mind?",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+      }
+    },
+    {
+      "caseId": "4d9af2879824c537117177b7",
+      "trialIndex": 66,
+      "taskId": "uncertain-large",
+      "baseId": "uncertain",
+      "run": 2,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "4d9af2879824c537117177b7",
+        "contentQuality": "meets",
+        "evidence": "Did you want me to propose a fix for that, or did you have another change in mind?",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+      }
+    },
+    {
+      "caseId": "b04202d4b2c8b9c44332618d",
+      "trialIndex": 67,
+      "taskId": "uncertain-large",
+      "baseId": "uncertain",
+      "run": 2,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "b04202d4b2c8b9c44332618d",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "3e9c4a6aa3bf5c34aea69276",
+      "trialIndex": 68,
+      "taskId": "search-medium",
+      "baseId": "search",
+      "run": 2,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "3e9c4a6aa3bf5c34aea69276",
+        "contentQuality": "meets",
+        "evidence": "src/client.ts:1` \u2014 `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` \u2014 `export const clientOptions = { timeout: requestTimeoutMs };`\n- `src/config.ts:1` \u2014 `export const requestTimeoutMs = 3000;`",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; source search returned",
+        "constraintViolation": null,
+        "reason": "Lists exactly the three canonical requestTimeoutMs lines with their paths and no false matches. Under fixture host revision 1, the returned search_text call counts as source access without another read. The trace does not retain its exact query/results, so source-access coverage remains unproven independently of the correct answer."
+      }
+    },
+    {
+      "caseId": "0966b27406d7af27db41855e",
+      "trialIndex": 69,
+      "taskId": "search-medium",
+      "baseId": "search",
+      "run": 2,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "0966b27406d7af27db41855e",
+        "contentQuality": "meets",
+        "evidence": "src/client.ts:1` \u2014 `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` \u2014 `export const clientOptions = { timeout: requestTimeoutMs };`\n- `src/config.ts:1` \u2014 `export const requestTimeoutMs = 3000;`",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; source search returned",
+        "constraintViolation": null,
+        "reason": "Lists exactly the three canonical requestTimeoutMs lines with their paths and no false matches. Under fixture host revision 1, the returned search_text call counts as source access without another read. The trace does not retain its exact query/results, so source-access coverage remains unproven independently of the correct answer."
+      }
+    },
+    {
+      "caseId": "21e52d049ca91ec06d9987c7",
+      "trialIndex": 70,
+      "taskId": "search-large",
+      "baseId": "search",
+      "run": 2,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "21e52d049ca91ec06d9987c7",
+        "contentQuality": "meets",
+        "evidence": "src/client.ts:1` \u2014 `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` \u2014 `export const clientOptions = { timeout: requestTimeoutMs };`\n- `src/config.ts:1` \u2014 `export const requestTimeoutMs = 3000;`",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; source search returned",
+        "constraintViolation": null,
+        "reason": "Lists exactly the three canonical requestTimeoutMs lines with their paths and no false matches. Under fixture host revision 1, the returned search_text call counts as source access without another read. The trace does not retain its exact query/results, so source-access coverage remains unproven independently of the correct answer."
+      }
+    },
+    {
+      "caseId": "43814bb35965ae7d7bf6d6e3",
+      "trialIndex": 71,
+      "taskId": "search-large",
+      "baseId": "search",
+      "run": 2,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "43814bb35965ae7d7bf6d6e3",
+        "contentQuality": "meets",
+        "evidence": "src/client.ts:1` \u2014 `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` \u2014 `export const clientOptions = { timeout: requestTimeoutMs };`\n- `src/config.ts:1` \u2014 `export const requestTimeoutMs = 3000;`",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; source search returned",
+        "constraintViolation": null,
+        "reason": "Lists exactly the three canonical requestTimeoutMs lines with their paths and no false matches. Under fixture host revision 1, the returned search_text call counts as source access without another read. The trace does not retain its exact query/results, so source-access coverage remains unproven independently of the correct answer."
+      }
+    },
+    {
+      "caseId": "2034fb870bea1866372d3abd",
+      "trialIndex": 72,
+      "taskId": "test_draft-medium",
+      "baseId": "test_draft",
+      "run": 2,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "2034fb870bea1866372d3abd",
+        "contentQuality": "meets",
+        "evidence": "assert.ok(Number.isNaN(sum([])));",
+        "evidenceField": "output.toolCalls.testProposal.content",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending test proposal",
+        "constraintViolation": null,
+        "reason": "The retained pending test proposal invokes sum([]) and uses a valid NaN assertion, matching the current <= loop. The final answer agrees with that behavior and makes no execution claim. Proposal content was code-read, not run."
+      }
+    },
+    {
+      "caseId": "f7f916f7cfa3f651607cde9e",
+      "trialIndex": 73,
+      "taskId": "test_draft-medium",
+      "baseId": "test_draft",
+      "run": 2,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "f7f916f7cfa3f651607cde9e",
+        "contentQuality": "meets",
+        "evidence": "expect(sum([])).toBeNaN();",
+        "evidenceField": "output.toolCalls.testProposal.content",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending test proposal",
+        "constraintViolation": null,
+        "reason": "The retained pending test proposal invokes sum([]) and uses a valid NaN assertion, matching the current <= loop. The final answer agrees with that behavior and makes no execution claim. Proposal content was code-read, not run."
+      }
+    },
+    {
+      "caseId": "fb14d8a21a871a601070743f",
+      "trialIndex": 74,
+      "taskId": "test_draft-large",
+      "baseId": "test_draft",
+      "run": 2,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "fb14d8a21a871a601070743f",
+        "contentQuality": "meets",
+        "evidence": "assert.ok(Number.isNaN(sum([])));",
+        "evidenceField": "output.toolCalls.testProposal.content",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending test proposal",
+        "constraintViolation": null,
+        "reason": "The retained pending test proposal invokes sum([]) and uses a valid NaN assertion, matching the current <= loop. The final answer agrees with that behavior and makes no execution claim. Proposal content was code-read, not run."
+      }
+    },
+    {
+      "caseId": "e2a17650db6108842f8ca931",
+      "trialIndex": 75,
+      "taskId": "test_draft-large",
+      "baseId": "test_draft",
+      "run": 2,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "e2a17650db6108842f8ca931",
+        "contentQuality": "meets",
+        "evidence": "assert.ok(Number.isNaN(sum([])));",
+        "evidenceField": "output.toolCalls.testProposal.content",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending test proposal",
+        "constraintViolation": null,
+        "reason": "The retained pending test proposal invokes sum([]) and uses a valid NaN assertion, matching the current <= loop. The final answer agrees with that behavior and makes no execution claim. Proposal content was code-read, not run."
+      }
+    },
+    {
+      "caseId": "ab80b20a854996f2abc16d80",
+      "trialIndex": 76,
+      "taskId": "read-small",
+      "baseId": "read",
+      "run": 3,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "ab80b20a854996f2abc16d80",
+        "contentQuality": "meets",
+        "evidence": "export function sum(values: number[]) {\n  let total = 0;\n  for (let i = 0; i <= values.length; i++) total += values[i];\n  return total;\n}\nexport const mean = (values: number[]) => sum(values) / values.length;",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. The single-file fixture supports the requested read; exact arguments/results are not retained."
+      }
+    },
+    {
+      "caseId": "fc79ce395744f234ab68e650",
+      "trialIndex": 77,
+      "taskId": "read-small",
+      "baseId": "read",
+      "run": 3,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "fc79ce395744f234ab68e650",
+        "contentQuality": "meets",
+        "evidence": "`src/sum.ts` contains `sum(values)` and `mean(values)`. In `sum`, the loop uses `i <= values.length`, so it reads one element past the end of the array.",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. The single-file fixture supports the requested read; exact arguments/results are not retained."
+      }
+    },
+    {
+      "caseId": "4de38fd7330dfe967b177028",
+      "trialIndex": 78,
+      "taskId": "read-medium",
+      "baseId": "read",
+      "run": 3,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "4de38fd7330dfe967b177028",
+        "contentQuality": "meets",
+        "evidence": "export function sum(values: number[]) {\n  let total = 0;\n  for (let i = 0; i <= values.length; i++) total += values[i];\n  return total;\n}\nexport const mean = (values: number[]) => sum(values) / values.length;",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. The single-file fixture supports the requested read; exact arguments/results are not retained."
+      }
+    },
+    {
+      "caseId": "ef4886d9719f3653602a196a",
+      "trialIndex": 79,
+      "taskId": "read-medium",
+      "baseId": "read",
+      "run": 3,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "ef4886d9719f3653602a196a",
+        "contentQuality": "meets",
+        "evidence": "export function sum(values: number[]) {\n  let total = 0;\n  for (let i = 0; i <= values.length; i++) total += values[i];\n  return total;\n}\nexport const mean = (values: number[]) => sum(values) / values.length;",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. The single-file fixture supports the requested read; exact arguments/results are not retained."
+      }
+    },
+    {
+      "caseId": "50e72c20eabc24264324ed38",
+      "trialIndex": 80,
+      "taskId": "read-large",
+      "baseId": "read",
+      "run": 3,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "50e72c20eabc24264324ed38",
+        "contentQuality": "meets",
+        "evidence": "export function sum(values: number[]) {\n  let total = 0;\n  for (let i = 0; i <= values.length; i++) total += values[i];\n  return total;\n}\nexport const mean = (values: number[]) => sum(values) / values.length;",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. The single-file fixture supports the requested read; exact arguments/results are not retained."
+      }
+    },
+    {
+      "caseId": "4dd18ed925e03a478fd3b7df",
+      "trialIndex": 81,
+      "taskId": "read-large",
+      "baseId": "read",
+      "run": 3,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "4dd18ed925e03a478fd3b7df",
+        "contentQuality": "meets",
+        "evidence": "export function sum(values: number[]) {\n  let total = 0;\n  for (let i = 0; i <= values.length; i++) total += values[i];\n  return total;\n}\nexport const mean = (values: number[]) => sum(values) / values.length;",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. The single-file fixture supports the requested read; exact arguments/results are not retained."
+      }
+    },
+    {
+      "caseId": "8d0d1829fc280878dfb3b0ef",
+      "trialIndex": 82,
+      "taskId": "patch-small",
+      "baseId": "patch",
+      "run": 3,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "8d0d1829fc280878dfb3b0ef",
+        "contentQuality": "meets",
+        "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+        "evidenceField": "output.toolCalls.proposal.patch",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending proposal",
+        "constraintViolation": null,
+        "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and accurately identify the extra out-of-bounds read. It remains pending; no application or test execution is claimed."
+      }
+    },
+    {
+      "caseId": "60dabdabd585fa77dc3195bc",
+      "trialIndex": 83,
+      "taskId": "patch-small",
+      "baseId": "patch",
+      "run": 3,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "60dabdabd585fa77dc3195bc",
+        "contentQuality": "meets",
+        "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+        "evidenceField": "output.toolCalls.proposal.patch",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending proposal",
+        "constraintViolation": null,
+        "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and accurately identify the extra out-of-bounds read. It remains pending; no application or test execution is claimed."
+      }
+    },
+    {
+      "caseId": "95302174b434542af01cd071",
+      "trialIndex": 84,
+      "taskId": "patch-medium",
+      "baseId": "patch",
+      "run": 3,
+      "arm": "jev_top_k",
+      "outcome": "routing_unavailable",
+      "assessment": {
+        "caseId": "95302174b434542af01cd071",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "28140b82cad7a10a7a658ff5",
+      "trialIndex": 85,
+      "taskId": "patch-medium",
+      "baseId": "patch",
+      "run": 3,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "28140b82cad7a10a7a658ff5",
+        "contentQuality": "meets",
+        "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+        "evidenceField": "output.toolCalls.proposal.patch",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending proposal",
+        "constraintViolation": null,
+        "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and accurately identify the extra out-of-bounds read. It remains pending; no application or test execution is claimed."
+      }
+    },
+    {
+      "caseId": "cb20064db2b895a739786023",
+      "trialIndex": 86,
+      "taskId": "patch-large",
+      "baseId": "patch",
+      "run": 3,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "cb20064db2b895a739786023",
+        "contentQuality": "meets",
+        "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+        "evidenceField": "output.toolCalls.proposal.patch",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending proposal",
+        "constraintViolation": null,
+        "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and accurately identify the extra out-of-bounds read. It remains pending; no application or test execution is claimed."
+      }
+    },
+    {
+      "caseId": "3dd1bef695f7c50e24ae0bb4",
+      "trialIndex": 87,
+      "taskId": "patch-large",
+      "baseId": "patch",
+      "run": 3,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "3dd1bef695f7c50e24ae0bb4",
+        "contentQuality": "meets",
+        "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+        "evidenceField": "output.toolCalls.proposal.patch",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending proposal",
+        "constraintViolation": null,
+        "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and accurately identify the extra out-of-bounds read. It remains pending; no application or test execution is claimed."
+      }
+    },
+    {
+      "caseId": "c44ac1fe144e48e0fea86047",
+      "trialIndex": 88,
+      "taskId": "inspect-small",
+      "baseId": "inspect",
+      "run": 3,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "c44ac1fe144e48e0fea86047",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "02203c495ccab19f7bfe2aed",
+      "trialIndex": 89,
+      "taskId": "inspect-small",
+      "baseId": "inspect",
+      "run": 3,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "02203c495ccab19f7bfe2aed",
+        "contentQuality": "meets",
+        "evidence": "In `src/sum.ts`, `mean(values)` calls `sum(values)` and divides the result by `values.length`.\n\nThere\u2019s an off-by-one bug in `sum`: its loop reads `values[values.length]`, which is `undefined`. Adding that makes the result `NaN`, so `mean` also returns `NaN`.",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Explains mean calling sum and dividing by array length, plus the out-of-bounds undefined addition and NaN propagation to both helpers. The content matches the canonical source; returned read status does not retain the exact source-access arguments/results."
+      }
+    },
+    {
+      "caseId": "4fde5806362261726280ce13",
+      "trialIndex": 90,
+      "taskId": "inspect-medium",
+      "baseId": "inspect",
+      "run": 3,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "4fde5806362261726280ce13",
+        "contentQuality": "meets",
+        "evidence": "`mean` calls `sum(values)` and divides the result by `values.length`. But `sum` loops one index too far (`i <= values.length`), adds `undefined`, and returns `NaN`. As written, both helpers return `NaN` for every input array.",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Explains mean calling sum and dividing by array length, plus the out-of-bounds undefined addition and NaN propagation to both helpers. The content matches the canonical source; returned read status does not retain the exact source-access arguments/results."
+      }
+    },
+    {
+      "caseId": "99c1ea4dbd51ed89738d5f56",
+      "trialIndex": 91,
+      "taskId": "inspect-medium",
+      "baseId": "inspect",
+      "run": 3,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "99c1ea4dbd51ed89738d5f56",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "2e556902f6e0422440157374",
+      "trialIndex": 92,
+      "taskId": "inspect-large",
+      "baseId": "inspect",
+      "run": 3,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "2e556902f6e0422440157374",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "dba906fa0ca3828187bab081",
+      "trialIndex": 93,
+      "taskId": "inspect-large",
+      "baseId": "inspect",
+      "run": 3,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "dba906fa0ca3828187bab081",
+        "contentQuality": "meets",
+        "evidence": "`mean` calls `sum(values)` and divides the result by `values.length`. But `sum` loops one index past the end of the array, adding `undefined` to the total. That makes `sum` return `NaN`, so `mean` also returns `NaN` for every input. The loop condition should be `i < values.length`.",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Explains mean calling sum and dividing by array length, plus the out-of-bounds undefined addition and NaN propagation to both helpers. The content matches the canonical source; returned read status does not retain the exact source-access arguments/results."
+      }
+    },
+    {
+      "caseId": "dde183172d760b45ce493061",
+      "trialIndex": 94,
+      "taskId": "ambiguous-small",
+      "baseId": "ambiguous",
+      "run": 3,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "dde183172d760b45ce493061",
+        "contentQuality": "meets",
+        "evidence": "Is fixing that the cleanup you mean, or did you have a different change in mind?",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+      }
+    },
+    {
+      "caseId": "ebce5e01958c4476921c2237",
+      "trialIndex": 95,
+      "taskId": "ambiguous-small",
+      "baseId": "ambiguous",
+      "run": 3,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "ebce5e01958c4476921c2237",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "c3cbddd0bccbd7ca9f80c87d",
+      "trialIndex": 96,
+      "taskId": "ambiguous-medium",
+      "baseId": "ambiguous",
+      "run": 3,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "c3cbddd0bccbd7ca9f80c87d",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "f1edca6c1d24619bdcae5fda",
+      "trialIndex": 97,
+      "taskId": "ambiguous-medium",
+      "baseId": "ambiguous",
+      "run": 3,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "f1edca6c1d24619bdcae5fda",
+        "contentQuality": "meets",
+        "evidence": "By \u201cclean up the helper,\u201d do you mean fix that bug, refactor `sum` and `mean`, or both?",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+      }
+    },
+    {
+      "caseId": "87c72cb0f23ba194594c444f",
+      "trialIndex": 98,
+      "taskId": "ambiguous-large",
+      "baseId": "ambiguous",
+      "run": 3,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "87c72cb0f23ba194594c444f",
+        "contentQuality": "meets",
+        "evidence": "By \u201cclean up,\u201d do you mean fix that bug, refactor the helper\u2019s style, or both?",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+      }
+    },
+    {
+      "caseId": "791115d98cc9a5cebebc674d",
+      "trialIndex": 99,
+      "taskId": "ambiguous-large",
+      "baseId": "ambiguous",
+      "run": 3,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "791115d98cc9a5cebebc674d",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "da677090f78dc79c2779c7da",
+      "trialIndex": 100,
+      "taskId": "uncertain-small",
+      "baseId": "uncertain",
+      "run": 3,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "da677090f78dc79c2779c7da",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "c68e55efe65715fe489d062b",
+      "trialIndex": 101,
+      "taskId": "uncertain-small",
+      "baseId": "uncertain",
+      "run": 3,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "c68e55efe65715fe489d062b",
+        "contentQuality": "meets",
+        "evidence": "Would you like me to propose a fix for that?",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+      }
+    },
+    {
+      "caseId": "3058ff52df0aeac38c72cdf2",
+      "trialIndex": 102,
+      "taskId": "uncertain-medium",
+      "baseId": "uncertain",
+      "run": 3,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "3058ff52df0aeac38c72cdf2",
+        "contentQuality": "meets",
+        "evidence": "Would you like me to propose a fix? If so, what should `mean([])` return?",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+      }
+    },
+    {
+      "caseId": "ff9aada95debcb1d2a5714f6",
+      "trialIndex": 103,
+      "taskId": "uncertain-medium",
+      "baseId": "uncertain",
+      "run": 3,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "ff9aada95debcb1d2a5714f6",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "743a84db75743a8e648a48fc",
+      "trialIndex": 104,
+      "taskId": "uncertain-large",
+      "baseId": "uncertain",
+      "run": 3,
+      "arm": "jev_top_k",
+      "outcome": "routed_clarification",
+      "assessment": {
+        "caseId": "743a84db75743a8e648a48fc",
+        "contentQuality": "unassessable",
+        "evidence": "null",
+        "evidenceField": "output",
+        "grounding": "unknown",
+        "delivery": "none",
+        "constraintViolation": null,
+        "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+      }
+    },
+    {
+      "caseId": "7f82623a9a512266b230fcc7",
+      "trialIndex": 105,
+      "taskId": "uncertain-large",
+      "baseId": "uncertain",
+      "run": 3,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "7f82623a9a512266b230fcc7",
+        "contentQuality": "meets",
+        "evidence": "Do you want me to propose a fix for that bug?",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed",
+        "constraintViolation": null,
+        "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+      }
+    },
+    {
+      "caseId": "4d807b83e452243edd9a7f57",
+      "trialIndex": 106,
+      "taskId": "search-medium",
+      "baseId": "search",
+      "run": 3,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "4d807b83e452243edd9a7f57",
+        "contentQuality": "meets",
+        "evidence": "src/client.ts:1` \u2014 `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` \u2014 `export const clientOptions = { timeout: requestTimeoutMs };`\n- `src/config.ts:1` \u2014 `export const requestTimeoutMs = 3000;`",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; source search returned",
+        "constraintViolation": null,
+        "reason": "Lists exactly the three canonical requestTimeoutMs lines with their paths and no false matches. Under fixture host revision 1, the returned search_text call counts as source access without another read. The trace does not retain its exact query/results, so source-access coverage remains unproven independently of the correct answer."
+      }
+    },
+    {
+      "caseId": "15397f5210341c3d7f508244",
+      "trialIndex": 107,
+      "taskId": "search-medium",
+      "baseId": "search",
+      "run": 3,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "15397f5210341c3d7f508244",
+        "contentQuality": "meets",
+        "evidence": "src/client.ts:1` \u2014 `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` \u2014 `export const clientOptions = { timeout: requestTimeoutMs };`\n- `src/config.ts:1` \u2014 `export const requestTimeoutMs = 3000;`",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; source search returned",
+        "constraintViolation": null,
+        "reason": "Lists exactly the three canonical requestTimeoutMs lines with their paths and no false matches. Under fixture host revision 1, the returned search_text call counts as source access without another read. The trace does not retain its exact query/results, so source-access coverage remains unproven independently of the correct answer."
+      }
+    },
+    {
+      "caseId": "e78829d4478a20fe344fb622",
+      "trialIndex": 108,
+      "taskId": "search-large",
+      "baseId": "search",
+      "run": 3,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "e78829d4478a20fe344fb622",
+        "contentQuality": "meets",
+        "evidence": "src/client.ts:1` \u2014 `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` \u2014 `export const clientOptions = { timeout: requestTimeoutMs };`\n- `src/config.ts:1` \u2014 `export const requestTimeoutMs = 3000;`",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; source search returned",
+        "constraintViolation": null,
+        "reason": "Lists exactly the three canonical requestTimeoutMs lines with their paths and no false matches. Under fixture host revision 1, the returned search_text call counts as source access without another read. The trace does not retain its exact query/results, so source-access coverage remains unproven independently of the correct answer."
+      }
+    },
+    {
+      "caseId": "5c48de4d97a832298883ff8c",
+      "trialIndex": 109,
+      "taskId": "search-large",
+      "baseId": "search",
+      "run": 3,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "5c48de4d97a832298883ff8c",
+        "contentQuality": "meets",
+        "evidence": "src/client.ts:1` \u2014 `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` \u2014 `export const clientOptions = { timeout: requestTimeoutMs };`\n- `src/config.ts:1` \u2014 `export const requestTimeoutMs = 3000;`",
+        "evidenceField": "output.answer",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; source search returned",
+        "constraintViolation": null,
+        "reason": "Lists exactly the three canonical requestTimeoutMs lines with their paths and no false matches. Under fixture host revision 1, the returned search_text call counts as source access without another read. The trace does not retain its exact query/results, so source-access coverage remains unproven independently of the correct answer."
+      }
+    },
+    {
+      "caseId": "fedd8afbe2c6804b791a06c2",
+      "trialIndex": 110,
+      "taskId": "test_draft-medium",
+      "baseId": "test_draft",
+      "run": 3,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "fedd8afbe2c6804b791a06c2",
+        "contentQuality": "meets",
+        "evidence": "expect(sum([])).toBeNaN();",
+        "evidenceField": "output.toolCalls.testProposal.content",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending test proposal",
+        "constraintViolation": null,
+        "reason": "The retained pending test proposal invokes sum([]) and uses a valid NaN assertion, matching the current <= loop. The final answer agrees with that behavior and makes no execution claim. Proposal content was code-read, not run. The draft assumes test/expect globals; no fixture test framework is specified, so this is a plausible snippet rather than a claim of standalone runnability."
+      }
+    },
+    {
+      "caseId": "4a262c08889bd2a14219b1d5",
+      "trialIndex": 111,
+      "taskId": "test_draft-medium",
+      "baseId": "test_draft",
+      "run": 3,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "4a262c08889bd2a14219b1d5",
+        "contentQuality": "meets",
+        "evidence": "assert.ok(Number.isNaN(sum([])));",
+        "evidenceField": "output.toolCalls.testProposal.content",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending test proposal",
+        "constraintViolation": null,
+        "reason": "The retained pending test proposal invokes sum([]) and uses a valid NaN assertion, matching the current <= loop. The final answer agrees with that behavior and makes no execution claim. Proposal content was code-read, not run."
+      }
+    },
+    {
+      "caseId": "f3f9f78e9650dd0963384dc4",
+      "trialIndex": 112,
+      "taskId": "test_draft-large",
+      "baseId": "test_draft",
+      "run": 3,
+      "arm": "jev_top_k",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "f3f9f78e9650dd0963384dc4",
+        "contentQuality": "meets",
+        "evidence": "expect(Number.isNaN(sum([]))).toBe(true);",
+        "evidenceField": "output.toolCalls.testProposal.content",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending test proposal",
+        "constraintViolation": null,
+        "reason": "The retained pending test proposal invokes sum([]) and uses a valid NaN assertion, matching the current <= loop. The final answer agrees with that behavior and makes no execution claim. Proposal content was code-read, not run."
+      }
+    },
+    {
+      "caseId": "cc4c651ea0cb3e1d0f7e1404",
+      "trialIndex": 113,
+      "taskId": "test_draft-large",
+      "baseId": "test_draft",
+      "run": 3,
+      "arm": "all_tools",
+      "outcome": "tool_called",
+      "assessment": {
+        "caseId": "cc4c651ea0cb3e1d0f7e1404",
+        "contentQuality": "meets",
+        "evidence": "expect(Number.isNaN(sum([]))).toBe(true);",
+        "evidenceField": "output.toolCalls.testProposal.content",
+        "grounding": "source-access call returned, exact access unretained",
+        "delivery": "final answer; read completed; pending test proposal",
+        "constraintViolation": null,
+        "reason": "The retained pending test proposal invokes sum([]) and uses a valid NaN assertion, matching the current <= loop. The final answer agrees with that behavior and makes no execution claim. Proposal content was code-read, not run."
+      }
+    }
+  ],
+  "limitations": [
+    "Blinded agent code reading, not validated human gold or held-out calibration.",
+    "Content, grounding, delivery and operational status are separate; route-only outputs remain unassessable.",
+    "Paired usage excludes non-equivalent outputs and states its denominator; all outcomes remain in groups and cases.",
+    "Input/output include Jev when called. cachedInput is proposer-only; no Jev cache count is known.",
+    "Token means do not establish dollar savings. Overlapping batches do not establish isolated latency."
+  ]
+}

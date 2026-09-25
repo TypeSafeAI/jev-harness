@@ -1,0 +1,218 @@
+{
+  "sourceCommit": "2eb8bcdfcfe30b4e9262d64a8be2d665ce49ccdb",
+  "clean": true,
+  "startedAt": "2026-09-25T05:03:52.003720+00:00",
+  "cliVersion": "codex-cli 0.156.1",
+  "requestedProposerModel": "gpt-6-sol",
+  "requestedReasoningEffort": "medium",
+  "jevModel": "jev-1.13.0",
+  "pairedCasesPlanned": 57,
+  "repetitions": 3,
+  "withPrerequisites": true,
+  "files": [
+    {
+      "path": "examples/host/arena-lanes.ts",
+      "sha256": "7f84ef6d0e611647e2f84ec35d7bff92afc81ed5bfcc4a535d40017629ba10ad"
+    },
+    {
+      "path": "examples/host/codex.ts",
+      "sha256": "1b255c93f1125e71243d77265a317388532123efd1bfb90761acfedd46ab1604"
+    },
+    {
+      "path": "examples/host/jev-choice.ts",
+      "sha256": "74b1c8f1c9792aeb8754e8a4ae40220c8600fdf3675493caaee8a9b677146874"
+    },
+    {
+      "path": "examples/host/live.ts",
+      "sha256": "dcb37eb39def217f3abc467ee920475d0d1e5177b741452fceb913025083e3cb"
+    },
+    {
+      "path": "examples/host/review-experiment.ts",
+      "sha256": "8c98412d05f88f16f3295cc0230c039ac192bf16fdcb2ede3e7a127a8c06fed5"
+    },
+    {
+      "path": "examples/host/runtime.ts",
+      "sha256": "76929d2d9f2b56260da84df64fc8ca1e37e7b572ad9fd18754ab03c9061b9262"
+    },
+    {
+      "path": "examples/routing/api-key.ts",
+      "sha256": "4515cb3fbfab979112c6849d755292d79c2298a730358e6e790877f282dd8745"
+    },
+    {
+      "path": "examples/routing/compare.ts",
+      "sha256": "67dcadc4dda9a092c9b7e435d6bc02cb2187cc0525869a95d721d9987f8884ca"
+    },
+    {
+      "path": "examples/routing/demo-state.ts",
+      "sha256": "49931e8b12d78197bdeb50d2438d8d1609c929e3526e8ac73d9ac9e4fa2fd3c7"
+    },
+    {
+      "path": "examples/routing/experiment-cli.ts",
+      "sha256": "f67c4a12f1b3b5cb0d60d43095bf53fb869ec7e5c0e275ba91776d0f3b48b4e9"
+    },
+    {
+      "path": "examples/routing/experiment-table.ts",
+      "sha256": "6b02a37f0b15cf4cf9286874a3c66cda21caf4fc0ebaf216d46efe9085c28eab"
+    },
+    {
+      "path": "examples/routing/experiment-tasks.ts",
+      "sha256": "92d063576f5dc924f3c225e1e609a6259904049510f02a91bc894695edb8e81b"
+    },
+    {
+      "path": "examples/routing/experiment.ts",
+      "sha256": "4f3cc299e16490c17d910588b8d82b1b1f7b75ca5356795dee34a27daa74af64"
+    },
+    {
+      "path": "examples/routing/favicon.svg",
+      "sha256": "0602f9d09c69b0931411696adeb7d9a16f4792afee15c3c1afea2a4d523fcac9"
+    },
+    {
+      "path": "examples/routing/live-client.ts",
+      "sha256": "29caa4a443815d344ac5ddb5623306e8d5d0f90d5a60221b036a6567497d41ed"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-22-routing-run.json",
+      "sha256": "08d7dc2a4b4271e106d2b1ebcb5ab5b8e577b77492f9b97301fb283ba2a865c9"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-23-routing-pilot.json",
+      "sha256": "0796608b55a35cbec77d8c4fc8ac57fd31f5ba51996929edfcf4e7f923a74f8e"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-23-routing-pilot.md",
+      "sha256": "0d90714ef745de4a0b8d2b72c5d61883bad43674e84264f23272f122972868a1"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-23-routing-r3.json",
+      "sha256": "f5882a2c38feb268d699670884de54253f30671eb7845723fb8acb61a09355e5"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-23-routing-r3.md",
+      "sha256": "20f305aa28c6ee25bcb049a16f1f8af288a0b89178675c5183e71a3fc2779534"
+    },
+    {
+      "path": "examples/routing/scenarios.ts",
+      "sha256": "861c643aa7ea0197d4fe7f5e621c161603c629ec1daa0ce7de1395144a4577ba"
+    },
+    {
+      "path": "examples/routing/usage.ts",
+      "sha256": "9fd9abcd6bd47ff32d2b0345cc7df941191c9bd7541d0da0db64e9f8cce697b6"
+    },
+    {
+      "path": "package.json",
+      "sha256": "19036715bb389a34e605a457e0f28ebee36f83557f554ee20e0f07e877e402c7"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "1bfac22d407a7f833f296b11facfe77a28c930c3a21a85c34a2faf1a02658918"
+    },
+    {
+      "path": "scripts/arena-mcp.mjs",
+      "sha256": "adf9e6a5674e467fbd123ea9d46698bd32176242b522c9ab5488786483990bd6"
+    },
+    {
+      "path": "scripts/experiment-routing.ts",
+      "sha256": "b3df9f41309ffa3cdd2db48bfc552e6c3be8070944d3ba8421ed2cbea4a23120"
+    },
+    {
+      "path": "src/audit/receipt.ts",
+      "sha256": "54074a1d948c8db0de618dbb44afe13f751214b27136b738a738875caeced934"
+    },
+    {
+      "path": "src/benchmark/bench.ts",
+      "sha256": "4b07913061795bda1c5ac36914fa953b3812af9b907adb801a5d9490ba43f2f1"
+    },
+    {
+      "path": "src/benchmark/evaluation.ts",
+      "sha256": "b3d214b46ddbc2f783cacff5a51777a9c49fc96d9d69b2b481f974e99cfe321e"
+    },
+    {
+      "path": "src/benchmark/fixtures.ts",
+      "sha256": "62afe5cbd8e018a6173c7a5d78136f3969fbc3b5b5c4aae92bb0a086407b467e"
+    },
+    {
+      "path": "src/benchmark/index.ts",
+      "sha256": "a0da8e81dece20ce4dae08df0ba4cf06f4eaf252ce3884404035b08b19fbd37c"
+    },
+    {
+      "path": "src/benchmark/load.ts",
+      "sha256": "0a88ee3c53c93645df7b9d99c6cc3fe858876538b28635dbcfdf9fb5911c623c"
+    },
+    {
+      "path": "src/benchmark/mock.ts",
+      "sha256": "46051b83f4df8c8098e6d871531b171c1c21d6aa544532a9847798ead85f50ee"
+    },
+    {
+      "path": "src/benchmark/proposer.ts",
+      "sha256": "904e9ee045761bc431272b5bb90ba34058e8bdce7b63062219d4304a32c1a972"
+    },
+    {
+      "path": "src/benchmark/run.ts",
+      "sha256": "702f925de89740e1563a97d72a3b4cc74c9156898f0bea3ae89dbc853ed93bca"
+    },
+    {
+      "path": "src/contract/decide.ts",
+      "sha256": "28e5dea5df034faa1b6136de1322586fc20811dce48faa64b92cc6cd05891cce"
+    },
+    {
+      "path": "src/contract/diff.ts",
+      "sha256": "54f29729703a3189321b9d18d70896e7995d7b5b534b2b22344797b43f47ae8c"
+    },
+    {
+      "path": "src/contract/index.ts",
+      "sha256": "e43f2c5da94cc47ef4a451285b40d028aa85b50ac703d27f15edd35b525a29c9"
+    },
+    {
+      "path": "src/contract/input.ts",
+      "sha256": "c9f0f9ac4d55a747d177416253eaa71cc7268b2020db15b52c353ca39ce55ecb"
+    },
+    {
+      "path": "src/contract/payload.ts",
+      "sha256": "17bb4e1672e6c01d4600d3d3138b6746918bf093ce9b195e9294d74547be871e"
+    },
+    {
+      "path": "src/contract/review.ts",
+      "sha256": "30efe4a3f640c0bb5c3114931f81d57dad4b018b63ca9ba6e16a673a0fffa383"
+    },
+    {
+      "path": "src/contract/types.ts",
+      "sha256": "d15be3dd3117c8d4c0e0896c51046c83cc0e20407cb79f12e4e5a11a587ec73b"
+    },
+    {
+      "path": "src/contract/validate.ts",
+      "sha256": "578afe9320101b76ea70e0588480e3afdf15c52151e2f4c983667284300bc451"
+    },
+    {
+      "path": "src/index.ts",
+      "sha256": "d02b15fbab59a81b68e12647cd82a35e51e8fab60458399522d45af3886be2be"
+    },
+    {
+      "path": "src/routing/bundle.ts",
+      "sha256": "b097a3a00bb5a17c9ea2a25d05a19a72d11dfe7d385c5b4e5b79537da3d5aba2"
+    },
+    {
+      "path": "src/routing/catalog.ts",
+      "sha256": "3c052b261c2bf6062241e74c3946426cd08fd7891158ea5c9a4afdf490ddf18f"
+    },
+    {
+      "path": "src/routing/context.ts",
+      "sha256": "8b1597e3ffe109888175f7ddf0d97dbaa7701aa51532d6a1b8186feae855e5dc"
+    },
+    {
+      "path": "src/routing/index.ts",
+      "sha256": "ed3b0406a24cf9bce2dc2fe6c7e485e7253b045602589554ab3b8ed6e15137e1"
+    },
+    {
+      "path": "src/routing/prepare.ts",
+      "sha256": "e45d8a8457d73da7a437b72c2f07bb883a0e9eafd7b56d445166d691a091196c"
+    },
+    {
+      "path": "src/routing/route.ts",
+      "sha256": "abd3e027ebe3994163f2fec8357643e60456d7a4f66b5834f363641a2541fd8f"
+    },
+    {
+      "path": "src/routing/types.ts",
+      "sha256": "f0570505a55e33214dab4fa7855ab37a2447ae1abbcf2b65151b2967ccab4d1f"
+    }
+  ]
+}

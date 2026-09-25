@@ -1,0 +1,19 @@
+{
+  "startedAt": "2026-09-25T05:35:05.829Z",
+  "finishedAt": "2026-09-25T05:35:17.498Z",
+  "sourceCommit": "e75b77ac52702565c95f3c11a3a37ac50cce34d8",
+  "cliSha256": "0196e89fe5a7598f816ee54232c3d7c26d75e502ab5cfe2c9240e81d90f7255a",
+  "executableResolution": "codex through pinned PATH; host auth-only copy enabled",
+  "result": {
+    "status": "completed",
+    "answer": "I couldn’t read `src/sum.ts`: the tool host failed to start, so the fixture contents aren’t available. Please paste the file or restore the arena fixture tool.",
+    "durationMs": 11506.893624999999,
+    "inputTokens": 19649,
+    "cachedInputTokens": 17408,
+    "outputTokens": 160,
+    "toolCallCount": 0,
+    "traceTruncated": false,
+    "toolCalls": [],
+    "error": null
+  }
+}

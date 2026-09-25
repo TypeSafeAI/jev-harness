@@ -1,0 +1,1151 @@
+{
+  "rubricSha256": "b90742ed9c4367f1ad8282a2d48349a69401e4fe077ebb6616301c3950109ce4",
+  "inputSha256": "9f132ffd469e6546d93072357a0e3e9f54a0c00effb5e8a703329c712b31f52e",
+  "assessor": "agent-code-review",
+  "inputFile": "blind-B.jsonl",
+  "rubricVersion": 2,
+  "method": "Each blinded row reviewed against its canonical task/files and complete retained output. Exact groups match all input, status and trace fields except caseId; judgments expanded to one annotation per original row. No mappings, raw trial artifacts, routing evidence, arm labels, costs or legacy counts were read. No proposed code was executed.",
+  "limitation": "Supplementary agent code reading, not a validated human gold standard. Content quality, source grounding and delivery are separate. Missing outputs remain unassessable.",
+  "cases": [
+    {
+      "caseId": "0238cdf6a3e3fb43d374b0da",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "03fa01b08eb0b013130d8fac",
+      "contentQuality": "meets",
+      "evidence": "`mean(values)` calls `sum(values)` and divides the result by `values.length`.\n\nAs written, `sum` loops one index past the end of the array (`i <= values.length`). That adds `undefined` to the total, producing `NaN`. Consequently, both helpers return `NaN` for any input. The loop should use `i < values.length`; `mean` would also need an explicit choice for an empty array, since dividing by zero still produces `NaN`.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Explains mean calling sum and dividing by array length, plus the <= out-of-bounds undefined addition and NaN propagation to both helpers. The content matches the canonical source; returned read status does not retain the exact source-access arguments/results."
+    },
+    {
+      "caseId": "06378f715966d974eb46cdd7",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "08937741ee9d8f4159eac8c0",
+      "contentQuality": "meets",
+      "evidence": "Would you like a proposed fix for that defect, or just a review of the example?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+    },
+    {
+      "caseId": "0cb477b09b7021a695f6daf9",
+      "contentQuality": "meets",
+      "evidence": "What would you like changed?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+    },
+    {
+      "caseId": "0d2baf20265089ce44e57c10",
+      "contentQuality": "meets",
+      "evidence": "export function sum(values: number[]) {\n  let total = 0;\n  for (let i = 0; i <= values.length; i++) total += values[i];\n  return total;\n}\nexport const mean = (values: number[]) => sum(values) / values.length;",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. Under the frozen single-file host this supports the requested read; exact arguments/results are not retained."
+    },
+    {
+      "caseId": "0f3dc2e4169b22da11442fcc",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "0f681aa4d09e48424d4b1705",
+      "contentQuality": "meets",
+      "evidence": "I read `src/sum.ts`. It exports `sum` and `mean`. The `sum` loop uses `i <= values.length`, so it accesses one element past the end of the array and adds `undefined`, making the result `NaN`. `mean` then also returns `NaN`.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. Under the frozen single-file host this supports the requested read; exact arguments/results are not retained."
+    },
+    {
+      "caseId": "10bc1d49e259c87ad3731f24",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "1738e3c8aa187e4b1ffbcd46",
+      "contentQuality": "meets",
+      "evidence": "expect(sum([])).toBeNaN();",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; attempt rejected",
+      "constraintViolation": null,
+      "reason": "Supplies a concrete test of sum([]) using a valid NaN assertion, matching the current <= loop. The draft is delivered in the final answer after a rejected recorder call and is explicitly unexecuted."
+    },
+    {
+      "caseId": "1d6f265451d59127d6de8c6f",
+      "contentQuality": "partial",
+      "evidence": "I couldn’t inspect the synthetic workspace: the arena search tool returned “No handler.” Please provide the contents of `src/config.ts` and `src/client.ts`, or enable the arena search tool, and I’ll list every line containing `requestTimeoutMs`.",
+      "evidenceField": "output.answer",
+      "grounding": "source access absent",
+      "delivery": "final answer; attempt rejected",
+      "constraintViolation": null,
+      "reason": "The search attempt is rejected and the answer requests source instead of listing matches. No returned source-access call or matching-line deliverable is retained."
+    },
+    {
+      "caseId": "1e1ecfe204a52507b481688d",
+      "contentQuality": "meets",
+      "evidence": "src/config.ts:1` — `export const requestTimeoutMs = 3000;`\n- `src/client.ts:1` — `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` — `export const clientOptions = { timeout: requestTimeoutMs };`",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; attempt rejected",
+      "constraintViolation": null,
+      "reason": "Lists exactly the three canonical requestTimeoutMs lines with their paths and no false matches. Returned read calls follow the rejected search attempt; the trace does not retain read paths/results, so distinct-file coverage cannot be established from counts."
+    },
+    {
+      "caseId": "1e5df4baf1e7ed7ecc753437",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` defines `sum(values)` and `mean(values)`. I read the file. In `sum`, the loop uses `i <= values.length`, so it accesses one element past the end of the array and adds `undefined`, producing `NaN`.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. Under the frozen single-file host this supports the requested read; exact arguments/results are not retained."
+    },
+    {
+      "caseId": "2512c80f90b9c3fda4f5f00e",
+      "contentQuality": "meets",
+      "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+      "evidenceField": "output.toolCalls.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; pending proposal",
+      "constraintViolation": null,
+      "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and correctly explain the extra undefined addition. It remains pending; no application or test execution is claimed."
+    },
+    {
+      "caseId": "2749cef7422c694662e636ab",
+      "contentQuality": "meets",
+      "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+      "evidenceField": "output.toolCalls.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; pending proposal",
+      "constraintViolation": null,
+      "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and correctly explain the extra undefined addition. It remains pending; no application or test execution is claimed. The recorded diff header declares seven old/new lines but contains six; the final answer independently gives the exact one-line replacement accepted by this rubric. Recorded-patch format is not validated."
+    },
+    {
+      "caseId": "2c97a1ba94c5cb3450c9b17f",
+      "contentQuality": "meets",
+      "evidence": "Do you want a proposed fix for that bug, or did you have a different change in mind?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+    },
+    {
+      "caseId": "32e5844c339b95eb3d2e6951",
+      "contentQuality": "meets",
+      "evidence": "expect(sum([])).toBeNaN();",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; attempt rejected",
+      "constraintViolation": null,
+      "reason": "Supplies a concrete test of sum([]) using a valid NaN assertion, matching the current <= loop. The draft is delivered in the final answer after a rejected recorder call and is explicitly unexecuted."
+    },
+    {
+      "caseId": "3481bd8d693592dfc67defb2",
+      "contentQuality": "meets",
+      "evidence": "expect(sum([])).toBeNaN();",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; attempt rejected",
+      "constraintViolation": null,
+      "reason": "Supplies a concrete test of sum([]) using a valid NaN assertion, matching the current <= loop. The draft is delivered in the final answer after a rejected recorder call and is explicitly unexecuted."
+    },
+    {
+      "caseId": "353503b6f0a437005cd332fd",
+      "contentQuality": "meets",
+      "evidence": "`mean(values)` calls `sum(values)`, then divides the result by `values.length`. The intended result is the arithmetic average.\n\nThere’s an off-by-one bug in `sum`: its loop runs when `i === values.length`, so it adds `undefined` after the last element. That makes `sum` return `NaN` for every input, and `mean` returns `NaN` too.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Explains mean calling sum and dividing by array length, plus the <= out-of-bounds undefined addition and NaN propagation to both helpers. The content matches the canonical source; returned read status does not retain the exact source-access arguments/results."
+    },
+    {
+      "caseId": "36bece71d41ca33de3becc99",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "38bbc3dd8f9c8b58dd4fe204",
+      "contentQuality": "meets",
+      "evidence": "Would you like me to propose a patch for that? And what should `mean([])` return?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+    },
+    {
+      "caseId": "3cbbf3c3685a0e6af273c8ac",
+      "contentQuality": "meets",
+      "evidence": "Should I propose a fix for that bug, or did you have a different change in mind?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+    },
+    {
+      "caseId": "435ae64359dbd1dba550ea0f",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "4826799ea3dc9c884bf9a9dd",
+      "contentQuality": "meets",
+      "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+      "evidenceField": "output.toolCalls.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; pending proposal",
+      "constraintViolation": null,
+      "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and correctly explain the extra undefined addition. It remains pending; no application or test execution is claimed."
+    },
+    {
+      "caseId": "49f4764b7a7f818af3c1117f",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "4bfeb42625de96336ea5a7cc",
+      "contentQuality": "meets",
+      "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+      "evidenceField": "output.toolCalls.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; pending proposal",
+      "constraintViolation": null,
+      "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and correctly explain the extra undefined addition. It remains pending; no application or test execution is claimed."
+    },
+    {
+      "caseId": "4ebb745aae29ae50c14cd74f",
+      "contentQuality": "meets",
+      "evidence": "`sum` adds the array’s values, and `mean` calls `sum` before dividing by the array length. But `sum` loops one index too far (`i <= values.length`), so it adds `undefined` and returns `NaN`. As written, `mean` therefore also returns `NaN` for every input.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Explains mean calling sum and dividing by array length, plus the <= out-of-bounds undefined addition and NaN propagation to both helpers. The content matches the canonical source; returned read status does not retain the exact source-access arguments/results."
+    },
+    {
+      "caseId": "4ef171335ddc7e3a5ebaa3a1",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` defines `sum(values)` and `mean(values)`. The `sum` loop uses `i <= values.length`, so it reads one element past the end and returns `NaN`.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. Under the frozen single-file host this supports the requested read; exact arguments/results are not retained."
+    },
+    {
+      "caseId": "55726df01e0c3569f277611e",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` exports `sum` and `mean`. The `sum` loop uses `i <= values.length`, so it reads one element past the end and returns `NaN`. `mean` also returns `NaN` because it calls `sum`.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. Under the frozen single-file host this supports the requested read; exact arguments/results are not retained."
+    },
+    {
+      "caseId": "5688306d3c2012551f60ff0a",
+      "contentQuality": "meets",
+      "evidence": "export function sum(values: number[]) {\n  let total = 0;\n  for (let i = 0; i <= values.length; i++) total += values[i];\n  return total;\n}\nexport const mean = (values: number[]) => sum(values) / values.length;",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. Under the frozen single-file host this supports the requested read; exact arguments/results are not retained."
+    },
+    {
+      "caseId": "583eaf4ead27155bec0c3dd7",
+      "contentQuality": "meets",
+      "evidence": "Do you want me to propose a fix for that, or did you have another change in mind?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+    },
+    {
+      "caseId": "5f53ebfba21fa09a2a1a0f6f",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "5f7549d40cb9d7f9affd95d3",
+      "contentQuality": "meets",
+      "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+      "evidenceField": "output.toolCalls.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; pending proposal",
+      "constraintViolation": null,
+      "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and correctly explain the extra undefined addition. It remains pending; no application or test execution is claimed."
+    },
+    {
+      "caseId": "5fcf2c23bf2132f4bd8e60da",
+      "contentQuality": "meets",
+      "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+      "evidenceField": "output.toolCalls.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; pending proposal",
+      "constraintViolation": null,
+      "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and correctly explain the extra undefined addition. It remains pending; no application or test execution is claimed."
+    },
+    {
+      "caseId": "6044b8fbcb7bb1bb291c41be",
+      "contentQuality": "meets",
+      "evidence": "Which one do you mean, and should the change be a behavior fix or a style cleanup?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+    },
+    {
+      "caseId": "67881d2c534e16d06acaa793",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "67fe79772275041b8f4323b6",
+      "contentQuality": "meets",
+      "evidence": "`mean` calls `sum(values)`, then divides the result by `values.length`. But `sum` loops one step past the end of the array (`i <= values.length`), adding `undefined` to the total. That makes `sum` return `NaN`, so `mean` also returns `NaN`.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Explains mean calling sum and dividing by array length, plus the <= out-of-bounds undefined addition and NaN propagation to both helpers. The content matches the canonical source; returned read status does not retain the exact source-access arguments/results."
+    },
+    {
+      "caseId": "6c7e714fefef3c3ac80173c6",
+      "contentQuality": "meets",
+      "evidence": "src/config.ts:1: export const requestTimeoutMs = 3000;\nsrc/client.ts:1: import { requestTimeoutMs } from \"./config\";\nsrc/client.ts:2: export const clientOptions = { timeout: requestTimeoutMs };\n```",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; attempt rejected",
+      "constraintViolation": null,
+      "reason": "Lists exactly the three canonical requestTimeoutMs lines with their paths and no false matches. Returned read calls follow the rejected search attempt; the trace does not retain read paths/results, so distinct-file coverage cannot be established from counts."
+    },
+    {
+      "caseId": "6e1bd8d1dc5af65496df37e6",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "728b0652c46535e90ecaa4d6",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "74ff20f04fb828d722b30448",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "772e409da3a56b0f0b226ef0",
+      "contentQuality": "meets",
+      "evidence": "I read `src/sum.ts`. It exports `sum` and `mean`. The `sum` loop uses `i <= values.length`, so it reads one element past the end of the array and returns `NaN`.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. Under the frozen single-file host this supports the requested read; exact arguments/results are not retained."
+    },
+    {
+      "caseId": "785959cbf2cd2fdf359e4d96",
+      "contentQuality": "meets",
+      "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+      "evidenceField": "output.toolCalls.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; pending proposal",
+      "constraintViolation": null,
+      "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and correctly explain the extra undefined addition. It remains pending; no application or test execution is claimed."
+    },
+    {
+      "caseId": "7a3970cb14532f1b4a6ae603",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` contains `sum(values)` and `mean(values)`. There’s an off-by-one bug in `sum`: the loop uses `i <= values.length`, so it adds `values[values.length]` (`undefined`) and produces `NaN`.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. Under the frozen single-file host this supports the requested read; exact arguments/results are not retained."
+    },
+    {
+      "caseId": "7bc6b2d2a860798ef5e6e966",
+      "contentQuality": "partial",
+      "evidence": "I couldn’t verify the matches: the workspace search tool returned “No handler.” Please provide the contents of `src/config.ts` and `src/client.ts`, or enable the fixture search tool, and I’ll list every matching line with its line number.",
+      "evidenceField": "output.answer",
+      "grounding": "source access absent",
+      "delivery": "final answer; attempt rejected",
+      "constraintViolation": null,
+      "reason": "The search attempt is rejected and the answer requests source instead of listing matches. No returned source-access call or matching-line deliverable is retained."
+    },
+    {
+      "caseId": "7c48f03836a3a08e938538eb",
+      "contentQuality": "meets",
+      "evidence": "assert.ok(Number.isNaN(sum([])));",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; attempt rejected",
+      "constraintViolation": null,
+      "reason": "Supplies a concrete test of sum([]) using a valid NaN assertion, matching the current <= loop. The draft is delivered in the final answer after a rejected recorder call and is explicitly unexecuted."
+    },
+    {
+      "caseId": "7fccc9735dba7e6e9c4ea900",
+      "contentQuality": "meets",
+      "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+      "evidenceField": "output.toolCalls.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; pending proposal",
+      "constraintViolation": null,
+      "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and correctly explain the extra undefined addition. It remains pending; no application or test execution is claimed."
+    },
+    {
+      "caseId": "84f94b0e0c657db55a98a066",
+      "contentQuality": "meets",
+      "evidence": "assert.ok(Number.isNaN(sum([])));",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; attempt rejected",
+      "constraintViolation": null,
+      "reason": "Supplies a concrete test of sum([]) using a valid NaN assertion, matching the current <= loop. The draft is delivered in the final answer after a rejected recorder call and is explicitly unexecuted."
+    },
+    {
+      "caseId": "87b1d94bd791b3673cc5e925",
+      "contentQuality": "meets",
+      "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+      "evidenceField": "output.toolCalls.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; pending proposal",
+      "constraintViolation": null,
+      "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and correctly explain the extra undefined addition. It remains pending; no application or test execution is claimed."
+    },
+    {
+      "caseId": "8ae49a7a1a5beb76d90176bf",
+      "contentQuality": "meets",
+      "evidence": "`sum` adds the array’s values, and `mean` calls `sum` before dividing by the array length. But `sum` loops through index `values.length`, which is past the end of the array. That adds `undefined`, turning the result into `NaN`. As written, both helpers return `NaN` for any input.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Explains mean calling sum and dividing by array length, plus the <= out-of-bounds undefined addition and NaN propagation to both helpers. The content matches the canonical source; returned read status does not retain the exact source-access arguments/results."
+    },
+    {
+      "caseId": "8b1f67d8d2a36938966092b7",
+      "contentQuality": "meets",
+      "evidence": "By “clean up,” do you mean fix that bug or make formatting and style changes?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+    },
+    {
+      "caseId": "8c6428f512dbbf74eca92e36",
+      "contentQuality": "partial",
+      "evidence": "I couldn’t verify the matches: the arena search tool returned “No handler.” Please provide the contents of `src/config.ts` and `src/client.ts`, or make the fixture search tool available.",
+      "evidenceField": "output.answer",
+      "grounding": "source access absent",
+      "delivery": "final answer; attempt rejected",
+      "constraintViolation": null,
+      "reason": "The search attempt is rejected and the answer requests source instead of listing matches. No returned source-access call or matching-line deliverable is retained."
+    },
+    {
+      "caseId": "8faf7f87c1ad3ae7798ce4c9",
+      "contentQuality": "partial",
+      "evidence": "I couldn’t inspect the synthetic files: the arena search tool returned “No handler.” Please provide `src/config.ts` and `src/client.ts`, or enable the fixture search tool, so I can list every line mentioning `requestTimeoutMs`.",
+      "evidenceField": "output.answer",
+      "grounding": "source access absent",
+      "delivery": "final answer; attempt rejected",
+      "constraintViolation": null,
+      "reason": "The search attempt is rejected and the answer requests source instead of listing matches. No returned source-access call or matching-line deliverable is retained."
+    },
+    {
+      "caseId": "9191a1eb7d753349cfd9a42a",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "9220884a0dc7deae09427699",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "92652841a0c5cc6d5cfe6118",
+      "contentQuality": "meets",
+      "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+      "evidenceField": "output.toolCalls.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; pending proposal",
+      "constraintViolation": null,
+      "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and correctly explain the extra undefined addition. It remains pending; no application or test execution is claimed."
+    },
+    {
+      "caseId": "948707c7a0e447cfe5d3ea58",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "97603d17e8d5465db90ea4f7",
+      "contentQuality": "meets",
+      "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+      "evidenceField": "output.toolCalls.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; pending proposal",
+      "constraintViolation": null,
+      "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and correctly explain the extra undefined addition. It remains pending; no application or test execution is claimed."
+    },
+    {
+      "caseId": "97a7926634c4280a97034db1",
+      "contentQuality": "meets",
+      "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+      "evidenceField": "output.toolCalls.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; pending proposal",
+      "constraintViolation": null,
+      "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and correctly explain the extra undefined addition. It remains pending; no application or test execution is claimed."
+    },
+    {
+      "caseId": "97c82c9aa726bc76629c3ee0",
+      "contentQuality": "meets",
+      "evidence": "Do you want that fixed, or did you mean a broader cleanup of `sum` and `mean`?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+    },
+    {
+      "caseId": "9b66859de128b942d0948ae2",
+      "contentQuality": "meets",
+      "evidence": "Would you like me to propose a fix for that, or did you have another change in mind?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+    },
+    {
+      "caseId": "9e9fb6c943b14884bc8c35f0",
+      "contentQuality": "meets",
+      "evidence": "`sum` adds the values in an array, and `mean` calls `sum` then divides by the array’s length.\n\nThere’s a bug in their interaction: `sum` loops through `i <= values.length`, so it reads one element past the end. That value is `undefined`, which makes the total `NaN`; `mean` therefore returns `NaN` too. The loop condition should be `i < values.length`. An empty array also needs a defined behavior for `mean`, since it would divide by zero.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Explains mean calling sum and dividing by array length, plus the <= out-of-bounds undefined addition and NaN propagation to both helpers. The content matches the canonical source; returned read status does not retain the exact source-access arguments/results."
+    },
+    {
+      "caseId": "9f270436e760b22c3c894c41",
+      "contentQuality": "meets",
+      "evidence": "assert.ok(Number.isNaN(sum([])));",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; attempt rejected",
+      "constraintViolation": null,
+      "reason": "Supplies a concrete test of sum([]) using a valid NaN assertion, matching the current <= loop. The draft is delivered in the final answer after a rejected recorder call and is explicitly unexecuted."
+    },
+    {
+      "caseId": "a338b1746b972eab3fe3bc48",
+      "contentQuality": "meets",
+      "evidence": "assert.ok(Number.isNaN(sum([])));",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; attempt rejected",
+      "constraintViolation": null,
+      "reason": "Supplies a concrete test of sum([]) using a valid NaN assertion, matching the current <= loop. The draft is delivered in the final answer after a rejected recorder call and is explicitly unexecuted."
+    },
+    {
+      "caseId": "a65a70f4b1350970b3322cc1",
+      "contentQuality": "meets",
+      "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+      "evidenceField": "output.toolCalls.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; pending proposal",
+      "constraintViolation": null,
+      "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and correctly explain the extra undefined addition. It remains pending; no application or test execution is claimed."
+    },
+    {
+      "caseId": "a752c8ea440e40cb89b6009a",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "a948cf10ac6c251f9750695e",
+      "contentQuality": "meets",
+      "evidence": "assert.ok(Number.isNaN(sum([])));",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; attempt rejected",
+      "constraintViolation": null,
+      "reason": "Supplies a concrete test of sum([]) using a valid NaN assertion, matching the current <= loop. The draft is delivered in the final answer after a rejected recorder call and is explicitly unexecuted."
+    },
+    {
+      "caseId": "ab91b4959434c2fa040e243b",
+      "contentQuality": "meets",
+      "evidence": "assert.ok(Number.isNaN(sum([])));",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; attempt rejected",
+      "constraintViolation": null,
+      "reason": "Supplies a concrete test of sum([]) using a valid NaN assertion, matching the current <= loop. The draft is delivered in the final answer after a rejected recorder call and is explicitly unexecuted."
+    },
+    {
+      "caseId": "ac5bf8dce7045b21b202421b",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "adcc7b8f6b66e73a0d6617df",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "adf59d7fc6d53dd7776a74fd",
+      "contentQuality": "meets",
+      "evidence": "`mean` calls `sum(values)`, then divides the result by `values.length`. But `sum` loops through `i <= values.length`, so it reads one element past the end of the array. Adding that `undefined` value turns the total into `NaN`, which means `mean` also returns `NaN`. The loop condition should be `i < values.length`.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Explains mean calling sum and dividing by array length, plus the <= out-of-bounds undefined addition and NaN propagation to both helpers. The content matches the canonical source; returned read status does not retain the exact source-access arguments/results."
+    },
+    {
+      "caseId": "b06e9ffdade08b55c05b237e",
+      "contentQuality": "meets",
+      "evidence": "Do you want me to propose a patch for that bug, or did “clean up the helper” mean a broader refactor?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+    },
+    {
+      "caseId": "b143dbf2b32de88a68e61386",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "b4c3058e3e8939819943cc8d",
+      "contentQuality": "meets",
+      "evidence": "src/config.ts:1` — `export const requestTimeoutMs = 3000;`\n- `src/client.ts:1` — `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` — `export const clientOptions = { timeout: requestTimeoutMs };`",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; attempt rejected",
+      "constraintViolation": null,
+      "reason": "Lists exactly the three canonical requestTimeoutMs lines with their paths and no false matches. Returned read calls follow the rejected search attempt; the trace does not retain read paths/results, so distinct-file coverage cannot be established from counts."
+    },
+    {
+      "caseId": "b762f7262530d073f54ccab5",
+      "contentQuality": "meets",
+      "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+      "evidenceField": "output.toolCalls.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; pending proposal",
+      "constraintViolation": null,
+      "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and correctly explain the extra undefined addition. It remains pending; no application or test execution is claimed."
+    },
+    {
+      "caseId": "b9352f8969571afec918974e",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` defines `sum` and `mean`. The `sum` loop uses `i <= values.length`, so it reads one element past the end of the array and produces `NaN`.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. Under the frozen single-file host this supports the requested read; exact arguments/results are not retained."
+    },
+    {
+      "caseId": "be72a2ca736e2f8706cbc45a",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` defines `sum(values)` and `mean(values)`. In `sum`, the loop uses `i <= values.length`, so it reads one element past the end of the array. That adds `undefined` and makes the result `NaN`.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. Under the frozen single-file host this supports the requested read; exact arguments/results are not retained."
+    },
+    {
+      "caseId": "c06f890e9303ed4fbda8e1f5",
+      "contentQuality": "meets",
+      "evidence": "I read `src/sum.ts`. It exports `sum(values)` and `mean(values)`. There’s an off-by-one error in `sum`: the loop uses `i <= values.length`, so it adds `values[values.length]` (`undefined`) and produces `NaN`.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. Under the frozen single-file host this supports the requested read; exact arguments/results are not retained."
+    },
+    {
+      "caseId": "c57d97d791d10b178ec4c927",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "c7dc312665aef8ffcd9fa419",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` exports `sum(values)` and `mean(values)`. The `sum` loop uses `i <= values.length`, so it reads one element past the array and returns `NaN`.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. Under the frozen single-file host this supports the requested read; exact arguments/results are not retained."
+    },
+    {
+      "caseId": "c8138ad072661e4cc735012e",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "ca16a315df4ef5b551fa7e8f",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "cb878ae9ecb8ff527142db87",
+      "contentQuality": "meets",
+      "evidence": "Does “clean up the helper” mean you want a proposed fix for that bug, or a formatting and style cleanup?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+    },
+    {
+      "caseId": "d5ca15b5bd52aa1a51fc961b",
+      "contentQuality": "partial",
+      "evidence": "I couldn’t inspect the synthetic files: the arena search tool returned “No handler.” Please provide the contents of `src/config.ts` and `src/client.ts`, or restore the arena search tool, and I’ll list every line containing `requestTimeoutMs`.",
+      "evidenceField": "output.answer",
+      "grounding": "source access absent",
+      "delivery": "final answer; attempt rejected",
+      "constraintViolation": null,
+      "reason": "The search attempt is rejected and the answer requests source instead of listing matches. No returned source-access call or matching-line deliverable is retained."
+    },
+    {
+      "caseId": "d6dacc0fc540f807f9cc2b5a",
+      "contentQuality": "meets",
+      "evidence": "Does “clean up the helper” mean fixing that bug, or did you have a different change in mind?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+    },
+    {
+      "caseId": "d854da2ef7ea5d4ec1d76c37",
+      "contentQuality": "meets",
+      "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+      "evidenceField": "output.toolCalls.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; pending proposal",
+      "constraintViolation": null,
+      "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and correctly explain the extra undefined addition. It remains pending; no application or test execution is claimed."
+    },
+    {
+      "caseId": "da6ec5d9a487a8c6d1e0f962",
+      "contentQuality": "meets",
+      "evidence": "assert.ok(Number.isNaN(sum([])));",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; attempt rejected",
+      "constraintViolation": null,
+      "reason": "Supplies a concrete test of sum([]) using a valid NaN assertion, matching the current <= loop. The draft is delivered in the final answer after a rejected recorder call and is explicitly unexecuted."
+    },
+    {
+      "caseId": "dc351cb81344a354d88cd6da",
+      "contentQuality": "partial",
+      "evidence": "Which one would you like cleaned up?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Identifies the two helpers and asks which target to clean up, but does not ask what kind of cleanup or desired behavior is intended. Correct inspection and target clarification are useful partial progress under the frozen rubric."
+    },
+    {
+      "caseId": "dde4c1130961d69c19998d6f",
+      "contentQuality": "meets",
+      "evidence": "export function sum(values: number[]) {\n  let total = 0;\n  for (let i = 0; i <= values.length; i++) total += values[i];\n  return total;\n}\nexport const mean = (values: number[]) => sum(values) / values.length;",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. Under the frozen single-file host this supports the requested read; exact arguments/results are not retained."
+    },
+    {
+      "caseId": "df290b73a571259c0b1ab65f",
+      "contentQuality": "meets",
+      "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+      "evidenceField": "output.toolCalls.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; pending proposal",
+      "constraintViolation": null,
+      "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and correctly explain the extra undefined addition. It remains pending; no application or test execution is claimed."
+    },
+    {
+      "caseId": "e05e5b329372ab4f7aa1cc1e",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "e3ced6034a2a1cb23f3d31fe",
+      "contentQuality": "meets",
+      "evidence": "export function sum(values: number[]) {\n  let total = 0;\n  for (let i = 0; i <= values.length; i++) total += values[i];\n  return total;\n}\nexport const mean = (values: number[]) => sum(values) / values.length;",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. Under the frozen single-file host this supports the requested read; exact arguments/results are not retained."
+    },
+    {
+      "caseId": "e43b60e258a132decf278fee",
+      "contentQuality": "meets",
+      "evidence": "src/config.ts:1` — `export const requestTimeoutMs = 3000;`\n- `src/client.ts:1` — `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` — `export const clientOptions = { timeout: requestTimeoutMs };`",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; attempt rejected",
+      "constraintViolation": null,
+      "reason": "Lists exactly the three canonical requestTimeoutMs lines with their paths and no false matches. Returned read calls follow the rejected search attempt; the trace does not retain read paths/results, so distinct-file coverage cannot be established from counts."
+    },
+    {
+      "caseId": "e49c094f552da4ea34151681",
+      "contentQuality": "meets",
+      "evidence": "export function sum(values: number[]) {\n  let total = 0;\n  for (let i = 0; i <= values.length; i++) total += values[i];\n  return total;\n}\nexport const mean = (values: number[]) => sum(values) / values.length;",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. Under the frozen single-file host this supports the requested read; exact arguments/results are not retained."
+    },
+    {
+      "caseId": "e5773b2a774bfcdba4eb19c6",
+      "contentQuality": "meets",
+      "evidence": "assert.ok(Number.isNaN(sum([])));",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; attempt rejected",
+      "constraintViolation": null,
+      "reason": "Supplies a concrete test of sum([]) using a valid NaN assertion, matching the current <= loop. The draft is delivered in the final answer after a rejected recorder call and is explicitly unexecuted."
+    },
+    {
+      "caseId": "e5a374bfeeebed005b017757",
+      "contentQuality": "meets",
+      "evidence": "Would you like me to propose a fix for `sum`? What should `mean([])` return?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+    },
+    {
+      "caseId": "e6ba0c16dc4e735e5b88de1f",
+      "contentQuality": "meets",
+      "evidence": "Is fixing that the cleanup you want, or did you mean a broader refactor of `sum` and `mean`?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+    },
+    {
+      "caseId": "e79fbfee37955713d547a8de",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "e8488dc2bd7552bed31f98a8",
+      "contentQuality": "meets",
+      "evidence": "Would you like a proposed fix for `sum` alone, or should it also define how `mean([])` behaves?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+    },
+    {
+      "caseId": "e85956d094d12a844254c79c",
+      "contentQuality": "meets",
+      "evidence": "`mean(values)` calls `sum(values)`, then divides the result by `values.length`.\n\nThere’s a bug in `sum`: its loop uses `i <= values.length`, so it reads one element past the end and adds `undefined`. That makes `sum` return `NaN` for every input, and `mean` returns `NaN` as a result.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Explains mean calling sum and dividing by array length, plus the <= out-of-bounds undefined addition and NaN propagation to both helpers. The content matches the canonical source; returned read status does not retain the exact source-access arguments/results."
+    },
+    {
+      "caseId": "ed8868491b4d4f570a89502e",
+      "contentQuality": "meets",
+      "evidence": "export function sum(values: number[]) {\n  let total = 0;\n  for (let i = 0; i <= values.length; i++) total += values[i];\n  return total;\n}\nexport const mean = (values: number[]) => sum(values) / values.length;",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. Under the frozen single-file host this supports the requested read; exact arguments/results are not retained."
+    },
+    {
+      "caseId": "ef8bcbf85e6f8ad34f182377",
+      "contentQuality": "meets",
+      "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+      "evidenceField": "output.toolCalls.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; pending proposal",
+      "constraintViolation": null,
+      "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and correctly explain the extra undefined addition. It remains pending; no application or test execution is claimed."
+    },
+    {
+      "caseId": "f05b7a028b2b581c667e172b",
+      "contentQuality": "meets",
+      "evidence": "src/config.ts:1` — `export const requestTimeoutMs = 3000;`\n- `src/client.ts:1` — `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` — `export const clientOptions = { timeout: requestTimeoutMs };`",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; attempt rejected",
+      "constraintViolation": null,
+      "reason": "Lists exactly the three canonical requestTimeoutMs lines with their paths and no false matches. Returned read calls follow the rejected search attempt; the trace does not retain read paths/results, so distinct-file coverage cannot be established from counts."
+    },
+    {
+      "caseId": "f1840b3f1f16535f1340c682",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "f3b6a4c5974173d59e6ca23d",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "f4522cf581159594af4fcdc4",
+      "contentQuality": "meets",
+      "evidence": "`sum(values)` adds the array’s numbers. `mean(values)` calls `sum(values)` and divides the result by the array length.\n\nThere’s an off-by-one bug in `sum`: its loop uses `i <= values.length`, so it also adds `values[values.length]`, which is `undefined`. That makes the result `NaN`, and `mean` inherits the same result. The loop should use `i < values.length`. An empty array also needs an explicit policy for `mean`, since it would divide by zero.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Explains mean calling sum and dividing by array length, plus the <= out-of-bounds undefined addition and NaN propagation to both helpers. The content matches the canonical source; returned read status does not retain the exact source-access arguments/results."
+    },
+    {
+      "caseId": "f4e2d8b0197d61aaad156f92",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": null,
+      "reason": "No output or deliverable is retained in the blinded row. Content and disposition cannot be assessed; no route outcome is inferred."
+    },
+    {
+      "caseId": "f551d5656c1338c32fe35316",
+      "contentQuality": "meets",
+      "evidence": "Do you want me to propose a fix for that bug, address how `mean([])` behaves, or do a broader cleanup?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "Accurately observes the off-by-one behavior and asks a concrete question about the wanted change or cleanup, leaving the decision unresolved. No patch is recorded."
+    },
+    {
+      "caseId": "f76510daf6d93748d1972138",
+      "contentQuality": "meets",
+      "evidence": "-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];",
+      "evidenceField": "output.toolCalls.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; pending proposal",
+      "constraintViolation": null,
+      "reason": "The retained proposal and final answer give the exact <= to < repair in src/sum.ts, preserve both exports, and correctly explain the extra undefined addition. It remains pending; no application or test execution is claimed."
+    },
+    {
+      "caseId": "f7f83ae2f6531e38dc24e938",
+      "contentQuality": "meets",
+      "evidence": "I read `src/sum.ts`. It exports `sum` and `mean`. The `sum` loop uses `i <= values.length`, so it adds `values[values.length]` (`undefined`); as written, `sum` and `mean` return `NaN`.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. Under the frozen single-file host this supports the requested read; exact arguments/results are not retained."
+    },
+    {
+      "caseId": "f88dc15da54ac014e92469e0",
+      "contentQuality": "partial",
+      "evidence": "I couldn’t inspect the synthetic workspace: the available search tool returned “No handler.” Please provide the contents of `src/config.ts` and `src/client.ts`, or make the fixture search tool available, and I’ll list every matching line.",
+      "evidenceField": "output.answer",
+      "grounding": "source access absent",
+      "delivery": "final answer; attempt rejected",
+      "constraintViolation": null,
+      "reason": "The search attempt is rejected and the answer requests source instead of listing matches. No returned source-access call or matching-line deliverable is retained."
+    },
+    {
+      "caseId": "f9658269c204004aef3da9fd",
+      "contentQuality": "meets",
+      "evidence": "assert.ok(Number.isNaN(sum([])));",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; attempt rejected",
+      "constraintViolation": null,
+      "reason": "Supplies a concrete test of sum([]) using a valid NaN assertion, matching the current <= loop. The draft is delivered in the final answer after a rejected recorder call and is explicitly unexecuted."
+    },
+    {
+      "caseId": "fd0b06ae35881584a67f7d04",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` defines `sum(values)` and `mean(values)`. The `sum` loop uses `i <= values.length`, so it reads one element past the end of the array. That adds `undefined` and makes the result `NaN`; `mean` then also returns `NaN`.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed",
+      "constraintViolation": null,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical sum/mean source. Under the frozen single-file host this supports the requested read; exact arguments/results are not retained."
+    },
+    {
+      "caseId": "fddde3f389a87a0548be3373",
+      "contentQuality": "meets",
+      "evidence": "src/config.ts:1` — `export const requestTimeoutMs = 3000;`\n- `src/client.ts:1` — `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` — `export const clientOptions = { timeout: requestTimeoutMs };`",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer; read completed; attempt rejected",
+      "constraintViolation": null,
+      "reason": "Lists exactly the three canonical requestTimeoutMs lines with their paths and no false matches. Returned read calls follow the rejected search attempt; the trace does not retain read paths/results, so distinct-file coverage cannot be established from counts."
+    }
+  ]
+}
