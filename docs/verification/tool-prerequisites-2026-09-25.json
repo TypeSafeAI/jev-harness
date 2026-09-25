@@ -138,5 +138,142 @@
     "Browser responses and CLI/provider transports are synthetic.",
     "No human keyboard-only or VoiceOver acceptance.",
     "No live performance improvement is established by these checks."
-  ]
+  ],
+  "reviewFollowup": {
+    "change": "Do not infer prerequisite expansion without a routing receipt.",
+    "checks": {
+      "typecheck": "passed",
+      "unitTests": {
+        "passed": 231,
+        "failed": 0
+      },
+      "build": "passed",
+      "secretScan": "passed",
+      "diffCheck": "passed"
+    },
+    "browser": {
+      "core": {
+        "checks": [
+          "tool exposure shown visually",
+          "headline includes router overhead even when savings disappear",
+          "actual calls visible per lane",
+          "answers visible side by side",
+          "accounting disclosed on demand",
+          "export retains overhead and nonexecution",
+          "tool activity is a readable event list",
+          "routing evidence is visualized as a distribution",
+          "raw data is a second-level disclosure",
+          "raw receipt stays collapsed",
+          "inspector tabs support arrow-key navigation",
+          "setup describes concurrent execution",
+          "Home selects first inspector tab",
+          "arena fits 320px",
+          "overlay accounting fits 320px",
+          "arena fits 390px",
+          "overlay accounting fits 390px",
+          "arena fits 768px",
+          "overlay accounting fits 768px",
+          "arena fits 1440px",
+          "overlay accounting fits 1440px",
+          "arena fits 1920px",
+          "overlay accounting fits 1920px",
+          "completed CLI with zero calls is not implied execution",
+          "unknown usage never becomes savings",
+          "early EOF shows partial status",
+          "early EOF records unknown usage",
+          "explicit skipped request does not add usage",
+          "recorded proposals expose their pending diff in the inspector",
+          "proposal export preserves nonexecution and recorded data"
+        ],
+        "count": 30,
+        "providerCalls": 0,
+        "humanAccessibilityAcceptance": "not performed"
+      },
+      "bundle": {
+        "checks": [
+          "bundle comparison fits 320px",
+          "bundle exposure clear at 320px",
+          "bundle comparison fits 390px",
+          "bundle exposure clear at 390px",
+          "bundle comparison fits 768px",
+          "bundle exposure clear at 768px",
+          "bundle comparison fits 1440px",
+          "bundle exposure clear at 1440px",
+          "bundle comparison fits 1920px",
+          "bundle exposure clear at 1920px",
+          "history keeps actual bundled exposure",
+          "download preserves Jev root selection",
+          "download records the host's expanded menu",
+          "new setup is identifiable and remains nonexecuting",
+          "missing routing evidence never implies prerequisite expansion",
+          "reported exposure remains visible without a routing receipt"
+        ],
+        "count": 16,
+        "providerCalls": 0,
+        "humanAccessibilityAcceptance": "not performed"
+      },
+      "progress": {
+        "checks": [
+          "baseline shows independent working state",
+          "integrated shows independent tool activity",
+          "both elapsed timers advance while pending",
+          "run button communicates pending state",
+          "pending runs do not show premature lessons",
+          "integration keeps an active comparison discoverable",
+          "returning from integration preserves progress and cancellation",
+          "examples cannot change during a run",
+          "history storage events do not cancel an active comparison",
+          "pending indicators stop animating with reduced motion",
+          "running metrics show pending rather than zero",
+          "finished lane displays its outcome immediately",
+          "other lane stays active after first finishes",
+          "finished zero-call lane does not wait for sibling trace",
+          "cancel removes stale running state",
+          "cancel clears activity indicators",
+          "cancelled missing lane metrics remain unknown",
+          "cancel preserves completed lane result",
+          "cancelled missing trace is not counted as zero calls",
+          "cancelled run saves the returned evidence exactly once",
+          "key changes abort the run and clear stale visible results",
+          "key-change cancellation is retained without manufacturing a complete comparison"
+        ],
+        "count": 22,
+        "providerCalls": 0
+      },
+      "bundleProgress": {
+        "checks": [
+          "baseline shows independent working state",
+          "integrated shows independent tool activity",
+          "pending exposure includes prerequisites after later phase events",
+          "pending integrated metric reports actual host menu",
+          "dependency exposure is distinguished from routed selection",
+          "both elapsed timers advance while pending",
+          "run button communicates pending state",
+          "pending runs do not show premature lessons",
+          "integration keeps an active comparison discoverable",
+          "returning from integration preserves progress and cancellation",
+          "examples cannot change during a run",
+          "history storage events do not cancel an active comparison",
+          "pending indicators stop animating with reduced motion",
+          "running metrics show pending rather than zero",
+          "finished lane displays its outcome immediately",
+          "other lane stays active after first finishes",
+          "finished zero-call lane does not wait for sibling trace",
+          "cancel removes stale running state",
+          "cancel clears activity indicators",
+          "cancelled missing lane metrics remain unknown",
+          "cancel preserves completed lane result",
+          "cancelled missing trace is not counted as zero calls",
+          "cancelled run saves the returned evidence exactly once",
+          "reopening an incomplete run does not reuse transient tool exposure",
+          "missing historical lane does not inherit another run's menu",
+          "key changes abort the run and clear stale visible results",
+          "key-change cancellation is retained without manufacturing a complete comparison"
+        ],
+        "count": 27,
+        "providerCalls": 0
+      }
+    },
+    "providerCalls": 0
+  }
 }

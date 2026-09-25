@@ -86,10 +86,11 @@ export async function verifyArenaBundle(page, baseURL, screenshotDir) {
   const checks = [];
   const check = (ok, label) => { if (!ok) throw Error(label); checks.push(label); };
   const at = "2026-09-24T00:00:00Z";
+  let missingReceipt = false;
   const result = { status: "completed", answer: "Read the synthetic helper and recorded a pending proposal. No patch was applied.", durationMs: 1000, inputTokens: 1000, cachedInputTokens: 0, outputTokens: 50, toolCallCount: 2, traceTruncated: false, toolCalls: [{ tool: "read_file", status: "returned", at }, { tool: "propose_patch", status: "returned", at }], error: null };
   await page.route("**/api/arena", route => route.fulfill({ contentType: "application/x-ndjson", body: [
     { type: "usage", attempted: true, measurement: { inputTokens: 100, outputTokens: 10, requestBytes: 400, responseBytes: 40, latencyMs: 200 } },
-    { type: "routing", receipt: browserReceipt(["propose_patch"]) },
+    { type: "routing", receipt: missingReceipt ? null : browserReceipt(["propose_patch"]) },
     { type: "result", lane: "baseline", tools: ["read_file", "propose_patch", "inspect_agent"], result },
     { type: "result", lane: "integrated", tools: ["read_file", "propose_patch"], result },
     { type: "done" },
@@ -115,6 +116,12 @@ export async function verifyArenaBundle(page, baseURL, screenshotDir) {
     check(JSON.stringify(exported.receipt.selectedIds) === JSON.stringify(["propose_patch"]), "download preserves Jev root selection");
     check(JSON.stringify(exported.lanes.integrated.tools) === JSON.stringify(["read_file", "propose_patch"]), "download records the host's expanded menu");
     check(exported.setupVersion === 2 && exported.applied === false, "new setup is identifiable and remains nonexecuting");
+    await page.getByRole("button", { name: "Close details" }).click();
+    missingReceipt = true;
+    await page.getByRole("button", { name: "Run comparison" }).click();
+    await page.getByText("Reported tool menu", { exact: true }).waitFor();
+    check(await page.getByText("Selected + prerequisites", { exact: true }).count() === 0, "missing routing evidence never implies prerequisite expansion");
+    check((await page.locator(".integrated .lane-metrics dd strong").first().textContent()) === "2", "reported exposure remains visible without a routing receipt");
     return { checks, count: checks.length, providerCalls: 0, humanAccessibilityAcceptance: "not performed" };
   } finally { await page.unroute("**/api/arena"); }
 }

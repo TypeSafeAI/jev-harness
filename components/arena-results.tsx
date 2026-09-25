@@ -50,7 +50,7 @@ export function ArenaResults({ lanes, receipt, jevUsage, pending, progress, fini
   useEffect(() => { if (!pending) return; setNow(Date.now()); const timer = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(timer); }, [pending]);
   const base = lanes.baseline, integrated = lanes.integrated;
   const integratedTools = integrated?.tools ?? progress.integrated?.tools;
-  const hasPrerequisites = integratedTools?.some(id => !receipt?.selectedIds.includes(id));
+  const hasPrerequisites = receipt && integratedTools?.some(id => !receipt.selectedIds.includes(id));
   const ready = base?.result.status === "completed" && integrated?.result.status === "completed";
   const integratedInput = integrated?.result.inputTokens != null && jevUsage?.inputTokens != null ? integrated.result.inputTokens + jevUsage.inputTokens : null;
   const baseInput = base?.result.inputTokens ?? null;
@@ -78,7 +78,7 @@ export function ArenaResults({ lanes, receipt, jevUsage, pending, progress, fini
         return <section className={`result arena-lane ${id}`} key={id} aria-label={title}>
           <div className="result-heading"><div><p className="eyebrow">{title}</p><h2>{subtitle}</h2></div><span className="lane-status" role="status">{running && <span className="activity-dot" aria-hidden="true" />}{phase}{running && activity && <small aria-hidden="true">{Math.max(0, Math.floor((now - activity.startedAt) / 1000))} s elapsed</small>}</span></div>
           <dl className="lane-metrics">
-            <div><dt>Available tools</dt><dd><strong>{selected ? selected.length : pending ? "Pending" : "—"}</strong><small>{id === "baseline" ? "Full fixture catalog" : selected ? hasPrerequisites ? "Selected + prerequisites" : "Selected tools" : finished ? "Not reported" : "Awaiting tool access"}</small></dd></div>
+            <div><dt>Available tools</dt><dd><strong>{selected ? selected.length : pending ? "Pending" : "—"}</strong><small>{id === "baseline" ? "Full fixture catalog" : selected ? !receipt ? "Reported tool menu" : hasPrerequisites ? "Selected + prerequisites" : "Selected tools" : finished ? "Not reported" : "Awaiting tool access"}</small></dd></div>
             <div><dt>Input tokens</dt><dd><strong>{input != null ? number(input) : waiting}</strong><small>{id === "baseline" ? "CLI only" : lane ? `${number(lane.result.inputTokens)} CLI + ${number(jevUsage?.inputTokens)} Jev` : "CLI + Jev"}</small></dd></div>
             <div><dt>Time</dt><dd><strong>{duration != null ? seconds(duration) : waiting}</strong><small>{id === "baseline" ? "CLI only" : lane ? `${seconds(lane.result.durationMs)} CLI + ${jevUsage ? seconds(jevUsage.latencyMs) : "Unknown"} Jev` : "CLI + routing"}</small></dd></div>
           </dl>
