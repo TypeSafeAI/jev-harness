@@ -84,6 +84,15 @@ Roadmap phase 3, [issue #2](https://github.com/TypeSafeAI/jev-harness/issues/2).
 
 **Proposer.** Live mode reuses the arena's isolated Codex CLI host (`runCodex`): auth-only temporary home, read-only sandbox, disabled external tools, the bounded synthetic MCP fixture host. The approval list is the exposed descriptor ids so a call to a handler-less descriptor reaches the fixture host and is recorded instead of being declined unseen. Live Jev calls go through the same `choice` transport as the local `/api/route` host (`examples/host/jev-choice.ts`).
 
+Pass `--model` with `--live` for repeatable model selection; it also fixes reasoning
+effort to medium. Offline and `--table` modes reject `--model` because they do not
+invoke the live proposer. The artifact records these requested settings, not provider-attested
+model metadata. Omitting it retains the historical CLI-default behavior. New
+artifacts retain bounded final answers, call statuses and pending proposals for
+separate quality assessment. Structural routing diagnostics identify missing
+options, probability-sum issues or model mismatches without retaining unexpected
+provider text. Historical artifacts without these fields remain readable.
+
 **Metrics**, per trial, per arm, per catalog size and paired per task:
 
 - **Correct tool.** Task labelled *selected*: the proposer completed and called at least one acceptable id. Task labelled *clarify*: no tool was called (routed clarification, or a proposer answer with no call). The answer text is not graded, so a no-call refusal also counts as asking. *First call correct* is reported separately.
@@ -92,7 +101,7 @@ Roadmap phase 3, [issue #2](https://github.com/TypeSafeAI/jev-harness/issues/2).
 - **Jev calls and latency.** Call count and wall time around each routing call on the host.
 - **Failures.** Routing unavailable, proposer failed or cancelled, routed clarification or no-match, and no-call answers are counted separately. Failed and cancelled attempts remain incorrect in the accuracy denominator, even if their trace was truncated. A completed truncated trace with no observed acceptable call is unknown; it cannot prove there was no acceptable call.
 
-**What a result can claim.** Paired correct-tool rates and reported token totals on these 19 synthetic tasks, with this catalog, `jev-1.13.0`, the Codex CLI's default model on the day and this policy. **What it cannot claim.** One run is a signal, not a calibration. Proxies are not provider savings. The tasks are synthetic, so the result says nothing about real repositories. It does not measure dollars (Codex and Jev price differently), cache effects across trials, answer quality, or execution speed. Top-1 routing can starve a task that needs two tools (read, then patch); that shows up as a correct-tool miss in arm B and is part of the result, not noise.
+**What a result can claim.** Paired correct-tool rates and reported token totals on these 19 synthetic tasks, with this catalog, `jev-1.13.0`, the recorded proposer settings and this policy. **What it cannot claim.** One run is a signal, not a calibration. Proxies are not provider savings. The tasks are synthetic, so the result says nothing about real repositories. It does not measure dollars (Codex and Jev price differently), cache effects across trials, answer quality, or execution speed. Top-1 routing can starve a task that needs two tools (read, then patch); that shows up as a correct-tool miss in arm B and is part of the result, not noise.
 
 **Run it offline** (default; scripted fakes, no network, no key):
 
@@ -105,7 +114,7 @@ pnpm experiment:routing --table examples/routing/runs/<file>.json  # table from 
 **Run it live** (explicit; Val's decision, never automated). Prerequisites: `codex login` on the host with file-based sign-in, and `TYPESAFE_API_KEY` exported in the shell from your own secret store. The key is read only from the environment, passed only to the Jev transport, and never printed or written. Live mode is refused under `CI`.
 
 ```sh
-pnpm --silent experiment:routing --live --runs 3
+pnpm --silent experiment:routing --live --model gpt-6-sol --runs 3
 ```
 
 This writes `examples/routing/runs/<date>-experiment.json` (it refuses to overwrite) and prints the table, which can be regenerated with `--table`. Three runs make 57 Jev calls and up to 114 Codex CLI runs (fewer when Jev routes to clarification), sequentially, so expect tens of minutes and both providers' usage. Use `--sizes small,large` or `--runs 1` for a smaller first pass, and `--top-k 2` to test the two-tool starvation case. Commit the artifact and link it next to any number quoted from it.

@@ -1,10 +1,30 @@
 /** Host-side Jev `choice` transport shared by the local demo route and the routing experiment. Never imported by `src/`. */
 import type { RoutingRequest, ToolRouter } from "../../src/routing/index.js";
 
-export interface JevMeasurement { requestBytes: number; responseBytes: number | null; inputTokens: number | null; outputTokens: number | null; latencyMs: number }
+export interface RoutingDiagnostic {
+  modelMatches: boolean; answerTypeMatches: boolean; confidenceValid: boolean;
+  missingOptions: number; unexpectedOptions: number; probabilitySum: number | null;
+  choiceInSet: boolean; leadingChoice: boolean;
+}
+export interface JevMeasurement { requestBytes: number; responseBytes: number | null; inputTokens: number | null; outputTokens: number | null; latencyMs: number; diagnostic?: RoutingDiagnostic }
 export const JEV_SYSTEMONE_URL = "https://api.typesafe.ai/v1/systemone";
 const bytes = (value: string) => new TextEncoder().encode(value).length;
 const count = (value: unknown): number | null => typeof value === "number" && Number.isSafeInteger(value) && value >= 0 ? value : null;
+const record = (value: unknown): Record<string, unknown> | null => value !== null && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : null;
+const unit = (value: unknown): value is number => typeof value === "number" && Number.isFinite(value) && value >= 0 && value <= 1;
+
+/** Structural facts only: never preserve raw provider error text or unexpected keys. */
+function diagnose(raw: unknown, query: RoutingRequest): RoutingDiagnostic {
+  const response = record(raw), answer = record(record(response?.answers)?.tool);
+  const scores = record(answer?.probabilities), ids = query.options.map(option => option.id);
+  const values = Object.values(scores ?? {}), valid = scores !== null && values.every(unit);
+  const choiceInSet = typeof answer?.choice === "string" && ids.includes(answer.choice);
+  return { modelMatches: response?.model === query.model, answerTypeMatches: answer?.type === "choice", confidenceValid: unit(answer?.confidence),
+    missingOptions: ids.filter(id => !scores || !Object.hasOwn(scores, id)).length,
+    unexpectedOptions: Object.keys(scores ?? {}).filter(id => !ids.includes(id)).length,
+    probabilitySum: valid ? (values as number[]).reduce((sum, value) => sum + value, 0) : null,
+    choiceInSet, leadingChoice: Boolean(choiceInSet && valid && scores![answer!.choice as string] === Math.max(...values as number[])) };
+}
 
 export async function boundedText(stream: ReadableStream<Uint8Array> | null, limit: number) {
   if (!stream) return "";
@@ -42,8 +62,9 @@ export function createJevChoiceRouter(options: { key: string; fetch?: typeof fet
       const text = await boundedText(result.body, 64_000);
       const raw = JSON.parse(text);
       measurement.responseBytes = bytes(text);
-      measurement.inputTokens = count(raw.usage?.input_tokens); measurement.outputTokens = count(raw.usage?.output_tokens);
-      const answer = raw.answers?.tool;
+      measurement.diagnostic = diagnose(raw, query);
+      measurement.inputTokens = count(raw?.usage?.input_tokens); measurement.outputTokens = count(raw?.usage?.output_tokens);
+      const answer = raw?.answers?.tool;
       return answer?.type === "choice" ? { model: raw.model, choice: answer.choice, confidence: answer.confidence, probabilities: answer.probabilities } : null;
     } finally { measurement.latencyMs = performance.now() - start; }
   } };

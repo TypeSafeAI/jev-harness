@@ -10,8 +10,8 @@
  */
 import { JEV_MODEL } from "../../src/contract/types.js";
 import { CLARIFICATION_ID, ROUTING_QUESTION_SET_VERSION, ROUTING_UNTRUSTED_DATA_NOTE, routeTools, type RoutingEvidence, type RoutingPolicy, type RoutingReceipt, type RoutingRequest, type ToolDefinition, type ToolRouter } from "../../src/routing/index.js";
-import { arenaPrompt, runCodex } from "../host/codex.js";
-import { jevChoiceBody, type JevMeasurement } from "../host/jev-choice.js";
+import { arenaPrompt, runCodex, type ToolCall } from "../host/codex.js";
+import { jevChoiceBody, type JevMeasurement, type RoutingDiagnostic } from "../host/jev-choice.js";
 import { EXPERIMENT_CATALOG, EXPERIMENT_TASKS, FAKE_PROPOSER_SCRIPT, EXPERIMENT_MOCKS, SIZE_TIERS, TIER_AVAILABLE_IDS, type ExperimentLabel, type ExperimentTask, type SizeTier } from "./experiment-tasks.js";
 
 export const EXPERIMENT_SCHEMA_VERSION = 1;
@@ -34,6 +34,9 @@ export interface ProposerResult {
   /** Provider-reported usage; null when the proposer does not report it. */
   inputTokens: number | null; cachedInputTokens: number | null; outputTokens: number | null;
   error: string | null;
+  /** Bounded synthetic output retained for separate task-quality assessment. */
+  answer?: string;
+  toolCalls?: ToolCall[];
 }
 export interface Proposer { source: "fake" | "codex"; propose(input: ProposerInput, signal?: AbortSignal): Promise<ProposerResult> }
 /** One router per routing call; `measurement()` returns provider-reported usage when the transport has it. */
@@ -58,9 +61,10 @@ export interface Trial {
     outcome: RoutingReceipt["outcome"]; selectedIds: string[]; reason: string; source: "mock" | "jev";
     evidence: RoutingReceipt["evidence"]; optionIds: string[];
     jevCalls: number; latencyMs: number | null;
+    diagnostic?: RoutingDiagnostic;
     reported: { input: number | null; output: number | null } | null;
   };
-  proposer: null | { status: ProposerResult["status"]; calledToolIds: string[]; traceTruncated: boolean; durationMs: number; reported: { input: number | null; cachedInput: number | null; output: number | null }; error: string | null };
+  proposer: null | { status: ProposerResult["status"]; calledToolIds: string[]; traceTruncated: boolean; durationMs: number; reported: { input: number | null; cachedInput: number | null; output: number | null }; error: string | null; answer?: string; toolCalls?: ToolCall[] };
   outcome: TrialOutcome;
   firstToolId: string | null;
   proxies: { proposerInputTokens: number; jevRequestTokens: number; totalInputTokens: number };
@@ -80,7 +84,9 @@ async function runProposer(deps: ExperimentDeps, input: ProposerInput, now: () =
   let result: ProposerResult;
   try { result = await deps.proposer.propose(input, deps.signal); }
   catch { result = { status: "failed", calledToolIds: [], traceTruncated: false, inputTokens: null, cachedInputTokens: null, outputTokens: null, error: "Proposer adapter failed." }; }
-  return { status: result.status, calledToolIds: [...result.calledToolIds], traceTruncated: result.traceTruncated, durationMs: now() - start, reported: { input: result.inputTokens, cachedInput: result.cachedInputTokens, output: result.outputTokens }, error: result.error };
+  return { status: result.status, calledToolIds: [...result.calledToolIds], traceTruncated: result.traceTruncated, durationMs: now() - start, reported: { input: result.inputTokens, cachedInput: result.cachedInputTokens, output: result.outputTokens }, error: result.error,
+    ...(result.answer === undefined ? {} : { answer: result.answer.slice(0, 20_000) }),
+    ...(result.toolCalls === undefined ? {} : { toolCalls: structuredClone(result.toolCalls.slice(0, 100)) }) };
 }
 function proposerOutcome(p: NonNullable<Trial["proposer"]>): TrialOutcome {
   return p.status !== "completed" ? "proposer_failed" : p.calledToolIds.length ? "tool_called" : "no_tool_call";
@@ -110,6 +116,7 @@ export async function runTrial(task: ExperimentTask, arm: Arm, run: number, orde
   const jevRequestTokens = sent ? proxyTokens(jevChoiceBody(sent)) : 0;
   const routing = { outcome: receipt.outcome, selectedIds: [...receipt.selectedIds], reason: receipt.reason, source: receipt.source, evidence: receipt.evidence,
     optionIds: receipt.request.options.map(o => o.id), jevCalls, latencyMs,
+    ...(measurement?.diagnostic ? { diagnostic: { ...measurement.diagnostic } } : {}),
     reported: jevCalls === 0 ? { input: 0, output: 0 } : measurement ? { input: measurement.inputTokens, output: measurement.outputTokens } : null };
   if (receipt.outcome !== "selected") {
     return { ...base, exposedToolIds: [], routing, proposer: null, outcome: receipt.outcome === "unavailable" ? "routing_unavailable" : "routed_clarification", firstToolId: null,
@@ -171,10 +178,10 @@ export const fakeProposer: Proposer = { source: "fake", async propose(input) {
 // ---------------------------------------------------------------- live proposer (Codex CLI arena host)
 
 /** Reuses the arena's isolated Codex host. Approves exactly the exposed descriptor ids so every call is recorded. */
-export function codexProposer(executable = "codex"): Proposer {
+export function codexProposer(executable = "codex", model?: string): Proposer {
   return { source: "codex", async propose(input, signal) {
-    const result = await runCodex({ task: input.task, files: input.files }, input.tools, signal ?? new AbortController().signal, executable, undefined, input.tools.map(t => t.id));
-    return { status: result.status, calledToolIds: result.toolCalls.map(call => call.tool), traceTruncated: result.traceTruncated, inputTokens: result.inputTokens, cachedInputTokens: result.cachedInputTokens, outputTokens: result.outputTokens, error: result.error };
+    const result = await runCodex({ task: input.task, files: input.files }, input.tools, signal ?? new AbortController().signal, executable, undefined, input.tools.map(t => t.id), model);
+    return { status: result.status, calledToolIds: result.toolCalls.map(call => call.tool), traceTruncated: result.traceTruncated, inputTokens: result.inputTokens, cachedInputTokens: result.cachedInputTokens, outputTokens: result.outputTokens, error: result.error, answer: result.answer, toolCalls: result.toolCalls };
   } };
 }
 
@@ -273,7 +280,7 @@ export const FAKE_NOTES = [
   "Latency values are local JS timing of fake adapters, not provider or execution latency.",
 ];
 export const LIVE_NOTES = [
-  "LIVE RUN: Jev jev-1.13.0 via the host choice transport; proposer is the Codex CLI arena host with its default model.",
+  "LIVE RUN: Jev jev-1.13.0 via the host choice transport; proposer is the isolated Codex CLI arena host. See models.proposer for the requested model; this is not provider-attested model metadata.",
   "Reported usage is what each provider returned; null means unknown, never zero. Proxy tokens are a byte heuristic and exclude the CLI's own system prompt and tool framing.",
   "One run is a signal, not a calibration. Correct-tool labels are synthetic and were fixed before the run.",
   "Jev latency is wall time around the routing call on this host; proposer duration includes CLI start-up.",
@@ -345,6 +352,18 @@ export async function parseExperimentArtifact(raw: unknown): Promise<ExperimentA
       if (!isObj(proposer) || !["completed", "failed", "cancelled"].includes(proposer.status as string) || !ids(proposer.calledToolIds, undefined, false) || proposer.calledToolIds.length > 100 || typeof proposer.traceTruncated !== "boolean" || !finite(proposer.durationMs) || !isObj(proposer.reported) || ![proposer.reported.input, proposer.reported.cachedInput, proposer.reported.output].every(nullableCount) || (proposer.error !== null && typeof proposer.error !== "string")) return fail(`trial ${i} proposer`);
       if (proposer.reported.input !== null && proposer.reported.cachedInput !== null && Number(proposer.reported.cachedInput) > Number(proposer.reported.input)) fail(`trial ${i} cached usage`);
       if (proposer.traceTruncated && proposer.calledToolIds.length !== 100) fail(`trial ${i} truncated trace length`);
+      if (proposer.answer !== undefined && (typeof proposer.answer !== "string" || proposer.answer.length > 20_000)) fail(`trial ${i} answer`);
+      if (proposer.toolCalls !== undefined) {
+        const calls = proposer.toolCalls;
+        if (!Array.isArray(calls) || calls.length !== proposer.calledToolIds.length) return fail(`trial ${i} call trace`);
+        for (const [index, call] of calls.entries()) {
+          if (!isObj(call) || call.tool !== proposer.calledToolIds[index] || !["returned", "rejected"].includes(String(call.status)) || typeof call.at !== "string" || !Number.isFinite(Date.parse(call.at))) return fail(`trial ${i} call trace`);
+          if (call.proposal !== undefined) {
+            const p = call.proposal;
+            if (call.tool !== "propose_patch" || call.status !== "returned" || !isObj(p) || p.applied !== false || typeof p.path !== "string" || !Object.hasOwn(task.files, p.path) || typeof p.patch !== "string" || p.patch.length > 16_000 || typeof p.rationale !== "string" || p.rationale.length > 16_000) fail(`trial ${i} recorded proposal`);
+          }
+        }
+      }
       if (proposer.calledToolIds.some(id => id !== "unknown" && !exposedIds.includes(id))) fail(`trial ${i} unexposed tool call`);
       const outcome = proposer.status !== "completed" ? "proposer_failed" : proposer.calledToolIds.length ? "tool_called" : "no_tool_call";
       if (t.outcome !== outcome || t.firstToolId !== (proposer.calledToolIds[0] ?? null)) fail(`trial ${i} outcome/proposer mismatch`);
@@ -354,6 +373,10 @@ export async function parseExperimentArtifact(raw: unknown): Promise<ExperimentA
       continue;
     }
     if (!isObj(routing) || !["selected", "needs_clarification", "no_match", "unavailable"].includes(routing.outcome as string) || !ids(routing.selectedIds, available) || !ids(routing.optionIds) || !sameIds(routing.optionIds, [...available, CLARIFICATION_ID]) || routing.source !== (a.source === "fake" ? "mock" : "jev") || !text(routing.reason) || !count(routing.jevCalls) || routing.jevCalls > 1 || !(routing.latencyMs === null || finite(routing.latencyMs)) || (routing.reported !== null && (!isObj(routing.reported) || ![routing.reported.input, routing.reported.output].every(nullableCount)))) return fail(`trial ${i} routing`);
+    if (routing.diagnostic !== undefined) {
+      const d = routing.diagnostic;
+      if (!isObj(d) || ![d.modelMatches, d.answerTypeMatches, d.confidenceValid, d.choiceInSet, d.leadingChoice].every(v => typeof v === "boolean") || !count(d.missingOptions) || !count(d.unexpectedOptions) || !(d.probabilitySum === null || finite(d.probabilitySum))) fail(`trial ${i} routing diagnostic`);
+    }
     if ((routing.outcome === "selected") !== (proposer !== null) || routing.selectedIds.length > policy.topK || !sameIds(t.exposedToolIds, available.filter(id => (routing.selectedIds as string[]).includes(id))) || (routing.outcome === "selected" ? routing.selectedIds.length === 0 : routing.selectedIds.length !== 0)) fail(`trial ${i} routing/exposure mismatch`);
     if (proposer === null && t.outcome !== (routing.outcome === "unavailable" ? "routing_unavailable" : "routed_clarification")) fail(`trial ${i} routing/outcome mismatch`);
     const evidence = routing.evidence;

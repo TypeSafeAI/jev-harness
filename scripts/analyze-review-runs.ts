@@ -15,6 +15,8 @@
  * same (fixture, arm) carries different `plus_jev` expectations across inputs,
  * the label from the input with the latest `at` timestamp wins and the conflict
  * is reported, so a pre-fix run is scored against the corrected label.
+ * Explicit runIndex values in repeated artifacts identify separate logical
+ * runs; legacy files without indexes continue to represent one run each.
  */
 import { readFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
@@ -29,13 +31,15 @@ export interface RunFile {
   at: string;
   model?: string;
   threshold?: number;
-  runs: Array<{ fixtureId: string; category: string; arm: string; mode: string; expected: string }>;
+  repetitions?: number;
+  runs: Array<{ fixtureId: string; category: string; arm: string; mode: string; expected: string; runIndex?: number }>;
   receipts: Array<{
     fixtureId: string;
     arm: string;
     mode: string;
     validation: unknown;
     jev: JevReview | null;
+    runIndex?: number;
   }>;
 }
 
@@ -60,8 +64,36 @@ function classify(arm: string, expected: string): ArmClass {
   return expected === "permit" ? "good_permit" : "good_clarify";
 }
 
+/** Preserve legacy order and reject incomplete indexing before any rows are filtered. */
+function logicalRuns(files: readonly RunFile[]): RunFile[] {
+  return files.flatMap(file => {
+    const entries = [...file.runs, ...file.receipts];
+    const hasPlan = Object.hasOwn(file, "repetitions");
+    if (!hasPlan && !entries.some(row => Object.hasOwn(row, "runIndex"))) return [file];
+    if (hasPlan && (!Number.isSafeInteger(file.repetitions) || file.repetitions! < 1))
+      throw Error("Indexed artifact needs a positive repetition count for runIndex validation.");
+    for (const row of entries) {
+      if (!Object.hasOwn(row, "runIndex") || !Number.isSafeInteger(row.runIndex) || row.runIndex! < 1 || (hasPlan && row.runIndex! > file.repetitions!))
+        throw Error("Every indexed artifact row and receipt needs a valid positive runIndex within its repetition plan.");
+    }
+    const rowIndexes = new Set(file.runs.map(row => row.runIndex!));
+    const receiptIndexes = new Set(file.receipts.map(row => row.runIndex!));
+    if (rowIndexes.size !== receiptIndexes.size || [...rowIndexes].some(index => !receiptIndexes.has(index)))
+      throw Error("Indexed artifact rows and receipts must contain matching runIndex values.");
+    return [...rowIndexes].sort((a, b) => a - b).map(runIndex => ({
+      ...file,
+      runs: file.runs.filter(row => row.runIndex === runIndex),
+      receipts: file.receipts.filter(row => row.runIndex === runIndex),
+    }));
+  });
+}
+
 /** Flatten runs into answered plus_jev observations with reconciled labels. */
 export function collect(files: readonly RunFile[]): { observations: Observation[]; conflicts: LabelConflict[]; skipped: number } {
+  return collectLogicalRuns(logicalRuns(files));
+}
+
+function collectLogicalRuns(files: readonly RunFile[]): { observations: Observation[]; conflicts: LabelConflict[]; skipped: number } {
   const labels = new Map<string, Array<{ run: number; at: string; expected: string; category: string }>>();
   files.forEach((file, run) => {
     for (const row of file.runs) {
@@ -265,10 +297,11 @@ export function highestFloorWithoutGoodBlock(sweep: readonly SweepRow[]): Array<
 }
 
 export function analyze(files: readonly RunFile[]) {
-  const { observations, conflicts, skipped } = collect(files);
+  const expanded = logicalRuns(files);
+  const { observations, conflicts, skipped } = collectLogicalRuns(expanded);
   const sweep = questionSweep(observations);
   return {
-    runs: files.length,
+    runs: expanded.length,
     observations: observations.length,
     byClass: {
       good_permit: observations.filter(o => o.cls === "good_permit").length,
