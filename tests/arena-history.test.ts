@@ -27,20 +27,21 @@ test("local snapshots round-trip evidence and exclude fields outside their schem
   assert.equal(parsed.error, null);
 });
 
-test("history preserves v1 and v2 receipts while setup 3 excludes older trend cohorts", async () => {
-  assert.equal(ARENA_SETUP_VERSION, 3);
+test("history preserves v1/v2/v3 receipts while setup 4 excludes older trend cohorts", async () => {
+  assert.equal(ARENA_SETUP_VERSION, 4);
   const current = run("current");
   current.receipt = await routeTools(DEMO_CATALOG, { intent: fixture.task, availableIds: DEMO_CATALOG.map(t => t.id) }, DEMO_POLICY, scenarioRouter(SCENARIOS[0]!));
   const oldReceipt = await routeTools(demo.DEMO_CATALOG_V1, { intent: fixture.task, availableIds: demo.DEMO_CATALOG_V1.map(t => t.id) }, DEMO_POLICY, scenarioRouter(SCENARIOS[0]!));
   const old = { ...run("v1"), setupVersion: 2, receipt: { ...oldReceipt, request: { ...oldReceipt.request, questionSetVersion: 1 as const } } };
-  const parsed = parseHistory(JSON.stringify({ version: 1, runs: [old, current] }));
+  const v2 = { ...run("v2"), setupVersion: 3, receipt: { ...current.receipt, request: { ...current.receipt.request, questionSetVersion: 2 as const } } };
+  const parsed = parseHistory(JSON.stringify({ version: 1, runs: [old, v2, current] }));
   assert.equal(parsed.error, null);
-  assert.deepEqual(parsed.runs, [old, current]);
-  assert.deepEqual(parsed.runs.map(r => r.receipt?.request.questionSetVersion), [1, 2]);
+  assert.deepEqual(parsed.runs, [old, v2, current]);
+  assert.deepEqual(parsed.runs.map(r => r.receipt?.request.questionSetVersion), [1, 2, 3]);
   const series = performanceSeries(parsed.runs, fixture, "input");
   assert.deepEqual(series.points.map(point => point.run.id), ["current"]);
-  assert.equal(series.excluded, 1);
-  for (const version of [0, 3, "1", null]) {
+  assert.equal(series.excluded, 2);
+  for (const version of [0, 4, "1", null]) {
     const invalid = { ...current, receipt: { ...current.receipt, request: { ...current.receipt.request, questionSetVersion: version } } };
     const result = parseHistory(JSON.stringify({ version: 1, runs: [invalid] }));
     assert.deepEqual(result.runs, []);

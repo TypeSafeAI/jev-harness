@@ -41,6 +41,7 @@ export const EXPERIMENT_CATALOG = createCatalog([...DEMO_CATALOG, ...SYNTHETIC_D
 export const EXPERIMENT_CATALOGS: Readonly<Record<RoutingQuestionSetVersion, Catalog>> = Object.freeze({
   1: createCatalog([...DEMO_CATALOG_V1, ...SYNTHETIC_DESCRIPTORS]),
   2: EXPERIMENT_CATALOG,
+  3: EXPERIMENT_CATALOG,
 });
 
 export type SizeTier = "small" | "medium" | "large";
