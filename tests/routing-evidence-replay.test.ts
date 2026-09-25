@@ -17,6 +17,9 @@ const batches = {
   B: "routing-package-prerequisites",
   C: "routing-package-inspector-attempt2",
   D: "routing-package-fixture-tools-attempt2",
+  E: "routing-package-v4-control",
+  F: "routing-package-v4-integrated",
+  G: "routing-package-v4-integrated-repeat",
 };
 
 test("retained routing blinder reads task definitions from its relocated checkout", async t => {

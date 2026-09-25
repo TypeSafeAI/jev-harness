@@ -116,9 +116,11 @@ v4 candidate from `fb7226c1c8b04efb0385ce3bef0d072e67f78899` alongside fixture
 host revision 1, the retained routing development evidence, and proposal-review
 v4. The [initial routing-only batch and frozen repeat](routing-evaluation/2026-09-25-routing-v4.md)
 record improved root selection alongside malformed distributions that remain
-unavailable. Full CLI measurement and answer-quality assessment of the integrated
-candidate remain pending. Offline checks do not establish live performance, and
-these development runs do not establish calibration.
+unavailable. The [full CLI comparison and blinded answer assessment](routing-evaluation/2026-09-25-routing-v4.md#end-to-end-comparison)
+retain a current-main control and two frozen v4 batches. Both v4 batches restore
+all clear-task outputs in this fixed suite; malformed distributions on ambiguity
+tasks remain unavailable. These development runs do not establish calibration
+or full benchmark saturation.
 
 Version 4 reuses the exact v2 catalog, descriptions, schemas, availability, costs,
 and host prerequisites. The model, task text, fixture files, labels, mocks,
@@ -241,8 +243,9 @@ routing descriptions/criteria, policy, or the prerequisite graph. In particular,
 `SUM_FILES` uses `i <= values.length`: on an empty array it adds `undefined`
 and returns `NaN`, not zero. Do not change the fixture or label to fit a draft.
 Later offline human or agent assessment can grade the retained source against
-that snapshot without executing it. Live effectiveness and draft quality for
-this host revision remain pending separate measurement.
+that snapshot without executing it. The [routing v4 comparison](routing-evaluation/2026-09-25-routing-v4.md#blinded-answer-assessment)
+records separately assessed drafts under this host revision. Their content was
+read against the synthetic source, never executed.
 
 ### Inputs and measurement
 

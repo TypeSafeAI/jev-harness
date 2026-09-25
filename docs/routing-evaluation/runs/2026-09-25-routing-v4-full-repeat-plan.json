@@ -1,0 +1,11 @@
+{
+  "kind": "predeclared-frozen-full-repeat",
+  "declaredAt": "2026-09-25T08:55:08.455606+00:00",
+  "sourceCommit": "5f58cd2198bf6ce485debee07e1b3b68f4544773",
+  "initialFullArtifactComplete": false,
+  "output": "routing-package-v4-integrated-repeat.json",
+  "pairedCasesPlanned": 57,
+  "repetitions": 3,
+  "protocol": "Same pinned CLI0.156.1/gpt-6-sol/medium, Jev1.13.0, fixed tasks/labels/policy/prerequisites. Repeat entire batch, no selective retry. Retain all failures and assess using unchanged blinded rubric.",
+  "rationale": "Check output repeatability on the frozen promising routing candidate without selecting the repeat based on initial full results. Concurrent execution limits latency comparisons."
+}

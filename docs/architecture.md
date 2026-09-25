@@ -287,8 +287,12 @@ checks. Versions 3 and 4 share the v2 catalog. Arena history preserves all four
 receipt versions. Unsupported question versions are rejected. The v4 hypothesis
 is that matching the requested operation preserves edit roots and recognizes
 source inspection for explanation tasks. This integration preserves the frozen
-v4 candidate alongside fixture host revision 1 and proposal-review v4. Full CLI
-measurement and answer-quality assessment of that combination remain pending. See
+v4 candidate alongside fixture host revision 1 and proposal-review v4. The
+[full CLI comparison and blinded answer assessment](routing-evaluation/2026-09-25-routing-v4.md#end-to-end-comparison)
+record a current-main control and two frozen candidate batches. Both candidate
+batches restore all clear-task outputs in this synthetic suite; malformed
+distributions on ambiguity tasks remain unavailable. This is development
+evidence, not calibration or full benchmark saturation. See
 [requested-operation instruction v4](routing.md#requested-operation-instruction-v4).
 
 Fixture host revision 1 adds literal bounded search over supplied synthetic
