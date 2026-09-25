@@ -1,12 +1,13 @@
 import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
+import { pathToFileURL } from 'node:url';
 const [artifactPath, prefix] = process.argv.slice(2);
 if (!artifactPath || !prefix) throw Error('Usage: artifact.json output-prefix');
 const hash = (value: string | Buffer) => createHash('sha256').update(value).digest('hex');
 const raw = readFileSync(artifactPath);
 const artifact = JSON.parse(raw.toString());
 if (artifact.status !== 'complete') throw Error('Assessment requires a completed retained batch.');
-const { EXPERIMENT_TASKS } = await import('../../../examples/routing/experiment-tasks.ts');
+const { EXPERIMENT_TASKS } = await import(pathToFileURL('/Users/buns/Documents/GitHub/TypeSafeAI/jev-harness/examples/routing/experiment-tasks.ts').href);
 const sourceHash = hash(raw);
 const mapping: unknown[] = [];
 const rows = artifact.trials.map((trial: any, index: number) => {

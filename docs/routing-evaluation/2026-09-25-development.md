@@ -187,11 +187,36 @@ savings claim: cached input differs, and omitted answers cannot be counted as
 equivalent work. Full per-case usage remains in the raw artifacts.
 
 The `runs/` directory retains the blinded inputs, original annotations and
-unblinding maps for A/B/C/D, along with the exact [blinding script](runs/2026-09-25-jev-blind-routing.mts)
-and [join script](runs/2026-09-25-jev-join-routing-assessments.py). Their historical
-temporary paths record the assessment environment; adapt those local paths when
-reproducing the join elsewhere. Content hashes and case ids bind each annotation
-to the original trial bytes.
+unblinding maps for A/B/C/D, along with the exact [original blinding script](runs/2026-09-25-jev-blind-routing-original.mts)
+and [join script](runs/2026-09-25-jev-join-routing-assessments.py). The original
+blinder and mappings record historical local paths. The [portable blinder](runs/2026-09-25-jev-blind-routing.mts)
+changes only the task-module import to resolve within its own checkout; it
+regenerates byte-identical blinded inputs and mappings with relocated artifact
+paths. Content hashes and case ids remain unchanged.
+
+Run the offline reproduction checks from any checkout:
+
+```sh
+pnpm exec tsx --test tests/routing-evidence-replay.test.ts
+```
+
+To reproduce a join, generate a fresh mapping that points to the local artifact,
+copy the original annotations unchanged, then run the retained join script.
+For example, using Python 3 for the historical join:
+
+```sh
+replay_dir=$(mktemp -d)
+pnpm exec tsx docs/routing-evaluation/runs/2026-09-25-jev-blind-routing.mts \
+  examples/routing/runs/2026-09-25-routing-package-baseline.json "$replay_dir/blind-A"
+cp docs/routing-evaluation/runs/2026-09-25-blind-A-assessments.json "$replay_dir/blind-A-assessments.json"
+python3 docs/routing-evaluation/runs/2026-09-25-jev-join-routing-assessments.py \
+  "$replay_dir/blind-A" "$replay_dir/quality-A.json"
+```
+
+The regenerated join's artifact filename reflects the published filename; all
+hashes, cases, grades, aggregates and paired usage match the retained report.
+The archived originals and annotations are never overwritten. Reproduction
+checks integrity and arithmetic; it does not repeat or validate the grading.
 
 The legacy correct-tool score is retained unchanged. It counts an acceptable
 tool id even if its handler rejects the call, and treats a no-tool answer as
