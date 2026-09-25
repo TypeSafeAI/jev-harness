@@ -115,7 +115,7 @@ export async function verifyArenaBundle(page, baseURL, screenshotDir) {
     const exported = JSON.parse(raw);
     check(JSON.stringify(exported.receipt.selectedIds) === JSON.stringify(["propose_patch"]), "download preserves Jev root selection");
     check(JSON.stringify(exported.lanes.integrated.tools) === JSON.stringify(["read_file", "propose_patch"]), "download records the host's expanded menu");
-    check(exported.setupVersion === 4 && exported.applied === false, "new setup is identifiable and remains nonexecuting");
+    check(exported.setupVersion === 5 && exported.applied === false, "new setup is identifiable and remains nonexecuting");
     await page.getByRole("button", { name: "Close details" }).click();
     missingReceipt = true;
     await page.getByRole("button", { name: "Run comparison" }).click();

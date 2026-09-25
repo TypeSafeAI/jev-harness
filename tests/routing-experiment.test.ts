@@ -252,7 +252,7 @@ test("artifact schema round-trips and rejects tampering", async () => {
   const artifact = meta(await runExperiment({ runs: 1, policy: DEMO_POLICY }, fakeDeps()));
   const parsed = await parseExperimentArtifact(JSON.parse(JSON.stringify(artifact)));
   assert.equal(parsed.schemaVersion, 1); assert.equal(parsed.kind, "routing-experiment"); assert.equal(parsed.models.jev, "jev-1.13.0");
-  assert.equal(parsed.routingQuestionSetVersion, 3);
+  assert.equal(parsed.routingQuestionSetVersion, 4);
   assert.deepEqual(parsed.catalog.ids, EXPERIMENT_CATALOG.map(t => t.id));
   const tamper = (edit: (a: any) => void) => { const copy = structuredClone(artifact) as any; edit(copy); return () => parseExperimentArtifact(copy); };
   await assert.rejects(tamper(a => { a.models.jev = "jev-latest"; }), /model pin/);

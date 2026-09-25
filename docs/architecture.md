@@ -224,24 +224,28 @@ roots; prerequisites add exposure and their costs are reported separately from
 the unchanged routing evidence. Neither selection nor a dependency grants
 permission. The Arena host declares `propose_patch → read_file`, records the
 actual menu per lane. Prerequisite support introduced setup revision 2; routing
-semantics v2 introduced setup revision 3. Routing semantics v3 uses setup revision
-4 so earlier setups do not enter current comparison trends. Prerequisites do not
-change review verdicts or routing policy.
+semantics v2 introduced setup revision 3 and v3 introduced setup revision 4.
+Routing semantics v4 uses setup revision 5 so earlier setups do not enter current
+comparison trends. Prerequisites do not change review verdicts or routing policy.
 
 Routing question-set version 2 clarifies that `inspect_agent` returns synthetic
 source context for inspecting behavior, relationships, and defects. The host
 returns fixture files with a general grounding note, without launching a model
-subagent. Version 3 changes only the generic choice instruction: a tool may
+subagent. Version 3 changed only the generic choice instruction: a tool may
 advance a clear task by supplying source evidence for the caller to reason about,
-without producing the final answer itself. Ambiguous outcomes or missing
-capabilities still call for clarification. The v2 catalog, schemas, availability,
-costs, host prerequisites, and routing policy remain unchanged, including the
+without producing the final answer itself. That hypothesis is abandoned as a
+deployment candidate, pending a linked diagnostic report. Version 4 distinguishes
+the requested operation or deliverable from a preliminary read, while retaining
+source inspection as evidence for the caller's explanation. Ambiguous outcomes
+or missing capabilities still call for clarification. The v2 catalog, schemas,
+availability, costs, host prerequisites, and routing policy remain unchanged, including the
 `0.7` confidence floor. Proposal-review questions and verdicts are unchanged.
 
-Versions 1 and 2 retain their exact wire instructions and catalog semantics for
+Versions 1, 2, and 3 retain their exact wire instructions and catalog semantics for
 replay; artifact parsing uses the matching catalog for policy and prerequisite
-checks. Version 3 shares the v2 catalog. Arena history preserves v1, v2, and v3
-receipts. Unsupported question versions are rejected. The hypothesis is fewer
-holds on clear source-based explanation tasks; live effectiveness and answer
-quality remain pending separate measurement. See
-[source-evidence instruction v3](routing.md#source-evidence-instruction-v3).
+checks. Versions 3 and 4 share the v2 catalog. Arena history preserves all four
+receipt versions. Unsupported question versions are rejected. The v4 hypothesis
+is that matching the requested operation preserves edit roots and recognizes
+source inspection for explanation tasks. Live effectiveness and answer quality
+remain pending separate measurement. See
+[requested-operation instruction v4](routing.md#requested-operation-instruction-v4).

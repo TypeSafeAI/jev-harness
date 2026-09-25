@@ -109,7 +109,9 @@ an optimum from this sample.
 - [x] [Routing semantics v2](routing.md#inspector-semantics-v2): describe the deterministic inspector's source-context capability and generalize its grounding note. Preserve exact v1 wire semantics, catalog replay, prerequisite artifacts, and readable Arena history; introduced setup revision 3.
 - [ ] Measure the inspector candidate separately with frozen tasks, labels, mocks, thresholds, cost policy, and prerequisites. Assess answers alongside the unchanged tool-use score; offline tests do not establish live effectiveness.
 - [x] [Routing instruction v3](routing.md#source-evidence-instruction-v3): distinguish source evidence that advances a clear task from ambiguity requiring clarification. Preserve v1/v2 wire bodies and replay, reuse the v2 catalog, and move new Arena runs to setup revision 4.
-- [ ] Measure the v3 instruction hypothesis separately at the unchanged `0.7` confidence floor with frozen tasks, labels, mocks, costs, and prerequisites. Check explanation holds and answer quality; no improvement is claimed from offline compatibility checks.
+- The v3 hypothesis is abandoned as a deployment candidate, pending a linked diagnostic report. Retain its exact instruction and historical evidence.
+- [x] [Routing instruction v4](routing.md#requested-operation-instruction-v4): distinguish the requested operation or deliverable from a preliminary read, retaining source inspection as evidence for an explanation. Preserve v1/v2/v3 wire bodies and replay, reuse the v2 catalog, and move new Arena runs to setup revision 5.
+- [ ] Measure the v4 instruction hypothesis separately at the unchanged `0.7` confidence floor with frozen tasks, labels, mocks, costs, and prerequisites. Check edit roots, explanation holds, distribution validity, and answer quality; no improvement is claimed from offline compatibility checks.
 
 ## 4 · Context scoring
 

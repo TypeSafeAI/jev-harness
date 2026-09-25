@@ -42,6 +42,7 @@ export const EXPERIMENT_CATALOGS: Readonly<Record<RoutingQuestionSetVersion, Cat
   1: createCatalog([...DEMO_CATALOG_V1, ...SYNTHETIC_DESCRIPTORS]),
   2: EXPERIMENT_CATALOG,
   3: EXPERIMENT_CATALOG,
+  4: EXPERIMENT_CATALOG,
 });
 
 export type SizeTier = "small" | "medium" | "large";

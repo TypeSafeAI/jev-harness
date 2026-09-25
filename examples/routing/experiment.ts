@@ -351,7 +351,7 @@ export async function parseExperimentArtifact(raw: unknown): Promise<ExperimentA
   if (a.status !== "complete" && a.status !== "cancelled") fail("completion status");
   if (!isObj(a.models) || a.models.jev !== JEV_MODEL || !text(a.models.proposer)) fail("model pin or proposer");
   const questionSetVersion = a.routingQuestionSetVersion;
-  if ((questionSetVersion !== 1 && questionSetVersion !== 2 && questionSetVersion !== 3) || a.untrustedDataNote !== ROUTING_UNTRUSTED_DATA_NOTE) return fail("routing metadata");
+  if ((questionSetVersion !== 1 && questionSetVersion !== 2 && questionSetVersion !== 3 && questionSetVersion !== 4) || a.untrustedDataNote !== ROUTING_UNTRUSTED_DATA_NOTE) return fail("routing metadata");
   const catalog = EXPERIMENT_CATALOGS[questionSetVersion];
   if (typeof a.generatedAt !== "string" || !Number.isFinite(Date.parse(a.generatedAt)) || !text(a.command)) fail("metadata");
   if (!count(a.runs) || a.runs < 1 || a.runs > 50 || !Array.isArray(a.notes) || !a.notes.every(x => typeof x === "string") || !Array.isArray(a.trials) || a.trials.length > 2 * a.runs * EXPERIMENT_TASKS.length || !isObj(a.labels)) return fail("structure");
@@ -428,7 +428,7 @@ export async function parseExperimentArtifact(raw: unknown): Promise<ExperimentA
       const probabilities = Object.values(evidence.probabilities) as number[];
       if (Math.abs(sum(probabilities) - 1) > 1e-6 || evidence.probabilities[evidence.choice] !== Math.max(...probabilities)) fail(`trial ${i} probabilities`);
     }
-    // v1/v2/v3 share policy. Reconstruct the historical catalog/request for bundle
+    // All supported versions share policy. Reconstruct the historical catalog/request for bundle
     // replay with recorded evidence only; never relabel or rewrite the artifact.
     const evaluated = await routeTools(catalog, { intent: task.intent, availableIds: available }, policy as unknown as RoutingPolicy,
       { source: a.source === "fake" ? "mock" : "jev", review: async () => { if (evidence === null) throw Error("Recorded unavailable route."); return evidence as unknown as RoutingEvidence; } });
