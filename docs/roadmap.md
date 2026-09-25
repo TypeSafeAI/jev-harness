@@ -80,9 +80,10 @@ completes the issue #5 investigation. Its confidence-only catch and unexpected
 good holds support retaining the fixed `0.8` floor as uncalibrated, not selecting
 an optimum from this sample.
 
-The [question set v2 candidate](architecture.md#question-sets) clarifies
-task-directed reads and separates explicit requests from factual or causal
-claims. It retains the v1 questions as frozen provenance and changes no fixture,
+The [question set v3 candidate](architecture.md#question-sets) builds on v2's
+task-directed reads and evidence support wording: it evaluates progress from
+one step without requiring a read to perform the edit. It retains v1 and v2
+questions as frozen provenance and changes no fixture,
 label, model pin, threshold or decision rule. Offline wire-contract checks do
 not establish semantic improvement; a separate live comparison remains pending.
 

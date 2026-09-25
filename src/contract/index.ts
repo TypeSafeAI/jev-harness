@@ -12,6 +12,7 @@ export { MAX_DIFF_BYTES, MAX_HUNKS, parseUnifiedDiff, type DiffFile, type DiffHu
 export {
   REVIEW_QUESTIONS,
   REVIEW_QUESTIONS_V1,
+  REVIEW_QUESTIONS_V2,
   REVIEW_QUESTION_CRITERIA,
   UNTRUSTED_NOTE,
   buildReviewPayload,

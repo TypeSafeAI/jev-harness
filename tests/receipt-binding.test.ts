@@ -65,9 +65,9 @@ test("model/source mismatches and substituted request state are refused", () => 
   assert.throws(() => createBoundReceipt(receipt, { ...binding, questionSetVersion: REVIEW_QUESTION_SET_VERSION + 1 }), /Unsupported/);
 });
 
-test("prior v1 question-set bindings cannot be created or replayed by v2 code", () => {
+for (const questionSetVersion of [1, 2]) test(`prior v${questionSetVersion} question-set bindings cannot be created or replayed by v3 code`, () => {
   const { receipt, binding } = sample();
-  const priorBinding = { ...binding, questionSetVersion: 1 };
+  const priorBinding = { ...binding, questionSetVersion };
   assert.throws(() => createBoundReceipt(receipt, priorBinding), /Unsupported/);
   // Rehash to exercise the version check even when integrity and expected
   // binding match; a hash does not make prior evidence current.

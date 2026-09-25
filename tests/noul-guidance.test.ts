@@ -3,15 +3,16 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { REVIEW_QUESTION_SET_VERSION, JEV_MODEL, REVIEW_CONFIDENCE_THRESHOLD } from "../src";
 
-test("Noul guidance preserves v1 provenance and versions the instruction-only v2 payload", () => {
+test("Noul guidance preserves prior provenance and versions the instruction-only v3 payload", () => {
   const agents = readFileSync("AGENTS.md", "utf8");
   const note = readFileSync("docs/hardening/07-noul-contract.md", "utf8");
   assert.match(agents, /supports optional `criteria/);
   assert.doesNotMatch(agents, /questions have no `criteria` field/);
   assert.match(note, /`REVIEW_QUESTIONS_V1` export keeps the historical effective questions/);
-  assert.match(note, /current question set v2 also sends no criteria/);
+  assert.match(note, /`REVIEW_QUESTIONS_V2` preserves v2/);
+  assert.match(note, /current question set\nv3 also sends no criteria/);
   assert.match(note, /uncalibrated/);
-  assert.equal(REVIEW_QUESTION_SET_VERSION, 2);
+  assert.equal(REVIEW_QUESTION_SET_VERSION, 3);
   assert.equal(JEV_MODEL, "jev-1.13.0");
   assert.equal(REVIEW_CONFIDENCE_THRESHOLD, 0.8);
 });
