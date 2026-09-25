@@ -1,6 +1,7 @@
 import { createCatalog, type RoutingPolicy, type RoutingReceipt, type ToolRouter } from "../../src/routing/index.js";
 
-export const DEMO_CATALOG = createCatalog([
+/** Historical routing v1 snapshot; retain descriptions and schemas for replay. */
+export const DEMO_CATALOG_V1 = createCatalog([
   { id: "read_file", kind: "tool", description: "Read one named file in a synthetic workspace without changing it.", estimatedCostUnits: 1,
     inputSchema: { type: "object", properties: { path: { type: "string", description: "Relative path to the single synthetic file to inspect; no absolute paths or parent traversal." } }, required: ["path"], additionalProperties: false } },
   { id: "propose_patch", kind: "tool", description: "Record a proposed single-file edit for a concrete defect; never apply it.", estimatedCostUnits: 3,
@@ -8,6 +9,10 @@ export const DEMO_CATALOG = createCatalog([
   { id: "inspect_agent", kind: "subagent", description: "A specialist descriptor for inspecting synthetic files and explaining a defect; no agent is launched.", estimatedCostUnits: 9,
     inputSchema: { type: "object", properties: { task: { type: "string", description: "A bounded inspection task for the synthetic specialist." }, path: { type: "string", description: "Synthetic target path for inspection." }, includeExplanation: { type: "boolean", description: "Whether to include a detailed explanation in a future host implementation." } }, required: ["task", "path"], additionalProperties: false } },
 ]);
+/** v2 clarifies the deterministic inspector's actual source-context capability. */
+export const DEMO_CATALOG = createCatalog(DEMO_CATALOG_V1.map(tool => tool.id === "inspect_agent"
+  ? { ...tool, description: "Return synthetic source context for inspecting behavior, relationships, and defects; deterministic fixture support, with no model subagent launched." }
+  : tool));
 export const DEMO_POLICY: RoutingPolicy = { topK: 1, confidenceFloor: 0.7, probabilityFloor: 0.2, relevanceWindow: 0.1, maxCostUnits: 10 };
 export interface RoutingScenario {
   id: string;

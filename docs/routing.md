@@ -47,6 +47,36 @@ A host can map `RoutingRequest.intent` to `RouteRequest.userInput`, its options 
 
 The [official choice documentation](https://docs.typesafe.ai/primitives/choice) defines the provider request and response. `RoutingRequest` is a host seam, not that wire format. If constructing a Jev request directly, include the note in the fixed instruction and state, use the available options as `criteria`, and validate the response before normalization. No provider request is made here. Review wording/model pins remain unchanged; changes to routing instruction semantics bump `ROUTING_QUESTION_SET_VERSION` independently.
 
+### Inspector semantics v2
+
+New requests use routing question-set version 2. The demo inspector description
+now states its actual capability: returning synthetic source context for
+inspecting behavior, relationships, and defects. Its host handler still returns
+the supplied fixture files deterministically. A general response note asks the
+proposer to ground the requested explanation in that source; no model subagent
+or specialist answer is produced. Arguments and handler behavior are unchanged.
+
+The generic choice instruction, clarification option, `jev-1.13.0` pin,
+untrusted-data note, and routing policy are unchanged. The confidence floor
+remains `0.7`, probability floor `0.2`, and relevance window `0.1`; cost still
+orders eligible tools. `read_file` remains a legitimate cheaper choice when
+evidence makes it eligible. Tasks, labels, mocks, and host prerequisites are
+unchanged. The frozen inspection label still accepts only `inspect_agent`, so
+inspect answer quality must be assessed separately from that tool-use score.
+No search or test-draft handler is added.
+
+`RoutingRequest` supports versions 1 and 2, and `jevChoiceBody` rejects other
+versions before transport. `DEMO_CATALOG_V1` retains the original frozen
+descriptors; `EXPERIMENT_CATALOGS` selects the matching catalog for artifact
+policy and prerequisite replay. Stored v1 artifacts keep their version and
+evidence, including historical selected-only runs. Arena history reads both
+versions and preserves the stored version. New Arena runs use setup revision 3,
+excluding earlier setups from current trend comparisons.
+
+This is a description-only routing hypothesis. Live effectiveness and answer
+quality remain pending separate measurement; offline compatibility tests do
+not establish a routing improvement or calibration.
+
 ## Reproduce the synthetic comparison
 
 ```sh

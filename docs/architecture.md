@@ -223,6 +223,16 @@ non-selection and cancellation expose no schemas. `topK` still limits routed
 roots; prerequisites add exposure and their costs are reported separately from
 the unchanged routing evidence. Neither selection nor a dependency grants
 permission. The Arena host declares `propose_patch → read_file`, records the
-actual menu per lane, and uses setup revision 2 so older runs do not enter its
-comparison trends. Review verdicts, routing questions and decision policy do
-not change.
+actual menu per lane. Prerequisite support introduced setup revision 2; routing
+semantics v2 now uses setup revision 3 so earlier setups do not enter current
+comparison trends. Prerequisites do not change review verdicts or routing policy.
+
+Routing question-set version 2 clarifies that `inspect_agent` returns synthetic
+source context for inspecting behavior, relationships, and defects. The host
+returns fixture files with a general grounding note, without launching a model
+subagent. Generic choice instructions and the routing policy remain unchanged.
+Version 1 retains its frozen catalog and exact wire instruction for replay;
+artifact parsing uses the matching catalog for policy and prerequisite checks.
+Arena history preserves v1 and v2 receipts. Unsupported question versions are
+rejected. Live effectiveness and answer quality remain pending; see
+[inspector semantics](routing.md#inspector-semantics-v2).

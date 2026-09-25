@@ -32,6 +32,27 @@ test("synthetic MCP host exposes only selected schemas and refuses unavailable t
   assert.equal((await readFile(trace, "utf8")).trim().split("\n").length, 3);
 });
 
+test("inspector returns deterministic source context with a general grounding note", async t => {
+  const dir = await mkdtemp(join(tmpdir(), "jev-inspector-test-"));
+  t.after(() => rm(dir, { recursive: true, force: true }));
+  const manifest = join(dir, "manifest.json"), trace = join(dir, "trace.jsonl");
+  const files = ARENA_CASES[0].files;
+  await writeFile(manifest, JSON.stringify({ tools: DEMO_CATALOG.filter(t => t.id === "inspect_agent"), files }));
+  await writeFile(trace, "");
+  const child = spawn(process.execPath, [resolve("scripts/arena-mcp.mjs"), manifest, trace]);
+  let output = ""; child.stdout.on("data", chunk => { output += chunk.toString(); });
+  child.stdin.end(JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/call", params: { name: "inspect_agent", arguments: { task: "Explain the synthetic source.", path: "src/sum.ts", includeExplanation: true } } }) + "\n");
+  const [code] = await once(child, "close"); assert.equal(code, 0);
+  const response = JSON.parse(output.trim()).result;
+  assert.equal(response.isError, false);
+  assert.deepEqual(JSON.parse(response.content[0].text), { source: "deterministic synthetic inspector, not a model subagent", files,
+    note: "Ground the requested explanation in the provided synthetic source. Nothing changed." });
+  assert.deepEqual(JSON.parse(await readFile(manifest, "utf8")).files, files);
+  const record = JSON.parse((await readFile(trace, "utf8")).trim());
+  assert.equal(record.status, "returned");
+  assert.equal(record.proposal, undefined);
+});
+
 test("CLI adapter uses isolated read-only settings and parses real event-shaped usage without provider calls", async t => {
   const dir = await mkdtemp(join(tmpdir(), "jev-cli-test-")); t.after(() => rm(dir, { recursive: true, force: true }));
   const fake = join(dir, "fake-cli");

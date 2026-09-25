@@ -10,10 +10,10 @@
  * The runner never receives evaluation labels. Scoring joins labels afterwards. Nothing proposed is applied.
  */
 import { JEV_MODEL } from "../../src/contract/types.js";
-import { assembleToolBundle, CLARIFICATION_ID, ROUTING_QUESTION_SET_VERSION, ROUTING_UNTRUSTED_DATA_NOTE, routeTools, type RoutingEvidence, type RoutingPolicy, type RoutingReceipt, type RoutingRequest, type ToolDefinition, type ToolDependencies, type ToolRouter } from "../../src/routing/index.js";
+import { assembleToolBundle, CLARIFICATION_ID, ROUTING_QUESTION_SET_VERSION, ROUTING_UNTRUSTED_DATA_NOTE, routeTools, type RoutingEvidence, type RoutingPolicy, type RoutingQuestionSetVersion, type RoutingReceipt, type RoutingRequest, type ToolDefinition, type ToolDependencies, type ToolRouter } from "../../src/routing/index.js";
 import { arenaPrompt, runCodex, type ToolCall } from "../host/codex.js";
 import { jevChoiceBody, type JevMeasurement, type RoutingDiagnostic } from "../host/jev-choice.js";
-import { EXPERIMENT_CATALOG, EXPERIMENT_TASKS, FAKE_PROPOSER_SCRIPT, EXPERIMENT_MOCKS, SIZE_TIERS, TIER_AVAILABLE_IDS, type ExperimentLabel, type ExperimentTask, type SizeTier } from "./experiment-tasks.js";
+import { EXPERIMENT_CATALOG, EXPERIMENT_CATALOGS, EXPERIMENT_TASKS, FAKE_PROPOSER_SCRIPT, EXPERIMENT_MOCKS, SIZE_TIERS, TIER_AVAILABLE_IDS, type ExperimentLabel, type ExperimentTask, type SizeTier } from "./experiment-tasks.js";
 
 export const EXPERIMENT_SCHEMA_VERSION = 1;
 export type Arm = "all_tools" | "jev_top_k";
@@ -294,7 +294,7 @@ export function summarizeExperiment(trials: readonly Trial[], labels: Readonly<R
 export interface ExperimentArtifact {
   schemaVersion: 1; kind: "routing-experiment"; status: "complete" | "cancelled"; generatedAt: string; command: string; source: "fake" | "live";
   models: { jev: typeof JEV_MODEL; proposer: string };
-  routingQuestionSetVersion: typeof ROUTING_QUESTION_SET_VERSION; untrustedDataNote: string;
+  routingQuestionSetVersion: RoutingQuestionSetVersion; untrustedDataNote: string;
   policy: RoutingPolicy; runs: number; sizes: SizeTier[];
   /** Absence retains historical selected-only semantics. */
   toolContext?: ExperimentToolContext;
@@ -350,7 +350,9 @@ export async function parseExperimentArtifact(raw: unknown): Promise<ExperimentA
   if (a.source !== "fake" && a.source !== "live") fail("source");
   if (a.status !== "complete" && a.status !== "cancelled") fail("completion status");
   if (!isObj(a.models) || a.models.jev !== JEV_MODEL || !text(a.models.proposer)) fail("model pin or proposer");
-  if (a.routingQuestionSetVersion !== ROUTING_QUESTION_SET_VERSION || a.untrustedDataNote !== ROUTING_UNTRUSTED_DATA_NOTE) fail("routing metadata");
+  const questionSetVersion = a.routingQuestionSetVersion;
+  if ((questionSetVersion !== 1 && questionSetVersion !== 2) || a.untrustedDataNote !== ROUTING_UNTRUSTED_DATA_NOTE) return fail("routing metadata");
+  const catalog = EXPERIMENT_CATALOGS[questionSetVersion];
   if (typeof a.generatedAt !== "string" || !Number.isFinite(Date.parse(a.generatedAt)) || !text(a.command)) fail("metadata");
   if (!count(a.runs) || a.runs < 1 || a.runs > 50 || !Array.isArray(a.notes) || !a.notes.every(x => typeof x === "string") || !Array.isArray(a.trials) || a.trials.length > 2 * a.runs * EXPERIMENT_TASKS.length || !isObj(a.labels)) return fail("structure");
   if (!ids(a.sizes, SIZE_TIERS) || !a.sizes.length) fail("sizes");
@@ -365,7 +367,7 @@ export async function parseExperimentArtifact(raw: unknown): Promise<ExperimentA
       if (!ids(toolContext.dependencies[id]) || !sameIds(toolContext.dependencies[id], prerequisites)) fail("tool prerequisite config");
     }
   }
-  const catalogIds = EXPERIMENT_CATALOG.map(t => t.id);
+  const catalogIds = catalog.map(t => t.id);
   if (!isObj(a.catalog) || !ids(a.catalog.ids) || !sameIds(a.catalog.ids, catalogIds) || !isObj(a.catalog.tierAvailableIds)) return fail("catalog");
   for (const size of SIZE_TIERS) {
     const available = a.catalog.tierAvailableIds[size];
@@ -426,9 +428,11 @@ export async function parseExperimentArtifact(raw: unknown): Promise<ExperimentA
       const probabilities = Object.values(evidence.probabilities) as number[];
       if (Math.abs(sum(probabilities) - 1) > 1e-6 || evidence.probabilities[evidence.choice] !== Math.max(...probabilities)) fail(`trial ${i} probabilities`);
     }
-    // Reuse policy and host bundle assembly with recorded evidence only; no provider is consulted.
-    const replay = await routeTools(EXPERIMENT_CATALOG, { intent: task.intent, availableIds: available }, policy as unknown as RoutingPolicy,
+    // v1/v2 share policy. Reconstruct the historical catalog/request for bundle
+    // replay with recorded evidence only; never relabel or rewrite the artifact.
+    const evaluated = await routeTools(catalog, { intent: task.intent, availableIds: available }, policy as unknown as RoutingPolicy,
       { source: a.source === "fake" ? "mock" : "jev", review: async () => { if (evidence === null) throw Error("Recorded unavailable route."); return evidence as unknown as RoutingEvidence; } });
+    const replay: RoutingReceipt = { ...evaluated, request: { ...evaluated.request, questionSetVersion } };
     if (routing.outcome !== replay.outcome || !sameIds(routing.selectedIds, replay.selectedIds)) fail(`trial ${i} policy mismatch`);
     let handoffReady = routing.outcome === "selected";
     let expectedIds: readonly string[] = available.filter(id => (routing.selectedIds as string[]).includes(id));

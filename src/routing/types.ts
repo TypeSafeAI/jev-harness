@@ -24,9 +24,10 @@ export interface RoutingPolicy {
   /** Maximum estimated cost of each candidate, not a cumulative run budget. */
   maxCostUnits: number;
 }
+export type RoutingQuestionSetVersion = 1 | 2;
 export interface RoutingRequest {
   model: "jev-1.13.0";
-  questionSetVersion: 1;
+  questionSetVersion: RoutingQuestionSetVersion;
   intent: string;
   untrustedDataNote: string;
   options: readonly { id: string; kind: "tool" | "subagent" | "fallback"; description: string }[];

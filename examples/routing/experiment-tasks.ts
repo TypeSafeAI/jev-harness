@@ -7,8 +7,8 @@
  *   EXPERIMENT_MOCKS / FAKE_PROPOSER_SCRIPT  scripted fake behaviour for offline runs
  * The runner never receives labels. Mock and fake values are demonstrations, not measurements.
  */
-import { createCatalog, type RoutingReceipt, type ToolDefinition } from "../../src/routing/index.js";
-import { DEMO_CATALOG, SCENARIOS } from "./scenarios.js";
+import { createCatalog, type Catalog, type RoutingQuestionSetVersion, type RoutingReceipt, type ToolDefinition } from "../../src/routing/index.js";
+import { DEMO_CATALOG, DEMO_CATALOG_V1, SCENARIOS } from "./scenarios.js";
 
 const tool = (id: string, description: string, estimatedCostUnits: number, properties: Record<string, string>, required = Object.keys(properties)): ToolDefinition => ({
   id, kind: "tool", description, estimatedCostUnits,
@@ -37,6 +37,11 @@ const SYNTHETIC_DESCRIPTORS: ToolDefinition[] = [
 ];
 
 export const EXPERIMENT_CATALOG = createCatalog([...DEMO_CATALOG, ...SYNTHETIC_DESCRIPTORS]);
+/** Replay uses the catalog semantics recorded by each supported question version. */
+export const EXPERIMENT_CATALOGS: Readonly<Record<RoutingQuestionSetVersion, Catalog>> = Object.freeze({
+  1: createCatalog([...DEMO_CATALOG_V1, ...SYNTHETIC_DESCRIPTORS]),
+  2: EXPERIMENT_CATALOG,
+});
 
 export type SizeTier = "small" | "medium" | "large";
 export const SIZE_TIERS: readonly SizeTier[] = ["small", "medium", "large"];
