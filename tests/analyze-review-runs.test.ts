@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { analyze, collect, miss, type RunFile } from "../scripts/analyze-review-runs.js";
+import { createHash } from "node:crypto";
+import { analyze, collect, miss, toMarkdown, type RunFile } from "../scripts/analyze-review-runs.js";
 import type { JevReview } from "../src/contract/types.js";
 
 // Tiny original synthetic runs. Arithmetic fixtures only; no live or recorded data.
@@ -35,6 +36,75 @@ function run(at: string, askExpected: string, goodEvidence: number, badAddresses
 }
 
 const files = [run("2026-01-01T00:00:00Z", "permit", 0.7, 0.45), run("2026-01-02T00:00:00Z", "proposal_only", 0.9, 0.55)];
+
+const repeated = () => {
+  const repeats = [run("2026-01-01T00:00:00Z", "permit", 0.7, 0.45), run("2026-01-01T00:00:00Z", "permit", 0.6, 0.55)];
+  return {
+    at: repeats[0]!.at, repetitions: 2,
+    runs: repeats.flatMap((file, index) => file.runs.map(row => ({ ...row, runIndex: index + 1 }))),
+    receipts: repeats.flatMap((file, index) => file.receipts.map(receipt => ({ ...receipt, runIndex: index + 1 }))),
+  };
+};
+
+test("legacy JSON and markdown analysis retain their exact output bytes", () => {
+  const result = analyze(files);
+  const digest = (value: string) => createHash("sha256").update(value).digest("hex");
+  assert.deepEqual({ json: digest(JSON.stringify(result)), markdown: digest(toMarkdown(result)), collection: digest(JSON.stringify(collect(files))) }, {
+    json: "095a7a724a604b96e51a5b00c66316abb183f69032e546910bba2e758d7c6b5b",
+    markdown: "dac819d1b727d449482dd0e3e54529d12eeb23f4025192b755fc6da12b57911b",
+    collection: "01aa05815d1b263de9ff5065dab5257f72958bbb3ca05b70cbcbb49ab3ae67a2",
+  });
+});
+
+test("indexed repetitions and legacy files receive separate logical run identities", () => {
+  const inputs = [repeated(), files[1]!];
+  const { observations, conflicts, skipped } = collect(inputs);
+  assert.deepEqual(observations.map(o => o.run), [0, 0, 0, 1, 1, 1, 2, 2, 2]);
+  assert.equal(skipped, 3);
+  assert.deepEqual(conflicts, [{ fixtureId: "ask-good", arm: "good", labels: [{ run: 0, expected: "permit" }, { run: 1, expected: "permit" }, { run: 2, expected: "proposal_only" }], used: "proposal_only" }]);
+  const result = analyze(inputs);
+  assert.equal(result.runs, 3);
+  assert.equal(result.observations, 9);
+  assert.deepEqual(result.goodPermitMisses.map(m => m.run), [0, 1]);
+  assert.deepEqual(collect([files[1]!, repeated()]).observations.map(o => o.run), [0, 0, 0, 1, 1, 1, 2, 2, 2]);
+});
+
+test("indexed repeats are ordered by index rather than incoming receipt order", () => {
+  const file = repeated();
+  file.runs.reverse(); file.receipts.reverse();
+  const observations = collect([file]).observations;
+  assert.deepEqual(observations.filter(o => o.fixtureId === "sum-good").map(o => [o.run, o.answers.evidence_supports.probability]), [[0, 0.7], [1, 0.6]]);
+});
+
+test("malformed and mixed run indexes are rejected instead of pooling or dropping observations", () => {
+  for (const value of [0, -1, 1.5, Number.NaN, Number.POSITIVE_INFINITY, "1", null, undefined]) {
+    const file = repeated();
+    (file.receipts[0] as { runIndex: unknown }).runIndex = value;
+    assert.throws(() => collect([file]), /runIndex/, String(value));
+    assert.throws(() => analyze([file]), /runIndex/, String(value));
+  }
+  for (const group of ["runs", "receipts"] as const) {
+    const file = repeated();
+    Reflect.deleteProperty(file[group][0]!, "runIndex");
+    assert.throws(() => collect([file]), /runIndex/);
+  }
+  const mismatched = repeated();
+  mismatched.receipts = mismatched.receipts.filter(receipt => receipt.runIndex === 1);
+  assert.throws(() => analyze([mismatched]), /runIndex/);
+  const outsidePlan = repeated();
+  outsidePlan.receipts[0]!.runIndex = 3;
+  assert.throws(() => collect([outsidePlan]), /runIndex/);
+});
+
+test("a cancelled indexed artifact counts only started repetitions, including unanswered ones", () => {
+  const partial = repeated();
+  partial.runs = partial.runs.filter(row => row.runIndex === 1);
+  partial.receipts = partial.receipts.filter(row => row.runIndex === 1).map(row => ({ ...row, jev: null }));
+  assert.equal(analyze([partial]).runs, 1);
+  assert.equal(analyze([partial]).skippedWithoutAnswers, 4);
+  partial.runs = []; partial.receipts = [];
+  assert.equal(analyze([partial]).runs, 0);
+});
 
 test("later labels win, conflicts are reported, and unanswered receipts are skipped", () => {
   const { observations, conflicts, skipped } = collect(files);

@@ -40,6 +40,7 @@
     "scripts/bench-review.ts",
     "scripts/analyze-review-runs.ts",
     "scripts/experiment-routing.ts",
+    "scripts/experiment-review.ts",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],
