@@ -169,6 +169,60 @@ test("a transport returning successfully after cancellation records a cancelled 
   assert.equal(artifact.receipts[1]!.verdict, "unavailable");
 });
 
+test("late cancellation preserves an answered receipt and attempt accounting", async () => {
+  for (const unfavorable of [false, true]) {
+    const controller = new AbortController();
+    let transportReturned = false, settledTimestamps = 0;
+    const artifact = await runReviewExperiment({ runs: 1 }, { source: "jev", fixtures: [clean], provenance, signal: controller.signal,
+      now: () => {
+        // The transport's finishedAt is first; the next timestamp belongs to the settled receipt.
+        if (transportReturned && ++settledTimestamps === 2) controller.abort();
+        return now();
+      },
+      transport: async () => {
+        transportReturned = true;
+        const reply = response();
+        if (unfavorable) reply.answers.addresses_task!.noul = 0.01;
+        return reply;
+      },
+    });
+    assert.equal(artifact.status, "cancelled");
+    assert.equal(artifact.receipts.length, 2);
+    assert.equal(artifact.receipts[1]!.verdict, unfavorable ? "proposal_only" : "permit");
+    assert.ok(artifact.receipts[1]!.jev!.answers);
+    assert.equal(artifact.attempts[0]!.status, "answered");
+    assert.equal(artifact.attempts[0]!.failure, null);
+    assert.equal(artifact.accounting.answered, 1);
+    assert.equal(artifact.accounting.unavailable, 0);
+    assert.equal(artifact.accounting.notStarted, 1);
+  }
+});
+
+test("late cancellation preserves settled unavailable failures", async () => {
+  for (const failure of ["transport_error", "malformed_response"] as const) {
+    const controller = new AbortController();
+    let transportReturned = false, settledTimestamps = 0;
+    const artifact = await runReviewExperiment({ runs: 1 }, { source: "jev", fixtures: [clean], provenance, signal: controller.signal,
+      now: () => {
+        if (transportReturned && ++settledTimestamps === 2) controller.abort();
+        return now();
+      },
+      transport: async () => {
+        transportReturned = true;
+        if (failure === "transport_error") throw Error("synthetic transport failure");
+        return { model: JEV_MODEL, answers: {} };
+      },
+    });
+    assert.equal(artifact.status, "cancelled");
+    assert.equal(artifact.receipts[1]!.verdict, "unavailable");
+    assert.equal(artifact.attempts[0]!.status, "unavailable");
+    assert.equal(artifact.attempts[0]!.failure, failure);
+    assert.equal(artifact.accounting.answered, 0);
+    assert.equal(artifact.accounting.unavailable, 1);
+    assert.equal(artifact.accounting.notStarted, 1);
+  }
+});
+
 test("CLI bounds repeats and requires an output without accepting keys on argv", () => {
   assert.deepEqual(parseReviewArgs(["--out", "result.json", "--runs", "4"]), { live: false, runs: 4, out: "result.json" });
   for (const args of [[], ["--runs", "5", "--out", "a"], ["--runs", "0", "--out", "a"], ["--runs", "1.5", "--out", "a"], ["--out", "a", "--key", "private-cli-canary"]]) assert.throws(() => parseReviewArgs(args));

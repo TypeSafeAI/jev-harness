@@ -116,8 +116,9 @@ reporting results; combining them would hide the treatment being measured.
 
 **Proposer.** Live mode reuses the arena's isolated Codex CLI host (`runCodex`): auth-only temporary home, read-only sandbox, disabled external tools, the bounded synthetic MCP fixture host. The approval list is the exposed descriptor ids so a call to a handler-less descriptor reaches the fixture host and is recorded instead of being declined unseen. Live Jev calls go through the same `choice` transport as the local `/api/route` host (`examples/host/jev-choice.ts`).
 
-Pass `--model` for repeatable model selection; it also fixes reasoning effort to
-medium. The artifact records these requested settings, not provider-attested
+Pass `--model` with `--live` for repeatable model selection; it also fixes reasoning
+effort to medium. Offline and `--table` modes reject `--model` because they do not
+invoke the live proposer. The artifact records these requested settings, not provider-attested
 model metadata. Omitting it retains the historical CLI-default behavior. New
 artifacts retain bounded final answers, call statuses and pending proposals for
 separate quality assessment. Structural routing diagnostics identify missing

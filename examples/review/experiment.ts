@@ -118,7 +118,9 @@ export async function runReviewExperiment(options: { runs: number }, deps: Revie
         // The callback assigns attempt; TS cannot infer that across the awaited pipeline.
         const completed = attempt as ReviewAttempt | null;
         if (completed) {
-          completed.status = deps.signal?.aborted ? "cancelled" : plus.receipt.jev?.answers ? "answered" : "unavailable";
+          // A later stop must not rewrite the settled review or its failure classification.
+          completed.status = plus.receipt.jev?.answers ? "answered"
+            : plus.receipt.jev?.error === "Review cancelled before an answer arrived." ? "cancelled" : "unavailable";
           if (completed.status === "cancelled") completed.failure = "cancelled";
           else if (completed.status === "unavailable") completed.failure ??= "malformed_response";
         }
