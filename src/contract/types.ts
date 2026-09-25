@@ -32,12 +32,12 @@ export const REVIEW_QUESTION_IDS = Object.freeze([
 ] as const);
 export type ReviewQuestionId = (typeof REVIEW_QUESTION_IDS)[number];
 
-/** Question set v1. Ids are stable; wording changes bump the version. */
-export const REVIEW_QUESTION_SET_VERSION = 1;
+/** Question set v4. Ids are stable; wording changes bump the version. */
+export const REVIEW_QUESTION_SET_VERSION = 4;
 
 /**
  * Pinned, versioned Jev model for reproducibility. Never `jev-latest`.
- * The four questions were evaluated on this model; the threshold is uncalibrated.
+ * Historical v1 questions were evaluated on this model; the threshold is uncalibrated.
  * Source: https://docs.typesafe.ai/models.md (fetched 2026-09-20) lists
  * `jev-1.13.0` as the current production model, with `jev-latest` and
  * `jev-preview` both aliasing it.

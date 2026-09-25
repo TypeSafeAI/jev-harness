@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { decide, JEV_MODEL, type Receipt, type JevReview } from "../src";
+import { createHash } from "node:crypto";
+import { decide, JEV_MODEL, REVIEW_QUESTION_SET_VERSION, type Receipt, type JevReview } from "../src";
 import { AUDIT_POLICY_VERSION, canonicalJson, createBoundReceipt, replayBoundReceipt, type EvidenceBinding } from "../src/audit/receipt";
 function sample(threshold = 0.8) {
   const proposal = { tool: "read_file" as const, path: "a.ts", rationale: "Inspect synthetic input", evidence: [] };
@@ -16,7 +17,7 @@ function sample(threshold = 0.8) {
   const receipt: Receipt = { schemaVersion: 1, fixtureId: "synthetic", arm: "good", mode: "plus_jev", proposer: "fixture", proposal, validation, jev, ...decision, execution: { applied: false, status: "recorded_pending", note: "Nothing ran." }, at: "2026-09-22T00:00:00Z" };
   const workspace = { task: "Read the synthetic file", files: { "a.ts": "export const x = 1;" } };
   const questions = Object.fromEntries(Object.keys(answers).map(id => [id, { type: "noul", instructions: "Synthetic audit test only" }]));
-  const binding: EvidenceBinding = { policyVersion: AUDIT_POLICY_VERSION, decisionRevision: "a".repeat(40), threshold, questionSetVersion: 1, requestedModel: JEV_MODEL, source: "mock", workspace, requestBody: JSON.stringify({ model: JEV_MODEL, questions, state: { ...workspace, proposal } }) };
+  const binding: EvidenceBinding = { policyVersion: AUDIT_POLICY_VERSION, decisionRevision: "a".repeat(40), threshold, questionSetVersion: REVIEW_QUESTION_SET_VERSION, requestedModel: JEV_MODEL, source: "mock", workspace, requestBody: JSON.stringify({ model: JEV_MODEL, questions, state: { ...workspace, proposal } }) };
   return { receipt, binding };
 }
 
@@ -61,7 +62,24 @@ test("model/source mismatches and substituted request state are refused", () => 
   const wrong = JSON.parse(binding.requestBody!);
   wrong.state.proposal.path = "other.ts";
   assert.throws(() => createBoundReceipt(receipt, { ...binding, requestBody: JSON.stringify(wrong) }), /does not match/);
-  assert.throws(() => createBoundReceipt(receipt, { ...binding, questionSetVersion: 2 }), /Unsupported/);
+  assert.throws(() => createBoundReceipt(receipt, { ...binding, questionSetVersion: REVIEW_QUESTION_SET_VERSION + 1 }), /Unsupported/);
+});
+
+for (const questionSetVersion of [1, 2, 3]) test(`prior v${questionSetVersion} question-set bindings cannot be created or replayed by v4 code`, () => {
+  const { receipt, binding } = sample();
+  const priorBinding = { ...binding, questionSetVersion };
+  assert.throws(() => createBoundReceipt(receipt, priorBinding), /Unsupported/);
+  // Rehash to exercise the version check even when integrity and expected
+  // binding match; a hash does not make prior evidence current.
+  const payload = { bindingVersion: 1, receipt, binding: priorBinding };
+  const envelope = { ...payload, integrity: {
+    algorithm: "sha256",
+    digest: createHash("sha256").update(canonicalJson(payload), "utf8").digest("hex"),
+  } };
+  const result = replayBoundReceipt(envelope, priorBinding);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join(" "), /Unsupported/);
+  assert.equal(replayBoundReceipt(envelope, binding).ok, false);
 });
 
 test("stored verdicts and execution claims must match offline replay", () => {

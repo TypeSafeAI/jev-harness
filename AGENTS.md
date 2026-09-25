@@ -28,7 +28,7 @@ src/contract/decide.ts   decide(), decideBase(), unfavorable(), FAVORABLE, REVIE
 src/contract/index.ts    root exports; benchmark-only decideBase is not re-exported
 src/contract/payload.ts  Question/RunPayload types and validateReviewPayload (criteria-preserving)
 src/contract/validate.ts proposal schema/path/diff validator (zod); diff.ts is its parser
-src/contract/review.ts   question set v1, buildReviewPayload, reviewProposal over an injected transport
+src/contract/review.ts   question set v4, frozen v1/v2/v3 provenance, buildReviewPayload, reviewProposal over an injected transport
 src/benchmark/          explicit base helper, offline evaluation/blinding, fixture bench (load.ts is Node-only)
 fixtures/proposal-review/ the synthetic proposal-review fixtures (20 extracted, 1 added for #4, 4 for #5)
 src/audit/receipt.ts    optional Node binding/replay adapter; not a pure-root import
@@ -72,6 +72,8 @@ Changing any row of this table is a design change: update `docs/architecture.md`
 Question ids (`addresses_task`, `evidence_supports`, `unrelated_changes`, `needs_clarification`) are stable and are the keys of `ReviewAnswers`. `FAVORABLE` pins the direction each one must point. These values and the tool list are readonly and frozen; never mutate them to change policy.
 
 Changing the *wording* of any question bumps `REVIEW_QUESTION_SET_VERSION`. Adding or removing a question is a new major version of the contract and needs a design note first.
+
+Question set v2 changed task alignment and evidence support wording; v3 changed only task alignment to evaluate progress from a single step. V4 changes only evidence support to distinguish a requested change from a defect claim. `REVIEW_QUESTIONS_V1`, `REVIEW_QUESTIONS_V2` and `REVIEW_QUESTIONS_V3` preserve historical instruction-only questions for provenance comparisons; do not attribute prior measurements to v4 or relabel prior bound receipts for replay by current code. Historical criteria remain unsent.
 
 The model is pinned: `JEV_MODEL = "jev-1.13.0"`. Never `jev-latest` or `jev-preview`. Moving the pin is its own PR and re-runs the live bench in the playground.
 

@@ -11,6 +11,9 @@ export { MAX_PATCH_CHARS, proposalSchema, checkPath, validateProposal } from "./
 export { MAX_DIFF_BYTES, MAX_HUNKS, parseUnifiedDiff, type DiffFile, type DiffHunk } from "./diff";
 export {
   REVIEW_QUESTIONS,
+  REVIEW_QUESTIONS_V1,
+  REVIEW_QUESTIONS_V2,
+  REVIEW_QUESTIONS_V3,
   REVIEW_QUESTION_CRITERIA,
   UNTRUSTED_NOTE,
   buildReviewPayload,

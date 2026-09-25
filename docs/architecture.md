@@ -45,20 +45,53 @@ The intended host sequence is proposal -> validation -> permitted egress/review
 calls on validation rejection; a pure result consumer cannot enforce call order.
 No runner in this repository automatically records every step.
 
-## Question set v1
+## Question sets
 
 The exact four instructions and favorable directions are documented in
 [README, Contract v1](../README.md#contract-v1). IDs remain `addresses_task`,
 `evidence_supports`, `unrelated_changes`, and `needs_clarification`; favorable
 directions remain yes, yes, no, no. `JEV_MODEL` remains `jev-1.13.0`.
 
+`REVIEW_QUESTION_SET_VERSION` is 4. V2 changed only `addresses_task` and
+`evidence_supports`. Task alignment considers actual code and operation order,
+and recognizes an explicitly requested read or targeted inspection before a
+concrete change. Evidence support separates an explicit request for a change
+or inspection from factual and causal claims about existing behavior. A read
+does not need to prove a defect first; unsupported or contradicted material
+claims remain unfavorable even when the proposed patch is correct.
+`unrelated_changes` and `needs_clarification` remain byte-identical to v1.
+These are semantic changes, not calibration or a live improvement claim.
+The decision table, threshold, model pin, fixture bytes and labels are unchanged.
+
+V3 changes only `addresses_task` from v2. It evaluates progress from the single
+proposed step, so a targeted read can determine how to implement a concrete
+change without performing the edit itself. The evidence-support, scope and
+clarification questions remain byte-identical to v2.
+
+V4 changes only `evidence_supports` from v3. A clear user request establishes
+why a change or inspection is wanted without needing an existing defect.
+Every material factual or causal claim must still be checked against the
+supplied source and evidence, even when the proposed edit is otherwise correct.
+The task-alignment, scope and clarification instructions remain byte-identical
+to v3. This is adaptive development tuning, not held-out calibration.
+
+The phase 1 extraction used v1. Its instructions remain frozen as
+`REVIEW_QUESTIONS_V1`; v2 and v3 are frozen as `REVIEW_QUESTIONS_V2` and
+`REVIEW_QUESTIONS_V3` for provenance comparisons. The default builder uses v4.
+Prior measurements must retain their original question-set versions rather
+than being attributed to v4. Offline tests
+check the exact serialized questions and unchanged instructions, not the
+semantic correctness of the model's answers. The [v4 live development comparison](calibration/2026-09-25-question-set-v4.md)
+retains every candidate and a separate frozen confirmation, without a held-out
+calibration claim.
+
 The [official Noul contract](https://docs.typesafe.ai/primitives/noul) supports
 optional `criteria` with true/false descriptions. Historical stripping in the
 playground was a local validation behavior, not an API-wide restriction.
 [Wire-contract acceptance](hardening/07-noul-contract.md) requires testing the
 actual post-validation request and versioning effective semantic changes.
-`buildReviewPayload` sends question set v1 as it historically reached the wire:
-type and instructions, no criteria. The playground authored criteria text but
+`buildReviewPayload` sends question set v4 with type and instructions, no criteria.
+V1, v2 and v3 also sent only type and instructions. The playground authored criteria text but
 its payload validator dropped noul criteria before sending, so no recorded run
 used them. That text is kept as `REVIEW_QUESTION_CRITERIA` and is not sent;
 sending it would change effective semantics and needs a new question-set
@@ -75,7 +108,8 @@ returns null answers and an error, so the unchanged decision table returns
 provenance. This deliberately tightens the source implementation, which
 accepted overrides and substituted the requested model for missing response
 metadata. `tests/review-payload.test.ts` checks the request sent to transport
-and both response paths. No fixture verdicts or question semantics change.
+and both response paths. These transport checks are independent of question
+wording changes; scripted fixture verdicts remain unchanged.
 
 `reviewProposal` checks cancellation before dispatch and again after the
 transport resolves. A pre-aborted signal makes no transport call; a transport
@@ -128,6 +162,11 @@ Enum fields require exact strings. Any validation rejection must have no retaine
 review provenance. The encoding budget includes escaped strings, keys, and
 punctuation and is enforced before joining containers. Creation checks the
 complete envelope, including integrity metadata, against the replay limits.
+Question-set bindings must match the current `REVIEW_QUESTION_SET_VERSION`.
+A prior v1, v2 or v3 bound receipt requires the corresponding historical code and
+its independently trusted binding for replay; current v4 code rejects all three.
+Do not relabel the receipt or substitute v4 questions to make it replay. Receipt schemaVersion
+and bindingVersion remain 1; they are separate from the question-set version.
 
 A SHA-256 digest is not a signature and does not authenticate a malicious
 writer. Host-authenticated provenance, protected storage, deployment identity,
@@ -162,9 +201,9 @@ totals, not measurements.
 
 The `clean-read-before-edit-content-not-in-evidence` fixture pairs a read with an
 unsupported guessed edit: the bad proposal claims an ignored legacy field
-controls upload retries, contradicting the inline documentation. Question set
-v1 supplies all fixture files to Jev, even when quoted evidence contains only
-the task. It cannot establish the proposer's read history or enforce read before
+controls upload retries, contradicting the inline documentation. Question sets
+v1, v2, v3 and v4 supply all fixture files to Jev, even when quoted evidence contains only
+the task. None can establish the proposer's read history or enforce read before
 edit. Only the scripted mock isolates an `evidence_supports` miss; a live review
 may flag other questions too.
 

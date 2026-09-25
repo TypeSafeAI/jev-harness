@@ -226,7 +226,7 @@ test("review payload pins the versioned model and carries four noul questions", 
   assert.notEqual(payload.model, "jev-latest");
   assert.match(JEV_MODEL, /^jev-\d+\.\d+\.\d+$/);
   assert.deepEqual(Object.keys(payload.questions).sort(), [...REVIEW_QUESTION_IDS].sort());
-  // Question set v1 on the wire is noul type + instructions. The playground
+  // Question sets v1 and v2 send noul type + instructions. The playground
   // built criteria here but its payload validator dropped them before sending;
   // see tests/review-payload.test.ts for the exact post-validation request.
   for (const q of Object.values(payload.questions)) {
