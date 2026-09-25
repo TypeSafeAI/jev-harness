@@ -18,8 +18,8 @@ untrusted record being checked. Different question text/criteria is detectable
 because the exact request body is bound, even if a version bump was forgotten.
 
 Question-set bindings must equal the current `REVIEW_QUESTION_SET_VERSION`,
-now 3. A prior v1 or v2 bound receipt requires the corresponding historical code
-and independently trusted binding for replay; current v3 code rejects either
+now 4. A prior v1, v2 or v3 bound receipt requires the corresponding historical code
+and independently trusted binding for replay; current v4 code rejects each
 version even when its digest and expected binding match. Never relabel an old binding or
 replace its request body to make it current. Receipt schemaVersion 1 and
 bindingVersion 1 are unchanged and distinct from the question-set version.

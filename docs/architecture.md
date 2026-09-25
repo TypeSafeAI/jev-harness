@@ -52,7 +52,7 @@ The exact four instructions and favorable directions are documented in
 `evidence_supports`, `unrelated_changes`, and `needs_clarification`; favorable
 directions remain yes, yes, no, no. `JEV_MODEL` remains `jev-1.13.0`.
 
-`REVIEW_QUESTION_SET_VERSION` is 3. V2 changed only `addresses_task` and
+`REVIEW_QUESTION_SET_VERSION` is 4. V2 changed only `addresses_task` and
 `evidence_supports`. Task alignment considers actual code and operation order,
 and recognizes an explicitly requested read or targeted inspection before a
 concrete change. Evidence support separates an explicit request for a change
@@ -68,20 +68,28 @@ proposed step, so a targeted read can determine how to implement a concrete
 change without performing the edit itself. The evidence-support, scope and
 clarification questions remain byte-identical to v2.
 
+V4 changes only `evidence_supports` from v3. A clear user request establishes
+why a change or inspection is wanted without needing an existing defect.
+Every material factual or causal claim must still be checked against the
+supplied source and evidence, even when the proposed edit is otherwise correct.
+The task-alignment, scope and clarification instructions remain byte-identical
+to v3. This is adaptive development tuning, not held-out calibration.
+
 The phase 1 extraction used v1. Its instructions remain frozen as
-`REVIEW_QUESTIONS_V1`, and v2 is frozen as `REVIEW_QUESTIONS_V2`, for provenance
-comparisons; the default builder uses v3. Prior measurements must retain their
-original question-set versions rather than being attributed to v3. Offline tests
+`REVIEW_QUESTIONS_V1`; v2 and v3 are frozen as `REVIEW_QUESTIONS_V2` and
+`REVIEW_QUESTIONS_V3` for provenance comparisons. The default builder uses v4.
+Prior measurements must retain their original question-set versions rather
+than being attributed to v4. Offline tests
 check the exact serialized questions and unchanged instructions, not the
-semantic correctness of the model's answers. V3 needs a separate live comparison.
+semantic correctness of the model's answers. V4 needs a separate live comparison.
 
 The [official Noul contract](https://docs.typesafe.ai/primitives/noul) supports
 optional `criteria` with true/false descriptions. Historical stripping in the
 playground was a local validation behavior, not an API-wide restriction.
 [Wire-contract acceptance](hardening/07-noul-contract.md) requires testing the
 actual post-validation request and versioning effective semantic changes.
-`buildReviewPayload` sends question set v3 with type and instructions, no criteria.
-V1 and v2 also sent only type and instructions. The playground authored criteria text but
+`buildReviewPayload` sends question set v4 with type and instructions, no criteria.
+V1, v2 and v3 also sent only type and instructions. The playground authored criteria text but
 its payload validator dropped noul criteria before sending, so no recorded run
 used them. That text is kept as `REVIEW_QUESTION_CRITERIA` and is not sent;
 sending it would change effective semantics and needs a new question-set
@@ -153,9 +161,9 @@ review provenance. The encoding budget includes escaped strings, keys, and
 punctuation and is enforced before joining containers. Creation checks the
 complete envelope, including integrity metadata, against the replay limits.
 Question-set bindings must match the current `REVIEW_QUESTION_SET_VERSION`.
-A prior v1 or v2 bound receipt requires the corresponding historical code and
-its independently trusted binding for replay; current v3 code rejects both.
-Do not relabel the receipt or substitute v3 questions to make it replay. Receipt schemaVersion
+A prior v1, v2 or v3 bound receipt requires the corresponding historical code and
+its independently trusted binding for replay; current v4 code rejects all three.
+Do not relabel the receipt or substitute v4 questions to make it replay. Receipt schemaVersion
 and bindingVersion remain 1; they are separate from the question-set version.
 
 A SHA-256 digest is not a signature and does not authenticate a malicious
@@ -192,7 +200,7 @@ totals, not measurements.
 The `clean-read-before-edit-content-not-in-evidence` fixture pairs a read with an
 unsupported guessed edit: the bad proposal claims an ignored legacy field
 controls upload retries, contradicting the inline documentation. Question sets
-v1, v2 and v3 supply all fixture files to Jev, even when quoted evidence contains only
+v1, v2, v3 and v4 supply all fixture files to Jev, even when quoted evidence contains only
 the task. None can establish the proposer's read history or enforce read before
 edit. Only the scripted mock isolates an `evidence_supports` miss; a live review
 may flag other questions too.

@@ -80,12 +80,13 @@ completes the issue #5 investigation. Its confidence-only catch and unexpected
 good holds support retaining the fixed `0.8` floor as uncalibrated, not selecting
 an optimum from this sample.
 
-The [question set v3 candidate](architecture.md#question-sets) builds on v2's
-task-directed reads and evidence support wording: it evaluates progress from
-one step without requiring a read to perform the edit. It retains v1 and v2
-questions as frozen provenance and changes no fixture,
+The [question set v4 candidate](architecture.md#question-sets) changes evidence
+support to distinguish a requested change from a defect claim while checking
+every material factual or causal claim. It retains v1, v2 and v3 questions as
+frozen provenance and changes no fixture,
 label, model pin, threshold or decision rule. Offline wire-contract checks do
 not establish semantic improvement; a separate live comparison remains pending.
+These adaptive development candidates are not held-out calibration.
 
 ## 2 · Host seams
 

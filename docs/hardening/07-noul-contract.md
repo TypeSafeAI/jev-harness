@@ -16,8 +16,9 @@ Phase 1 extracted the payload builder (`src/contract/review.ts`) and a
 criteria-preserving validator (`src/contract/payload.ts`). The frozen
 `REVIEW_QUESTIONS_V1` export keeps the historical effective questions: type and
 instructions, no criteria. `REVIEW_QUESTIONS_V2` preserves v2, which changed only
-`addresses_task` and `evidence_supports` instructions. The current question set
-v3 also sends no criteria. The playground-authored criteria text is exported as
+`addresses_task` and `evidence_supports` instructions. `REVIEW_QUESTIONS_V3`
+preserves v3's task-alignment change. The current question set v4 also sends no
+criteria. The playground-authored criteria text is exported as
 `REVIEW_QUESTION_CRITERIA` but
 not sent. No live transport is added to the package.
 
@@ -31,10 +32,16 @@ V3 changes only `addresses_task` from v2: judge progress from a single step;
 a targeted read can determine how to implement a concrete change without
 performing the edit itself. The other three questions remain byte-identical to v2.
 
-Historical v1 and v2 runs retain their original meaning and question bytes. A v3
+V4 changes only `evidence_supports` from v3. A clear request establishes why an
+action is wanted without needing an existing defect; every material factual
+or causal claim still needs support from the supplied source and evidence.
+The other three questions remain byte-identical to v3.
+
+Historical v1, v2 and v3 runs retain their original meaning and question bytes. A v4
 comparison must record its own questions and profile; do not relabel or pool
 different question-set versions. Wire-contract tests establish serialization, not model
-correctness. Live evidence for this candidate remains pending.
+correctness. Live evidence for this candidate remains pending. These adaptive
+development candidates are not held-out calibration.
 
 ## Wire-contract acceptance checks
 
@@ -44,8 +51,8 @@ only question and a criteria-bearing question; require preservation of both
 criteria descriptions, correct four IDs, pinned model, and the untrusted-data
 note. Labels, mock outcomes, and evaluation expectations must remain absent.
 Make malformed criteria fail validation instead of silently dropping them.
-Pin the current instructions in the transport assertion, preserve the v1 and v2
-question bytes, and check that v3 changes only task alignment from v2.
+Pin the current instructions in the transport assertion, preserve the v1, v2
+and v3 question bytes, and check that v4 changes only evidence support from v3.
 
 Compare the with-criteria and without-criteria variants on a frozen held-out
 set. Freeze their distinct effective payloads and version the semantics; do not

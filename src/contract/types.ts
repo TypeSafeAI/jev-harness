@@ -32,8 +32,8 @@ export const REVIEW_QUESTION_IDS = Object.freeze([
 ] as const);
 export type ReviewQuestionId = (typeof REVIEW_QUESTION_IDS)[number];
 
-/** Question set v3. Ids are stable; wording changes bump the version. */
-export const REVIEW_QUESTION_SET_VERSION = 3;
+/** Question set v4. Ids are stable; wording changes bump the version. */
+export const REVIEW_QUESTION_SET_VERSION = 4;
 
 /**
  * Pinned, versioned Jev model for reproducibility. Never `jev-latest`.
