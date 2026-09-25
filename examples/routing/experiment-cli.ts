@@ -38,7 +38,8 @@ export function parseCliArgs(argv: readonly string[]): CliOptions {
     else if (flag === "--table") options.table = value(i++, flag);
     else throw Error(`Unknown argument: ${flag}`);
   }
-  if (options.table && (options.live || options.out)) throw Error("--table only renders an existing artifact.");
+  if (options.table && (options.live || options.out || options.model)) throw Error("--table only renders an existing artifact.");
+  if (options.model && !options.live) throw Error("--model requires --live; offline runs use the scripted fake proposer.");
   return options;
 }
 

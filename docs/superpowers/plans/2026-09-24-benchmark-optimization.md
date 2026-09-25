@@ -25,7 +25,7 @@
 - [x] Inspect current code, historical failures, fixtures, policy, and host isolation.
 - [x] Create isolated worktree and verify clean baseline.
 - [x] Start optimization dev preview on port 4200 (session 5256).
-- [ ] Add tested measurement controls: explicit proposer model and review experiment attempt/usage accounting.
+- [x] Add tested measurement controls: explicit proposer model and review experiment attempt/usage accounting.
 - [ ] Record fresh frozen routing and review baselines.
 - [ ] Routing candidate: retain host-declared read prerequisites for patch/test tools, with availability/cost/cancellation checks; test before measurement.
 - [ ] Investigate inspect-task routing misses from sanitized evidence diagnostics; fix semantics only with a new version when justified.

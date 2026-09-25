@@ -240,7 +240,7 @@ test("Codex approval list defaults to the fixture handlers and only accepts cata
 });
 
 test("experiment pins the requested proposer model without changing CLI isolation", () => {
-  assert.equal(parseCliArgs(["--model", "gpt-6-sol"]).model, "gpt-6-sol");
+  assert.equal(parseCliArgs(["--live", "--model", "gpt-6-sol"]).model, "gpt-6-sol");
   const args = codexArguments("/w", "m", "t", ["read_file"], "gpt-6-sol");
   assert.equal(args[args.indexOf("--model") + 1], "gpt-6-sol");
   assert.ok(args.includes("read-only"));
@@ -248,6 +248,16 @@ test("experiment pins the requested proposer model without changing CLI isolatio
   assert.ok(args.includes('model_reasoning_effort="medium"'));
   assert.throws(() => parseCliArgs(["--model", "bad model"]), /model/);
   assert.throws(() => codexArguments("/w", "m", "t", [], ""), /model/);
+});
+
+test("CLI rejects ignored model options in offline and table modes", async () => {
+  assert.throws(() => parseCliArgs(["--model", "gpt-6-sol"]), /--model requires --live/);
+  assert.throws(() => parseCliArgs(["--table", "recorded.json", "--model", "gpt-6-sol"]), /only renders/);
+  assert.throws(() => parseCliArgs(["--table", "recorded.json", "--live", "--model", "gpt-6-sol"]), /only renders/);
+  const output = collect();
+  assert.equal(await main(["--model", "gpt-6-sol", "--format", "json"], { ...output.io, env: {}, fetch: async () => { assert.fail("invalid options must not dispatch"); } }), 2);
+  assert.equal(output.out, "");
+  assert.match(output.err, /--model requires --live/);
 });
 
 test("routing diagnostics explain unusable evidence without retaining provider text", async () => {
