@@ -17,12 +17,15 @@ export function renderExperimentTable(artifact: ExperimentArtifact): string {
     `Generated ${artifact.generatedAt} · \`${artifact.command}\` · runs: ${artifact.runs} · sizes: ${artifact.sizes.join(", ")} · topK ${artifact.policy.topK}, confidence floor ${artifact.policy.confidenceFloor}`, "");
 
   if (artifact.status === "cancelled") lines.push("> **Cancelled: partial results only. Planned runs did not finish.**", "");
+  const withPrerequisites = artifact.toolContext?.mode === "with_prerequisites";
+  if (withPrerequisites) lines.push("Arm B exposes routed roots plus host prerequisites (dependency version 1). topK limits roots; the all-tools baseline is unchanged. Host withholding is counted separately from provider unavailability.", "");
+  const showWithheld = withPrerequisites || artifact.trials.some(t => t.outcome === "context_withheld");
   lines.push("#### Totals by arm", "",
-    row(["Arm", "Trials", "Correct tool", "First call correct", "Routed clarify / no-match", "No tool call", "Unavailable", "Failed", "Jev calls", "Jev latency median (ms)", "Reported input mean", "Reported output mean", "Proxy input mean", "Tools exposed mean"]),
-    row(Array(14).fill("---")));
+    row(["Arm", "Trials", "Correct tool", "First call correct", "Routed clarify / no-match", "No tool call", "Unavailable", ...(showWithheld ? ["Host withheld"] : []), "Failed", "Jev calls", "Jev latency median (ms)", "Reported input mean", "Reported output mean", "Proxy input mean", "Tools exposed mean"]),
+    row(Array(showWithheld ? 15 : 14).fill("---")));
   for (const arm of ARMS) {
     const s = summary.byArm[arm];
-    lines.push(row([ARM_LABEL[arm], String(s.trials), pct(s), String(s.firstCallCorrect), String(s.routedClarifications), String(s.noToolCalls), String(s.unavailable), String(s.failed), String(s.jevCalls), n(s.jevLatencyMedianMs, 1), reported(s, s.reportedInputMean), reported(s, s.reportedOutputMean, s.reportedOutputKnown), n(s.proxyInputMean), n(s.exposedToolsMean, 1)]));
+    lines.push(row([ARM_LABEL[arm], String(s.trials), pct(s), String(s.firstCallCorrect), String(s.routedClarifications), String(s.noToolCalls), String(s.unavailable), ...(showWithheld ? [String(s.withheld ?? 0)] : []), String(s.failed), String(s.jevCalls), n(s.jevLatencyMedianMs, 1), reported(s, s.reportedInputMean), reported(s, s.reportedOutputMean, s.reportedOutputKnown), n(s.proxyInputMean), n(s.exposedToolsMean, 1)]));
   }
 
   lines.push("", "#### By catalog size", "", row(["Size", "N", "Arm", "Correct tool", "Reported input mean", "Proxy input mean"]), row(Array(6).fill("---")));

@@ -6,7 +6,7 @@ export const HISTORY_KEY = "jev-arena-history-v1";
 export const MAX_RUNS = 30;
 export const MAX_BYTES = 2_000_000;
 // Bump when prompt, fixture isolation, catalog or host settings change comparability.
-export const ARENA_SETUP_VERSION = 1;
+export const ARENA_SETUP_VERSION = 2;
 export interface SavedFixture { id: string; title: string; task: string; files: Record<string, string> }
 export interface SavedLane { tools: string[]; result: CliResult }
 export interface ArenaRun {

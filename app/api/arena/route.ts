@@ -3,7 +3,8 @@ import { liveHandle } from "../../../examples/host/runtime";
 import { runArenaLanes } from "../../../examples/host/arena-lanes";
 import { ARENA_CASES } from "../../../examples/arena/cases";
 import { DEMO_CATALOG, DEMO_POLICY } from "../../../examples/routing/scenarios";
-import { prepareToolContext } from "../../../src/routing";
+import { prepareToolContext, assembleToolBundle } from "../../../src/routing";
+import { ARENA_TOOL_DEPENDENCIES } from "../../../examples/arena/tool-dependencies";
 export const runtime = "nodejs";
 export const maxDuration = 300;
 let running = false;
@@ -32,8 +33,10 @@ export async function POST(request: Request) {
         const { receipt } = prepared;
         if (receipt.outcome === "unavailable") { emit({ type: "error", value: "Routing evidence unavailable. No CLI run started." }); return; }
         emit({ type: "routing", receipt });
+        const bundle = assembleToolBundle(receipt, ARENA_TOOL_DEPENDENCIES, { signal });
+        if (receipt.outcome === "selected" && bundle.status !== "ready") { emit({ type: "error", value: bundle.reason }); return; }
         emit({ type: "stage", value: "Both agents are running in parallel. Results appear independently as each finishes." });
-        await runArenaLanes(fixture, prepared.context.state.loadedIds, signal, emit);
+        await runArenaLanes(fixture, bundle.context.state.loadedIds, signal, emit);
         if (!signal.aborted) emit({ type: "done", at: new Date().toISOString() });
       } catch { emit({ type: "error", value: "The comparison could not complete. Check the local CLI configuration and retry explicitly." }); }
       finally { running = false; try { controller.close(); } catch {} }

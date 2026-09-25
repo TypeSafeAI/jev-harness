@@ -5,7 +5,7 @@ import type { CliPhase, CliResult } from "../examples/host/codex";
 import type { RouterMeasurement } from "../examples/routing/live-client";
 import type { RoutingReceipt } from "../src/routing";
 
-export interface LaneProgress { phase: CliPhase; startedAt: number }
+export interface LaneProgress { phase: CliPhase; startedAt: number; tools?: string[] }
 export interface ArenaLane { tools: string[]; result: CliResult }
 const phaseLabels = { starting: "Starting Codex…", working: "Agent is working…", calling: "Calling a fixture tool…", answering: "Preparing its answer…", failed: "Run incomplete" };
 const names: Record<string, string> = { read_file: "Read file", propose_patch: "Record proposal", inspect_agent: "Inspect fixture" };
@@ -49,6 +49,8 @@ export function ArenaResults({ lanes, receipt, jevUsage, pending, progress, fini
   const [now, setNow] = useState(0);
   useEffect(() => { if (!pending) return; setNow(Date.now()); const timer = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(timer); }, [pending]);
   const base = lanes.baseline, integrated = lanes.integrated;
+  const integratedTools = integrated?.tools ?? progress.integrated?.tools;
+  const hasPrerequisites = receipt && integratedTools?.some(id => !receipt.selectedIds.includes(id));
   const ready = base?.result.status === "completed" && integrated?.result.status === "completed";
   const integratedInput = integrated?.result.inputTokens != null && jevUsage?.inputTokens != null ? integrated.result.inputTokens + jevUsage.inputTokens : null;
   const baseInput = base?.result.inputTokens ?? null;
@@ -57,7 +59,7 @@ export function ArenaResults({ lanes, receipt, jevUsage, pending, progress, fini
   const timeDelta = ready && integratedTime != null ? integratedTime - base.result.durationMs : null;
   return <>
     <section className="arena-overview" aria-label="Comparison at a glance">
-      <div><p className="eyebrow">The difference, at a glance</p><h2>{receipt ? `${base?.tools.length ?? DEMO_CATALOG.length} tools → ${receipt.selectedIds.length} exposed with Jev` : finished ? "No routing result returned" : "Same task. A smaller tool menu?"}</h2><p className="hint">{receipt ? "Compare the answers, then expand tool activity to see what each agent used." : "Run a comparison to see what Jev selects and what each agent actually does."}</p></div>
+      <div><p className="eyebrow">The difference, at a glance</p><h2>{integratedTools ? `${base?.tools.length ?? DEMO_CATALOG.length} tools → ${integratedTools.length} exposed with Jev` : receipt ? `${receipt.selectedIds.length} selected · ${pending ? "preparing tool access" : "tool access not reported"}` : finished ? "No routing result returned" : "Same task. A smaller tool menu?"}</h2><p className="hint">{receipt ? "Compare the answers, then expand tool activity to see what each agent used." : "Run a comparison to see what Jev selects and what each agent actually does."}</p></div>
       <div className="arena-verdict"><span>Observed input · CLI + router</span><strong>{delta == null ? ready ? "Usage incomplete" : pending ? "Comparing…" : base || integrated || finished ? "Comparison incomplete" : "Awaiting results" : delta === 0 ? "Same input count" : `${number(Math.abs(delta))} ${delta < 0 ? "fewer" : "more"} tokens`}</strong>
         {timeDelta != null && <p className="arena-time-delta">{timeDelta === 0 ? "Same measured duration" : `${seconds(Math.abs(timeDelta))} ${timeDelta < 0 ? "less" : "longer"} with Jev`} · includes routing</p>}
         <p className="hint">{ready ? "This run only. Input includes Jev; output and cache details are in the inspector. Answer quality is not scored." : "Results appear as each lane finishes. A finished CLI run does not prove a tool was used."}</p>
@@ -68,7 +70,7 @@ export function ArenaResults({ lanes, receipt, jevUsage, pending, progress, fini
         const lane = lanes[id], activity = progress[id];
         const running = pending && !lane && activity?.phase !== "failed";
         const phase = lane ? outcome(lane) : running ? activity ? phaseLabels[activity.phase] : "Waiting for Jev routing…" : activity ? "Run stopped · results incomplete" : finished ? "No result returned" : "Ready";
-        const selected = lane?.tools ?? (id === "integrated" ? receipt?.selectedIds : DEMO_CATALOG.map(tool => tool.id));
+        const selected = lane?.tools ?? activity?.tools ?? (id === "baseline" ? DEMO_CATALOG.map(tool => tool.id) : undefined);
         const input = id === "baseline" ? baseInput : integratedInput;
         const duration = id === "baseline" ? lane?.result.durationMs ?? null : integratedTime;
         const waiting = running ? "Pending" : "Unknown";
@@ -76,7 +78,7 @@ export function ArenaResults({ lanes, receipt, jevUsage, pending, progress, fini
         return <section className={`result arena-lane ${id}`} key={id} aria-label={title}>
           <div className="result-heading"><div><p className="eyebrow">{title}</p><h2>{subtitle}</h2></div><span className="lane-status" role="status">{running && <span className="activity-dot" aria-hidden="true" />}{phase}{running && activity && <small aria-hidden="true">{Math.max(0, Math.floor((now - activity.startedAt) / 1000))} s elapsed</small>}</span></div>
           <dl className="lane-metrics">
-            <div><dt>Available tools</dt><dd><strong>{selected ? selected.length : pending ? "Pending" : "—"}</strong><small>{id === "baseline" ? "Full fixture catalog" : selected ? "Selected by Jev" : finished ? "Not reported" : "Awaiting routing"}</small></dd></div>
+            <div><dt>Available tools</dt><dd><strong>{selected ? selected.length : pending ? "Pending" : "—"}</strong><small>{id === "baseline" ? "Full fixture catalog" : selected ? !receipt ? "Reported tool menu" : hasPrerequisites ? "Selected + prerequisites" : "Selected tools" : finished ? "Not reported" : "Awaiting tool access"}</small></dd></div>
             <div><dt>Input tokens</dt><dd><strong>{input != null ? number(input) : waiting}</strong><small>{id === "baseline" ? "CLI only" : lane ? `${number(lane.result.inputTokens)} CLI + ${number(jevUsage?.inputTokens)} Jev` : "CLI + Jev"}</small></dd></div>
             <div><dt>Time</dt><dd><strong>{duration != null ? seconds(duration) : waiting}</strong><small>{id === "baseline" ? "CLI only" : lane ? `${seconds(lane.result.durationMs)} CLI + ${jevUsage ? seconds(jevUsage.latencyMs) : "Unknown"} Jev` : "CLI + routing"}</small></dd></div>
           </dl>
