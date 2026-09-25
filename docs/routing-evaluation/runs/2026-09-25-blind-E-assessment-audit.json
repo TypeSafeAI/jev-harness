@@ -1,0 +1,9 @@
+{
+  "inputFile": "blind-E.jsonl",
+  "inputSha256": "587365eab6167960561f605c5a9fce09608c97da594a2c4eb388b0e08db29f2d",
+  "assessmentSha256": "3bbfad6841a2ef42956da6f263d5f72c01e79305ab106327e9c2f9ec89b4f1f3",
+  "rubricSha256": "b90742ed9c4367f1ad8282a2d48349a69401e4fe077ebb6616301c3950109ce4",
+  "uniqueCases": 114,
+  "exactFieldExcerptsMatched": 114,
+  "note": "Offline identity, hash and exact excerpt validation; this does not validate the human-equivalent correctness of the agent grades."
+}

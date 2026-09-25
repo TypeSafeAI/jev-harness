@@ -1,0 +1,1146 @@
+{
+  "sourceHash": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+  "blindedSha256": "587365eab6167960561f605c5a9fce09608c97da594a2c4eb388b0e08db29f2d",
+  "cases": [
+    {
+      "caseId": "8d79895bc57c0900d4a07aa2",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 0,
+      "taskId": "read-small",
+      "baseId": "read",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "a8da7e3a5bfa6c0cd29e359a",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 1,
+      "taskId": "read-small",
+      "baseId": "read",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "521f08260f428532f5d2983c",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 2,
+      "taskId": "read-medium",
+      "baseId": "read",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "0f0413a5bbb729b0f676e1c4",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 3,
+      "taskId": "read-medium",
+      "baseId": "read",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "6525baf60d6dc54ff4b303d6",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 4,
+      "taskId": "read-large",
+      "baseId": "read",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "4a97b13a374eb00c5418823b",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 5,
+      "taskId": "read-large",
+      "baseId": "read",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "cc657602045f124ca82890ae",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 6,
+      "taskId": "patch-small",
+      "baseId": "patch",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "9c3dda19674ec964bea3380b",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 7,
+      "taskId": "patch-small",
+      "baseId": "patch",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "479f043d90f51d2ec8a4f686",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 8,
+      "taskId": "patch-medium",
+      "baseId": "patch",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "dc70ad88240169b5e728206c",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 9,
+      "taskId": "patch-medium",
+      "baseId": "patch",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "0a5c438a79cddbc4bad83a9f",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 10,
+      "taskId": "patch-large",
+      "baseId": "patch",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "15f9308a57321467c20518bd",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 11,
+      "taskId": "patch-large",
+      "baseId": "patch",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "0202b940d40345ddcd28f459",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 12,
+      "taskId": "inspect-small",
+      "baseId": "inspect",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "a25b6620cb2b6a2669c3e55a",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 13,
+      "taskId": "inspect-small",
+      "baseId": "inspect",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "06d3bef0fd082f01917f71e5",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 14,
+      "taskId": "inspect-medium",
+      "baseId": "inspect",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "0c58b17125fefc2b076edb70",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 15,
+      "taskId": "inspect-medium",
+      "baseId": "inspect",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "f9a18fc63656e25cdee467b7",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 16,
+      "taskId": "inspect-large",
+      "baseId": "inspect",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "f27124f241db42eaefa5f74f",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 17,
+      "taskId": "inspect-large",
+      "baseId": "inspect",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "5e4e9f10311bae3676617509",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 18,
+      "taskId": "ambiguous-small",
+      "baseId": "ambiguous",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "9fd48ae368e68378fae3888f",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 19,
+      "taskId": "ambiguous-small",
+      "baseId": "ambiguous",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "ddeffc001e2e1d1402889ffc",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 20,
+      "taskId": "ambiguous-medium",
+      "baseId": "ambiguous",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "82874e6216bb2664d5c17595",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 21,
+      "taskId": "ambiguous-medium",
+      "baseId": "ambiguous",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "31e7ff69891aff309a10f43d",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 22,
+      "taskId": "ambiguous-large",
+      "baseId": "ambiguous",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "4b47201806584376fd90b92e",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 23,
+      "taskId": "ambiguous-large",
+      "baseId": "ambiguous",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "95478cc7e486514b7b3f1607",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 24,
+      "taskId": "uncertain-small",
+      "baseId": "uncertain",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "8db5c112e9ff22e27449a773",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 25,
+      "taskId": "uncertain-small",
+      "baseId": "uncertain",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "c654b64c2108d54f7ef6f227",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 26,
+      "taskId": "uncertain-medium",
+      "baseId": "uncertain",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "a98a2ecd8a990f3ab1ec0dcf",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 27,
+      "taskId": "uncertain-medium",
+      "baseId": "uncertain",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "462f51bcb6ddd08d4a347b1e",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 28,
+      "taskId": "uncertain-large",
+      "baseId": "uncertain",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "ee73235eadb62181c7b82af4",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 29,
+      "taskId": "uncertain-large",
+      "baseId": "uncertain",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "70b52c11ccfe91e8ea667dd4",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 30,
+      "taskId": "search-medium",
+      "baseId": "search",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "507993c8efe9511520954e34",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 31,
+      "taskId": "search-medium",
+      "baseId": "search",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "acf5bfafe82650aaa0990bea",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 32,
+      "taskId": "search-large",
+      "baseId": "search",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "f57f2e85284696e7b7c154a2",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 33,
+      "taskId": "search-large",
+      "baseId": "search",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "1ef82bcf604a949c86b679cc",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 34,
+      "taskId": "test_draft-medium",
+      "baseId": "test_draft",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "97617b8ea5ada1d9ba97d39e",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 35,
+      "taskId": "test_draft-medium",
+      "baseId": "test_draft",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "01e60799863b247167b13d45",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 36,
+      "taskId": "test_draft-large",
+      "baseId": "test_draft",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "a1ab431c3d3256216cbf7764",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 37,
+      "taskId": "test_draft-large",
+      "baseId": "test_draft",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "8ed6bb7fa7a1bd7c8fac5552",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 38,
+      "taskId": "read-small",
+      "baseId": "read",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "821fe88d722cb850b2eaecf0",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 39,
+      "taskId": "read-small",
+      "baseId": "read",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "2dd3aaf4a7abe52694586046",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 40,
+      "taskId": "read-medium",
+      "baseId": "read",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "d92094739e39b39d1dd21bdb",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 41,
+      "taskId": "read-medium",
+      "baseId": "read",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "85d5f8456cd7d101a60d1928",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 42,
+      "taskId": "read-large",
+      "baseId": "read",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "8a7b11f4b72cafbd24328a78",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 43,
+      "taskId": "read-large",
+      "baseId": "read",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "a2c0d9e97ad39183b541c01d",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 44,
+      "taskId": "patch-small",
+      "baseId": "patch",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "870386bd2f550abf34ad6bde",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 45,
+      "taskId": "patch-small",
+      "baseId": "patch",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "c23287e910da694bcccb6c4d",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 46,
+      "taskId": "patch-medium",
+      "baseId": "patch",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "03bcf5d5144af3db60068646",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 47,
+      "taskId": "patch-medium",
+      "baseId": "patch",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "8345b81450392b248db73929",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 48,
+      "taskId": "patch-large",
+      "baseId": "patch",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "1fc3175cca271e1c5bb1057d",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 49,
+      "taskId": "patch-large",
+      "baseId": "patch",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "a2a32d954a15e9c61c02dd51",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 50,
+      "taskId": "inspect-small",
+      "baseId": "inspect",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "f665ac03334193e15b0fb464",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 51,
+      "taskId": "inspect-small",
+      "baseId": "inspect",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "d85c9e9b98b90104d84fbd42",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 52,
+      "taskId": "inspect-medium",
+      "baseId": "inspect",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "382a406322a447fb4c98437e",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 53,
+      "taskId": "inspect-medium",
+      "baseId": "inspect",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "6afb09cfa7171816837a2cd1",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 54,
+      "taskId": "inspect-large",
+      "baseId": "inspect",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "efaecbeca1eafbd3e00f2c44",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 55,
+      "taskId": "inspect-large",
+      "baseId": "inspect",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "c3922e8ce879cd7505d86d4f",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 56,
+      "taskId": "ambiguous-small",
+      "baseId": "ambiguous",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "af85a53c7a75db0173517ac5",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 57,
+      "taskId": "ambiguous-small",
+      "baseId": "ambiguous",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "ffd197b5c1a6d42b432f263d",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 58,
+      "taskId": "ambiguous-medium",
+      "baseId": "ambiguous",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "8604d768b8169205991d6f14",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 59,
+      "taskId": "ambiguous-medium",
+      "baseId": "ambiguous",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "dcd0eeef1b6ff4063df8d648",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 60,
+      "taskId": "ambiguous-large",
+      "baseId": "ambiguous",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "54f4ea230d5e40563c149caf",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 61,
+      "taskId": "ambiguous-large",
+      "baseId": "ambiguous",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "8c71630b2b132ba4376d03ab",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 62,
+      "taskId": "uncertain-small",
+      "baseId": "uncertain",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "c8a37db317350d5034612921",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 63,
+      "taskId": "uncertain-small",
+      "baseId": "uncertain",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "6b5cd591d9cbc633a2cf4406",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 64,
+      "taskId": "uncertain-medium",
+      "baseId": "uncertain",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "b471fe5615aa70ee6a45488e",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 65,
+      "taskId": "uncertain-medium",
+      "baseId": "uncertain",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "27b2dfd598bd9271eced0060",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 66,
+      "taskId": "uncertain-large",
+      "baseId": "uncertain",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "2d9993d1f5455f05b3b79f3e",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 67,
+      "taskId": "uncertain-large",
+      "baseId": "uncertain",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "648512f11e26d1a8a84ee422",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 68,
+      "taskId": "search-medium",
+      "baseId": "search",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "ccf9ce3bd9fe7c78a1ed271e",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 69,
+      "taskId": "search-medium",
+      "baseId": "search",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "f544266989998261d5975c1f",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 70,
+      "taskId": "search-large",
+      "baseId": "search",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "27d77ce47e10245e1f88d08c",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 71,
+      "taskId": "search-large",
+      "baseId": "search",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "e768b1bd62016d56d5d510ee",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 72,
+      "taskId": "test_draft-medium",
+      "baseId": "test_draft",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "bd75ac06fb1072391e183173",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 73,
+      "taskId": "test_draft-medium",
+      "baseId": "test_draft",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "0fd2921a41607dcd70851069",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 74,
+      "taskId": "test_draft-large",
+      "baseId": "test_draft",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "737256fda3457eaaa042ad84",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 75,
+      "taskId": "test_draft-large",
+      "baseId": "test_draft",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "d09e54e05d90fb7bf8ce7e79",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 76,
+      "taskId": "read-small",
+      "baseId": "read",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "6b55c3bf1d698bdfcd3b7f9b",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 77,
+      "taskId": "read-small",
+      "baseId": "read",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "895092493bfe18c066db2d22",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 78,
+      "taskId": "read-medium",
+      "baseId": "read",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "3ab530babd9bcf29f888a909",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 79,
+      "taskId": "read-medium",
+      "baseId": "read",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "97ad9406da8981c849acb28b",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 80,
+      "taskId": "read-large",
+      "baseId": "read",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "8037640d60e8703dd5ceb2ed",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 81,
+      "taskId": "read-large",
+      "baseId": "read",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "52bb98f998d3648ccf0084dd",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 82,
+      "taskId": "patch-small",
+      "baseId": "patch",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "6fa235cf792eb592045bde04",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 83,
+      "taskId": "patch-small",
+      "baseId": "patch",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "5f40a550c63c58c3ce21072a",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 84,
+      "taskId": "patch-medium",
+      "baseId": "patch",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "278579dbc1c1d547ac4b6038",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 85,
+      "taskId": "patch-medium",
+      "baseId": "patch",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "c1e431761e01490108045044",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 86,
+      "taskId": "patch-large",
+      "baseId": "patch",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "1f78b8aef94d6a5304f7e1e5",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 87,
+      "taskId": "patch-large",
+      "baseId": "patch",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "c3029002a9fb0434b6183d21",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 88,
+      "taskId": "inspect-small",
+      "baseId": "inspect",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "90b3aeb816e7e578635d3755",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 89,
+      "taskId": "inspect-small",
+      "baseId": "inspect",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "11277f41447cc8938e0de0c5",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 90,
+      "taskId": "inspect-medium",
+      "baseId": "inspect",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "7dd67547c5386b21251e1a0a",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 91,
+      "taskId": "inspect-medium",
+      "baseId": "inspect",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "29a0dac754e2663033f3b857",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 92,
+      "taskId": "inspect-large",
+      "baseId": "inspect",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "f3b16a795a6bee8fb6870aef",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 93,
+      "taskId": "inspect-large",
+      "baseId": "inspect",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "3281dc985309ba1e34554669",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 94,
+      "taskId": "ambiguous-small",
+      "baseId": "ambiguous",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "006f28c22eff68f62f4fbaab",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 95,
+      "taskId": "ambiguous-small",
+      "baseId": "ambiguous",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "5ce83104589d035318ed37fb",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 96,
+      "taskId": "ambiguous-medium",
+      "baseId": "ambiguous",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "e4af3557a5290225709f7df7",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 97,
+      "taskId": "ambiguous-medium",
+      "baseId": "ambiguous",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "fd205d8f46995beda7582a15",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 98,
+      "taskId": "ambiguous-large",
+      "baseId": "ambiguous",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "c89217baa4b253db555233fe",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 99,
+      "taskId": "ambiguous-large",
+      "baseId": "ambiguous",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "4726e765f2be45913bb909ba",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 100,
+      "taskId": "uncertain-small",
+      "baseId": "uncertain",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "1cccfd3f666f37f8b2895033",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 101,
+      "taskId": "uncertain-small",
+      "baseId": "uncertain",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "a58b6273757a8ca26c76e8df",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 102,
+      "taskId": "uncertain-medium",
+      "baseId": "uncertain",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "c87b00f02c07a9aa6e464add",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 103,
+      "taskId": "uncertain-medium",
+      "baseId": "uncertain",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "654595acf04be3d2606af4e5",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 104,
+      "taskId": "uncertain-large",
+      "baseId": "uncertain",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "91f7e91d367725232d2b3eef",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 105,
+      "taskId": "uncertain-large",
+      "baseId": "uncertain",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "0e1a267ac8691b8873095621",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 106,
+      "taskId": "search-medium",
+      "baseId": "search",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "9a44204b4f07abd55b261b30",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 107,
+      "taskId": "search-medium",
+      "baseId": "search",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "75e23f227f1089cee58f1f8c",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 108,
+      "taskId": "search-large",
+      "baseId": "search",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "79d4641efd80c97a4c797863",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 109,
+      "taskId": "search-large",
+      "baseId": "search",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "7302a799e1cb252af2764804",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 110,
+      "taskId": "test_draft-medium",
+      "baseId": "test_draft",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "703cf47753fdd122f0c17a6e",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 111,
+      "taskId": "test_draft-medium",
+      "baseId": "test_draft",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "90b795da6cc93d105456a6d5",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 112,
+      "taskId": "test_draft-large",
+      "baseId": "test_draft",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "a06b9d47e1dff84870e925a7",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/routing-package-v4-control.json",
+      "artifactSha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0",
+      "trialIndex": 113,
+      "taskId": "test_draft-large",
+      "baseId": "test_draft",
+      "run": 3,
+      "arm": "all_tools"
+    }
+  ]
+}

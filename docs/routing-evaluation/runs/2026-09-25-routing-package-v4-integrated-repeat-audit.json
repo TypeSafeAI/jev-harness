@@ -1,0 +1,14 @@
+{
+  "artifactFile": "routing-package-v4-integrated-repeat.json",
+  "artifactSha256": "568691e7acdf5d598fcb3dfce291e138f3757409d148ad2dedf023b934ec53ee",
+  "sourceCommit": "5f58cd2198bf6ce485debee07e1b3b68f4544773",
+  "sourceFilesMatched": 73,
+  "packageFilesMatched": 42,
+  "trials": 114,
+  "pairedCases": 57,
+  "jevCalls": 57,
+  "sourceUnchanged": true,
+  "packageUnchanged": true,
+  "retries": 0,
+  "note": "Offline manifest, retained identity and completion audit; parser replay is checked separately."
+}

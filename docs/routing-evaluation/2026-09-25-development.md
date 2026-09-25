@@ -1,5 +1,9 @@
 # Routing optimization development ledger
 
+Follow-up: [routing v4 measurements](2026-09-25-routing-v4.md) record the next
+frozen instruction experiment. This ledger preserves the earlier development
+state and assessments.
+
 Four matched routing comparisons and their blinded output assessments are
 complete; further instruction measurements remain pending. This ledger retains setup
 failures and cancelled runs alongside successful measurements; none are silently
@@ -48,7 +52,8 @@ provenance or benchmark artifact was written; its second launch is recorded
 separately. Both v4 routing diagnostic launches had the same startup failure
 before the wrapper ran. Neither created a provenance file or made a provider
 request; further live diagnostics await credential-store access.
-Provider requests are not automatically retried.
+The harness does not retry Jev calls or proposer invocations. Provider retries
+internal to the CLI are not retained in these artifacts.
 
 ## Completed comparisons
 

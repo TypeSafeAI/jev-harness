@@ -1,0 +1,23 @@
+{
+  "sourceArtifact": "/tmp/jev-performance-2026-09-24/routing-evidence-v4-attempt3.json",
+  "sourceCommit": "fb7226c1c8b04efb0385ce3bef0d072e67f78899",
+  "matchedRequestBodies": 57,
+  "matchedRequestsCatalogsPoliciesAndOutcomes": 57,
+  "historicalArtifactsReplayed": [
+    "examples/routing/runs/2026-09-23-routing-pilot.json",
+    "examples/routing/runs/2026-09-23-routing-r3.json",
+    "examples/routing/runs/2026-09-25-routing-baseline.json",
+    "examples/routing/runs/2026-09-25-routing-package-baseline.json",
+    "examples/routing/runs/2026-09-25-routing-package-fixture-tools-attempt2.json",
+    "examples/routing/runs/2026-09-25-routing-package-inspector-attempt2.json",
+    "examples/routing/runs/2026-09-25-routing-package-prerequisites.json",
+    "examples/routing/runs/2026-09-25-routing-pinned-baseline.json",
+    "examples/routing/runs/2026-09-25-routing-pinned-prerequisites.json",
+    "examples/routing/runs/2026-09-25-routing-prerequisites.json",
+    "tests/fixtures/routing-v1-prerequisites.json",
+    "tests/fixtures/routing-v2-prerequisites.json",
+    "tests/fixtures/routing-v3-prerequisites.json"
+  ],
+  "providerCalls": 0,
+  "cliCalls": 0
+}
