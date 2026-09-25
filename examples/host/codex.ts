@@ -6,10 +6,11 @@ import type { ToolDefinition } from "../../src/routing/types";
 /** Structural fixture shape: the arena cases and the routing experiment tasks both satisfy it. Never carries labels. */
 export interface CliFixture { readonly task: string; readonly files: Readonly<Record<string, string>> }
 export interface RecordedProposal { path: string; patch: string; rationale: string; applied: false }
-export interface ToolCall { tool: string; status: string; at: string; proposal?: RecordedProposal }
+export interface RecordedTestProposal { path: string; content: string; applied: false }
+export interface ToolCall { tool: string; status: string; at: string; proposal?: RecordedProposal; testProposal?: RecordedTestProposal }
 export interface CliResult { status: "completed" | "failed" | "cancelled"; answer: string; durationMs: number; inputTokens: number | null; cachedInputTokens: number | null; outputTokens: number | null; toolCallCount: number; traceTruncated: boolean; toolCalls: ToolCall[]; error: string | null }
 export type CliTool = Pick<ToolDefinition, "id" | "kind" | "description" | "inputSchema">;
-/** The bounded fixture handlers in scripts/arena-mcp.mjs. */
+/** Default Arena allowlist; the experiment explicitly exposes additional descriptors. */
 export const FIXTURE_TOOL_IDS = ["read_file", "propose_patch", "inspect_agent"] as const;
 /**
  * `approvedIds` defaults to the three fixture handlers. The routing experiment passes the exposed

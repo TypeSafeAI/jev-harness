@@ -110,7 +110,55 @@ rejects inconsistent provenance or exposure. Historical v1 artifacts without
 `toolContext` remain selected-only. Compare these configurations explicitly when
 reporting results; combining them would hide the treatment being measured.
 
-**Tasks.** `examples/routing/experiment-tasks.ts`. The five non-failure routing scenarios (read, patch, inspect, ambiguous, uncertain) run at three catalog sizes: small (N = 3, the demo catalog, comparable with the arena), medium (N = 8) and large (N = 20). Two synthetic intents target non-demo descriptors (search, test draft) at medium and large. That makes 19 tasks per run. The extra descriptors are synthetic and have no fixture handler; a call to one is recorded by the fixture host and answered with an error. Nothing executes.
+**Tasks.** `examples/routing/experiment-tasks.ts`. The five non-failure routing scenarios (read, patch, inspect, ambiguous, uncertain) run at three catalog sizes: small (N = 3, the demo catalog, comparable with the arena), medium (N = 8) and large (N = 20). Two synthetic intents target non-demo descriptors (search, test draft) at medium and large. That makes 19 tasks per run. The host supports those two extra descriptors as described below. Other extra descriptors remain unsupported: their calls are recorded and answered with `No handler.` Nothing proposed executes.
+
+### Fixture host revision 1
+
+New experiment artifacts and Arena snapshots record `fixtureHostRevision: 1`.
+This identifies the host that adds `search_text` and `draft_test_proposal`;
+absence identifies the historical host without these handlers. It is separate
+from routing question-set version and is structural provenance, not
+authentication. Readers preserve historical records, reject unknown revisions,
+and require this revision for returned search calls or retained test drafts.
+The default Arena allowlist remains `read_file`, `propose_patch`, and
+`inspect_agent`; its setup revision remains 2. The experiment explicitly
+exposes its selected descriptors.
+
+`search_text` searches only supplied `manifest.files` for a nonempty literal,
+case-sensitive query. Results are a prefix in lexical path order, then 1-based
+line order. They contain `{ path, line, text }` matches and an explicit
+`truncated` boolean. The host stops before exceeding 100 matches or 64,000 UTF-8
+bytes for the serialized `{ matches, truncated }` data object, including JSON
+escaping. This byte limit excludes the enclosing MCP text/JSON-RPC envelope.
+It performs no regex search, shell command, or additional filesystem read.
+
+`draft_test_proposal` records the exact submitted source separately as
+`ToolCall.testProposal = { path, content, applied: false }`. It returns
+`recorded_pending` with an explicit note that correctness has not been assessed.
+The host retains source in the trace without parsing, importing or executing it;
+no proposed file is created or modified. Paths
+must be new relative files ending in `.test` or `.spec` followed by `.js`,
+`.jsx`, `.mjs`, `.cjs`, `.ts`, `.tsx`, `.mts`, or `.cts`; absolute/drive paths,
+backslashes, colons, control characters, empty segments, `.` and `..` segments,
+and collisions with existing fixture files are rejected. The pure predicate
+and limits in `examples/host/fixture-tools.mjs` are shared with artifact readers.
+
+Existing argument limits remain 16,000 characters per string. Patch and test
+records share a 256,000-byte UTF-8 serialized proposal budget per CLI run;
+overflow is rejected before retention, never truncated. Readers require the
+matching returned tool, `applied: false`, no simultaneous patch record, valid
+path/content, and the same shared budget, including fixture collisions where
+the snapshot is available. A retained draft is unevaluated evidence.
+
+Fixture content, tasks, labels, mocks, model, routing descriptions/criteria,
+policy, and prerequisite graph are unchanged. In particular, frozen
+`SUM_FILES` uses `i <= values.length`: on an empty array it adds `undefined`
+and returns `NaN`, not zero. Do not change the fixture or label to fit a draft.
+Later offline human or agent assessment can grade the retained source against
+that snapshot without executing it. Live effectiveness and draft quality for
+this host revision remain pending separate measurement.
+
+### Inputs and measurement
 
 **Label separation.** Tasks carry only an id, size, intent and synthetic files. Evaluation labels (`EXPERIMENT_LABELS`, copied from the scenario labels where reused) are a separate table. The runner never receives them; scoring joins them after all trials finish. Scripted fake distributions and the fake proposer script are separate tables again. Jev receives the pinned model, the untrusted-data note, the available descriptions and the clarification option. The proposer receives a frozen copy of the task text, the synthetic files and the exposed schemas, nothing else.
 

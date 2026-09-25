@@ -265,3 +265,14 @@ permission. The Arena host declares `propose_patch → read_file`, records the
 actual menu per lane, and uses setup revision 2 so older runs do not enter its
 comparison trends. Review verdicts, routing questions and decision policy do
 not change.
+
+Fixture host revision 1 adds literal bounded search over supplied synthetic
+files and exact, unevaluated test-source recording in a separate
+`ToolCall.testProposal` field. New experiment artifacts and Arena snapshots
+record `fixtureHostRevision: 1`; absence retains historical host provenance.
+Pure host helpers outside `src/` share path, argument and combined patch/test
+recording limits with artifact and history readers. Proposed source is never
+parsed, imported or executed, and no proposed files are created or modified.
+No contract verdict changes. The
+default Arena menu and routing question semantics remain unchanged. See
+[fixture host bounds and assessment limits](routing.md#fixture-host-revision-1).
