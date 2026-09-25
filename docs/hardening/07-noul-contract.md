@@ -13,19 +13,34 @@ payload validation historically stripped them. That observation does not imply
 that the TypeSafe API forbids criteria.
 
 Phase 1 extracted the payload builder (`src/contract/review.ts`) and a
-criteria-preserving validator (`src/contract/payload.ts`). Question set v1 keeps
-its historical effective payload: type and instructions, no criteria. The
+criteria-preserving validator (`src/contract/payload.ts`). The frozen
+`REVIEW_QUESTIONS_V1` export keeps the historical effective questions: type and
+instructions, no criteria. The current question set v2 also sends no criteria;
+it changes only `addresses_task` and `evidence_supports` instructions. The
 playground-authored criteria text is exported as `REVIEW_QUESTION_CRITERIA` but
 not sent. No live transport is added to the package.
 
-## Extraction acceptance checks
+V2 treats an explicitly requested read or targeted inspection before a concrete
+change as task-directed. An explicit request establishes the desired change
+or inspection, while material factual and causal claims still need support.
+The scope and clarification questions remain byte-identical to v1. The model
+pin, threshold, decision table, fixtures and labels remain unchanged.
 
-The extraction PR must test the exact request after all validation/serialization
+Historical v1 runs retain their original meaning and question bytes. A v2
+comparison must record its own questions and profile; do not relabel or pool
+v1 and v2 measurements. Wire-contract tests establish serialization, not model
+correctness. Live evidence for this candidate remains pending.
+
+## Wire-contract acceptance checks
+
+Tests must check the exact request after all validation/serialization
 and immediately before the injected fake transport. Check both an instruction-
 only question and a criteria-bearing question; require preservation of both
 criteria descriptions, correct four IDs, pinned model, and the untrusted-data
 note. Labels, mock outcomes, and evaluation expectations must remain absent.
 Make malformed criteria fail validation instead of silently dropping them.
+Pin the current instructions in the transport assertion, preserve the v1
+question bytes, and check that v2 changes only the two intended questions.
 
 Compare the with-criteria and without-criteria variants on a frozen held-out
 set. Freeze their distinct effective payloads and version the semantics; do not

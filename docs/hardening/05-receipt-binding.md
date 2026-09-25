@@ -17,6 +17,13 @@ come from independently trusted host policy/current state, never from the
 untrusted record being checked. Different question text/criteria is detectable
 because the exact request body is bound, even if a version bump was forgotten.
 
+Question-set bindings must equal the current `REVIEW_QUESTION_SET_VERSION`,
+now 2. A prior v1 bound receipt requires the historical v1 code and an
+independently trusted v1 binding for replay; current v2 code rejects it even
+when its digest and expected binding match. Never relabel an old binding or
+replace its request body to make it current. Receipt schemaVersion 1 and
+bindingVersion 1 are unchanged and distinct from the question-set version.
+
 The SHA-256 digest is **not a signature**. A writer controlling a receipt can
 rewrite answers and rehash it. This detects accidental corruption and binding
 mismatches, not a malicious authorized log writer. Hosts requiring authentic

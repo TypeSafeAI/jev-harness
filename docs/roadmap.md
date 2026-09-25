@@ -24,7 +24,7 @@ Source: `typesafe-playground/lib/harness/`, re-diffed against canonical merged
 `main` commit `6fe5967dc020521a0731682b06c4d8eeeab95ffb` (playground PR #41).
 The [offline extraction check](verification/phase1-extraction-2026-09-23.json)
 confirms all original 20 fixtures and normalized v1 requests remain unchanged. The
-[hardened extraction adaptations](architecture.md#question-set-v1) retain the
+[hardened extraction adaptations](architecture.md#question-sets) retain the
 existing decision table and require the exact model pin before transport and
 on real-source replies. The original historical run links remain pinned to
 the revisions that produced them.
@@ -79,6 +79,12 @@ The separately recorded [live follow-up](calibration/2026-09-23-followup.md)
 completes the issue #5 investigation. Its confidence-only catch and unexpected
 good holds support retaining the fixed `0.8` floor as uncalibrated, not selecting
 an optimum from this sample.
+
+The [question set v2 candidate](architecture.md#question-sets) clarifies
+task-directed reads and separates explicit requests from factual or causal
+claims. It retains the v1 questions as frozen provenance and changes no fixture,
+label, model pin, threshold or decision rule. Offline wire-contract checks do
+not establish semantic improvement; a separate live comparison remains pending.
 
 ## 2 · Host seams
 
