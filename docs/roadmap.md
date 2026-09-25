@@ -116,7 +116,12 @@ candidates are not held-out calibration.
 - [x] Host-declared tool prerequisites: a routed patch can retain fixture-read access without changing Jev's selected roots or granting execution authority. The Arena records the complete menu, and the repeatable experiment opts in with `--with-prerequisites`. [Offline verification](verification/tool-prerequisites-2026-09-25.json) covers bundle withholding, artifact replay, live progress and saved-run exposure. Live effectiveness remains a separate experiment.
 
 - [x] [Fixture host revision 1](routing.md#fixture-host-revision-1): bounded literal search and retained, unevaluated test drafts, with shared recording limits and artifact/history provenance. Default Arena exposure, routing semantics, frozen fixtures, labels and mocks stay unchanged.
-- [ ] Measure this host capability candidate separately and assess retained test source offline without executing it. A recorded draft does not establish task correctness; live effectiveness remains pending.
+- [ ] Measure the integrated host capability and routing v4 candidate, then assess retained test source offline without executing it. A recorded draft does not establish task correctness; full CLI measurement remains pending.
+- [x] [Routing semantics v2](routing.md#inspector-semantics-v2): describe the deterministic inspector's source-context capability and generalize its grounding note. Preserve exact v1 wire semantics, catalog replay, prerequisite artifacts, and readable Arena history; introduced setup revision 3.
+- [x] [Routing instruction v3](routing.md#source-evidence-instruction-v3): distinguish source evidence that advances a clear task from ambiguity requiring clarification. Preserve v1/v2 wire bodies and replay, reuse the v2 catalog, and move new Arena runs to setup revision 4.
+- Retain the historical v3 development candidate's exact instruction and evidence for comparison.
+- [x] [Routing instruction v4](routing.md#requested-operation-instruction-v4): distinguish the requested operation or deliverable from a preliminary read, retaining source inspection as evidence for an explanation. Preserve v1/v2/v3 wire bodies and replay, reuse the v2 catalog, and move new Arena runs to setup revision 5.
+- [ ] Complete full CLI measurement of routing v4 with fixture host revision 1 and proposal-review v4, at the unchanged `0.7` routing confidence floor with frozen tasks, labels, mocks, costs, and prerequisites. Check edit roots, explanation holds, distribution validity, and answer quality; no improvement is claimed from offline compatibility checks.
 
 ## 4 · Context scoring
 

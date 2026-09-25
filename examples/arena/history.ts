@@ -8,7 +8,7 @@ export const HISTORY_KEY = "jev-arena-history-v1";
 export const MAX_RUNS = 30;
 export const MAX_BYTES = 2_000_000;
 // Bump when prompt, fixture isolation, catalog or host settings change comparability.
-export const ARENA_SETUP_VERSION = 2;
+export const ARENA_SETUP_VERSION = 5;
 export interface SavedFixture { id: string; title: string; task: string; files: Record<string, string> }
 export interface SavedLane { tools: string[]; result: CliResult }
 export interface ArenaRun {
@@ -41,12 +41,13 @@ function policy(value: unknown): RoutingPolicy { const v = record(value); return
 function receipt(value: unknown): RoutingReceipt | null {
   if (value === null) return null;
   const v = record(value), request = record(v.request);
-  if (v.schemaVersion !== 1 || request.questionSetVersion !== 1) throw Error();
+  const questionSetVersion = request.questionSetVersion;
+  if (v.schemaVersion !== 1 || (questionSetVersion !== 1 && questionSetVersion !== 2 && questionSetVersion !== 3 && questionSetVersion !== 4)) throw Error();
   const evidence = v.evidence === null ? null : record(v.evidence);
   return {
     schemaVersion: 1,
     catalog: list(v.catalog, item => { const t = record(item); return { id: text(t.id), kind: literal(t.kind, ["tool", "subagent"]), description: text(t.description), estimatedCostUnits: numeric(t.estimatedCostUnits), inputSchema: schema(t.inputSchema) }; }),
-    request: { model: literal(request.model, ["jev-1.13.0"]), questionSetVersion: 1, intent: text(request.intent), untrustedDataNote: text(request.untrustedDataNote), options: list(request.options, item => { const o = record(item); return { id: text(o.id), kind: literal(o.kind, ["tool", "subagent", "fallback"]), description: text(o.description) }; }) },
+    request: { model: literal(request.model, ["jev-1.13.0"]), questionSetVersion, intent: text(request.intent), untrustedDataNote: text(request.untrustedDataNote), options: list(request.options, item => { const o = record(item); return { id: text(o.id), kind: literal(o.kind, ["tool", "subagent", "fallback"]), description: text(o.description) }; }) },
     policy: policy(v.policy), source: literal(v.source, ["mock", "jev"]),
     evidence: evidence ? { model: literal(evidence.model, ["jev-1.13.0"]), choice: text(evidence.choice), confidence: numeric(evidence.confidence), probabilities: Object.fromEntries(Object.entries(record(evidence.probabilities)).map(([key, p]) => [key, numeric(p)])) } : null,
     outcome: literal(v.outcome, ["selected", "needs_clarification", "no_match", "unavailable"]), selectedIds: list(v.selectedIds, text), reason: text(v.reason), execution: { applied: unapplied(record(v.execution).applied) },

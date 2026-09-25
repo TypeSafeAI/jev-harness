@@ -52,7 +52,7 @@ lines.on("line", line => {
     else if (proposalBytes + size > FIXTURE_PROPOSAL_BYTES) { data = { error: "Proposal recording budget exhausted." }; failed = true; }
     else { testProposal = candidate; proposalBytes += size; data = { status: "recorded_pending", applied: false, note: "Test source retained in the run trace for inspection only. No correctness assessment, execution or file changes." }; }
   }
-  else if (tool.id === "inspect_agent") data = { source: "deterministic synthetic inspector, not a model subagent", files: manifest.files, note: "Compare the named exported constants to the question. Nothing changed." };
+  else if (tool.id === "inspect_agent") data = { source: "deterministic synthetic inspector, not a model subagent", files: manifest.files, note: "Ground the requested explanation in the provided synthetic source. Nothing changed." };
   else { data = { error: "No handler." }; failed = true; }
   appendFileSync(trace, JSON.stringify({ tool: tool?.id ?? "unknown", status: failed ? "rejected" : "returned", at: new Date().toISOString(), ...(proposal ? { proposal } : {}), ...(testProposal ? { testProposal } : {}) }) + "\n");
   respond(message.id, { result: { content: [{ type: "text", text: JSON.stringify(data) }], isError: failed } });

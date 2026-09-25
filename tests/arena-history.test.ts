@@ -1,7 +1,11 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { ARENA_CASES } from "../examples/arena/cases";
-import { createRun, parseHistory, retainRuns, saveRun, readHistory, clearHistory, performanceSeries, type ArenaRun, HISTORY_KEY, MAX_RUNS, MAX_BYTES } from "../examples/arena/history";
+import { ARENA_SETUP_VERSION, createRun, parseHistory, retainRuns, saveRun, readHistory, clearHistory, performanceSeries, type ArenaRun, HISTORY_KEY, MAX_RUNS, MAX_BYTES } from "../examples/arena/history";
+import { routeTools } from "../src/routing";
+import * as demo from "../examples/routing/scenarios";
+
+const { DEMO_CATALOG, DEMO_POLICY, SCENARIOS, scenarioRouter } = demo;
 
 const fixture = ARENA_CASES[0];
 const lane = { tools: ["read_file"], result: { status: "completed" as const, answer: "The result is 5.", durationMs: 1000, inputTokens: 100, cachedInputTokens: 0, outputTokens: 10, toolCallCount: 1, traceTruncated: false, toolCalls: [{ tool: "read_file", status: "returned", at: "2026-09-22T00:00:00Z" }], error: null } };
@@ -21,6 +25,32 @@ test("local snapshots round-trip evidence and exclude fields outside their schem
   assert.deepEqual(parsed.runs, [entry]);
   assert.equal(JSON.stringify(parsed).includes("synthetic-extra-field"), false);
   assert.equal(parsed.error, null);
+});
+
+test("history preserves v1/v2/v3/v4 receipts while setup 5 excludes older trend cohorts", async () => {
+  assert.equal(ARENA_SETUP_VERSION, 5);
+  const current = run("current");
+  current.receipt = await routeTools(DEMO_CATALOG, { intent: fixture.task, availableIds: DEMO_CATALOG.map(t => t.id) }, DEMO_POLICY, scenarioRouter(SCENARIOS[0]!));
+  const oldReceipt = await routeTools(demo.DEMO_CATALOG_V1, { intent: fixture.task, availableIds: demo.DEMO_CATALOG_V1.map(t => t.id) }, DEMO_POLICY, scenarioRouter(SCENARIOS[0]!));
+  const old = { ...run("v1"), setupVersion: 2, receipt: { ...oldReceipt, request: { ...oldReceipt.request, questionSetVersion: 1 as const } } };
+  const v2 = { ...run("v2"), setupVersion: 3, receipt: { ...current.receipt, request: { ...current.receipt.request, questionSetVersion: 2 as const } } };
+  const v3 = { ...run("v3"), setupVersion: 4, receipt: { ...current.receipt, request: { ...current.receipt.request, questionSetVersion: 3 as const } } };
+  const runs = [old, v2, v3, current];
+  const before = JSON.stringify(runs);
+  const parsed = parseHistory(JSON.stringify({ version: 1, runs }));
+  assert.equal(parsed.error, null);
+  assert.deepEqual(parsed.runs, runs);
+  assert.equal(JSON.stringify(runs), before);
+  assert.deepEqual(parsed.runs.map(r => r.receipt?.request.questionSetVersion), [1, 2, 3, 4]);
+  const series = performanceSeries(parsed.runs, fixture, "input");
+  assert.deepEqual(series.points.map(point => point.run.id), ["current"]);
+  assert.equal(series.excluded, 3);
+  for (const version of [0, 5, "1", null]) {
+    const invalid = { ...current, receipt: { ...current.receipt, request: { ...current.receipt.request, questionSetVersion: version } } };
+    const result = parseHistory(JSON.stringify({ version: 1, runs: [invalid] }));
+    assert.deepEqual(result.runs, []);
+    assert.ok(result.error);
+  }
 });
 
 test("invalid, future and malformed local data do not become results", () => {
