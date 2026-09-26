@@ -147,8 +147,9 @@ labels or numeric answers.
 The [distribution diagnostic and recovery repeat](routing-evaluation/2026-09-26-distribution-diagnostic.md)
 locate malformed numeric distributions at the response boundary. Bounded
 recovery did not eliminate them, so this candidate tests whether clearer generic
-ambiguity wording improves the evidence instead. It is an unmeasured hypothesis
-until the candidate's fixed batches complete.
+ambiguity wording improves the evidence instead. The [two frozen v5 routing-only batches](routing-evaluation/2026-09-26-routing-v5.md)
+record every expected outcome without retries. These repeated development cases
+do not establish delivered-answer quality or general reliability.
 
 The v2 catalog, model pin, pure validation, thresholds, costs, availability,
 fixture text, labels, mocks, host prerequisites and proposal-review questions

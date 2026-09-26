@@ -39,9 +39,9 @@ Files: `docs/routing.md`, `docs/architecture.md`, `docs/roadmap.md`; new develop
 
 ## Task 3: Fixed manual measurement
 
-- [ ] Freeze the candidate source and runner with before/after hashes. Run the same 19 task/catalog combinations three times (57 cases), single attempt, no CLI or labels in the request.
-- [ ] Audit every numeric wire projection and receipt using unchanged `routeTools`; compare exact task/catalog/model/policy/request construction with the frozen v4 control. Retain all failures and usage.
-- [ ] Repeat the entire frozen 57-case candidate batch. Do not cherry-pick cases or increase retries to obtain a passing score.
+- [x] Freeze the candidate source and runner with before/after hashes. Run the same 19 task/catalog combinations three times (57 cases), single attempt, no CLI or labels in the request.
+- [x] Audit every numeric wire projection and receipt using unchanged `routeTools`; compare exact task/catalog/model/policy/request construction with the frozen v4 control. Retain all failures and usage.
+- [x] Repeat the entire frozen 57-case candidate batch. Do not cherry-pick cases or increase retries to obtain a passing score.
 - [ ] If results regress, retain the candidate evidence and do not merge its default. If they justify integration, run the full paired CLI benchmark with existing prerequisites, retain all outputs, and assess delivered answer quality under the pre-existing blinded rubric before delivery.
 
 ## Delivery gate

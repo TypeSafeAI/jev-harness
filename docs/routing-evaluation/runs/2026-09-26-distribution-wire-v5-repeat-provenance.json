@@ -1,0 +1,351 @@
+{
+  "schemaVersion": 1,
+  "kind": "routing-distribution-diagnostic-provenance",
+  "source": "live",
+  "sourceCommit": "fda2774667872968e1ef48271faa040e435ffdfc",
+  "clean": true,
+  "files": [
+    {
+      "path": "examples/host/arena-lanes.ts",
+      "sha256": "7f84ef6d0e611647e2f84ec35d7bff92afc81ed5bfcc4a535d40017629ba10ad"
+    },
+    {
+      "path": "examples/host/codex.ts",
+      "sha256": "6895da0049f426a2901fb8798fbe84c4b8de18482bb6e5aebdb73c7ae0d4e98e"
+    },
+    {
+      "path": "examples/host/fixture-records.ts",
+      "sha256": "d3f0497f7d1d6835a1ee96fe27c05d19c434f53ca63f97675e56c41c56cf231d"
+    },
+    {
+      "path": "examples/host/fixture-tools.mjs",
+      "sha256": "b4de2586b3c35880d06006cf18d6ed8e513b63eb9cece565068c00f2158594f3"
+    },
+    {
+      "path": "examples/host/jev-choice.ts",
+      "sha256": "2ef40b432eb27ab056858ca9de6878d3327f0baab4658acb9745e74becf2a9c2"
+    },
+    {
+      "path": "examples/host/live.ts",
+      "sha256": "dcb37eb39def217f3abc467ee920475d0d1e5177b741452fceb913025083e3cb"
+    },
+    {
+      "path": "examples/host/review-experiment.ts",
+      "sha256": "8c98412d05f88f16f3295cc0230c039ac192bf16fdcb2ede3e7a127a8c06fed5"
+    },
+    {
+      "path": "examples/host/runtime.ts",
+      "sha256": "76929d2d9f2b56260da84df64fc8ca1e37e7b572ad9fd18754ab03c9061b9262"
+    },
+    {
+      "path": "examples/routing/api-key.ts",
+      "sha256": "4515cb3fbfab979112c6849d755292d79c2298a730358e6e790877f282dd8745"
+    },
+    {
+      "path": "examples/routing/compare.ts",
+      "sha256": "67dcadc4dda9a092c9b7e435d6bc02cb2187cc0525869a95d721d9987f8884ca"
+    },
+    {
+      "path": "examples/routing/demo-state.ts",
+      "sha256": "49931e8b12d78197bdeb50d2438d8d1609c929e3526e8ac73d9ac9e4fa2fd3c7"
+    },
+    {
+      "path": "examples/routing/experiment-cli.ts",
+      "sha256": "2812418a0eb5ebab6e68eaa00994fe1fc1d2c0782e22369c5acbabb33018f123"
+    },
+    {
+      "path": "examples/routing/experiment-table.ts",
+      "sha256": "6b02a37f0b15cf4cf9286874a3c66cda21caf4fc0ebaf216d46efe9085c28eab"
+    },
+    {
+      "path": "examples/routing/experiment-tasks.ts",
+      "sha256": "edeb30e529b0f52dc45b9e10c86722894abe894df26f2a20c0a05142d951d5da"
+    },
+    {
+      "path": "examples/routing/experiment.ts",
+      "sha256": "55a752b45be675f4d419944e877d6149016d6670333eb316053f12f66c8f412e"
+    },
+    {
+      "path": "examples/routing/favicon.svg",
+      "sha256": "0602f9d09c69b0931411696adeb7d9a16f4792afee15c3c1afea2a4d523fcac9"
+    },
+    {
+      "path": "examples/routing/live-client.ts",
+      "sha256": "29caa4a443815d344ac5ddb5623306e8d5d0f90d5a60221b036a6567497d41ed"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-22-routing-run.json",
+      "sha256": "08d7dc2a4b4271e106d2b1ebcb5ab5b8e577b77492f9b97301fb283ba2a865c9"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-23-routing-pilot.json",
+      "sha256": "0796608b55a35cbec77d8c4fc8ac57fd31f5ba51996929edfcf4e7f923a74f8e"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-23-routing-pilot.md",
+      "sha256": "0d90714ef745de4a0b8d2b72c5d61883bad43674e84264f23272f122972868a1"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-23-routing-r3.json",
+      "sha256": "f5882a2c38feb268d699670884de54253f30671eb7845723fb8acb61a09355e5"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-23-routing-r3.md",
+      "sha256": "20f305aa28c6ee25bcb049a16f1f8af288a0b89178675c5183e71a3fc2779534"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-pinned-cli-auth-smoke.json",
+      "sha256": "139fbd72f154f76cf5e92320f3204b2e0c3b0681a6a124dfc17f67297355536c"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-pinned-cli-diagnostic-smoke.json",
+      "sha256": "9b1effdf5409c3a7504ea124354f308b36a1e8b7cb5c91fb2fc162e58c169219"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-pinned-package-manifest.json",
+      "sha256": "43d92cd0026552482fd0330c4ce4c404b57a08366a90fc0ba060fc0398df7a88"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-pinned-package-smoke.json",
+      "sha256": "c7298749071dc123a54bcc63863b3335c08f787cfbab8c2e77afa26a46816fcc"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-routing-baseline-provenance.json",
+      "sha256": "89c849e0caffbc73e0aa383ef83cda2f63f98f042c9b3eb76c8156ad2c8a2930"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-routing-baseline.json",
+      "sha256": "e2d5573f08ed358f3710f4eaca2133961a4154a2c6331bd42e4ec49775c329f8"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-routing-package-baseline-provenance.json",
+      "sha256": "4ab2d17ce7c0d00a6510ee5594d399ca7a2735adb89da22258343dc965978783"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-routing-package-baseline.json",
+      "sha256": "3acc5a00302a50e493d7474efc656afbcf1993a6d385181b86c10e9eeddcff96"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-routing-package-fixture-tools-attempt2-provenance.json",
+      "sha256": "0b339a422271b6fd9378a5f24cbd502ec51f700b7edd376dd88b208ca4658dfc"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-routing-package-fixture-tools-attempt2.json",
+      "sha256": "6cb5438412749878f2bceb7004400c393d294cd20dda199681383219b243cee0"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-routing-package-inspector-attempt2-provenance.json",
+      "sha256": "8880121110cfab175024222fd9f27dd501fe2670f71ac49d8f0cb05bf8410e5f"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-routing-package-inspector-attempt2.json",
+      "sha256": "b94c277464f44b5fa13da197d90d94de03b5111c7bca563bffa90d076bf64e26"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-routing-package-prerequisites-provenance.json",
+      "sha256": "b12dc061af9a087e55d8732bb098a2426ed28232def7d88281f5dad06c79d42c"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-routing-package-prerequisites.json",
+      "sha256": "d6dfabe9f995d6f860c5f66074272baecb16522dbb020d0a684af8e74c41daa1"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-routing-package-v4-control-completion.json",
+      "sha256": "11376febe3bb5c1faf45a97780927c1185e611374b6ee52924501fa21a287485"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-routing-package-v4-control-provenance.json",
+      "sha256": "df300a5596344325c4afa76aeec45c38ee9648270d08d97c007b37a17740a88d"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-routing-package-v4-control.json",
+      "sha256": "09af7e469989cc638a71ef81a6e6972de233eb76c3da04b81755e60f3808e6a0"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-routing-package-v4-integrated-completion.json",
+      "sha256": "d9c9a45c428d657dabe51192ec8091d3a533efe9ae8a0bfaaef78cee6bc191ad"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-routing-package-v4-integrated-provenance.json",
+      "sha256": "24ad04317ebb803e0d23aaa37d87c6e287a1d02d9e5ef16e60919d6a70f5b388"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-routing-package-v4-integrated-repeat-completion.json",
+      "sha256": "46d2486ec55ac3d6adad38adffa7f1e24a1a392c0864e68d40439c2b0c75ef92"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-routing-package-v4-integrated-repeat-provenance.json",
+      "sha256": "94007042063409b00d1f13c95089e71a76888915a7244191c9c9ee47c93b7bbe"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-routing-package-v4-integrated-repeat.json",
+      "sha256": "568691e7acdf5d598fcb3dfce291e138f3757409d148ad2dedf023b934ec53ee"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-routing-package-v4-integrated.json",
+      "sha256": "6676fb4f4159587fa8902076a5f85bebe4775b01d61eacaff4792dc35f0c2723"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-routing-pinned-baseline-provenance.json",
+      "sha256": "45125d0793ead96dc872444314b28df945779d68c45ebcb432a04d132f70e98f"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-routing-pinned-baseline.json",
+      "sha256": "5e5931b1c4bdf470d91f9786972bf762e1c19a048137e41d66ec7f4f6a953ec5"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-routing-pinned-prerequisites-provenance.json",
+      "sha256": "63743f9ef433bd9638be3ee803a1c968cd8f4e56dd3c17977017532539e635cf"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-routing-pinned-prerequisites.json",
+      "sha256": "c04f3a19df4a08899f332df723d186ec4c7f994e0408122620ad346d8afc65bf"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-routing-prerequisites-provenance.json",
+      "sha256": "afa0ddfeeb87dffc537f72493fca473f0318b9413dca86721fb64bfaa555febf"
+    },
+    {
+      "path": "examples/routing/runs/2026-09-25-routing-prerequisites.json",
+      "sha256": "8368f45fbf6455bf6b4d32b036b1e4fc4fc147fae842f6fde234c44e61e64c73"
+    },
+    {
+      "path": "examples/routing/scenarios.ts",
+      "sha256": "3b23b8970f7afa40cb7d5589bea147ea5bd1404c0394b885b02fdd1c3af8dc46"
+    },
+    {
+      "path": "examples/routing/usage.ts",
+      "sha256": "9fd9abcd6bd47ff32d2b0345cc7df941191c9bd7541d0da0db64e9f8cce697b6"
+    },
+    {
+      "path": "package.json",
+      "sha256": "19036715bb389a34e605a457e0f28ebee36f83557f554ee20e0f07e877e402c7"
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "sha256": "1bfac22d407a7f833f296b11facfe77a28c930c3a21a85c34a2faf1a02658918"
+    },
+    {
+      "path": "src/audit/receipt.ts",
+      "sha256": "54074a1d948c8db0de618dbb44afe13f751214b27136b738a738875caeced934"
+    },
+    {
+      "path": "src/benchmark/bench.ts",
+      "sha256": "4b07913061795bda1c5ac36914fa953b3812af9b907adb801a5d9490ba43f2f1"
+    },
+    {
+      "path": "src/benchmark/evaluation.ts",
+      "sha256": "b3d214b46ddbc2f783cacff5a51777a9c49fc96d9d69b2b481f974e99cfe321e"
+    },
+    {
+      "path": "src/benchmark/fixtures.ts",
+      "sha256": "62afe5cbd8e018a6173c7a5d78136f3969fbc3b5b5c4aae92bb0a086407b467e"
+    },
+    {
+      "path": "src/benchmark/index.ts",
+      "sha256": "a0da8e81dece20ce4dae08df0ba4cf06f4eaf252ce3884404035b08b19fbd37c"
+    },
+    {
+      "path": "src/benchmark/load.ts",
+      "sha256": "0a88ee3c53c93645df7b9d99c6cc3fe858876538b28635dbcfdf9fb5911c623c"
+    },
+    {
+      "path": "src/benchmark/mock.ts",
+      "sha256": "46051b83f4df8c8098e6d871531b171c1c21d6aa544532a9847798ead85f50ee"
+    },
+    {
+      "path": "src/benchmark/proposer.ts",
+      "sha256": "904e9ee045761bc431272b5bb90ba34058e8bdce7b63062219d4304a32c1a972"
+    },
+    {
+      "path": "src/benchmark/run.ts",
+      "sha256": "702f925de89740e1563a97d72a3b4cc74c9156898f0bea3ae89dbc853ed93bca"
+    },
+    {
+      "path": "src/contract/decide.ts",
+      "sha256": "28e5dea5df034faa1b6136de1322586fc20811dce48faa64b92cc6cd05891cce"
+    },
+    {
+      "path": "src/contract/diff.ts",
+      "sha256": "54f29729703a3189321b9d18d70896e7995d7b5b534b2b22344797b43f47ae8c"
+    },
+    {
+      "path": "src/contract/index.ts",
+      "sha256": "e5979c4dfea72e4c1763f00a495cf8c262ea276e0babd791e1ff95c632c8c323"
+    },
+    {
+      "path": "src/contract/input.ts",
+      "sha256": "c9f0f9ac4d55a747d177416253eaa71cc7268b2020db15b52c353ca39ce55ecb"
+    },
+    {
+      "path": "src/contract/payload.ts",
+      "sha256": "17bb4e1672e6c01d4600d3d3138b6746918bf093ce9b195e9294d74547be871e"
+    },
+    {
+      "path": "src/contract/review.ts",
+      "sha256": "b369849d811970bfe98a1f7887834c991a07e6d558eba87b615981086a65eeda"
+    },
+    {
+      "path": "src/contract/types.ts",
+      "sha256": "b4eed4ae81c32c587b550d5270d24ca6e6f8d87ec0df22c048cb2326f9f608d1"
+    },
+    {
+      "path": "src/contract/validate.ts",
+      "sha256": "578afe9320101b76ea70e0588480e3afdf15c52151e2f4c983667284300bc451"
+    },
+    {
+      "path": "src/index.ts",
+      "sha256": "d02b15fbab59a81b68e12647cd82a35e51e8fab60458399522d45af3886be2be"
+    },
+    {
+      "path": "src/routing/bundle.ts",
+      "sha256": "b097a3a00bb5a17c9ea2a25d05a19a72d11dfe7d385c5b4e5b79537da3d5aba2"
+    },
+    {
+      "path": "src/routing/catalog.ts",
+      "sha256": "f5daf76d3c7c72ef80a17808d24040d75098b3fb78f4f8f1d9743949ecd7c606"
+    },
+    {
+      "path": "src/routing/context.ts",
+      "sha256": "8b1597e3ffe109888175f7ddf0d97dbaa7701aa51532d6a1b8186feae855e5dc"
+    },
+    {
+      "path": "src/routing/index.ts",
+      "sha256": "ed3b0406a24cf9bce2dc2fe6c7e485e7253b045602589554ab3b8ed6e15137e1"
+    },
+    {
+      "path": "src/routing/prepare.ts",
+      "sha256": "e45d8a8457d73da7a437b72c2f07bb883a0e9eafd7b56d445166d691a091196c"
+    },
+    {
+      "path": "src/routing/route.ts",
+      "sha256": "abd3e027ebe3994163f2fec8357643e60456d7a4f66b5834f363641a2541fd8f"
+    },
+    {
+      "path": "src/routing/types.ts",
+      "sha256": "c1cacf9fac45c9497659a0b0c3b8758861c4783beb099df87614ef936e51c6b9"
+    }
+  ],
+  "runnerSha256": "63263079724181c4a1def9ec72e3171f4cdfbcfbd1f45c0692b5a148fef75002",
+  "startedAt": "2026-09-26T07:24:18.059Z",
+  "argv": [
+    "--live",
+    "--attempts",
+    "1",
+    "--out",
+    "/tmp/jev-performance-2026-09-24/distribution-wire-v5-repeat.json"
+  ],
+  "casesPlanned": 57,
+  "maxAttempts": 1,
+  "requestCap": 57,
+  "recoveryRule": "No recovery. Exactly one attempt per case; malformed distributions remain unavailable. No probability is changed.",
+  "retainedWireFields": "SHA256 of response text plus allowlisted choice, unit confidence, unit probabilities for known option ids, and shape flags. Never raw text, unexpected strings/keys, headers, key or exceptions.",
+  "terminalHttpStatuses": [
+    401,
+    402,
+    403,
+    429
+  ],
+  "proposerCalls": 0,
+  "protocol": "Routing v5 wording candidate; 19 unchanged task/catalog combinations, three repetitions, serial requests. Labels joined after provider work. Existing routeTools policy unchanged."
+}

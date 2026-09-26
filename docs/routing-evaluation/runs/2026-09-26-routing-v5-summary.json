@@ -1,0 +1,32 @@
+[
+  {
+    "stem": "distribution-wire-v5-single",
+    "sourceCommit": "fda2774667872968e1ef48271faa040e435ffdfc",
+    "cases": 57,
+    "requests": 57,
+    "expected": 57,
+    "outcomes": {
+      "selected": 39,
+      "needs_clarification": 18
+    },
+    "inputTokens": 45741,
+    "outputTokens": 7185,
+    "onlyChangedWireField": "questions.tool.instructions",
+    "instructionSha256": "9ba26429b6edc941225290a3e69ff1a316e495cab4c8b502e0e433d88b4a4970"
+  },
+  {
+    "stem": "distribution-wire-v5-repeat",
+    "sourceCommit": "fda2774667872968e1ef48271faa040e435ffdfc",
+    "cases": 57,
+    "requests": 57,
+    "expected": 57,
+    "outcomes": {
+      "selected": 39,
+      "needs_clarification": 18
+    },
+    "inputTokens": 45741,
+    "outputTokens": 7185,
+    "onlyChangedWireField": "questions.tool.instructions",
+    "instructionSha256": "9ba26429b6edc941225290a3e69ff1a316e495cab4c8b502e0e433d88b4a4970"
+  }
+]
