@@ -236,7 +236,14 @@ historical label corrections rather than silently rewriting old results.
 
 ## Dynamic tool context experiment
 
-`src/routing/` adds an injected `ToolRouter` seam, a schema catalog, availability snapshots, cost-aware top-k selection and explicit schema loading/eviction. No tool or sub-agent executes. Run the paired synthetic comparison:
+`src/routing/` adds an injected `ToolRouter` seam, a schema catalog, availability snapshots, cost-aware top-k selection and explicit schema loading/eviction. No tool or sub-agent executes.
+
+Routing question set v5 separates a named target from a specified desired
+outcome, so vague improvement requests call for clarification. The
+[v5 development comparison](docs/routing-evaluation/2026-09-26-routing-v5.md)
+retains fixed single-attempt measurements and historical request replay.
+Validation, model and thresholds remain unchanged; these synthetic results are
+not calibration. Run the paired synthetic comparison:
 
 ```sh
 pnpm --silent bench:routing > routing-run.json

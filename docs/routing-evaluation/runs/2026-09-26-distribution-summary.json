@@ -1,0 +1,123 @@
+[
+  {
+    "stem": "distribution-wire-single",
+    "status": "complete",
+    "cases": 57,
+    "requests": 57,
+    "expectedFinal": null,
+    "firstOutcomes": {
+      "unavailable": 57
+    },
+    "finalOutcomes": {
+      "unavailable": 57
+    },
+    "perAttemptOutcomes": {
+      "unavailable": 57
+    },
+    "inputTokens": null,
+    "outputTokens": null,
+    "extraRequests": 0,
+    "extraInputTokens": 0,
+    "extraOutputTokens": 0,
+    "extraLatencyMs": 0,
+    "totalLatencyMs": 10023.294877999999,
+    "retriedCases": 0,
+    "sourceUnchanged": true,
+    "runnerUnchanged": true
+  },
+  {
+    "stem": "distribution-wire-funded-single",
+    "status": "complete",
+    "cases": 57,
+    "requests": 57,
+    "expectedFinal": 53,
+    "firstOutcomes": {
+      "selected": 39,
+      "needs_clarification": 14,
+      "unavailable": 4
+    },
+    "finalOutcomes": {
+      "selected": 39,
+      "needs_clarification": 14,
+      "unavailable": 4
+    },
+    "perAttemptOutcomes": {
+      "selected": 39,
+      "needs_clarification": 14,
+      "unavailable": 4
+    },
+    "inputTokens": 44430,
+    "outputTokens": 7185,
+    "extraRequests": 0,
+    "extraInputTokens": 0,
+    "extraOutputTokens": 0,
+    "extraLatencyMs": 0,
+    "totalLatencyMs": 12427.920960000003,
+    "retriedCases": 0,
+    "sourceUnchanged": true,
+    "runnerUnchanged": true
+  },
+  {
+    "stem": "distribution-wire-funded-recovery",
+    "status": "complete",
+    "cases": 57,
+    "requests": 62,
+    "expectedFinal": 57,
+    "firstOutcomes": {
+      "selected": 39,
+      "needs_clarification": 15,
+      "unavailable": 3
+    },
+    "finalOutcomes": {
+      "selected": 39,
+      "needs_clarification": 18
+    },
+    "perAttemptOutcomes": {
+      "selected": 39,
+      "needs_clarification": 18,
+      "unavailable": 5
+    },
+    "inputTokens": 49460,
+    "outputTokens": 8220,
+    "extraRequests": 5,
+    "extraInputTokens": 5030,
+    "extraOutputTokens": 1035,
+    "extraLatencyMs": 989.2456670000001,
+    "totalLatencyMs": 14806.136875000002,
+    "retriedCases": 3,
+    "sourceUnchanged": true,
+    "runnerUnchanged": true
+  },
+  {
+    "stem": "distribution-wire-funded-recovery-repeat",
+    "status": "complete",
+    "cases": 57,
+    "requests": 63,
+    "expectedFinal": 56,
+    "firstOutcomes": {
+      "selected": 39,
+      "needs_clarification": 15,
+      "unavailable": 3
+    },
+    "finalOutcomes": {
+      "selected": 39,
+      "needs_clarification": 17,
+      "unavailable": 1
+    },
+    "perAttemptOutcomes": {
+      "selected": 39,
+      "needs_clarification": 17,
+      "unavailable": 7
+    },
+    "inputTokens": 50466,
+    "outputTokens": 8427,
+    "extraRequests": 6,
+    "extraInputTokens": 6036,
+    "extraOutputTokens": 1242,
+    "extraLatencyMs": 1462.7587919999996,
+    "totalLatencyMs": 14066.099286000004,
+    "retriedCases": 3,
+    "sourceUnchanged": true,
+    "runnerUnchanged": true
+  }
+]

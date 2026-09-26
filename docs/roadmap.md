@@ -124,6 +124,9 @@ candidates are not held-out calibration.
 - [x] Record the [v4 routing-only diagnostic and frozen repeat](routing-evaluation/2026-09-25-routing-v4.md), including every malformed distribution. These are selection measurements, not delivered-answer scores or evidence of overall saturation.
 - [x] Complete [full CLI measurement of routing v4](routing-evaluation/2026-09-25-routing-v4.md#end-to-end-comparison) with fixture host revision 1 and proposal-review v4, at the unchanged `0.7` routing confidence floor with frozen tasks, labels, mocks, costs, and prerequisites. Retain the control, initial candidate and frozen repeat, including every unavailable outcome and blinded answer assessment. Full saturation remains unproven because malformed provider distributions persist.
 
+- [x] Record the [v4 numeric wire diagnostic and bounded recovery repeat](routing-evaluation/2026-09-26-distribution-diagnostic.md), including every failed attempt and added usage. Recovery is not integrated; the repeat still exhausted its cap on one case.
+- [x] Evaluate [clarification wording v5](routing-evaluation/2026-09-26-routing-v5.md) with two frozen single-attempt batches, full paired CLI comparison and blinded output assessment. Every delivered clear-task output meets the rubric; one malformed response remains unavailable in the full batch. Saturation remains unproven.
+
 ## 4 · Context scoring
 
 - [x] Compare scoring/re-prefill costs with forfeited prefix-cache reuse. [Cost model](context-scoring-cost-model.md): no-go for integration code; conditional go for a synthetic shadow experiment

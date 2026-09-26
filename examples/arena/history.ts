@@ -8,7 +8,7 @@ export const HISTORY_KEY = "jev-arena-history-v1";
 export const MAX_RUNS = 30;
 export const MAX_BYTES = 2_000_000;
 // Bump when prompt, fixture isolation, catalog or host settings change comparability.
-export const ARENA_SETUP_VERSION = 5;
+export const ARENA_SETUP_VERSION = 6;
 export interface SavedFixture { id: string; title: string; task: string; files: Record<string, string> }
 export interface SavedLane { tools: string[]; result: CliResult }
 export interface ArenaRun {
@@ -42,7 +42,7 @@ function receipt(value: unknown): RoutingReceipt | null {
   if (value === null) return null;
   const v = record(value), request = record(v.request);
   const questionSetVersion = request.questionSetVersion;
-  if (v.schemaVersion !== 1 || (questionSetVersion !== 1 && questionSetVersion !== 2 && questionSetVersion !== 3 && questionSetVersion !== 4)) throw Error();
+  if (v.schemaVersion !== 1 || (questionSetVersion !== 1 && questionSetVersion !== 2 && questionSetVersion !== 3 && questionSetVersion !== 4 && questionSetVersion !== 5)) throw Error();
   const evidence = v.evidence === null ? null : record(v.evidence);
   return {
     schemaVersion: 1,
