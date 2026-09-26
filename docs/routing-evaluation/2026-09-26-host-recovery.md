@@ -67,6 +67,14 @@ also passes. [Desktop](runs/2026-09-26-recovery-ui-1440.png) and
 [mobile](runs/2026-09-26-recovery-ui-390.png) screenshots were inspected; human
 keyboard-only and VoiceOver acceptance were not performed.
 
+The 293-test count belongs to frozen runtime commit `9c5490b`, before live
+measurement. Delivery commit `dd0c3e6` adds exactly two offline checks in
+[`routing-evidence-replay.test.ts`](../../tests/routing-evidence-replay.test.ts):
+batch I blinded-input/mapping reproduction and retained recovery-ledger replay.
+The delivery suite therefore has 295 passing tests. The original gate remains
+unchanged to preserve the record of what ran before the measurements; no runtime
+source changed between those commits.
+
 The [real-main preflight](runs/2026-09-26-recovery-real-main-preflight-result.json)
 uses fake fetch and an absolute fake CLI executable. Its
 [fake artifact](runs/2026-09-26-recovery-real-main-fake-artifact.json) is explicitly
