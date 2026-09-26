@@ -230,6 +230,28 @@ scoring drops at least `s·(1 − r) + ρ·(1 + ε)` of it.
 The planned Rust seam does not put provider HTTP clients into a pure crate;
 transport stays in an appropriate host adapter.
 
+`examples/context-scoring-shadow/` implements only the offline synthetic
+experiment kit. Its injected adapter supplies independent Noul probabilities
+for each chunk, comparing all chunks in one request with separate requests.
+The example pins `jev-1.13.0`, versions its questions separately, preserves
+explicit criteria and the fixed untrusted-data note, and excludes evaluation
+labels and cost assumptions from model inputs. It has no root export or live
+transport and does not change any proposal-review question or verdict.
+
+Each run freezes illustrative relevance cutoffs: below 0.2 would drop, from
+0.2 through 0.8 is uncertain and retained, and above 0.8 is relevant and
+retained. These are not calibrated policy. Missing, malformed, cancelled, or
+wrong-model evidence is unavailable; any incomplete turn withholds a complete
+drop recommendation. Results report proposed IDs, uncertainty, label-based
+recall and byte/token proxies while preserving the original context.
+
+Versioned JSON and Markdown artifacts are labeled **synthetic demonstration**.
+Counterfactual cost arithmetic requires dated prices and explicit segment-level
+token/cache observations, including scoring overhead. Aggregate cached-token
+counts do not identify the context block's cache share, and missing inputs
+produce an unknown estimate. Scripted evidence cannot establish live accuracy,
+latency or savings. See [the experiment guide](../examples/context-scoring-shadow/README.md).
+
 The [host-conformance specification](hardening/08-host-conformance.md) defines
 negative cases for missing/revoked grants, changed snapshots/proposals, denied
 egress, unexpected model/source, timeout/cancellation, path races, independent
