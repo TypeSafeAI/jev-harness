@@ -21,3 +21,8 @@ test("public metadata uses the confirmed community origin without collapsing can
   assert.match(layout, /unofficial/i);
   assert.doesNotMatch(layout, /canonical:/);
 });
+
+test("local sharing evidence is ignored instead of becoming source", () => {
+  const ignore = readFileSync(new URL("../.gitignore", import.meta.url), "utf8");
+  assert.ok(ignore.split(/\r?\n/).includes("/test-results/sharing/"));
+});
