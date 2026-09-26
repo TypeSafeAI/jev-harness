@@ -1,17 +1,29 @@
 {
   "repository": "TypeSafeAI/jev-harness",
+  "homepage": "https://jev.guru",
   "description": "Unofficial proposal-review harness for coding agents: typed Jev evidence, deterministic policy, receipts, fixtures, and explicit host-owned authorization.",
   "topics": [
-    "typesafe-ai",
-    "jev",
+    "agent-harness",
+    "agentic-coding",
     "ai-agents",
-    "coding-agents",
-    "agent-safety",
-    "ai-evaluation",
-    "typescript",
-    "policy-engine",
-    "developer-tools"
+    "ai-governance",
+    "ai-safety",
+    "code-review",
+    "coding-agent",
+    "developer-tools",
+    "guardrails",
+    "harness",
+    "human-in-the-loop",
+    "jev",
+    "llm",
+    "llm-agents",
+    "nodejs",
+    "structured-outputs",
+    "system-one",
+    "typesafe",
+    "typesafe-ai",
+    "typescript"
   ],
   "status": "proposed-not-applied",
-  "note": "Capability-focused discovery metadata. Committing this file does not itself change GitHub repository settings."
+  "note": "Preserves the 20 existing repository topics observed on 2026-09-26 rather than adding redundant categories beyond GitHub's limit. Intended description and homepage are recorded here; committing this file does not apply repository settings."
 }
