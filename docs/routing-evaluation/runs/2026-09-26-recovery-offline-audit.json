@@ -1,0 +1,1226 @@
+{
+  "schemaVersion": 1,
+  "kind": "host-recovery-diagnostic-audit",
+  "status": "pass",
+  "source": "scripted-fake",
+  "sourceCommit": "9c5490be2a4777a10fb93a42a55bed078e3f4f52",
+  "artifactSha256": "23a8220e97461d2c3d4dc5fee9fce8d9819fbbb08c5ace54e816e3d0ddebb94c",
+  "provenanceSha256": "d66ea4537fc8d17f4a01eec74b23e672930b8ad6dbfd61756d52706e07d9e784",
+  "auditSha256": "91ba79a7a2a55edba158eedd99230b88d3ddff4cfde959c83279e2395d258d53",
+  "runnerSha256": "bce781368ad6b3f2c84e77afccc67d0dbc09fa2db4618174c71f1d2e5a053e65",
+  "sourceFilesMatched": 128,
+  "checks": [
+    "fixed order and all57identities",
+    "source and runner byte identity",
+    "unchanged tasks labels policy model request body",
+    "every attempt replayed through unchanged pure routing: valid/invalid-sum numeric projection, otherwise host null-evidence boundary",
+    "every dispatched request reconciled to ledger",
+    "no retry after valid response",
+    "all failed attempt usage retained"
+  ],
+  "totals": {
+    "cases": 57,
+    "firstExpected": 36,
+    "finalExpected": 48,
+    "physicalRequests": 87,
+    "extraRequests": 30,
+    "invalidSumAttempts": 33,
+    "recoveredCases": 12,
+    "exhaustedCases": 3,
+    "attemptReplays": 87,
+    "outcomes": {
+      "selected": 30,
+      "unavailable": 6,
+      "needs_clarification": 21
+    },
+    "inputTokens": 870,
+    "outputTokens": 174,
+    "requestBytes": 197418,
+    "responseBytes": 36501,
+    "missingInput": 0,
+    "missingOutput": 0,
+    "missingResponseBytes": 0
+  },
+  "usage": {
+    "input": {
+      "reported": 870,
+      "unknownAttempts": 0,
+      "total": 870
+    },
+    "output": {
+      "reported": 174,
+      "unknownAttempts": 0,
+      "total": 174
+    },
+    "responseBytes": {
+      "reported": 36501,
+      "unknownAttempts": 0,
+      "total": 36501
+    }
+  },
+  "attemptStatuses": {
+    "invalid_sum": 33,
+    "valid": 51,
+    "invalid_other": 3
+  },
+  "replayCoverage": {
+    "numericEvidenceReplays": 84,
+    "nullEvidenceReplays": 3
+  },
+  "cases": [
+    {
+      "run": 1,
+      "taskId": "read-small",
+      "attempts": 3,
+      "firstOutcome": "unavailable",
+      "finalOutcome": "selected",
+      "firstExpected": false,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 30,
+      "outputTokens": 6,
+      "attemptsSummary": [
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        },
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        },
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "taskId": "read-medium",
+      "attempts": 1,
+      "firstOutcome": "unavailable",
+      "finalOutcome": "unavailable",
+      "firstExpected": false,
+      "finalExpected": false,
+      "stopReason": "failure",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "invalid_other",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "taskId": "read-large",
+      "attempts": 3,
+      "firstOutcome": "unavailable",
+      "finalOutcome": "unavailable",
+      "firstExpected": false,
+      "finalExpected": false,
+      "stopReason": "exhausted",
+      "inputTokens": 30,
+      "outputTokens": 6,
+      "attemptsSummary": [
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        },
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        },
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "taskId": "patch-small",
+      "attempts": 1,
+      "firstOutcome": "selected",
+      "finalOutcome": "selected",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "taskId": "patch-medium",
+      "attempts": 1,
+      "firstOutcome": "needs_clarification",
+      "finalOutcome": "needs_clarification",
+      "firstExpected": false,
+      "finalExpected": false,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "taskId": "patch-large",
+      "attempts": 3,
+      "firstOutcome": "unavailable",
+      "finalOutcome": "selected",
+      "firstExpected": false,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 30,
+      "outputTokens": 6,
+      "attemptsSummary": [
+        {
+          "status": "invalid_sum",
+          "sum": 0.9899999999999999
+        },
+        {
+          "status": "invalid_sum",
+          "sum": 0.9899999999999999
+        },
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "taskId": "inspect-small",
+      "attempts": 1,
+      "firstOutcome": "selected",
+      "finalOutcome": "selected",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "taskId": "inspect-medium",
+      "attempts": 1,
+      "firstOutcome": "selected",
+      "finalOutcome": "selected",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "taskId": "inspect-large",
+      "attempts": 1,
+      "firstOutcome": "selected",
+      "finalOutcome": "selected",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "taskId": "ambiguous-small",
+      "attempts": 1,
+      "firstOutcome": "needs_clarification",
+      "finalOutcome": "needs_clarification",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "taskId": "ambiguous-medium",
+      "attempts": 3,
+      "firstOutcome": "unavailable",
+      "finalOutcome": "needs_clarification",
+      "firstExpected": false,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 30,
+      "outputTokens": 6,
+      "attemptsSummary": [
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        },
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        },
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "taskId": "ambiguous-large",
+      "attempts": 1,
+      "firstOutcome": "needs_clarification",
+      "finalOutcome": "needs_clarification",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "taskId": "uncertain-small",
+      "attempts": 1,
+      "firstOutcome": "needs_clarification",
+      "finalOutcome": "needs_clarification",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1.0000000000000002
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "taskId": "uncertain-medium",
+      "attempts": 1,
+      "firstOutcome": "needs_clarification",
+      "finalOutcome": "needs_clarification",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1.0000000000000002
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "taskId": "uncertain-large",
+      "attempts": 1,
+      "firstOutcome": "needs_clarification",
+      "finalOutcome": "needs_clarification",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1.0000000000000002
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "taskId": "search-medium",
+      "attempts": 3,
+      "firstOutcome": "unavailable",
+      "finalOutcome": "selected",
+      "firstExpected": false,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 30,
+      "outputTokens": 6,
+      "attemptsSummary": [
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        },
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        },
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "taskId": "search-large",
+      "attempts": 1,
+      "firstOutcome": "selected",
+      "finalOutcome": "selected",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "taskId": "test_draft-medium",
+      "attempts": 1,
+      "firstOutcome": "selected",
+      "finalOutcome": "selected",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 1,
+      "taskId": "test_draft-large",
+      "attempts": 1,
+      "firstOutcome": "selected",
+      "finalOutcome": "selected",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "taskId": "read-small",
+      "attempts": 3,
+      "firstOutcome": "unavailable",
+      "finalOutcome": "selected",
+      "firstExpected": false,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 30,
+      "outputTokens": 6,
+      "attemptsSummary": [
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        },
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        },
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "taskId": "read-medium",
+      "attempts": 1,
+      "firstOutcome": "unavailable",
+      "finalOutcome": "unavailable",
+      "firstExpected": false,
+      "finalExpected": false,
+      "stopReason": "failure",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "invalid_other",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "taskId": "read-large",
+      "attempts": 3,
+      "firstOutcome": "unavailable",
+      "finalOutcome": "unavailable",
+      "firstExpected": false,
+      "finalExpected": false,
+      "stopReason": "exhausted",
+      "inputTokens": 30,
+      "outputTokens": 6,
+      "attemptsSummary": [
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        },
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        },
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "taskId": "patch-small",
+      "attempts": 1,
+      "firstOutcome": "selected",
+      "finalOutcome": "selected",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "taskId": "patch-medium",
+      "attempts": 1,
+      "firstOutcome": "needs_clarification",
+      "finalOutcome": "needs_clarification",
+      "firstExpected": false,
+      "finalExpected": false,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "taskId": "patch-large",
+      "attempts": 3,
+      "firstOutcome": "unavailable",
+      "finalOutcome": "selected",
+      "firstExpected": false,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 30,
+      "outputTokens": 6,
+      "attemptsSummary": [
+        {
+          "status": "invalid_sum",
+          "sum": 0.9899999999999999
+        },
+        {
+          "status": "invalid_sum",
+          "sum": 0.9899999999999999
+        },
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "taskId": "inspect-small",
+      "attempts": 1,
+      "firstOutcome": "selected",
+      "finalOutcome": "selected",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "taskId": "inspect-medium",
+      "attempts": 1,
+      "firstOutcome": "selected",
+      "finalOutcome": "selected",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "taskId": "inspect-large",
+      "attempts": 1,
+      "firstOutcome": "selected",
+      "finalOutcome": "selected",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "taskId": "ambiguous-small",
+      "attempts": 1,
+      "firstOutcome": "needs_clarification",
+      "finalOutcome": "needs_clarification",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "taskId": "ambiguous-medium",
+      "attempts": 3,
+      "firstOutcome": "unavailable",
+      "finalOutcome": "needs_clarification",
+      "firstExpected": false,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 30,
+      "outputTokens": 6,
+      "attemptsSummary": [
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        },
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        },
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "taskId": "ambiguous-large",
+      "attempts": 1,
+      "firstOutcome": "needs_clarification",
+      "finalOutcome": "needs_clarification",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "taskId": "uncertain-small",
+      "attempts": 1,
+      "firstOutcome": "needs_clarification",
+      "finalOutcome": "needs_clarification",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1.0000000000000002
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "taskId": "uncertain-medium",
+      "attempts": 1,
+      "firstOutcome": "needs_clarification",
+      "finalOutcome": "needs_clarification",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1.0000000000000002
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "taskId": "uncertain-large",
+      "attempts": 1,
+      "firstOutcome": "needs_clarification",
+      "finalOutcome": "needs_clarification",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1.0000000000000002
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "taskId": "search-medium",
+      "attempts": 3,
+      "firstOutcome": "unavailable",
+      "finalOutcome": "selected",
+      "firstExpected": false,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 30,
+      "outputTokens": 6,
+      "attemptsSummary": [
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        },
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        },
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "taskId": "search-large",
+      "attempts": 1,
+      "firstOutcome": "selected",
+      "finalOutcome": "selected",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "taskId": "test_draft-medium",
+      "attempts": 1,
+      "firstOutcome": "selected",
+      "finalOutcome": "selected",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 2,
+      "taskId": "test_draft-large",
+      "attempts": 1,
+      "firstOutcome": "selected",
+      "finalOutcome": "selected",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "taskId": "read-small",
+      "attempts": 3,
+      "firstOutcome": "unavailable",
+      "finalOutcome": "selected",
+      "firstExpected": false,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 30,
+      "outputTokens": 6,
+      "attemptsSummary": [
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        },
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        },
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "taskId": "read-medium",
+      "attempts": 1,
+      "firstOutcome": "unavailable",
+      "finalOutcome": "unavailable",
+      "firstExpected": false,
+      "finalExpected": false,
+      "stopReason": "failure",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "invalid_other",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "taskId": "read-large",
+      "attempts": 3,
+      "firstOutcome": "unavailable",
+      "finalOutcome": "unavailable",
+      "firstExpected": false,
+      "finalExpected": false,
+      "stopReason": "exhausted",
+      "inputTokens": 30,
+      "outputTokens": 6,
+      "attemptsSummary": [
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        },
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        },
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "taskId": "patch-small",
+      "attempts": 1,
+      "firstOutcome": "selected",
+      "finalOutcome": "selected",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "taskId": "patch-medium",
+      "attempts": 1,
+      "firstOutcome": "needs_clarification",
+      "finalOutcome": "needs_clarification",
+      "firstExpected": false,
+      "finalExpected": false,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "taskId": "patch-large",
+      "attempts": 3,
+      "firstOutcome": "unavailable",
+      "finalOutcome": "selected",
+      "firstExpected": false,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 30,
+      "outputTokens": 6,
+      "attemptsSummary": [
+        {
+          "status": "invalid_sum",
+          "sum": 0.9899999999999999
+        },
+        {
+          "status": "invalid_sum",
+          "sum": 0.9899999999999999
+        },
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "taskId": "inspect-small",
+      "attempts": 1,
+      "firstOutcome": "selected",
+      "finalOutcome": "selected",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "taskId": "inspect-medium",
+      "attempts": 1,
+      "firstOutcome": "selected",
+      "finalOutcome": "selected",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "taskId": "inspect-large",
+      "attempts": 1,
+      "firstOutcome": "selected",
+      "finalOutcome": "selected",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "taskId": "ambiguous-small",
+      "attempts": 1,
+      "firstOutcome": "needs_clarification",
+      "finalOutcome": "needs_clarification",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "taskId": "ambiguous-medium",
+      "attempts": 3,
+      "firstOutcome": "unavailable",
+      "finalOutcome": "needs_clarification",
+      "firstExpected": false,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 30,
+      "outputTokens": 6,
+      "attemptsSummary": [
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        },
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        },
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "taskId": "ambiguous-large",
+      "attempts": 1,
+      "firstOutcome": "needs_clarification",
+      "finalOutcome": "needs_clarification",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "taskId": "uncertain-small",
+      "attempts": 1,
+      "firstOutcome": "needs_clarification",
+      "finalOutcome": "needs_clarification",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1.0000000000000002
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "taskId": "uncertain-medium",
+      "attempts": 1,
+      "firstOutcome": "needs_clarification",
+      "finalOutcome": "needs_clarification",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1.0000000000000002
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "taskId": "uncertain-large",
+      "attempts": 1,
+      "firstOutcome": "needs_clarification",
+      "finalOutcome": "needs_clarification",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1.0000000000000002
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "taskId": "search-medium",
+      "attempts": 3,
+      "firstOutcome": "unavailable",
+      "finalOutcome": "selected",
+      "firstExpected": false,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 30,
+      "outputTokens": 6,
+      "attemptsSummary": [
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        },
+        {
+          "status": "invalid_sum",
+          "sum": 0.99
+        },
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "taskId": "search-large",
+      "attempts": 1,
+      "firstOutcome": "selected",
+      "finalOutcome": "selected",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "taskId": "test_draft-medium",
+      "attempts": 1,
+      "firstOutcome": "selected",
+      "finalOutcome": "selected",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    },
+    {
+      "run": 3,
+      "taskId": "test_draft-large",
+      "attempts": 1,
+      "firstOutcome": "selected",
+      "finalOutcome": "selected",
+      "firstExpected": true,
+      "finalExpected": true,
+      "stopReason": "valid",
+      "inputTokens": 10,
+      "outputTokens": 2,
+      "attemptsSummary": [
+        {
+          "status": "valid",
+          "sum": 1
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Scripted-fake preflights are not live measurements.",
+    "Repeated synthetic development cases are not calibration.",
+    "No CLI or delivered-output assessment.",
+    "Sanitized invalid-other projections are not full raw responses; their host null-evidence boundary is replayed.",
+    "Usage totals are provider-reported telemetry; unknown attempt metrics stay explicit. Dispatch counts do not prove billing.",
+    "Hashes establish byte identity, not authenticity."
+  ]
+}

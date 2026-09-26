@@ -25,7 +25,11 @@ export async function POST(request: Request) {
       const emit = (event: unknown) => { if (!signal.aborted) controller.enqueue(new TextEncoder().encode(JSON.stringify(event) + "\n")); };
       try {
         emit({ type: "stage", value: "Asking Jev which tool schemas to expose…" });
-        const routed = await liveHandle(new Request(request.url, { method: "POST", headers: request.headers, body: JSON.stringify({ intent: fixture.task, availableIds: DEMO_CATALOG.map(tool => tool.id) }), signal }));
+        const routed = await liveHandle(new Request(request.url, { method: "POST", headers: request.headers, body: JSON.stringify({ intent: fixture.task, availableIds: DEMO_CATALOG.map(tool => tool.id) }), signal }), measurement => {
+          emit({ type: "routing_usage", version: 1, measurement });
+          const ledger = measurement.attemptLedger;
+          if (ledger && ledger.attempts.length > 1 && ledger.attempts.at(-1)?.status === "pending") emit({ type: "stage", value: `Jev is retrying an invalid probability total: request ${ledger.attempts.length} of ${ledger.maxAttempts}…` });
+        });
         const body = await routed.json();
         emit({ type: "usage", measurement: body.measurement ?? null, attempted: body.attempted !== false, error: body.error ?? null });
         if (!routed.ok || !body.evidence) { emit({ type: "error", value: body.error ?? "Jev evidence unavailable. No CLI run started." }); return; }

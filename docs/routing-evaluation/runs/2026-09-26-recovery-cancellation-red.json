@@ -1,0 +1,75 @@
+{
+  "schemaVersion": 1,
+  "phase": "red",
+  "passed": 7,
+  "sourceSchema": "/Users/buns/Documents/GitHub/TypeSafeAI/jev-harness-wt/routing-host-recovery",
+  "probes": [
+    {
+      "kind": "diagnostic",
+      "mode": "cancel_valid_response",
+      "phase": "red",
+      "wrapperSha256": "fece4352fc4dee48f4039f227bba488387e21c7a843b39a89ee0fe9f82dd36f0",
+      "exitCode": 1,
+      "passed": true,
+      "record": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-cancellation-probes-trc5cuih/diagnostic-cancel_valid_response/result.json"
+    },
+    {
+      "kind": "diagnostic",
+      "mode": "missing_evidence_no_cancel",
+      "phase": "red",
+      "wrapperSha256": "fece4352fc4dee48f4039f227bba488387e21c7a843b39a89ee0fe9f82dd36f0",
+      "exitCode": 1,
+      "passed": true,
+      "record": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-cancellation-probes-trc5cuih/diagnostic-missing_evidence_no_cancel/result.json"
+    },
+    {
+      "kind": "diagnostic",
+      "mode": "cancel_mismatched_evidence",
+      "phase": "red",
+      "wrapperSha256": "fece4352fc4dee48f4039f227bba488387e21c7a843b39a89ee0fe9f82dd36f0",
+      "exitCode": 1,
+      "passed": true,
+      "record": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-cancellation-probes-trc5cuih/diagnostic-cancel_mismatched_evidence/result.json"
+    },
+    {
+      "kind": "package",
+      "mode": "cancelled_zero_route",
+      "phase": "red",
+      "wrapperSha256": "15527c3fd722ea3afe44a124f1b7ec487698f6a195416eea296f3d0d06328a92",
+      "exitCode": 1,
+      "passed": true,
+      "record": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-cancellation-probes-trc5cuih/package-cancelled_zero_route/result-completion.json"
+    },
+    {
+      "kind": "package",
+      "mode": "missing_after_logical_call",
+      "phase": "red",
+      "wrapperSha256": "15527c3fd722ea3afe44a124f1b7ec487698f6a195416eea296f3d0d06328a92",
+      "exitCode": 1,
+      "passed": true,
+      "record": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-cancellation-probes-trc5cuih/package-missing_after_logical_call/result-completion.json"
+    },
+    {
+      "kind": "package",
+      "mode": "nonzero_physical_count",
+      "phase": "red",
+      "wrapperSha256": "15527c3fd722ea3afe44a124f1b7ec487698f6a195416eea296f3d0d06328a92",
+      "exitCode": 1,
+      "passed": true,
+      "record": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-cancellation-probes-trc5cuih/package-nonzero_physical_count/result-completion.json"
+    },
+    {
+      "kind": "package",
+      "mode": "nonzero_observed_count",
+      "phase": "red",
+      "wrapperSha256": "15527c3fd722ea3afe44a124f1b7ec487698f6a195416eea296f3d0d06328a92",
+      "exitCode": 1,
+      "passed": true,
+      "record": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-cancellation-probes-trc5cuih/package-nonzero_observed_count/result-completion.json"
+    }
+  ],
+  "limits": [
+    "Actual parser, router, and fixture modules are imported read-only. No proposer or provider is invoked.",
+    "Source-clean verification is exercised with a synthetic Git shim; no commits are created."
+  ]
+}

@@ -1,4 +1,6 @@
 import { test } from "node:test";
+import { createHash } from "node:crypto";
+import { parseExperimentArtifact } from "../examples/routing/experiment.js";
 import assert from "node:assert/strict";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
@@ -21,6 +23,7 @@ const batches = {
   F: "routing-package-v4-integrated",
   G: "routing-package-v4-integrated-repeat",
   H: "routing-package-v5-integrated",
+  I: "recovery-full",
 };
 
 test("retained routing blinder reads task definitions from its relocated checkout", async t => {
@@ -45,7 +48,7 @@ for (const [label, batch] of Object.entries(batches)) {
   test(`routing ${label} regenerates the exact blinded inputs and case mapping offline`, async t => {
     const directory = await mkdtemp(join(tmpdir(), "jev-evidence-replay-"));
     t.after(() => rm(directory, { recursive: true, force: true }));
-    const date = label === "H" ? "2026-09-26" : "2026-09-25";
+    const date = ["H", "I"].includes(label) ? "2026-09-26" : "2026-09-25";
     const artifact = join(root, `examples/routing/runs/${date}-${batch}.json`);
     const prefix = join(directory, "output");
     await exec(process.execPath, ["--import", import.meta.resolve("tsx"), blinder, artifact, prefix], { cwd: directory });
@@ -58,3 +61,34 @@ for (const [label, batch] of Object.entries(batches)) {
     assert.deepEqual(actual, expected);
   });
 }
+
+
+test("published recovery evidence preserves its dispatch ledger and all paired outcomes", async () => {
+  const path = join(root, "examples/routing/runs/2026-09-26-recovery-full.json");
+  const bytes = await readFile(path);
+  const raw = JSON.parse(bytes.toString());
+  const completion = JSON.parse(await readFile(path.replace(".json", "-completion.json"), "utf8"));
+  assert.equal(createHash("sha256").update(bytes).digest("hex"), completion.artifactSha256);
+  const artifact = await parseExperimentArtifact(raw);
+  assert.deepEqual(artifact, raw, "strict replay never repairs the retained evidence");
+  assert.equal(artifact.status, "complete");
+  assert.equal(artifact.trials.length, 114);
+  assert.deepEqual(artifact.routingTransport, { version: 1, recovery: "probability_sum_only_v1", maxAttempts: 3, timeoutMs: 45_000 });
+  const routed = artifact.trials.filter(trial => trial.routing !== null);
+  assert.equal(routed.length, 57);
+  let dispatch = 0;
+  for (const trial of routed) {
+    const routing = trial.routing!;
+    assert.equal(routing.jevCalls, 1);
+    assert.equal(routing.attemptLedger?.complete, true);
+    for (const attempt of routing.attemptLedger!.attempts) {
+      const captured = completion.dispatches[dispatch++];
+      assert.equal(attempt.requestBytes, captured.requestBytes);
+      assert.equal(attempt.httpStatus, captured.httpStatus);
+    }
+  }
+  assert.equal(dispatch, completion.providerRequests);
+  assert.equal(dispatch, 57, "this retained batch did not need recovery");
+  assert.equal(routed.filter(trial => trial.outcome === "tool_called").length, 39);
+  assert.equal(routed.filter(trial => trial.outcome === "routed_clarification").length, 18);
+});

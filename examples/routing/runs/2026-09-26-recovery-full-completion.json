@@ -1,0 +1,360 @@
+{
+  "sourceCommit": "9c5490be2a4777a10fb93a42a55bed078e3f4f52",
+  "finishedAt": "2026-09-26T09:16:54.620Z",
+  "exitCode": 0,
+  "artifactValid": true,
+  "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+  "providerRequests": 57,
+  "stoppedHttpStatus": null,
+  "wrapperFatal": null,
+  "interrupted": null,
+  "dispatches": [
+    {
+      "index": 1,
+      "httpStatus": 200,
+      "requestSha256": "67b99c9d4d36f3faa553e1ccef4502a7eab0be2f649bb481e7c6ec856d4dc83c",
+      "requestBytes": 1506
+    },
+    {
+      "index": 2,
+      "httpStatus": 200,
+      "requestSha256": "263308aac8e5e61d10a7480cf8ad0d9c6b83c04cb956072794116306ec110b22",
+      "requestBytes": 1964
+    },
+    {
+      "index": 3,
+      "httpStatus": 200,
+      "requestSha256": "ba24f0e2a670296eddfff883efdef530f896b911c23dc3275f37f113b0127993",
+      "requestBytes": 3031
+    },
+    {
+      "index": 4,
+      "httpStatus": 200,
+      "requestSha256": "ce4b85d558e2aec757a045f67e5d26259997741486537be5698cef1c694572dc",
+      "requestBytes": 1530
+    },
+    {
+      "index": 5,
+      "httpStatus": 200,
+      "requestSha256": "1ee097065807c25067f78375a7c3a57300be30ec3d987944fd727049e3d88a99",
+      "requestBytes": 1988
+    },
+    {
+      "index": 6,
+      "httpStatus": 200,
+      "requestSha256": "1300aa56a90627e57e7d671b924c9bbd3a9b7169324fce36c624712b0adf4891",
+      "requestBytes": 3055
+    },
+    {
+      "index": 7,
+      "httpStatus": 200,
+      "requestSha256": "efde9e37b4a63c3ad1c2945d5f326288680954d7a1ebdd4ea3b62d53577535d7",
+      "requestBytes": 1527
+    },
+    {
+      "index": 8,
+      "httpStatus": 200,
+      "requestSha256": "14169a48453a881854fc8cbc4618bb9312f356c2a73a48142ca267689d9b3494",
+      "requestBytes": 1985
+    },
+    {
+      "index": 9,
+      "httpStatus": 200,
+      "requestSha256": "a83be559e225fba9c677f287b12a1e682ad39da57987a74937b35bd9a66cd90f",
+      "requestBytes": 3052
+    },
+    {
+      "index": 10,
+      "httpStatus": 200,
+      "requestSha256": "05fe3edd285298699b4faed115dcfdb6358c615e60d61ba0564a0c3cd323ebdd",
+      "requestBytes": 1483
+    },
+    {
+      "index": 11,
+      "httpStatus": 200,
+      "requestSha256": "a3d07caab48b9c8b81242de9e570f5889f8d88a3ad74b4eac236aca5e56c223d",
+      "requestBytes": 1941
+    },
+    {
+      "index": 12,
+      "httpStatus": 200,
+      "requestSha256": "a14ae2150c9eace2f2ad5ffe5ecf8e569a93a03afd79be7844814f96892538f8",
+      "requestBytes": 3008
+    },
+    {
+      "index": 13,
+      "httpStatus": 200,
+      "requestSha256": "f66b4f27394f7aa3973838be952ae820215650f10ac04e561d4878efd04c619e",
+      "requestBytes": 1503
+    },
+    {
+      "index": 14,
+      "httpStatus": 200,
+      "requestSha256": "d111465909da0b03809f6907c3f78bc67194d1fb56876988dc301217eda55de7",
+      "requestBytes": 1961
+    },
+    {
+      "index": 15,
+      "httpStatus": 200,
+      "requestSha256": "e81612d01f7f29f5a3c7b42c9c70f4c684dac908652fa4f50c42b25ae039fa46",
+      "requestBytes": 3028
+    },
+    {
+      "index": 16,
+      "httpStatus": 200,
+      "requestSha256": "7ba4d9ccb50693f5a368d23cf4eb4b3150641d23f03647f9d8c7e2aef657f183",
+      "requestBytes": 1999
+    },
+    {
+      "index": 17,
+      "httpStatus": 200,
+      "requestSha256": "fd9bde5c60fdb3e5886039bdb61ff2ef5a889647644b9f1a0a6d4a2d4e505d1b",
+      "requestBytes": 3066
+    },
+    {
+      "index": 18,
+      "httpStatus": 200,
+      "requestSha256": "4f35fe3f5a913816c71c839844c9e4f3fe5073162b5ee6d9c2af193d366a429e",
+      "requestBytes": 2024
+    },
+    {
+      "index": 19,
+      "httpStatus": 200,
+      "requestSha256": "7e746069a0b1e0735550c3d0809331410c46573d3416c8429ff8f570c16a25cd",
+      "requestBytes": 3091
+    },
+    {
+      "index": 20,
+      "httpStatus": 200,
+      "requestSha256": "67b99c9d4d36f3faa553e1ccef4502a7eab0be2f649bb481e7c6ec856d4dc83c",
+      "requestBytes": 1506
+    },
+    {
+      "index": 21,
+      "httpStatus": 200,
+      "requestSha256": "263308aac8e5e61d10a7480cf8ad0d9c6b83c04cb956072794116306ec110b22",
+      "requestBytes": 1964
+    },
+    {
+      "index": 22,
+      "httpStatus": 200,
+      "requestSha256": "ba24f0e2a670296eddfff883efdef530f896b911c23dc3275f37f113b0127993",
+      "requestBytes": 3031
+    },
+    {
+      "index": 23,
+      "httpStatus": 200,
+      "requestSha256": "ce4b85d558e2aec757a045f67e5d26259997741486537be5698cef1c694572dc",
+      "requestBytes": 1530
+    },
+    {
+      "index": 24,
+      "httpStatus": 200,
+      "requestSha256": "1ee097065807c25067f78375a7c3a57300be30ec3d987944fd727049e3d88a99",
+      "requestBytes": 1988
+    },
+    {
+      "index": 25,
+      "httpStatus": 200,
+      "requestSha256": "1300aa56a90627e57e7d671b924c9bbd3a9b7169324fce36c624712b0adf4891",
+      "requestBytes": 3055
+    },
+    {
+      "index": 26,
+      "httpStatus": 200,
+      "requestSha256": "efde9e37b4a63c3ad1c2945d5f326288680954d7a1ebdd4ea3b62d53577535d7",
+      "requestBytes": 1527
+    },
+    {
+      "index": 27,
+      "httpStatus": 200,
+      "requestSha256": "14169a48453a881854fc8cbc4618bb9312f356c2a73a48142ca267689d9b3494",
+      "requestBytes": 1985
+    },
+    {
+      "index": 28,
+      "httpStatus": 200,
+      "requestSha256": "a83be559e225fba9c677f287b12a1e682ad39da57987a74937b35bd9a66cd90f",
+      "requestBytes": 3052
+    },
+    {
+      "index": 29,
+      "httpStatus": 200,
+      "requestSha256": "05fe3edd285298699b4faed115dcfdb6358c615e60d61ba0564a0c3cd323ebdd",
+      "requestBytes": 1483
+    },
+    {
+      "index": 30,
+      "httpStatus": 200,
+      "requestSha256": "a3d07caab48b9c8b81242de9e570f5889f8d88a3ad74b4eac236aca5e56c223d",
+      "requestBytes": 1941
+    },
+    {
+      "index": 31,
+      "httpStatus": 200,
+      "requestSha256": "a14ae2150c9eace2f2ad5ffe5ecf8e569a93a03afd79be7844814f96892538f8",
+      "requestBytes": 3008
+    },
+    {
+      "index": 32,
+      "httpStatus": 200,
+      "requestSha256": "f66b4f27394f7aa3973838be952ae820215650f10ac04e561d4878efd04c619e",
+      "requestBytes": 1503
+    },
+    {
+      "index": 33,
+      "httpStatus": 200,
+      "requestSha256": "d111465909da0b03809f6907c3f78bc67194d1fb56876988dc301217eda55de7",
+      "requestBytes": 1961
+    },
+    {
+      "index": 34,
+      "httpStatus": 200,
+      "requestSha256": "e81612d01f7f29f5a3c7b42c9c70f4c684dac908652fa4f50c42b25ae039fa46",
+      "requestBytes": 3028
+    },
+    {
+      "index": 35,
+      "httpStatus": 200,
+      "requestSha256": "7ba4d9ccb50693f5a368d23cf4eb4b3150641d23f03647f9d8c7e2aef657f183",
+      "requestBytes": 1999
+    },
+    {
+      "index": 36,
+      "httpStatus": 200,
+      "requestSha256": "fd9bde5c60fdb3e5886039bdb61ff2ef5a889647644b9f1a0a6d4a2d4e505d1b",
+      "requestBytes": 3066
+    },
+    {
+      "index": 37,
+      "httpStatus": 200,
+      "requestSha256": "4f35fe3f5a913816c71c839844c9e4f3fe5073162b5ee6d9c2af193d366a429e",
+      "requestBytes": 2024
+    },
+    {
+      "index": 38,
+      "httpStatus": 200,
+      "requestSha256": "7e746069a0b1e0735550c3d0809331410c46573d3416c8429ff8f570c16a25cd",
+      "requestBytes": 3091
+    },
+    {
+      "index": 39,
+      "httpStatus": 200,
+      "requestSha256": "67b99c9d4d36f3faa553e1ccef4502a7eab0be2f649bb481e7c6ec856d4dc83c",
+      "requestBytes": 1506
+    },
+    {
+      "index": 40,
+      "httpStatus": 200,
+      "requestSha256": "263308aac8e5e61d10a7480cf8ad0d9c6b83c04cb956072794116306ec110b22",
+      "requestBytes": 1964
+    },
+    {
+      "index": 41,
+      "httpStatus": 200,
+      "requestSha256": "ba24f0e2a670296eddfff883efdef530f896b911c23dc3275f37f113b0127993",
+      "requestBytes": 3031
+    },
+    {
+      "index": 42,
+      "httpStatus": 200,
+      "requestSha256": "ce4b85d558e2aec757a045f67e5d26259997741486537be5698cef1c694572dc",
+      "requestBytes": 1530
+    },
+    {
+      "index": 43,
+      "httpStatus": 200,
+      "requestSha256": "1ee097065807c25067f78375a7c3a57300be30ec3d987944fd727049e3d88a99",
+      "requestBytes": 1988
+    },
+    {
+      "index": 44,
+      "httpStatus": 200,
+      "requestSha256": "1300aa56a90627e57e7d671b924c9bbd3a9b7169324fce36c624712b0adf4891",
+      "requestBytes": 3055
+    },
+    {
+      "index": 45,
+      "httpStatus": 200,
+      "requestSha256": "efde9e37b4a63c3ad1c2945d5f326288680954d7a1ebdd4ea3b62d53577535d7",
+      "requestBytes": 1527
+    },
+    {
+      "index": 46,
+      "httpStatus": 200,
+      "requestSha256": "14169a48453a881854fc8cbc4618bb9312f356c2a73a48142ca267689d9b3494",
+      "requestBytes": 1985
+    },
+    {
+      "index": 47,
+      "httpStatus": 200,
+      "requestSha256": "a83be559e225fba9c677f287b12a1e682ad39da57987a74937b35bd9a66cd90f",
+      "requestBytes": 3052
+    },
+    {
+      "index": 48,
+      "httpStatus": 200,
+      "requestSha256": "05fe3edd285298699b4faed115dcfdb6358c615e60d61ba0564a0c3cd323ebdd",
+      "requestBytes": 1483
+    },
+    {
+      "index": 49,
+      "httpStatus": 200,
+      "requestSha256": "a3d07caab48b9c8b81242de9e570f5889f8d88a3ad74b4eac236aca5e56c223d",
+      "requestBytes": 1941
+    },
+    {
+      "index": 50,
+      "httpStatus": 200,
+      "requestSha256": "a14ae2150c9eace2f2ad5ffe5ecf8e569a93a03afd79be7844814f96892538f8",
+      "requestBytes": 3008
+    },
+    {
+      "index": 51,
+      "httpStatus": 200,
+      "requestSha256": "f66b4f27394f7aa3973838be952ae820215650f10ac04e561d4878efd04c619e",
+      "requestBytes": 1503
+    },
+    {
+      "index": 52,
+      "httpStatus": 200,
+      "requestSha256": "d111465909da0b03809f6907c3f78bc67194d1fb56876988dc301217eda55de7",
+      "requestBytes": 1961
+    },
+    {
+      "index": 53,
+      "httpStatus": 200,
+      "requestSha256": "e81612d01f7f29f5a3c7b42c9c70f4c684dac908652fa4f50c42b25ae039fa46",
+      "requestBytes": 3028
+    },
+    {
+      "index": 54,
+      "httpStatus": 200,
+      "requestSha256": "7ba4d9ccb50693f5a368d23cf4eb4b3150641d23f03647f9d8c7e2aef657f183",
+      "requestBytes": 1999
+    },
+    {
+      "index": 55,
+      "httpStatus": 200,
+      "requestSha256": "fd9bde5c60fdb3e5886039bdb61ff2ef5a889647644b9f1a0a6d4a2d4e505d1b",
+      "requestBytes": 3066
+    },
+    {
+      "index": 56,
+      "httpStatus": 200,
+      "requestSha256": "4f35fe3f5a913816c71c839844c9e4f3fe5073162b5ee6d9c2af193d366a429e",
+      "requestBytes": 2024
+    },
+    {
+      "index": 57,
+      "httpStatus": 200,
+      "requestSha256": "7e746069a0b1e0735550c3d0809331410c46573d3416c8429ff8f570c16a25cd",
+      "requestBytes": 3091
+    }
+  ],
+  "verificationErrors": [],
+  "sourceUnchanged": true,
+  "runnerUnchanged": true,
+  "packageUnchanged": true,
+  "artifactPresent": true
+}

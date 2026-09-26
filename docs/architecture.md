@@ -300,7 +300,7 @@ not specify the desired outcome, materially different possible outcomes require
 clarification, and a vague improvement request must not be turned into an
 invented concrete edit. This is a candidate semantic improvement, not a relaxed
 evidence contract. All malformed distributions still produce `unavailable`;
-no automatic retry or normalization is introduced. See the [v4 wire diagnostic
+the v5 wording change introduced no retry or normalization. See the [v4 wire diagnostic
 and bounded recovery results](routing-evaluation/2026-09-26-distribution-diagnostic.md)
 and [v5 wording](routing.md#desired-outcome-clarification-v5). The
 [v5 measurements](routing-evaluation/2026-09-26-routing-v5.md) record all expected
@@ -318,3 +318,35 @@ parsed, imported or executed, and no proposed files are created or modified.
 This host revision does not change contract verdicts, the default Arena menu,
 or routing question semantics. See
 [fixture host bounds and assessment limits](routing.md#fixture-host-revision-1).
+
+### Bounded routing recovery in the example host
+
+`examples/host/jev-choice.ts` owns an opt-in `probability_sum_only_v1`
+transport policy. The reusable adapter defaults to `none` (one physical request).
+The demo explicitly selects recovery. Recovery permits
+at most three total requests with identical bodies under one 45-second deadline
+and caller cancellation, including response reads. Each response is capped at
+64,000 bytes. Only a sole probability-sum defect relative to the unchanged pure
+parser permits another request. Every valid answer, including clarification,
+ties, and low-confidence evidence, stops the loop. Other malformed evidence,
+HTTP errors, transport failures, and body failures are terminal. Exhaustion stays
+`unavailable`; no probabilities are normalized and no fallback tool is selected.
+
+The host records every dispatched request in a versioned attempt ledger. Its
+sanitized projection contains only known option IDs and finite unit numbers.
+It never contains raw provider text, unexpected keys, or credentials. Whole-call
+usage sums all attempts; each metric stays unknown if any attempt omits it.
+Reported subtotals remain separate. Whole-call latency includes the full recovery
+chain once. Browser disconnects preserve observed attempts as a lower bound,
+with an unknown physical total until a terminal ledger arrives.
+
+The pure routing API, policy, model pin, question versions, prerequisites, and
+execution boundary are unchanged. New transport-marked artifacts retain logical
+`jevCalls`, explicit physical counts, and physical request proxies. Unmarked
+historical artifacts retain their original interpretation. The demo selects
+`probability_sum_only_v1` in `examples/routing/host-policy.ts`, using Arena setup 7;
+explicit `none` controls retain setup 6. The [frozen comparison](routing-evaluation/2026-09-26-host-recovery.md)
+records all 171 expected routing outcomes and all 39 assessable routed outputs
+meeting the blinded rubric. Every first response was valid. These gates support
+the measured configuration, but establish no observed recovery benefit or
+calibration.

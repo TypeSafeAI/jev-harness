@@ -249,6 +249,14 @@ not calibration. Run the paired synthetic comparison:
 pnpm --silent bench:routing > routing-run.json
 ```
 
+The example host also supports opt-in bounded recovery for probability-sum
+errors, with every physical request recorded. The reusable adapter defaults to
+one request; the demo explicitly enables recovery as setup 7. The CLI still
+requires `--live --sum-recovery`. The [frozen comparison](docs/routing-evaluation/2026-09-26-host-recovery.md)
+records 171/171 expected routing outcomes and 39/39 assessable routed outputs
+meeting the blinded rubric. Every first response was valid, so no live recovery
+benefit was observed. See the [host recovery and accounting rules](docs/routing.md#experiment-protocol-n-tools-in-context-vs-jev-top-k).
+
 For the dark, full-width **Agent arena**:
 
 ```sh

@@ -9,27 +9,30 @@ import { DEMO_POLICY } from "./scenarios.js";
 import { EXPERIMENT_LABELS, SIZE_TIERS, type SizeTier } from "./experiment-tasks.js";
 import { buildArtifact, codexProposer, fakeProposer, fakeRouterFor, parseExperimentArtifact, runExperiment, type ExperimentDeps } from "./experiment.js";
 import { renderExperimentTable } from "./experiment-table.js";
+import { routingTransport } from "./measurement.js";
 import { createJevChoiceRouter } from "../host/jev-choice.js";
 
 export const USAGE = `Usage:
   pnpm experiment:routing [--runs N] [--sizes small,medium,large] [--top-k K] [--with-prerequisites] [--format table|json] [--out FILE]
       Offline: scripted fake Jev and fake proposer. Prints the table (default) or artifact JSON; --out also writes the artifact.
-  pnpm experiment:routing --live [--model MODEL] [--runs N] [--sizes ...] [--top-k K] [--with-prerequisites] [--out FILE]
+  pnpm experiment:routing --live [--sum-recovery] [--model MODEL] [--runs N] [--sizes ...] [--top-k K] [--with-prerequisites] [--out FILE]
+      --sum-recovery allows at most three physical Jev requests for sum-only failures.
       Live: reads TYPESAFE_API_KEY from the environment and runs the Codex CLI arena host.
       Writes examples/routing/runs/<date>-experiment.json (refuses to overwrite) and prints the table.
       --with-prerequisites adds host-declared prerequisites to routed roots; default is selected-only.
   pnpm experiment:routing --table FILE
       Render the markdown table from an existing artifact.`;
 
-export interface CliOptions { live: boolean; runs: number; sizes: SizeTier[]; topK: number; withPrerequisites: boolean; format: "table" | "json"; out: string | null; table: string | null; model?: string }
+export interface CliOptions { live: boolean; sumRecovery: boolean; runs: number; sizes: SizeTier[]; topK: number; withPrerequisites: boolean; format: "table" | "json"; out: string | null; table: string | null; model?: string }
 
 export function parseCliArgs(argv: readonly string[]): CliOptions {
-  const options: CliOptions = { live: false, runs: 1, sizes: [...SIZE_TIERS], topK: DEMO_POLICY.topK, withPrerequisites: false, format: "table", out: null, table: null };
+  const options: CliOptions = { live: false, sumRecovery: false, runs: 1, sizes: [...SIZE_TIERS], topK: DEMO_POLICY.topK, withPrerequisites: false, format: "table", out: null, table: null };
   const value = (i: number, flag: string) => { const v = argv[i + 1]; if (v === undefined || v.startsWith("--")) throw Error(`${flag} needs a value.`); return v; };
   for (let i = 0; i < argv.length; i++) {
     const flag = argv[i]!;
     if (flag === "--") continue;
     else if (flag === "--live") options.live = true;
+    else if (flag === "--sum-recovery") options.sumRecovery = true;
     else if (flag === "--with-prerequisites") options.withPrerequisites = true;
     else if (flag === "--model") { options.model = value(i++, flag); if (!/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$/.test(options.model)) throw Error("Invalid proposer model identifier."); }
     else if (flag === "--runs") { options.runs = Number(value(i++, flag)); if (!Number.isInteger(options.runs) || options.runs < 1 || options.runs > 50) throw Error("--runs must be an integer from 1 to 50."); }
@@ -40,7 +43,8 @@ export function parseCliArgs(argv: readonly string[]): CliOptions {
     else if (flag === "--table") options.table = value(i++, flag);
     else throw Error(`Unknown argument: ${flag}`);
   }
-  if (options.table && (options.live || options.out || options.model || options.withPrerequisites)) throw Error("--table only renders an existing artifact.");
+  if (options.table && (options.live || options.out || options.model || options.withPrerequisites || options.sumRecovery)) throw Error("--table only renders an existing artifact.");
+  if (options.sumRecovery && !options.live) throw Error("--sum-recovery requires --live.");
   if (options.model && !options.live) throw Error("--model requires --live; offline runs use the scripted fake proposer.");
   return options;
 }
@@ -76,10 +80,11 @@ export async function main(argv: readonly string[], io: CliIo): Promise<number> 
 
   const date = (io.now ?? (() => new Date()))();
   const policy = { ...DEMO_POLICY, topK: options.topK };
+  const transport = routingTransport(options.sumRecovery ? "probability_sum_only_v1" : "none");
   const deps: ExperimentDeps = options.live
-    ? { source: "live", proposer: codexProposer(io.codexExecutable ?? "codex", options.model), onProgress: line => io.stderr(`${line}\n`),
-        routerFor: () => { const jev = createJevChoiceRouter({ key: key!, ...(io.fetch ? { fetch: io.fetch } : {}) }); return { router: jev.router, measurement: () => jev.state.measurement }; } }
-    : { source: "fake", proposer: fakeProposer, routerFor: fakeRouterFor };
+    ? { source: "live", routingTransport: transport, proposer: codexProposer(io.codexExecutable ?? "codex", options.model), onProgress: line => io.stderr(`${line}\n`),
+        routerFor: () => { const jev = createJevChoiceRouter({ key: key!, recovery: transport.recovery, ...(io.fetch ? { fetch: io.fetch } : {}) }); return { router: jev.router, measurement: () => jev.state.measurement }; } }
+    : { source: "fake", routingTransport: transport, proposer: fakeProposer, routerFor: fakeRouterFor };
 
   if (io.signal) deps.signal = io.signal;
 
@@ -90,7 +95,7 @@ export async function main(argv: readonly string[], io: CliIo): Promise<number> 
   }
 
   const trials = await runExperiment({ runs: options.runs, sizes: options.sizes, policy, withPrerequisites: options.withPrerequisites }, deps);
-  const artifact = buildArtifact(trials, { source: deps.source, command, generatedAt: date.toISOString(), policy, runs: options.runs, sizes: options.sizes,
+  const artifact = buildArtifact(trials, { source: deps.source, routingTransport: transport, command, generatedAt: date.toISOString(), policy, runs: options.runs, sizes: options.sizes,
     proposer: options.live ? options.model ? `codex-cli (requested ${options.model}, reasoning medium, isolated arena host)` : "codex-cli (default model, isolated arena host)" : "fake-scripted", labels: EXPERIMENT_LABELS, status: io.signal?.aborted ? "cancelled" : "complete", withPrerequisites: options.withPrerequisites });
   const json = JSON.stringify(artifact, null, 2) + "\n";
   if (outPath) {

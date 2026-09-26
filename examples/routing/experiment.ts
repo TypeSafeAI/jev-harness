@@ -14,7 +14,8 @@ import { assembleToolBundle, CLARIFICATION_ID, ROUTING_QUESTION_SET_VERSION, ROU
 import { arenaPrompt, runCodex, type ToolCall } from "../host/codex.js";
 import { FIXTURE_HOST_REVISION } from "../host/fixture-tools.mjs";
 import { parseFixtureHostRevision, parseFixtureToolCalls } from "../host/fixture-records.js";
-import { jevChoiceBody, type JevMeasurement, type RoutingDiagnostic } from "../host/jev-choice.js";
+import { jevChoiceBody } from "../host/jev-choice.js";
+import { attemptTotals, measureLedger, parseMeasurement, parseRoutingTransport, type JevMeasurement, type RoutingDiagnostic, type JevAttemptLedger, type RoutingTransport } from "./measurement.js";
 import { EXPERIMENT_CATALOG, EXPERIMENT_CATALOGS, EXPERIMENT_TASKS, FAKE_PROPOSER_SCRIPT, EXPERIMENT_MOCKS, SIZE_TIERS, TIER_AVAILABLE_IDS, type ExperimentLabel, type ExperimentTask, type SizeTier } from "./experiment-tasks.js";
 
 export const EXPERIMENT_SCHEMA_VERSION = 1;
@@ -64,6 +65,7 @@ export interface RouterHandle { router: ToolRouter; measurement(): JevMeasuremen
 
 export interface ExperimentDeps {
   source: "fake" | "live";
+  routingTransport?: RoutingTransport;
   /** Receives only the task id so a fake can look up its scripted distribution. */
   routerFor(taskId: string): RouterHandle;
   proposer: Proposer;
@@ -84,12 +86,13 @@ export interface Trial {
     evidence: RoutingReceipt["evidence"]; optionIds: string[];
     jevCalls: number; latencyMs: number | null;
     diagnostic?: RoutingDiagnostic;
+    providerRequests?: number | null; observedProviderRequests?: number; attemptLedger?: JevAttemptLedger | null;
     reported: { input: number | null; output: number | null } | null;
   };
   proposer: null | { status: ProposerResult["status"]; calledToolIds: string[]; traceTruncated: boolean; durationMs: number; reported: { input: number | null; cachedInput: number | null; output: number | null }; error: string | null; answer?: string; toolCalls?: ToolCall[] };
   outcome: TrialOutcome;
   firstToolId: string | null;
-  proxies: { proposerInputTokens: number; jevRequestTokens: number; totalInputTokens: number };
+  proxies: { proposerInputTokens: number; jevRequestTokens: number; jevPhysicalRequestTokens?: number; totalInputTokens: number };
 }
 
 /** Detached, frozen copy with only task/files/tools, so no extra field can reach a proposer. */
@@ -124,7 +127,7 @@ export async function runTrial(task: ExperimentTask, arm: Arm, run: number, orde
     const proposer = await runProposer(deps, input, now);
     const proposerInputTokens = proposerProxy(input);
     return { ...base, exposedToolIds: available.map(t => t.id), routing: null, proposer, outcome: proposerOutcome(proposer), firstToolId: proposer.calledToolIds[0] ?? null,
-      proxies: { proposerInputTokens, jevRequestTokens: 0, totalInputTokens: proposerInputTokens } };
+      proxies: { proposerInputTokens, jevRequestTokens: 0, ...(deps.routingTransport ? { jevPhysicalRequestTokens: 0 } : {}), totalInputTokens: proposerInputTokens } };
   }
   const handle = deps.routerFor(task.id);
   let jevCalls = 0, latencyMs: number | null = null, sent: RoutingRequest | null = null;
@@ -136,19 +139,24 @@ export async function runTrial(task: ExperimentTask, arm: Arm, run: number, orde
   const receipt = await routeTools(EXPERIMENT_CATALOG, { intent: task.intent, availableIds }, policy, counted, deps.signal);
   const measurement = handle.measurement();
   const jevRequestTokens = sent ? proxyTokens(jevChoiceBody(sent)) : 0;
+  const ledger = measurement?.attemptLedger ?? null;
+  const providerRequests = deps.source === "fake" || jevCalls === 0 ? 0 : ledger ? attemptTotals(ledger).providerRequests : null;
+  const observedProviderRequests = deps.source === "fake" ? 0 : ledger?.attempts.length ?? 0;
+  const physicalProxy = jevRequestTokens * observedProviderRequests;
   const routing = { outcome: receipt.outcome, selectedIds: [...receipt.selectedIds], reason: receipt.reason, source: receipt.source, evidence: receipt.evidence,
-    optionIds: receipt.request.options.map(o => o.id), jevCalls, latencyMs,
+    optionIds: receipt.request.options.map(o => o.id), jevCalls, latencyMs: deps.routingTransport && measurement ? measurement.latencyMs : latencyMs,
+    ...(deps.routingTransport ? { providerRequests, observedProviderRequests, attemptLedger: ledger } : {}),
     ...(measurement?.diagnostic ? { diagnostic: { ...measurement.diagnostic } } : {}),
     reported: jevCalls === 0 ? { input: 0, output: 0 } : measurement ? { input: measurement.inputTokens, output: measurement.outputTokens } : null };
   const handoff = withPrerequisites ? bundleFor(receipt, deps.signal) : null;
   const bundle = handoff ? { bundle: handoff.bundle } : {};
   if (receipt.outcome !== "selected") {
     return { ...base, ...bundle, exposedToolIds: [], routing, proposer: null, outcome: receipt.outcome === "unavailable" ? "routing_unavailable" : "routed_clarification", firstToolId: null,
-      proxies: { proposerInputTokens: 0, jevRequestTokens, totalInputTokens: jevRequestTokens } };
+      proxies: { proposerInputTokens: 0, jevRequestTokens, ...(deps.routingTransport ? { jevPhysicalRequestTokens: physicalProxy } : {}), totalInputTokens: deps.routingTransport ? physicalProxy : jevRequestTokens } };
   }
   if (handoff?.bundle.status === "withheld") {
     return { ...base, ...bundle, exposedToolIds: [], routing, proposer: null, outcome: "context_withheld", firstToolId: null,
-      proxies: { proposerInputTokens: 0, jevRequestTokens, totalInputTokens: jevRequestTokens } };
+      proxies: { proposerInputTokens: 0, jevRequestTokens, ...(deps.routingTransport ? { jevPhysicalRequestTokens: physicalProxy } : {}), totalInputTokens: deps.routingTransport ? physicalProxy : jevRequestTokens } };
   }
   const selectedIds = handoff?.context.state.loadedIds ?? receipt.selectedIds;
   const selected = EXPERIMENT_CATALOG.filter(t => selectedIds.includes(t.id));
@@ -156,7 +164,7 @@ export async function runTrial(task: ExperimentTask, arm: Arm, run: number, orde
   const proposer = await runProposer(deps, input, now);
   const proposerInputTokens = proposerProxy(input);
   return { ...base, ...bundle, exposedToolIds: selected.map(t => t.id), routing, proposer, outcome: proposerOutcome(proposer), firstToolId: proposer.calledToolIds[0] ?? null,
-    proxies: { proposerInputTokens, jevRequestTokens, totalInputTokens: proposerInputTokens + jevRequestTokens } };
+    proxies: { proposerInputTokens, jevRequestTokens, ...(deps.routingTransport ? { jevPhysicalRequestTokens: physicalProxy } : {}), totalInputTokens: proposerInputTokens + (deps.routingTransport ? physicalProxy : jevRequestTokens) } };
 }
 
 /** Sequential by design: one provider call at a time. Arm order alternates per (run, task) to spread order and cache effects. */
@@ -251,6 +259,7 @@ export interface ArmSummary {
   routedClarifications: number; noToolCalls: number; unavailable: number; failed: number;
   /** Omitted for historical selected-only trials. Host withholding is not provider unavailability. */
   withheld?: number;
+  providerRequests?: number | null; observedProviderRequests?: number; retryRequests?: number; recoveredCalls?: number; exhaustedCalls?: number;
   jevCalls: number; jevLatencyMedianMs: number | null;
   reportedInputMean: number | null; reportedOutputMean: number | null; reportedInputKnown: number; reportedOutputKnown: number; reportedUnknown: number;
   proxyInputMean: number | null; exposedToolsMean: number | null;
@@ -267,6 +276,13 @@ function summarizeArm(trials: readonly Trial[], labels: Readonly<Record<string, 
     routedClarifications: trials.filter(t => t.outcome === "routed_clarification").length, noToolCalls: trials.filter(t => t.outcome === "no_tool_call").length,
     unavailable: trials.filter(t => t.outcome === "routing_unavailable").length, failed: trials.filter(t => t.outcome === "proposer_failed").length,
     ...(trials.some(t => t.bundle || t.outcome === "context_withheld") ? { withheld: trials.filter(t => t.outcome === "context_withheld").length } : {}),
+    ...(trials.some(t => t.proxies.jevPhysicalRequestTokens !== undefined) ? {
+      providerRequests: trials.every(t => !t.routing || t.routing.providerRequests != null) ? sum(trials.map(t => t.routing?.providerRequests ?? 0)) : null,
+      observedProviderRequests: sum(trials.map(t => t.routing?.observedProviderRequests ?? 0)),
+      retryRequests: sum(trials.map(t => Math.max(0, (t.routing?.observedProviderRequests ?? 0) - 1))),
+      recoveredCalls: trials.filter(t => (t.routing?.attemptLedger?.returnedAttempt ?? 0) > 1).length,
+      exhaustedCalls: trials.filter(t => t.routing?.attemptLedger?.stopReason === "exhausted").length,
+    } : {}),
     jevCalls: sum(trials.map(t => t.routing?.jevCalls ?? 0)), jevLatencyMedianMs: median(trials.flatMap(t => t.routing?.latencyMs == null ? [] : [t.routing.latencyMs])),
     reportedInputMean: mean(inputs), reportedOutputMean: mean(outputs), reportedInputKnown: inputs.length, reportedOutputKnown: outputs.length, reportedUnknown: reported.filter(r => r.input === null || r.output === null).length,
     proxyInputMean: mean(trials.map(t => t.proxies.totalInputTokens)), exposedToolsMean: mean(trials.map(t => t.exposedToolIds.length)),
@@ -300,6 +316,7 @@ export interface ExperimentArtifact {
   /** Absence means the historical host without search/test-draft handlers. */
   fixtureHostRevision?: typeof FIXTURE_HOST_REVISION;
   policy: RoutingPolicy; runs: number; sizes: SizeTier[];
+  routingTransport?: RoutingTransport;
   /** Absence retains historical selected-only semantics. */
   toolContext?: ExperimentToolContext;
   catalog: { ids: string[]; tierAvailableIds: Record<SizeTier, string[]> };
@@ -322,11 +339,12 @@ export const LIVE_NOTES = [
   "Jev latency is wall time around the routing call on this host; proposer duration includes CLI start-up.",
 ];
 
-export function buildArtifact(trials: Trial[], meta: { source: "fake" | "live"; status?: "complete" | "cancelled"; command: string; generatedAt: string; policy: RoutingPolicy; runs: number; sizes: readonly SizeTier[]; proposer: string; labels: Readonly<Record<string, ExperimentLabel>>; withPrerequisites?: boolean }): ExperimentArtifact {
+export function buildArtifact(trials: Trial[], meta: { source: "fake" | "live"; status?: "complete" | "cancelled"; command: string; generatedAt: string; policy: RoutingPolicy; runs: number; sizes: readonly SizeTier[]; proposer: string; labels: Readonly<Record<string, ExperimentLabel>>; withPrerequisites?: boolean; routingTransport?: RoutingTransport }): ExperimentArtifact {
   const labels = structuredClone(Object.fromEntries(Object.entries(meta.labels).map(([k, v]) => [k, { acceptableIds: [...v.acceptableIds], expectedOutcome: v.expectedOutcome }])));
   return {
     schemaVersion: 1, kind: "routing-experiment", status: meta.status ?? "complete", generatedAt: meta.generatedAt, command: meta.command, source: meta.source,
     models: { jev: JEV_MODEL, proposer: meta.proposer }, routingQuestionSetVersion: ROUTING_QUESTION_SET_VERSION, untrustedDataNote: ROUTING_UNTRUSTED_DATA_NOTE, fixtureHostRevision: FIXTURE_HOST_REVISION,
+    ...(meta.routingTransport ? { routingTransport: { ...meta.routingTransport } } : {}),
     policy: { ...meta.policy }, runs: meta.runs, sizes: [...meta.sizes],
     ...(meta.withPrerequisites ? { toolContext: { mode: "with_prerequisites" as const, dependencyVersion: 1 as const, dependencies: structuredClone(EXPERIMENT_TOOL_DEPENDENCIES) } } : {}),
     catalog: { ids: EXPERIMENT_CATALOG.map(t => t.id), tierAvailableIds: Object.fromEntries(SIZE_TIERS.map(s => [s, [...TIER_AVAILABLE_IDS[s]]])) as Record<SizeTier, string[]> },
@@ -357,6 +375,7 @@ export async function parseExperimentArtifact(raw: unknown): Promise<ExperimentA
   const questionSetVersion = a.routingQuestionSetVersion;
   if ((questionSetVersion !== 1 && questionSetVersion !== 2 && questionSetVersion !== 3 && questionSetVersion !== 4 && questionSetVersion !== 5) || a.untrustedDataNote !== ROUTING_UNTRUSTED_DATA_NOTE) return fail("routing metadata");
   const catalog = EXPERIMENT_CATALOGS[questionSetVersion];
+  const transport = a.routingTransport === undefined ? undefined : parseRoutingTransport(a.routingTransport);
   let fixtureHostRevision: typeof FIXTURE_HOST_REVISION | undefined;
   try { fixtureHostRevision = parseFixtureHostRevision(a.fixtureHostRevision); } catch { return fail("fixture host revision"); }
   if (typeof a.generatedAt !== "string" || !Number.isFinite(Date.parse(a.generatedAt)) || !text(a.command)) fail("metadata");
@@ -394,7 +413,8 @@ export async function parseExperimentArtifact(raw: unknown): Promise<ExperimentA
     const available = TIER_AVAILABLE_IDS[task.size];
     if (t.catalogSize !== available.length || !ids(t.exposedToolIds, available)) return fail(`trial ${i} exposure`);
     const exposedIds = t.exposedToolIds;
-    if (!isObj(t.proxies) || ![t.proxies.proposerInputTokens, t.proxies.jevRequestTokens, t.proxies.totalInputTokens].every(count) || t.proxies.totalInputTokens !== Number(t.proxies.proposerInputTokens) + Number(t.proxies.jevRequestTokens)) fail(`trial ${i} proxies`);
+    if (!isObj(t.proxies) || ![t.proxies.proposerInputTokens, t.proxies.jevRequestTokens, t.proxies.totalInputTokens].every(count) || t.proxies.totalInputTokens !== Number(t.proxies.proposerInputTokens) + Number(transport ? t.proxies.jevPhysicalRequestTokens : t.proxies.jevRequestTokens)) return fail(`trial ${i} proxies`);
+    if (transport ? !count(t.proxies.jevPhysicalRequestTokens) : t.proxies.jevPhysicalRequestTokens !== undefined) fail(`trial ${i} physical proxies`);
     const proposer = t.proposer, routing = t.routing;
     if (proposer !== null) {
       if (!isObj(proposer) || !["completed", "failed", "cancelled"].includes(proposer.status as string) || !ids(proposer.calledToolIds, undefined, false) || proposer.calledToolIds.length > 100 || typeof proposer.traceTruncated !== "boolean" || !finite(proposer.durationMs) || !isObj(proposer.reported) || ![proposer.reported.input, proposer.reported.cachedInput, proposer.reported.output].every(nullableCount) || (proposer.error !== null && typeof proposer.error !== "string")) return fail(`trial ${i} proposer`);
@@ -414,7 +434,7 @@ export async function parseExperimentArtifact(raw: unknown): Promise<ExperimentA
       if (t.outcome !== outcome || t.firstToolId !== (proposer.calledToolIds[0] ?? null)) fail(`trial ${i} outcome/proposer mismatch`);
     } else if (t.firstToolId !== null || !["routed_clarification", "routing_unavailable", "context_withheld"].includes(t.outcome as string) || !isObj(t.proxies) || t.proxies.proposerInputTokens !== 0) fail(`trial ${i} absent proposer`);
     if (t.arm === "all_tools") {
-      if (routing !== null || proposer === null || t.bundle !== undefined || !sameIds(t.exposedToolIds, available) || !isObj(t.proxies) || t.proxies.jevRequestTokens !== 0) fail(`trial ${i} arm/routing mismatch`);
+      if (routing !== null || proposer === null || t.bundle !== undefined || !sameIds(t.exposedToolIds, available) || !isObj(t.proxies) || t.proxies.jevRequestTokens !== 0 || (transport && t.proxies.jevPhysicalRequestTokens !== 0)) fail(`trial ${i} arm/routing mismatch`);
       continue;
     }
     if (!isObj(routing) || !["selected", "needs_clarification", "no_match", "unavailable"].includes(routing.outcome as string) || !ids(routing.selectedIds, available) || !ids(routing.optionIds) || !sameIds(routing.optionIds, [...available, CLARIFICATION_ID]) || routing.source !== (a.source === "fake" ? "mock" : "jev") || !text(routing.reason) || !count(routing.jevCalls) || routing.jevCalls > 1 || !(routing.latencyMs === null || finite(routing.latencyMs)) || (routing.reported !== null && (!isObj(routing.reported) || ![routing.reported.input, routing.reported.output].every(nullableCount)))) return fail(`trial ${i} routing`);
@@ -431,6 +451,33 @@ export async function parseExperimentArtifact(raw: unknown): Promise<ExperimentA
       const probabilities = Object.values(evidence.probabilities) as number[];
       if (Math.abs(sum(probabilities) - 1) > 1e-6 || evidence.probabilities[evidence.choice] !== Math.max(...probabilities)) fail(`trial ${i} probabilities`);
     }
+    if (transport) {
+      const ledger = routing.attemptLedger;
+      if (a.source === "fake" || routing.jevCalls === 0) {
+        if (ledger !== null || routing.providerRequests !== 0 || routing.observedProviderRequests !== 0 || t.proxies.jevPhysicalRequestTokens !== 0) fail(`trial ${i} no provider requests`);
+      } else {
+        if (!isObj(ledger)) return fail(`trial ${i} missing attempt ledger`);
+        const typed = ledger as unknown as JevAttemptLedger;
+        const measured = parseMeasurement(measureLedger(typed, routing.latencyMs as number | null), routing.optionIds, evidence === null && a.status === "cancelled" ? undefined : evidence as RoutingEvidence | null);
+        if (typed.recovery !== transport.recovery || typed.maxAttempts !== transport.maxAttempts || typed.timeoutMs !== transport.timeoutMs || !typed.complete || !sameIds(typed.optionIds, routing.optionIds)) fail(`trial ${i} transport configuration`);
+        const totals = attemptTotals(typed);
+        if (routing.providerRequests !== totals.providerRequests || routing.observedProviderRequests !== totals.observedProviderRequests || !isObj(routing.reported) || routing.reported.input !== measured.inputTokens || routing.reported.output !== measured.outputTokens || JSON.stringify(routing.diagnostic) !== JSON.stringify(measured.diagnostic)) fail(`trial ${i} attempt accounting`);
+        const request: RoutingRequest = { model: JEV_MODEL, questionSetVersion, intent: task.intent, untrustedDataNote: ROUTING_UNTRUSTED_DATA_NOTE, options: routing.optionIds.map(id => id === CLARIFICATION_ID ? { id, kind: "fallback", description: "Ask for clarification when the task is ambiguous or none of the available tools fits." } : { ...catalog.find(t => t.id === id)! }) };
+        const requestBody = jevChoiceBody(request);
+        if (typed.attempts.some(attempt => attempt.requestBytes !== bytes(requestBody)) || t.proxies.jevRequestTokens !== proxyTokens(requestBody) || t.proxies.jevPhysicalRequestTokens !== proxyTokens(requestBody) * totals.observedProviderRequests) fail(`trial ${i} physical request proxies`);
+        // Recheck each sanitized projection against the unchanged core parser. A discarded
+        // unexpected option or answer type can never be reconstructed as usable evidence.
+        for (const attempt of typed.attempts) {
+          if (!attempt.projection) continue;
+          const p = attempt.projection, d = attempt.diagnostic!;
+          const replayed = await routeTools(catalog, { intent: task.intent, availableIds: available }, policy as unknown as RoutingPolicy, {
+            source: "jev", review: async () => !p.answerTypeMatches || d.unexpectedOptions > 0 ? null : { model: p.modelMatches ? JEV_MODEL : null, choice: p.choice, confidence: p.confidence, probabilities: p.probabilities },
+          });
+          if ((attempt.status === "valid") !== (replayed.evidence !== null)) fail(`trial ${i} attempt projection replay`);
+        }
+        if (typed.returnedAttempt !== null && evidence === null && a.status !== "cancelled") fail(`trial ${i} missing returned evidence`);
+      }
+    } else if (routing.attemptLedger !== undefined || routing.providerRequests !== undefined || routing.observedProviderRequests !== undefined) fail(`trial ${i} unversioned transport`);
     // All supported versions share policy. Reconstruct the historical catalog/request for bundle
     // replay with recorded evidence only; never relabel or rewrite the artifact.
     const evaluated = await routeTools(catalog, { intent: task.intent, availableIds: available }, policy as unknown as RoutingPolicy,
