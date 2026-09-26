@@ -78,13 +78,14 @@ History is unencrypted local evidence, not authenticated provenance or an accoun
 
 The Next.js API requires loopback Host/Origin for live operations, bounded JSON bodies and explicit POST requests. `/api/route` rebuilds its payload from the fixed catalog, pins `jev-1.13.0`, validates the full distribution and strips provider error bodies. It limits physical provider requests, including recovery, to 30/minute and two concurrent logical calls per process across tabs and keys. These are local safeguards, not authentication or account-wide quotas. Do not forward this local app publicly.
 
-The candidate demo selects `probability_sum_only_v1` in
+The demo selects `probability_sum_only_v1` in
 `examples/routing/host-policy.ts` through the configurable `createLiveHandler`: at most three total identical requests for a sole
 probability-sum defect, under one 45-second deadline and a 64,000-byte response
 cap. Valid answers and other failures stop immediately. The UI does not choose
-this policy. The reusable adapter still defaults to `none`. This candidate is
-enabled for a frozen comparison; its effectiveness remains unmeasured, and
-shipping the proposed default depends on the live and output-quality gates.
+this policy. The reusable adapter still defaults to `none`. The
+[frozen comparison](routing-evaluation/2026-09-26-host-recovery.md) passes its
+fixed routing and blinded output-quality gates. Every first response was valid,
+so the live results establish no observed recovery benefit.
 
 The Arena streams sanitized attempt snapshots before its terminal usage event.
 If delivery is interrupted, history/download retains the observed partial ledger

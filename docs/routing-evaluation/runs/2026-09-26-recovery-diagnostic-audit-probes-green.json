@@ -1,0 +1,143 @@
+{
+  "phase": "green",
+  "wrapperSha256": "bce781368ad6b3f2c84e77afccc67d0dbc09fa2db4618174c71f1d2e5a053e65",
+  "auditSha256": "91ba79a7a2a55edba158eedd99230b88d3ddff4cfde959c83279e2395d258d53",
+  "sourceCommit": "9c5490be2a4777a10fb93a42a55bed078e3f4f52",
+  "probes": [
+    {
+      "mode": "normal",
+      "expectedAccepted": true,
+      "exitCode": 0,
+      "passed": true,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/normal.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/normal-audit.json"
+    },
+    {
+      "mode": "extra_option",
+      "expectedAccepted": true,
+      "exitCode": 0,
+      "passed": true,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/extra_option.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/extra_option-audit.json"
+    },
+    {
+      "mode": "http500",
+      "expectedAccepted": true,
+      "exitCode": 0,
+      "passed": true,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/http500.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/http500-audit.json"
+    },
+    {
+      "mode": "transport_error",
+      "expectedAccepted": true,
+      "exitCode": 0,
+      "passed": true,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/transport_error.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/transport_error-audit.json"
+    },
+    {
+      "mode": "missing_usage",
+      "expectedAccepted": true,
+      "exitCode": 0,
+      "passed": true,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/missing_usage.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/missing_usage-audit.json"
+    },
+    {
+      "mode": "timeout_http_race",
+      "expectedAccepted": true,
+      "exitCode": 0,
+      "passed": true,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/timeout_http_race.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/timeout_http_race-audit.json"
+    },
+    {
+      "mode": "bad_schema",
+      "expectedAccepted": false,
+      "exitCode": 1,
+      "passed": true,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/bad_schema.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/bad_schema-audit.json"
+    },
+    {
+      "mode": "bad_kind",
+      "expectedAccepted": false,
+      "exitCode": 1,
+      "passed": true,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/bad_kind.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/bad_kind-audit.json"
+    },
+    {
+      "mode": "source_mismatch",
+      "expectedAccepted": false,
+      "exitCode": 1,
+      "passed": true,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/source_mismatch.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/source_mismatch-audit.json"
+    },
+    {
+      "mode": "dirty_provenance",
+      "expectedAccepted": false,
+      "exitCode": 1,
+      "passed": true,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/dirty_provenance.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/dirty_provenance-audit.json"
+    },
+    {
+      "mode": "stopped_http",
+      "expectedAccepted": false,
+      "exitCode": 1,
+      "passed": true,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/stopped_http.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/stopped_http-audit.json"
+    },
+    {
+      "mode": "fatal_reason",
+      "expectedAccepted": false,
+      "exitCode": 1,
+      "passed": true,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/fatal_reason.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/fatal_reason-audit.json"
+    },
+    {
+      "mode": "verification_errors",
+      "expectedAccepted": false,
+      "exitCode": 1,
+      "passed": true,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/verification_errors.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/verification_errors-audit.json"
+    },
+    {
+      "mode": "hidden_dispatch",
+      "expectedAccepted": false,
+      "exitCode": 1,
+      "passed": true,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/hidden_dispatch.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/hidden_dispatch-audit.json"
+    },
+    {
+      "mode": "bad_body",
+      "expectedAccepted": false,
+      "exitCode": 1,
+      "passed": true,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/bad_body.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/bad_body-audit.json"
+    },
+    {
+      "mode": "tampered_receipt",
+      "expectedAccepted": false,
+      "exitCode": 1,
+      "passed": true,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/tampered_receipt.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-diagnostic-audit-probes-Uw0yyi/tampered_receipt-audit.json"
+    }
+  ],
+  "passed": 16,
+  "total": 16,
+  "limitations": [
+    "No provider or actual Codex CLI calls.",
+    "Failure fixtures are synthetic mutations of the real offline artifact; host response failures use the actual adapter with injected local fetch.",
+    "Timeout race uses a schema-valid synthetic ledger matching the runner allowance."
+  ]
+}

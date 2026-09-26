@@ -156,7 +156,7 @@ not establish full saturation or general reliability.
 
 The v2 catalog, model pin, pure validation, thresholds, costs, availability,
 fixture text, labels, mocks, host prerequisites and proposal-review questions
-are unchanged. No automatic recovery is added. V1–v4 keep their exact wire
+are unchanged. That wording change added no automatic recovery. V1–v4 keep their exact wire
 instructions and historical provenance. V5 introduces Arena setup revision 6.
 
 ## Reproduce the synthetic comparison
@@ -286,9 +286,9 @@ separate quality assessment. Structural routing diagnostics identify missing
 options, probability-sum issues or model mismatches without retaining unexpected
 provider text. Historical artifacts without these fields remain readable.
 
-**Host recovery candidate.** Add `--sum-recovery` to an explicit `--live` run to
+**Bounded host recovery.** Add `--sum-recovery` to an explicit `--live` run to
 select `probability_sum_only_v1`. The shared host adapter defaults to `none`.
-The candidate demo explicitly selects recovery through `HOST_ROUTING_RECOVERY`
+The demo explicitly selects recovery through `HOST_ROUTING_RECOVERY`
 and records Arena setup 7; single-request controls retain setup 6.
 The option permits three total physical requests, not three retries, with an
 identical request body and one 45-second deadline across fetches and body reads.
@@ -308,8 +308,10 @@ original semantics. `--table` and offline mode reject `--sum-recovery`.
 The ledger stores only sanitized structural facts and known-option numeric
 projections. Missing metrics remain independently unknown while reported
 subtotals remain available. A partial ledger reports an observed lower bound,
-not an exact physical request total. This host candidate has offline verification;
-its effectiveness still requires the separate frozen live comparison.
+not an exact physical request total. The [frozen live comparison](routing-evaluation/2026-09-26-host-recovery.md)
+records 171/171 expected outcomes and all 39 assessable routed outputs meeting
+the blinded rubric. Every first response was valid, so recovery was not exercised
+live and its benefit remains unmeasured.
 
 **Metrics**, per trial, per arm, per catalog size and paired per task:
 

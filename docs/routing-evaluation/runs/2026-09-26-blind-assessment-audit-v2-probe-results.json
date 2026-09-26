@@ -1,0 +1,143 @@
+{
+  "status": "PASS",
+  "auditorSha256": "c3d95609f8c8a8b62d6308ec29ce973ac2fc5bf51e0fbd0772534df2828df6ec",
+  "probes": 33,
+  "results": [
+    {
+      "case": "select output.answer",
+      "passed": true
+    },
+    {
+      "case": "select output.toolCalls.0.proposal.patch",
+      "passed": true
+    },
+    {
+      "case": "select output.toolCalls.1.proposal.patch",
+      "passed": true
+    },
+    {
+      "case": "select output.toolCalls[1].proposal.patch",
+      "passed": true
+    },
+    {
+      "case": "select output.toolCalls[1].testProposal.content",
+      "passed": true
+    },
+    {
+      "case": "select output.toolCalls.proposal.patch",
+      "passed": true
+    },
+    {
+      "case": "select output.toolCalls.testProposal.content",
+      "passed": true
+    },
+    {
+      "case": "select output.toolCalls.2.proposal.patch",
+      "passed": true
+    },
+    {
+      "case": "select output.toolCalls[2].proposal.patch",
+      "passed": true
+    },
+    {
+      "case": "select output.toolCalls.1.proposal.missing",
+      "passed": true
+    },
+    {
+      "case": "select output.missing",
+      "passed": true
+    },
+    {
+      "case": "reject ",
+      "passed": true
+    },
+    {
+      "case": "reject .output",
+      "passed": true
+    },
+    {
+      "case": "reject output.",
+      "passed": true
+    },
+    {
+      "case": "reject output..answer",
+      "passed": true
+    },
+    {
+      "case": "reject output.toolCalls.-1.proposal.patch",
+      "passed": true
+    },
+    {
+      "case": "reject output.toolCalls.+1.proposal.patch",
+      "passed": true
+    },
+    {
+      "case": "reject output.toolCalls.01.proposal.patch",
+      "passed": true
+    },
+    {
+      "case": "reject output.toolCalls[-1].proposal.patch",
+      "passed": true
+    },
+    {
+      "case": "reject output.toolCalls[01].proposal.patch",
+      "passed": true
+    },
+    {
+      "case": "reject output.toolCalls[1.0].proposal.patch",
+      "passed": true
+    },
+    {
+      "case": "reject output.toolCalls[1]proposal.patch",
+      "passed": true
+    },
+    {
+      "case": "reject output.toolCalls[]",
+      "passed": true
+    },
+    {
+      "case": "reject output.toolCalls[1][x]",
+      "passed": true
+    },
+    {
+      "case": "full audit dot",
+      "passed": true
+    },
+    {
+      "case": "full audit bracket",
+      "passed": true
+    },
+    {
+      "case": "full audit wildcard",
+      "passed": true
+    },
+    {
+      "case": "full audit wrong_index_excerpt",
+      "passed": true
+    },
+    {
+      "case": "full audit wrong_excerpt",
+      "passed": true
+    },
+    {
+      "case": "full audit out_of_range",
+      "passed": true
+    },
+    {
+      "case": "full audit invalid_index",
+      "passed": true
+    },
+    {
+      "case": "explicit copied rubric path",
+      "passed": true
+    },
+    {
+      "case": "reject mismatched rubric hash",
+      "passed": true
+    }
+  ],
+  "fixtureRoot": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-blind-audit-v2-probes-0y91b346",
+  "limits": [
+    "Synthetic reference-integrity checks only; no quality grading or source/proposal execution."
+  ]
+}

@@ -1,0 +1,181 @@
+{
+  "status": "PASS",
+  "auditorSha256": "32530a7122c4863144f345cdc94e5e51b33133d2f09d9ebaee6e11edc26f2939",
+  "sourceCommit": "9c5490be2a4777a10fb93a42a55bed078e3f4f52",
+  "probes": [
+    {
+      "mode": "normal",
+      "passed": true,
+      "exitCode": 0,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/normal/artifact.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/normal/audit.json",
+      "stderr": ""
+    },
+    {
+      "mode": "exhausted",
+      "passed": true,
+      "exitCode": 0,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/exhausted/artifact.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/exhausted/audit.json",
+      "stderr": ""
+    },
+    {
+      "mode": "invalid_other",
+      "passed": true,
+      "exitCode": 0,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/invalid_other/artifact.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/invalid_other/audit.json",
+      "stderr": ""
+    },
+    {
+      "mode": "http500",
+      "passed": true,
+      "exitCode": 0,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/http500/artifact.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/http500/audit.json",
+      "stderr": ""
+    },
+    {
+      "mode": "transport_error",
+      "passed": true,
+      "exitCode": 0,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/transport_error/artifact.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/transport_error/audit.json",
+      "stderr": ""
+    },
+    {
+      "mode": "invalid_json",
+      "passed": true,
+      "exitCode": 0,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/invalid_json/artifact.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/invalid_json/audit.json",
+      "stderr": ""
+    },
+    {
+      "mode": "bad_body_hash",
+      "passed": true,
+      "exitCode": 1,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/bad_body_hash/artifact.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/bad_body_hash/audit.json",
+      "stderr": ""
+    },
+    {
+      "mode": "bad_request_bytes",
+      "passed": true,
+      "exitCode": 1,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/bad_request_bytes/artifact.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/bad_request_bytes/audit.json",
+      "stderr": ""
+    },
+    {
+      "mode": "missing_dispatch",
+      "passed": true,
+      "exitCode": 1,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/missing_dispatch/artifact.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/missing_dispatch/audit.json",
+      "stderr": ""
+    },
+    {
+      "mode": "extra_dispatch",
+      "passed": true,
+      "exitCode": 1,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/extra_dispatch/artifact.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/extra_dispatch/audit.json",
+      "stderr": ""
+    },
+    {
+      "mode": "changed_retry_hash",
+      "passed": true,
+      "exitCode": 1,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/changed_retry_hash/artifact.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/changed_retry_hash/audit.json",
+      "stderr": ""
+    },
+    {
+      "mode": "bad_status",
+      "passed": true,
+      "exitCode": 1,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/bad_status/artifact.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/bad_status/audit.json",
+      "stderr": ""
+    },
+    {
+      "mode": "bad_source_hash",
+      "passed": true,
+      "exitCode": 1,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/bad_source_hash/artifact.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/bad_source_hash/audit.json",
+      "stderr": ""
+    },
+    {
+      "mode": "bad_package_hash",
+      "passed": true,
+      "exitCode": 1,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/bad_package_hash/artifact.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/bad_package_hash/audit.json",
+      "stderr": ""
+    },
+    {
+      "mode": "bad_runner_hash",
+      "passed": true,
+      "exitCode": 1,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/bad_runner_hash/artifact.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/bad_runner_hash/audit.json",
+      "stderr": ""
+    },
+    {
+      "mode": "bad_model",
+      "passed": true,
+      "exitCode": 1,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/bad_model/artifact.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/bad_model/audit.json",
+      "stderr": ""
+    },
+    {
+      "mode": "bad_summary",
+      "passed": true,
+      "exitCode": 1,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/bad_summary/artifact.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/bad_summary/audit.json",
+      "stderr": ""
+    },
+    {
+      "mode": "bad_order",
+      "passed": true,
+      "exitCode": 1,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/bad_order/artifact.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/bad_order/audit.json",
+      "stderr": ""
+    },
+    {
+      "mode": "missing_ledger",
+      "passed": true,
+      "exitCode": 1,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/missing_ledger/artifact.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/missing_ledger/audit.json",
+      "stderr": ""
+    },
+    {
+      "mode": "bad_recovery",
+      "passed": true,
+      "exitCode": 1,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/bad_recovery/artifact.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/bad_recovery/audit.json",
+      "stderr": ""
+    },
+    {
+      "mode": "applied_proposal",
+      "passed": true,
+      "exitCode": 1,
+      "input": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/applied_proposal/artifact.json",
+      "output": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-full-audit-probes-0rrmvk_o/applied_proposal/audit.json",
+      "stderr": ""
+    }
+  ],
+  "passed": 21,
+  "limits": [
+    "All provenance/completion fixtures are synthetic and do not claim a live run.",
+    "Base artifact comes from real main with injected fake transport and fake CLI; this harness invokes only pnpm/tsx and the read-only audit.",
+    "No delivered output is graded."
+  ]
+}

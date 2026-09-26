@@ -1,0 +1,223 @@
+{
+  "schemaVersion": 1,
+  "kind": "recovery-wrapper-offline-fault-probes",
+  "wrapperSha256": "bce781368ad6b3f2c84e77afccc67d0dbc09fa2db4618174c71f1d2e5a053e65",
+  "passed": 17,
+  "probes": [
+    {
+      "mode": "normal",
+      "passed": true,
+      "exitCode": 0,
+      "status": "complete",
+      "casesRecorded": 57,
+      "requests": 87,
+      "forwardedToFakeFetch": 0,
+      "fatalReason": null,
+      "verificationErrors": [],
+      "artifact": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-wrapper-probes-vg_dlm57/normal/result.json"
+    },
+    {
+      "mode": "changed_body",
+      "passed": true,
+      "exitCode": 1,
+      "status": "failed",
+      "casesRecorded": 1,
+      "requests": 1,
+      "forwardedToFakeFetch": 0,
+      "fatalReason": "unexpected_request_body",
+      "verificationErrors": [],
+      "artifact": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-wrapper-probes-vg_dlm57/changed_body/result.json"
+    },
+    {
+      "mode": "changed_signal",
+      "passed": true,
+      "exitCode": 1,
+      "status": "failed",
+      "casesRecorded": 1,
+      "requests": 1,
+      "forwardedToFakeFetch": 0,
+      "fatalReason": "changed_deadline_signal",
+      "verificationErrors": [],
+      "artifact": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-wrapper-probes-vg_dlm57/changed_signal/result.json"
+    },
+    {
+      "mode": "missing_ledger",
+      "passed": true,
+      "exitCode": 1,
+      "status": "failed",
+      "casesRecorded": 1,
+      "requests": 3,
+      "forwardedToFakeFetch": 0,
+      "fatalReason": null,
+      "verificationErrors": [],
+      "artifact": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-wrapper-probes-vg_dlm57/missing_ledger/result.json"
+    },
+    {
+      "mode": "bad_ledger_count",
+      "passed": true,
+      "exitCode": 1,
+      "status": "failed",
+      "casesRecorded": 1,
+      "requests": 3,
+      "forwardedToFakeFetch": 0,
+      "fatalReason": null,
+      "verificationErrors": [],
+      "artifact": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-wrapper-probes-vg_dlm57/bad_ledger_count/result.json"
+    },
+    {
+      "mode": "bad_totals",
+      "passed": true,
+      "exitCode": 1,
+      "status": "failed",
+      "casesRecorded": 1,
+      "requests": 3,
+      "forwardedToFakeFetch": 0,
+      "fatalReason": null,
+      "verificationErrors": [],
+      "artifact": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-wrapper-probes-vg_dlm57/bad_totals/result.json"
+    },
+    {
+      "mode": "ignored_recovery",
+      "passed": true,
+      "exitCode": 1,
+      "status": "failed",
+      "casesRecorded": 1,
+      "requests": 1,
+      "forwardedToFakeFetch": 0,
+      "fatalReason": null,
+      "verificationErrors": [],
+      "artifact": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-wrapper-probes-vg_dlm57/ignored_recovery/result.json"
+    },
+    {
+      "mode": "runner_read_failure",
+      "passed": true,
+      "exitCode": 1,
+      "status": "failed",
+      "casesRecorded": 57,
+      "requests": 87,
+      "forwardedToFakeFetch": 0,
+      "fatalReason": null,
+      "verificationErrors": [
+        "runner_verification_failed"
+      ],
+      "artifact": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-wrapper-probes-vg_dlm57/runner_read_failure/result.json"
+    },
+    {
+      "mode": "source_read_failure",
+      "passed": true,
+      "exitCode": 1,
+      "status": "failed",
+      "casesRecorded": 57,
+      "requests": 87,
+      "forwardedToFakeFetch": 0,
+      "fatalReason": null,
+      "verificationErrors": [
+        "source_verification_failed"
+      ],
+      "artifact": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-wrapper-probes-vg_dlm57/source_read_failure/result.json"
+    },
+    {
+      "mode": "git_failure",
+      "passed": true,
+      "exitCode": 1,
+      "status": "failed",
+      "casesRecorded": 57,
+      "requests": 87,
+      "forwardedToFakeFetch": 0,
+      "fatalReason": null,
+      "verificationErrors": [
+        "source_verification_failed"
+      ],
+      "artifact": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-wrapper-probes-vg_dlm57/git_failure/result.json"
+    },
+    {
+      "mode": "cancel_before_query",
+      "passed": true,
+      "exitCode": 130,
+      "status": "cancelled",
+      "casesRecorded": 1,
+      "requests": 0,
+      "forwardedToFakeFetch": 0,
+      "fatalReason": null,
+      "verificationErrors": [],
+      "artifact": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-wrapper-probes-vg_dlm57/cancel_before_query/result.json"
+    },
+    {
+      "mode": "terminal_http_401",
+      "passed": true,
+      "exitCode": 1,
+      "status": "provider_unavailable",
+      "casesRecorded": 1,
+      "requests": 1,
+      "forwardedToFakeFetch": 1,
+      "fatalReason": null,
+      "verificationErrors": [],
+      "artifact": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-wrapper-probes-vg_dlm57/terminal_http_401/result.json"
+    },
+    {
+      "mode": "terminal_http_402",
+      "passed": true,
+      "exitCode": 1,
+      "status": "provider_unavailable",
+      "casesRecorded": 1,
+      "requests": 1,
+      "forwardedToFakeFetch": 1,
+      "fatalReason": null,
+      "verificationErrors": [],
+      "artifact": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-wrapper-probes-vg_dlm57/terminal_http_402/result.json"
+    },
+    {
+      "mode": "terminal_http_403",
+      "passed": true,
+      "exitCode": 1,
+      "status": "provider_unavailable",
+      "casesRecorded": 1,
+      "requests": 1,
+      "forwardedToFakeFetch": 1,
+      "fatalReason": null,
+      "verificationErrors": [],
+      "artifact": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-wrapper-probes-vg_dlm57/terminal_http_403/result.json"
+    },
+    {
+      "mode": "terminal_http_429",
+      "passed": true,
+      "exitCode": 1,
+      "status": "provider_unavailable",
+      "casesRecorded": 1,
+      "requests": 1,
+      "forwardedToFakeFetch": 1,
+      "fatalReason": null,
+      "verificationErrors": [],
+      "artifact": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-wrapper-probes-vg_dlm57/terminal_http_429/result.json"
+    },
+    {
+      "mode": "terminal_http_retry",
+      "passed": true,
+      "exitCode": 1,
+      "status": "failed",
+      "casesRecorded": 1,
+      "requests": 1,
+      "forwardedToFakeFetch": 1,
+      "fatalReason": "dispatch_after_stop",
+      "verificationErrors": [],
+      "artifact": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-wrapper-probes-vg_dlm57/terminal_http_retry/result.json"
+    },
+    {
+      "mode": "cancel_after_http",
+      "passed": true,
+      "exitCode": 130,
+      "status": "cancelled",
+      "casesRecorded": 1,
+      "requests": 1,
+      "forwardedToFakeFetch": 1,
+      "fatalReason": null,
+      "verificationErrors": [],
+      "artifact": "/var/folders/sz/mtdd9q6j3z5_8jq7xsm876600000gn/T/jev-recovery-wrapper-probes-vg_dlm57/cancel_after_http/result.json"
+    }
+  ],
+  "limitations": [
+    "Only external wrapper behavior is exercised. Stub adapter/measurement parser do not validate the real implementation.",
+    "Synthetic Git shim establishes fixture metadata without making commits.",
+    "--live branches use a preloaded local fetch stub; no provider or CLI is called."
+  ]
+}

@@ -323,7 +323,7 @@ or routing question semantics. See
 
 `examples/host/jev-choice.ts` owns an opt-in `probability_sum_only_v1`
 transport policy. The reusable adapter defaults to `none` (one physical request).
-The candidate demo explicitly selects recovery. Recovery permits
+The demo explicitly selects recovery. Recovery permits
 at most three total requests with identical bodies under one 45-second deadline
 and caller cancellation, including response reads. Each response is capped at
 64,000 bytes. Only a sole probability-sum defect relative to the unchanged pure
@@ -343,10 +343,10 @@ with an unknown physical total until a terminal ledger arrives.
 The pure routing API, policy, model pin, question versions, prerequisites, and
 execution boundary are unchanged. New transport-marked artifacts retain logical
 `jevCalls`, explicit physical counts, and physical request proxies. Unmarked
-historical artifacts retain their original interpretation. This implementation
-is a candidate for a frozen live comparison, not a measured recovery improvement
-or calibration. The candidate demo selects `probability_sum_only_v1` in
-`examples/routing/host-policy.ts` so its measured source can match the proposed
-default. It uses Arena setup 7; explicit `none` controls retain setup 6. Shipping
-that default remains contingent on the frozen comparison and output-quality
-gates.
+historical artifacts retain their original interpretation. The demo selects
+`probability_sum_only_v1` in `examples/routing/host-policy.ts`, using Arena setup 7;
+explicit `none` controls retain setup 6. The [frozen comparison](routing-evaluation/2026-09-26-host-recovery.md)
+records all 171 expected routing outcomes and all 39 assessable routed outputs
+meeting the blinded rubric. Every first response was valid. These gates support
+the measured configuration, but establish no observed recovery benefit or
+calibration.

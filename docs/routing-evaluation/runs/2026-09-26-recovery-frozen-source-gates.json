@@ -1,0 +1,53 @@
+{
+  "kind": "host-recovery-frozen-source-gates",
+  "source": "9c5490be2a4777a10fb93a42a55bed078e3f4f52",
+  "base": "48fbf7f46d2defca65c05dddfae84d8df92dfc08",
+  "signedAndGitHubVerified": true,
+  "clean": true,
+  "offlineTests": 293,
+  "typecheck": "pass",
+  "build": "pass",
+  "secrets": "pass",
+  "browserChecks": 29,
+  "widths": [
+    320,
+    390,
+    768,
+    1440,
+    1920
+  ],
+  "desktopAndMobileScreenshotsInspected": true,
+  "independentSpecification": "pass",
+  "independentQuality": "pass",
+  "unchangedFromBase": [
+    "pure src including proposal review",
+    "synthetic fixtures",
+    "dependencies and lockfile",
+    "routing tasks labels mocks",
+    "isolated Codex host",
+    "bounded fixture tool server"
+  ],
+  "liveRecoveryMeasured": false,
+  "limitations": [
+    "Browser verification uses intercepted fake I/O.",
+    "Human keyboard-only and VoiceOver acceptance not performed."
+  ],
+  "logs": [
+    {
+      "path": "/tmp/jev-recovery-root-freeze-tests.log",
+      "sha256": "064eac7b929c2a101e3e9d41e048c970818a645fc39797f451cdc9c640a742b3"
+    },
+    {
+      "path": "/tmp/jev-recovery-activated-typecheck.log",
+      "sha256": "ac6231f265f8c48752c2e6ae50bcdbe696e58ef3cca30a96105dee90ef9826d0"
+    },
+    {
+      "path": "/tmp/jev-recovery-activated-build.log",
+      "sha256": "36e0555bab00faa99e319b205035f89718f7303c741320c2ffed37e833a13948"
+    },
+    {
+      "path": "/tmp/jev-recovery-activated-secrets.log",
+      "sha256": "2dac1588e2cb4a5caf3b29e68529487dfd0c80cdf40d1bbf31c211c746638e92"
+    }
+  ]
+}

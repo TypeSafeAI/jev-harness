@@ -1,0 +1,97 @@
+{
+  "kind": "offline-preflight-and-predeclared-plan-archive",
+  "liveMeasurements": false,
+  "files": [
+    {
+      "source": "/tmp/jev-performance-2026-09-24/recovery-live-plan.json",
+      "published": "docs/routing-evaluation/runs/2026-09-26-recovery-live-plan.json",
+      "sha256": "b9320d1687f24b6bee399117a28072ab361afd4c25d8e575d37628b9de2451fb"
+    },
+    {
+      "source": "/tmp/jev-routing-recovery-diagnostic.mts",
+      "published": "docs/routing-evaluation/runs/2026-09-26-recovery-diagnostic-original.mts",
+      "sha256": "bce781368ad6b3f2c84e77afccc67d0dbc09fa2db4618174c71f1d2e5a053e65"
+    },
+    {
+      "source": "/tmp/jev-routing-recovery-package.mts",
+      "published": "docs/routing-evaluation/runs/2026-09-26-recovery-package-original.mts",
+      "sha256": "a2b14dca517a4f6c9c8873ac60261b8d089a06ea33d552d505bc14f701de2356"
+    },
+    {
+      "source": "/tmp/jev-recovery-cancellation-fix-verification.json",
+      "published": "docs/routing-evaluation/runs/2026-09-26-recovery-wrapper-verification.json",
+      "sha256": "345fff13e019fd9366ddf6f717ee53338918f8d8502e42aa04169a4bb3abda58"
+    },
+    {
+      "source": "/tmp/jev-recovery-cancellation-probes.py",
+      "published": "docs/routing-evaluation/runs/2026-09-26-recovery-cancellation-probes.py",
+      "sha256": "0766c9dfca00f990ed19cad9a29b8313cc6619f0e8acba4065e4acc2092b3056"
+    },
+    {
+      "source": "/tmp/jev-recovery-cancellation-probe-red.json",
+      "published": "docs/routing-evaluation/runs/2026-09-26-recovery-cancellation-red.json",
+      "sha256": "be05965d8d379b4f745ebb25742914e77191756e3ecc4612da2831de6e9cc4ec"
+    },
+    {
+      "source": "/tmp/jev-recovery-cancellation-probe-green.json",
+      "published": "docs/routing-evaluation/runs/2026-09-26-recovery-cancellation-green.json",
+      "sha256": "60d0182dd08d02ae08abb36f1c99d140eaec1f84263fb7e5f710fc5a4ca0b901"
+    },
+    {
+      "source": "/tmp/jev-recovery-wrapper-probes.py",
+      "published": "docs/routing-evaluation/runs/2026-09-26-recovery-wrapper-probes.py",
+      "sha256": "d5e5eaf995f66d3b690e9d35351042bcdd407fcc10c64c8075355fa9c6fb60e9"
+    },
+    {
+      "source": "/tmp/jev-recovery-wrapper-probe-results.json",
+      "published": "docs/routing-evaluation/runs/2026-09-26-recovery-wrapper-probe-results.json",
+      "sha256": "d6715a17b7182910ed86e91849201848a90eae2d557fd810a9dbedcc6e89ce88"
+    },
+    {
+      "source": "/tmp/jev-recovery-package-probes.py",
+      "published": "docs/routing-evaluation/runs/2026-09-26-recovery-package-probes.py",
+      "sha256": "20907f38e6306bb8bf397309f3db0b01c763a5d17685faa123c0e77f5a92ac0d"
+    },
+    {
+      "source": "/tmp/jev-recovery-package-probe-results.json",
+      "published": "docs/routing-evaluation/runs/2026-09-26-recovery-package-probe-results.json",
+      "sha256": "239044f294ebdf4640e256be0be34b4e29fbe138559bcb3ea57c7d9f7ec0e6ea"
+    },
+    {
+      "source": "/tmp/jev-performance-2026-09-24/real-main-recovery-preflight.mjs",
+      "published": "docs/routing-evaluation/runs/2026-09-26-recovery-real-main-preflight.mjs",
+      "sha256": "baabb9f0044ce5a925a65eab3a9491081b27019fb6635b44a987914bd461d19f"
+    },
+    {
+      "source": "/tmp/jev-performance-2026-09-24/recovery-real-main-preflight/preflight-result.json",
+      "published": "docs/routing-evaluation/runs/2026-09-26-recovery-real-main-preflight-result.json",
+      "sha256": "16cb9fc14782e9bfeec7e6dee5a65e02825eafc9f579b98faf99c631345ffdb4"
+    },
+    {
+      "source": "/tmp/jev-performance-2026-09-24/recovery-real-main-preflight/artifact.fake-injected.json",
+      "published": "docs/routing-evaluation/runs/2026-09-26-recovery-real-main-fake-artifact.json",
+      "sha256": "c6a6a98f4987208c4e27a5f1588a385ae81e2be4f3b7deb68d692a191c83748e"
+    },
+    {
+      "source": "/tmp/jev-performance-2026-09-24/recovery-browser-cards/results.json",
+      "published": "docs/routing-evaluation/runs/2026-09-26-recovery-browser-result.json",
+      "sha256": "45da4f3d65914d2172caa22589a7411d3526852f981d0c4ae57461d58037f5ab"
+    },
+    {
+      "source": "/tmp/jev-recovery-browser-cards.mts",
+      "published": "docs/routing-evaluation/runs/2026-09-26-recovery-browser-original.mts",
+      "sha256": "1d3fc27111c1b8129eee648ce96bc60b4aae757ed3568150541d865b16fd7924"
+    },
+    {
+      "source": "/tmp/jev-performance-2026-09-24/recovery-offline.json",
+      "published": "docs/routing-evaluation/runs/2026-09-26-recovery-offline.json",
+      "sha256": "23a8220e97461d2c3d4dc5fee9fce8d9819fbbb08c5ace54e816e3d0ddebb94c"
+    },
+    {
+      "source": "/tmp/jev-performance-2026-09-24/recovery-offline-provenance.json",
+      "published": "docs/routing-evaluation/runs/2026-09-26-recovery-offline-provenance.json",
+      "sha256": "d66ea4537fc8d17f4a01eec74b23e672930b8ad6dbfd61756d52706e07d9e784"
+    }
+  ],
+  "note": "Original temporary paths retained as provenance. Fake artifact source:live identifies the exercised main code path, not real provider work. No task-quality claim."
+}

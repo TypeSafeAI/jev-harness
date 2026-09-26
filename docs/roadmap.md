@@ -127,8 +127,8 @@ candidates are not held-out calibration.
 - [x] Record the [v4 numeric wire diagnostic and bounded recovery repeat](routing-evaluation/2026-09-26-distribution-diagnostic.md), including every failed attempt and added usage. That standalone diagnostic predates the integrated host candidate; its repeat still exhausted its cap on one case.
 - [x] Evaluate [clarification wording v5](routing-evaluation/2026-09-26-routing-v5.md) with two frozen single-attempt batches, full paired CLI comparison and blinded output assessment. Every delivered clear-task output meets the rubric; one malformed response remains unavailable in the full batch. Saturation remains unproven.
 
-- [x] Add the [bounded host recovery candidate](architecture.md#bounded-routing-recovery-in-the-example-host), with strict attempt accounting, physical request admission, versioned artifacts, and Arena setup 7 for recovery. The candidate demo selects `probability_sum_only_v1` for its frozen comparison; the shared adapter defaults to `none`. Pure policy, model, questions, and fixtures are unchanged.
-- [ ] Freeze and measure the integrated recovery candidate with every attempt, failed case, first-response counterfactual, and blinded output assessment retained. Decide whether to ship the proposed default from that evidence; no integrated recovery benefit or calibration is claimed yet.
+- [x] Add the [bounded host recovery candidate](architecture.md#bounded-routing-recovery-in-the-example-host), with strict attempt accounting, physical request admission, versioned artifacts, and Arena setup 7 for recovery. The demo selects `probability_sum_only_v1`; the shared adapter defaults to `none`. Pure policy, model, questions, and fixtures are unchanged.
+- [x] [Freeze and measure integrated recovery](routing-evaluation/2026-09-26-host-recovery.md), retaining all attempts, first-response outcomes, and blinded assessment. All 171 routing outcomes match expectations; all 39 assessable routed outputs meet the rubric. Retain the measured demo default. Every first response was valid, so no live recovery benefit or calibration is established.
 
 ## 4 · Context scoring
 

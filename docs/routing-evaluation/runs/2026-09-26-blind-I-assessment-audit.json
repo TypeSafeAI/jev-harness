@@ -1,0 +1,11 @@
+{
+  "auditVersion": 2,
+  "auditorSha256": "c3d95609f8c8a8b62d6308ec29ce973ac2fc5bf51e0fbd0772534df2828df6ec",
+  "inputFile": "blind-I.jsonl",
+  "inputSha256": "8ea5ea365ce80c3763bb2e8ad133128327e93b8b289b90eb25087e498ff34ea7",
+  "assessmentSha256": "1910d8bd2fed205a458c14bbc851f5036c651a870bdb581343378b4ab88b7e28",
+  "rubricSha256": "b90742ed9c4367f1ad8282a2d48349a69401e4fe077ebb6616301c3950109ce4",
+  "uniqueCases": 114,
+  "exactFieldExcerptsMatched": 114,
+  "note": "Offline identity, hash and exact excerpt validation; this does not validate the human-equivalent correctness of the agent grades."
+}

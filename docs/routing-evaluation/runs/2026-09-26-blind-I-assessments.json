@@ -1,0 +1,1839 @@
+{
+  "schemaVersion": 1,
+  "assessor": "Independent blinded agent code-reading assessment of blind-I; unchanged supplementary routing output rubric v2; no human gold-standard claim",
+  "inputSha256": "8ea5ea365ce80c3763bb2e8ad133128327e93b8b289b90eb25087e498ff34ea7",
+  "rubricSha256": "b90742ed9c4367f1ad8282a2d48349a69401e4fe077ebb6616301c3950109ce4",
+  "method": {
+    "approach": "Read the rubric first, then every distinct complete row in input order in batches 1-12, 13-28, 29-44, 45-60, 61-76 and 77-88. Read all task/source text, final answers, patches, retained tests, status and truncation fields. Manually assigned content judgments by group after reading; expanded only exact complete-content duplicates excluding caseId.",
+    "readCoverage": {
+      "inputRows": 114,
+      "uniqueCaseIds": 114,
+      "distinctCompleteRows": 88,
+      "distinctCompleteRowsReadInFull": 88,
+      "duplicateRowsExpanded": 26,
+      "distinctNonNullRows": 86,
+      "nullOutputRows": 18
+    },
+    "grounding": "Returned read_file, inspect_agent and versioned fixtureHostRevision 1 search_text establish source-access return status under rubric v2; exact arguments, results and search coverage remain unretained. No tool return status establishes content correctness.",
+    "delivery": "delivery records the primary deliverable using a rubric value; deliveryFacts records additional observed rubric delivery facts. Null output uses none to mean no retained delivery evidence, not a demonstrated absence of all operational activity.",
+    "evidencePaths": "evidenceField uses dot paths with numeric array indexes. Evidence is a literal complete field value, with the rubric-required string null for a null output.",
+    "constraints": "constraintViolation=false means no violation observed in retained evidence. Missing output does not establish constraint compliance.",
+    "separation": "Content quality, provenance, retained delivery and operational status were recorded separately. No arm, route, usage, benchmark expected label, mapping, raw trial artifact or prior assessment was consulted."
+  },
+  "limitations": [
+    "Supplementary agent code reading only, not an independently validated human gold standard or calibration.",
+    "No proposed source was applied, executed, compiled, imported or tested; no provider or agent CLI invocation and no network access were used.",
+    "The 18 null-output rows cannot establish operational status, grounding, retained questions, or route-only clarification; all remain unassessable.",
+    "Returned source access does not retain exact arguments or results. Search completeness is assessed against canonical supplied files, not inferred from call count.",
+    "All non-null outputs report completed, complete traces and unclipped answers; these are retained operational fields, not an independent execution audit.",
+    "The 114 cases repeat seven synthetic intents and do not represent 114 independent task types."
+  ],
+  "summary": {
+    "contentQualityCounts": {
+      "meets": 95,
+      "partial": 1,
+      "fails": 0,
+      "unassessable": 18
+    },
+    "operationalStatusCounts": {
+      "completed": 96,
+      "unknown": 18
+    },
+    "operationalFailuresObserved": 0,
+    "operationalUnknowns": 18,
+    "constraintViolationsObserved": 0,
+    "fixtureHostRevisions": [
+      1
+    ]
+  },
+  "cases": [
+    {
+      "caseId": "004377172aa89bed90f9f974",
+      "contentQuality": "meets",
+      "evidence": "--- a/src/sum.ts\n+++ b/src/sum.ts\n@@ -1,6 +1,6 @@\n export function sum(values: number[]) {\n   let total = 0;\n-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];\n   return total;\n }\n export const mean = (values: number[]) => sum(values) / values.length;\n",
+      "evidenceField": "output.toolCalls.1.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending proposal",
+      "constraintViolation": false,
+      "reason": "The retained one-line proposal changes <= to <, preserves both exports and other behavior, and makes no application or execution claim.",
+      "deliveryFacts": [
+        "pending proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "01a8ed8c00603fe28c14e1d4",
+      "contentQuality": "meets",
+      "evidence": "`mean(values)` calls `sum(values)`, then divides the result by `values.length`.\n\nAs written, `sum` loops one step past the end of the array (`i <= values.length`). That adds `undefined` to the total, producing `NaN`, so both helpers return `NaN` for every input. Changing `<=` to `<` fixes the loop; `mean([])` would still need separate handling for division by zero.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Explains the accumulation and mean calling sum then dividing by length; correctly traces the extra undefined read to NaN in both helpers.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "01c9a8a09880b05abc23bbc5",
+      "contentQuality": "meets",
+      "evidence": "import assert from 'node:assert/strict';\nimport { test } from 'node:test';\nimport { sum } from '../src/sum';\n\ntest('sum returns NaN for an empty array', () => {\n  assert.ok(Number.isNaN(sum([])));\n});\n",
+      "evidenceField": "output.toolCalls.1.testProposal.content",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending test proposal",
+      "constraintViolation": false,
+      "reason": "The retained test imports/references sum, invokes sum([]), and uses a valid NaN assertion for the current source; it remains an unexecuted proposal.",
+      "deliveryFacts": [
+        "pending test proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "032ba31b6dfb6c9fd486d990",
+      "contentQuality": "meets",
+      "evidence": "I found a bug in `src/sum.ts`: `sum` loops one index past the end of the array, so it returns `NaN`. Would you like me to propose a fix, or did you have a different change in mind?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Accurately observes the loop defect and asks whether addressing it is the desired change; the optional change remains undecided.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "0779e2cabf24ac0e79626798",
+      "contentQuality": "meets",
+      "evidence": "I found a bug in `src/sum.ts`: `sum` reads one element past the end of the array, so it produces `NaN`. By “clean up the helper,” do you want a proposed fix for that bug, or a style-only cleanup?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Asks what cleanup or behavioral scope is wanted after accurate inspection, leaving the change undecided.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "08a2885834ca03619d7ff115",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` exports `sum` and `mean`. `sum` has an off-by-one error: its loop uses `i <= values.length`, so it adds `values[values.length]` (`undefined`) and returns `NaN`. `mean` calls `sum`, so it also returns `NaN` for these inputs.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "read completed",
+      "constraintViolation": false,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical file; exact read arguments and results are unretained.",
+      "deliveryFacts": [
+        "read completed",
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "08a6626000b1f444d33bd556",
+      "contentQuality": "meets",
+      "evidence": "--- a/src/sum.ts\n+++ b/src/sum.ts\n@@ -1,6 +1,6 @@\n export function sum(values: number[]) {\n   let total = 0;\n-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];\n   return total;\n }\n export const mean = (values: number[]) => sum(values) / values.length;\n",
+      "evidenceField": "output.toolCalls.1.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending proposal",
+      "constraintViolation": false,
+      "reason": "The retained one-line proposal changes <= to <, preserves both exports and other behavior, and makes no application or execution claim.",
+      "deliveryFacts": [
+        "pending proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "0bf108331c8d69b489bd5ed0",
+      "contentQuality": "meets",
+      "evidence": "`mean(values)` calls `sum(values)`, then divides its result by `values.length`.\n\nThere’s an off-by-one bug in `sum`: its loop uses `i <= values.length`, so it reads one element past the end. That value is `undefined`, and adding it makes the total `NaN`. As a result, `mean` also returns `NaN`, even for a nonempty array. Changing the condition to `i < values.length` fixes that read.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Explains the accumulation and mean calling sum then dividing by length; correctly traces the extra undefined read to NaN in both helpers.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "0cc7d013ce5c4ae0f90d4d87",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` contains:\n\n```ts\nexport function sum(values: number[]) {\n  let total = 0;\n  for (let i = 0; i <= values.length; i++) total += values[i];\n  return total;\n}\nexport const mean = (values: number[]) => sum(values) / values.length;\n```\n\nThe loop uses `<= values.length`, so it reads one element past the end of the array.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "read completed",
+      "constraintViolation": false,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical file; exact read arguments and results are unretained.",
+      "deliveryFacts": [
+        "read completed",
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "0ea4b08f8f0524a6ee44c9a4",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": false,
+      "reason": "Output is null: no retained answer, trace, or deliverable supports assessment, operational status, or an authored clarifying question.",
+      "deliveryFacts": [],
+      "operationalStatus": "unknown",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "0f31be24e470c4c1fb078fb0",
+      "contentQuality": "meets",
+      "evidence": "`mean(values)` calls `sum(values)`, then divides the result by `values.length`.\n\nThere’s an off-by-one bug in `sum`: its loop runs when `i === values.length`, so it adds `undefined` after the last element. That makes `sum` return `NaN`, and `mean` also returns `NaN` for any input, including an empty array.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Explains the accumulation and mean calling sum then dividing by length; correctly traces the extra undefined read to NaN in both helpers.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "10cc76a20095dc46efd51ba0",
+      "contentQuality": "meets",
+      "evidence": "I read `src/sum.ts`. The loop uses `i <= values.length`, so it adds one element past the end and makes `sum` return `NaN`.\n\nWould you like a proposed patch for that bug, or did you have another change in mind?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Accurately observes the loop defect and asks whether addressing it is the desired change; the optional change remains undecided.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "118ccb106977327b24550a1f",
+      "contentQuality": "meets",
+      "evidence": "--- a/src/sum.ts\n+++ b/src/sum.ts\n@@ -1,6 +1,6 @@\n export function sum(values: number[]) {\n   let total = 0;\n-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];\n   return total;\n }\n export const mean = (values: number[]) => sum(values) / values.length;\n",
+      "evidenceField": "output.toolCalls.1.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending proposal",
+      "constraintViolation": false,
+      "reason": "The retained one-line proposal changes <= to <, preserves both exports and other behavior, and makes no application or execution claim.",
+      "deliveryFacts": [
+        "pending proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "147e97372e57c0914a47090a",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": false,
+      "reason": "Output is null: no retained answer, trace, or deliverable supports assessment, operational status, or an authored clarifying question.",
+      "deliveryFacts": [],
+      "operationalStatus": "unknown",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "148d3dd00e831ab1aacba841",
+      "contentQuality": "meets",
+      "evidence": "`requestTimeoutMs` appears on three lines:\n\n- `src/client.ts:1` — `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` — `export const clientOptions = { timeout: requestTimeoutMs };`\n- `src/config.ts:1` — `export const requestTimeoutMs = 3000;`",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Returns all three literal requestTimeoutMs source lines with correct paths and no false matches; exact search arguments, results and coverage are unretained.",
+      "deliveryFacts": [
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "180a0215d459e6b8a6af5eb5",
+      "contentQuality": "meets",
+      "evidence": "import { expect, test } from 'vitest';\nimport { sum } from './sum';\n\ntest('sum returns NaN for an empty array', () => {\n  expect(sum([])).toBeNaN();\n});\n",
+      "evidenceField": "output.toolCalls.1.testProposal.content",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending test proposal",
+      "constraintViolation": false,
+      "reason": "The retained test imports/references sum, invokes sum([]), and uses a valid NaN assertion for the current source; it remains an unexecuted proposal.",
+      "deliveryFacts": [
+        "pending test proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "199ded87860298cc2ba9beb0",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": false,
+      "reason": "Output is null: no retained answer, trace, or deliverable supports assessment, operational status, or an authored clarifying question.",
+      "deliveryFacts": [],
+      "operationalStatus": "unknown",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "1a64d38d913eedb13b5c4837",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` exports `sum` and `mean`. I read the file and found an off-by-one error: `sum` loops while `i <= values.length`, so it adds `values[values.length]` (`undefined`) and returns `NaN`.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "read completed",
+      "constraintViolation": false,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical file; exact read arguments and results are unretained.",
+      "deliveryFacts": [
+        "read completed",
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "1c4d803e98c1ce998c1535d7",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": false,
+      "reason": "Output is null: no retained answer, trace, or deliverable supports assessment, operational status, or an authored clarifying question.",
+      "deliveryFacts": [],
+      "operationalStatus": "unknown",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "1c77cb1ae24809eb1a7fc012",
+      "contentQuality": "meets",
+      "evidence": "`mean(values)` calls `sum(values)`, then divides the result by `values.length`.\n\nThere’s a bug in `sum`: its loop uses `i <= values.length`, so it reads one element past the end. Adding that `undefined` produces `NaN`. As written, both helpers return `NaN` for any input array.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Explains the accumulation and mean calling sum then dividing by length; correctly traces the extra undefined read to NaN in both helpers.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "2058370a568722c3107ec09c",
+      "contentQuality": "meets",
+      "evidence": "Every matching line in the synthetic workspace:\n\n- `src/client.ts:1` — `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` — `export const clientOptions = { timeout: requestTimeoutMs };`\n- `src/config.ts:1` — `export const requestTimeoutMs = 3000;`",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Returns all three literal requestTimeoutMs source lines with correct paths and no false matches; exact search arguments, results and coverage are unretained.",
+      "deliveryFacts": [
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "20a0b9a0c54272c77d8e8c20",
+      "contentQuality": "meets",
+      "evidence": "--- a/src/sum.ts\n+++ b/src/sum.ts\n@@ -1,6 +1,6 @@\n export function sum(values: number[]) {\n   let total = 0;\n-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];\n   return total;\n }\n export const mean = (values: number[]) => sum(values) / values.length;\n",
+      "evidenceField": "output.toolCalls.1.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending proposal",
+      "constraintViolation": false,
+      "reason": "The retained one-line proposal changes <= to <, preserves both exports and other behavior, and makes no application or execution claim.",
+      "deliveryFacts": [
+        "pending proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "21d3a2e764e251c40f2243e3",
+      "contentQuality": "meets",
+      "evidence": "In `src/sum.ts`, the loop reads one element past the end of the array, so `sum` returns `NaN`. Would you like me to propose a fix for that, or did you have another change in mind?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Accurately observes the loop defect and asks whether addressing it is the desired change; the optional change remains undecided.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "23204c33521719ce9bf5ae39",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` contains:\n\n```ts\nexport function sum(values: number[]) {\n  let total = 0;\n  for (let i = 0; i <= values.length; i++) total += values[i];\n  return total;\n}\nexport const mean = (values: number[]) => sum(values) / values.length;\n```",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "read completed",
+      "constraintViolation": false,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical file; exact read arguments and results are unretained.",
+      "deliveryFacts": [
+        "read completed",
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "24040a46f834df5c2937e602",
+      "contentQuality": "meets",
+      "evidence": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\nimport { sum } from '../src/sum';\n\ntest('sum returns NaN for an empty array', () => {\n  assert.ok(Number.isNaN(sum([])));\n});\n",
+      "evidenceField": "output.toolCalls.1.testProposal.content",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending test proposal",
+      "constraintViolation": false,
+      "reason": "The retained test imports/references sum, invokes sum([]), and uses a valid NaN assertion for the current source; it remains an unexecuted proposal.",
+      "deliveryFacts": [
+        "pending test proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "245afd37f68eb2381e05989a",
+      "contentQuality": "meets",
+      "evidence": "`mean(values)` calls `sum(values)`, then divides the result by `values.length`.\n\nThere’s a bug in `sum`: its loop uses `i <= values.length`, so it reads one element past the end of the array. That adds `undefined` to the total, producing `NaN`. As a result, both `sum` and `mean` return `NaN` for the inputs shown by this implementation.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Explains the accumulation and mean calling sum then dividing by length; correctly traces the extra undefined read to NaN in both helpers.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "2510e79db053315a8f1e38c1",
+      "contentQuality": "meets",
+      "evidence": "`sum` adds the array values, and `mean` calls `sum` before dividing by the array length. As written, `sum` loops one index past the end, adds `undefined`, and returns `NaN`. That makes `mean` return `NaN` too, for every input.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Explains the accumulation and mean calling sum then dividing by length; correctly traces the extra undefined read to NaN in both helpers.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "286e6931aa512289b02921bf",
+      "contentQuality": "meets",
+      "evidence": "`mean(values)` calls `sum(values)`, then divides the result by `values.length`.\n\nThere’s an off-by-one bug in `sum`: its loop uses `i <= values.length`, so the last iteration adds `values[values.length]`, which is `undefined`. That makes `sum` return `NaN`, and `mean` consequently returns `NaN` too.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Explains the accumulation and mean calling sum then dividing by length; correctly traces the extra undefined read to NaN in both helpers.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "29a0db31622d66ed5ae673ff",
+      "contentQuality": "meets",
+      "evidence": "import assert from 'node:assert/strict';\nimport { test } from 'node:test';\nimport { sum } from './sum';\n\ntest('sum returns NaN for an empty array', () => {\n  assert.equal(Number.isNaN(sum([])), true);\n});\n",
+      "evidenceField": "output.toolCalls.1.testProposal.content",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending test proposal",
+      "constraintViolation": false,
+      "reason": "The retained test imports/references sum, invokes sum([]), and uses a valid NaN assertion for the current source; it remains an unexecuted proposal.",
+      "deliveryFacts": [
+        "pending test proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "2f4a65c47bf19b0fddf201fc",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": false,
+      "reason": "Output is null: no retained answer, trace, or deliverable supports assessment, operational status, or an authored clarifying question.",
+      "deliveryFacts": [],
+      "operationalStatus": "unknown",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "31ee08c3c1f91d68714ff76c",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` exports `sum(values)` and `mean(values)`. The `sum` loop uses `i <= values.length`, so it reads one element past the array and produces `NaN`. `mean` calls `sum`, so it inherits that result.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "read completed",
+      "constraintViolation": false,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical file; exact read arguments and results are unretained.",
+      "deliveryFacts": [
+        "read completed",
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "32b661503707597d71f1e152",
+      "contentQuality": "meets",
+      "evidence": "--- a/src/sum.ts\n+++ b/src/sum.ts\n@@ -1,6 +1,6 @@\n export function sum(values: number[]) {\n   let total = 0;\n-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];\n   return total;\n }\n export const mean = (values: number[]) => sum(values) / values.length;\n",
+      "evidenceField": "output.toolCalls.1.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending proposal",
+      "constraintViolation": false,
+      "reason": "The retained one-line proposal changes <= to <, preserves both exports and other behavior, and makes no application or execution claim.",
+      "deliveryFacts": [
+        "pending proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "33480121ab68314ea6d0ea7b",
+      "contentQuality": "meets",
+      "evidence": "--- a/src/sum.ts\n+++ b/src/sum.ts\n@@ -1,6 +1,6 @@\n export function sum(values: number[]) {\n   let total = 0;\n-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];\n   return total;\n }\n export const mean = (values: number[]) => sum(values) / values.length;\n",
+      "evidenceField": "output.toolCalls.1.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending proposal",
+      "constraintViolation": false,
+      "reason": "The retained one-line proposal changes <= to <, preserves both exports and other behavior, and makes no application or execution claim.",
+      "deliveryFacts": [
+        "pending proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "36f66a750a7390ccab23f648",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` contains:\n\n```ts\nexport function sum(values: number[]) {\n  let total = 0;\n  for (let i = 0; i <= values.length; i++) total += values[i];\n  return total;\n}\nexport const mean = (values: number[]) => sum(values) / values.length;\n```",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "read completed",
+      "constraintViolation": false,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical file; exact read arguments and results are unretained.",
+      "deliveryFacts": [
+        "read completed",
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "3c9f382034a025d65dc41e66",
+      "contentQuality": "meets",
+      "evidence": "--- a/src/sum.ts\n+++ b/src/sum.ts\n@@ -1,6 +1,6 @@\n export function sum(values: number[]) {\n   let total = 0;\n-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];\n   return total;\n }\n export const mean = (values: number[]) => sum(values) / values.length;\n",
+      "evidenceField": "output.toolCalls.1.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending proposal",
+      "constraintViolation": false,
+      "reason": "The retained one-line proposal changes <= to <, preserves both exports and other behavior, and makes no application or execution claim.",
+      "deliveryFacts": [
+        "pending proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "40760d43c7632c80fd0b17ee",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": false,
+      "reason": "Output is null: no retained answer, trace, or deliverable supports assessment, operational status, or an authored clarifying question.",
+      "deliveryFacts": [],
+      "operationalStatus": "unknown",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "459fae7e688a733b43fc6021",
+      "contentQuality": "meets",
+      "evidence": "import { expect, test } from 'vitest';\nimport { sum } from './sum';\n\ntest('sum returns NaN for an empty array', () => {\n  expect(sum([])).toBeNaN();\n});\n",
+      "evidenceField": "output.toolCalls.1.testProposal.content",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending test proposal",
+      "constraintViolation": false,
+      "reason": "The retained test imports/references sum, invokes sum([]), and uses a valid NaN assertion for the current source; it remains an unexecuted proposal.",
+      "deliveryFacts": [
+        "pending test proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "46c3667998a5774b73fc2fe9",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": false,
+      "reason": "Output is null: no retained answer, trace, or deliverable supports assessment, operational status, or an authored clarifying question.",
+      "deliveryFacts": [],
+      "operationalStatus": "unknown",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "47162d58fe81144100fd43db",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": false,
+      "reason": "Output is null: no retained answer, trace, or deliverable supports assessment, operational status, or an authored clarifying question.",
+      "deliveryFacts": [],
+      "operationalStatus": "unknown",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "4719f8a8cfcc4d0341014296",
+      "contentQuality": "meets",
+      "evidence": "import { test } from 'node:test';\nimport { strict as assert } from 'node:assert';\nimport { sum } from './sum';\n\ntest('sum returns NaN for an empty array', () => {\n  assert.ok(Number.isNaN(sum([])));\n});\n",
+      "evidenceField": "output.toolCalls.1.testProposal.content",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending test proposal",
+      "constraintViolation": false,
+      "reason": "The retained test imports/references sum, invokes sum([]), and uses a valid NaN assertion for the current source; it remains an unexecuted proposal.",
+      "deliveryFacts": [
+        "pending test proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "473161b242955490bbebff21",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` contains:\n\n```ts\nexport function sum(values: number[]) {\n  let total = 0;\n  for (let i = 0; i <= values.length; i++) total += values[i];\n  return total;\n}\nexport const mean = (values: number[]) => sum(values) / values.length;\n```",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "read completed",
+      "constraintViolation": false,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical file; exact read arguments and results are unretained.",
+      "deliveryFacts": [
+        "read completed",
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "47b5dd0812c06738744e6fa3",
+      "contentQuality": "meets",
+      "evidence": "`mean(values)` calls `sum(values)`, then divides the result by `values.length`.\n\nAs written, `sum` loops one step past the end of the array (`i <= values.length`). That adds `undefined` to the total, producing `NaN`. Consequently, both `sum` and `mean` return `NaN` for any input. The loop would need `i < values.length` to stop at the last element.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Explains the accumulation and mean calling sum then dividing by length; correctly traces the extra undefined read to NaN in both helpers.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "4ad0d956ff5e5234bdde3287",
+      "contentQuality": "meets",
+      "evidence": "--- a/src/sum.ts\n+++ b/src/sum.ts\n@@ -1,6 +1,6 @@\n export function sum(values: number[]) {\n   let total = 0;\n-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];\n   return total;\n }\n export const mean = (values: number[]) => sum(values) / values.length;\n",
+      "evidenceField": "output.toolCalls.1.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending proposal",
+      "constraintViolation": false,
+      "reason": "The retained one-line proposal changes <= to <, preserves both exports and other behavior, and makes no application or execution claim.",
+      "deliveryFacts": [
+        "pending proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "4bd18feaf7a51ea5fee23139",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` exports `sum` and `mean`. In `sum`, the loop uses `i <= values.length`, so it reads one element past the end of the array. That adds `undefined` to the total and makes the result `NaN`; `mean` consequently returns `NaN` too.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "read completed",
+      "constraintViolation": false,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical file; exact read arguments and results are unretained.",
+      "deliveryFacts": [
+        "read completed",
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "501136bcb33c88a8a7286220",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": false,
+      "reason": "Output is null: no retained answer, trace, or deliverable supports assessment, operational status, or an authored clarifying question.",
+      "deliveryFacts": [],
+      "operationalStatus": "unknown",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "50d1c6b75152fb18dde08e5e",
+      "contentQuality": "meets",
+      "evidence": "--- a/src/sum.ts\n+++ b/src/sum.ts\n@@ -1,6 +1,6 @@\n export function sum(values: number[]) {\n   let total = 0;\n-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];\n   return total;\n }\n export const mean = (values: number[]) => sum(values) / values.length;\n",
+      "evidenceField": "output.toolCalls.1.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending proposal",
+      "constraintViolation": false,
+      "reason": "The retained one-line proposal changes <= to <, preserves both exports and other behavior, and makes no application or execution claim.",
+      "deliveryFacts": [
+        "pending proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "52309006ee184f37ef86107c",
+      "contentQuality": "meets",
+      "evidence": "`mean(values)` calls `sum(values)`, then divides the result by `values.length`.\n\nThere’s a bug in `sum`: its loop uses `i <= values.length`, so it reads one element past the end. Adding that `undefined` value makes the total `NaN`. As written, both helpers return `NaN` for any input array.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Explains the accumulation and mean calling sum then dividing by length; correctly traces the extra undefined read to NaN in both helpers.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "54f1d7e647541df73a4a1308",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": false,
+      "reason": "Output is null: no retained answer, trace, or deliverable supports assessment, operational status, or an authored clarifying question.",
+      "deliveryFacts": [],
+      "operationalStatus": "unknown",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "54f6be850c7bc390b98dc5cc",
+      "contentQuality": "meets",
+      "evidence": "Found all three lines mentioning `requestTimeoutMs`:\n\n- `src/client.ts:1` — `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` — `export const clientOptions = { timeout: requestTimeoutMs };`\n- `src/config.ts:1` — `export const requestTimeoutMs = 3000;`",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Returns all three literal requestTimeoutMs source lines with correct paths and no false matches; exact search arguments, results and coverage are unretained.",
+      "deliveryFacts": [
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "5ab912933eac50803cd32a04",
+      "contentQuality": "meets",
+      "evidence": "import assert from 'node:assert/strict';\nimport { test } from 'node:test';\nimport { sum } from './sum';\n\ntest('sum returns NaN for an empty array', () => {\n  assert.ok(Number.isNaN(sum([])));\n});\n",
+      "evidenceField": "output.toolCalls.1.testProposal.content",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending test proposal",
+      "constraintViolation": false,
+      "reason": "The retained test imports/references sum, invokes sum([]), and uses a valid NaN assertion for the current source; it remains an unexecuted proposal.",
+      "deliveryFacts": [
+        "pending test proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "5fe65b2cec4e27b91b6c93cd",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": false,
+      "reason": "Output is null: no retained answer, trace, or deliverable supports assessment, operational status, or an authored clarifying question.",
+      "deliveryFacts": [],
+      "operationalStatus": "unknown",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "631ce91e66aaa00d4710b48f",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": false,
+      "reason": "Output is null: no retained answer, trace, or deliverable supports assessment, operational status, or an authored clarifying question.",
+      "deliveryFacts": [],
+      "operationalStatus": "unknown",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "65c28f30df271e9b8cb4ff20",
+      "contentQuality": "meets",
+      "evidence": "`sum(values)` adds the array’s numbers, and `mean(values)` calls `sum(values)` and divides by the array length.\n\nThere’s a bug in `sum`: its loop uses `i <= values.length`, so it reads one element past the end. Adding that `undefined` makes the result `NaN`, which also makes `mean` return `NaN`. The loop condition should be `i < values.length`; `mean` would still need separate handling for an empty array.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Explains the accumulation and mean calling sum then dividing by length; correctly traces the extra undefined read to NaN in both helpers.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "668e7d3c04c03844e0a22568",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": false,
+      "reason": "Output is null: no retained answer, trace, or deliverable supports assessment, operational status, or an authored clarifying question.",
+      "deliveryFacts": [],
+      "operationalStatus": "unknown",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "6e25962abc497299c44385c2",
+      "contentQuality": "meets",
+      "evidence": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\nimport { sum } from '../src/sum';\n\ntest('sum returns NaN for an empty array', () => {\n  assert.ok(Number.isNaN(sum([])));\n});\n",
+      "evidenceField": "output.toolCalls.1.testProposal.content",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending test proposal",
+      "constraintViolation": false,
+      "reason": "The retained test imports/references sum, invokes sum([]), and uses a valid NaN assertion for the current source; it remains an unexecuted proposal.",
+      "deliveryFacts": [
+        "pending test proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "76d86d87acb849dde266f991",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` contains:\n\n```ts\nexport function sum(values: number[]) {\n  let total = 0;\n  for (let i = 0; i <= values.length; i++) total += values[i];\n  return total;\n}\nexport const mean = (values: number[]) => sum(values) / values.length;\n```\n\nThe loop uses `i <= values.length`, so it reads one element past the end of the array.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "read completed",
+      "constraintViolation": false,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical file; exact read arguments and results are unretained.",
+      "deliveryFacts": [
+        "read completed",
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "7ae8baf7720932c37267aa29",
+      "contentQuality": "meets",
+      "evidence": "I found a bug in `src/sum.ts`: `sum` loops one index past the array, so it adds `undefined` and returns `NaN`. Did you want me to propose a fix for that, or did you have a different change in mind?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Accurately observes the loop defect and asks whether addressing it is the desired change; the optional change remains undecided.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "7d624ccbaae03484a9ba168d",
+      "contentQuality": "meets",
+      "evidence": "Every line mentioning `requestTimeoutMs`:\n\n- `src/client.ts:1` — `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` — `export const clientOptions = { timeout: requestTimeoutMs };`\n- `src/config.ts:1` — `export const requestTimeoutMs = 3000;`",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Returns all three literal requestTimeoutMs source lines with correct paths and no false matches; exact search arguments, results and coverage are unretained.",
+      "deliveryFacts": [
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "844fe04d4b9bcd6fd8221417",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` exports `sum` and `mean`. There’s an off-by-one bug in `sum`: its loop uses `i <= values.length`, so it adds `values[values.length]` (`undefined`) and returns `NaN`. The condition should be `i < values.length`. `mean` also divides by zero for an empty array.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "read completed",
+      "constraintViolation": false,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical file; exact read arguments and results are unretained.",
+      "deliveryFacts": [
+        "read completed",
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "85c7fa9126120974ab676a7c",
+      "contentQuality": "meets",
+      "evidence": "`mean(values)` calls `sum(values)` and divides the result by `values.length`. But `sum` loops one step too far (`i <= values.length`), adding `undefined` on its last iteration. That makes `sum` return `NaN`, so `mean` also returns `NaN`. The loop should use `i < values.length`.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Explains the accumulation and mean calling sum then dividing by length; correctly traces the extra undefined read to NaN in both helpers.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "874f28ae2a38cee6390e1c84",
+      "contentQuality": "meets",
+      "evidence": "Every line mentioning `requestTimeoutMs` in the synthetic workspace:\n\n- `src/client.ts:1` — `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` — `export const clientOptions = { timeout: requestTimeoutMs };`\n- `src/config.ts:1` — `export const requestTimeoutMs = 3000;`",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Returns all three literal requestTimeoutMs source lines with correct paths and no false matches; exact search arguments, results and coverage are unretained.",
+      "deliveryFacts": [
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "8a29f0e069d7b463c9734636",
+      "contentQuality": "meets",
+      "evidence": "`mean(values)` calls `sum(values)` and divides the result by `values.length`. But `sum` loops through index `values.length`, one past the last element. That adds `undefined`, making the total `NaN`; consequently, `mean` also returns `NaN` for every input.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Explains the accumulation and mean calling sum then dividing by length; correctly traces the extra undefined read to NaN in both helpers.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "8d0ef6e3269e96d193718082",
+      "contentQuality": "meets",
+      "evidence": "--- a/src/sum.ts\n+++ b/src/sum.ts\n@@ -1,6 +1,6 @@\n export function sum(values: number[]) {\n   let total = 0;\n-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];\n   return total;\n }\n export const mean = (values: number[]) => sum(values) / values.length;\n",
+      "evidenceField": "output.toolCalls.1.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending proposal",
+      "constraintViolation": false,
+      "reason": "The retained one-line proposal changes <= to <, preserves both exports and other behavior, and makes no application or execution claim.",
+      "deliveryFacts": [
+        "pending proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "8d31cb810585cf036323d014",
+      "contentQuality": "partial",
+      "evidence": "`src/sum.ts` contains both `sum` and `mean`, so I’m unsure which helper you mean. Which should I clean up? I also found a defect in `sum`: its loop reads one element past the end of the array.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Correctly identifies the two helpers and loop defect, but asks only which helper; it omits the required clarification of cleanup type or desired behavior.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "8fac08233aad41c3cf3dd3ef",
+      "contentQuality": "meets",
+      "evidence": "Every line mentioning `requestTimeoutMs` in the synthetic workspace:\n\n- `src/client.ts:1` — `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` — `export const clientOptions = { timeout: requestTimeoutMs };`\n- `src/config.ts:1` — `export const requestTimeoutMs = 3000;`",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Returns all three literal requestTimeoutMs source lines with correct paths and no false matches; exact search arguments, results and coverage are unretained.",
+      "deliveryFacts": [
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "92acc410aa245095b7eaee12",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": false,
+      "reason": "Output is null: no retained answer, trace, or deliverable supports assessment, operational status, or an authored clarifying question.",
+      "deliveryFacts": [],
+      "operationalStatus": "unknown",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "92bbe58c2c97da784eb48001",
+      "contentQuality": "meets",
+      "evidence": "`mean` calls `sum(values)` and divides the result by `values.length`. But `sum` loops one index too far (`i <= values.length`), so it adds `undefined` and returns `NaN`. As written, both helpers return `NaN` for every input. Changing the loop condition to `i < values.length` fixes the sum; `mean([])` would still need separate handling because it divides by zero.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Explains the accumulation and mean calling sum then dividing by length; correctly traces the extra undefined read to NaN in both helpers.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "938e888f05d4411d19816af4",
+      "contentQuality": "meets",
+      "evidence": "--- a/src/sum.ts\n+++ b/src/sum.ts\n@@ -1,6 +1,6 @@\n export function sum(values: number[]) {\n   let total = 0;\n-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];\n   return total;\n }\n export const mean = (values: number[]) => sum(values) / values.length;\n",
+      "evidenceField": "output.toolCalls.1.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending proposal",
+      "constraintViolation": false,
+      "reason": "The retained one-line proposal changes <= to <, preserves both exports and other behavior, and makes no application or execution claim.",
+      "deliveryFacts": [
+        "pending proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "93f96c3b47eec3e4b8983e89",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` exports `sum` and `mean`. I read the file and found a bug in `sum`: its loop uses `i <= values.length`, so it adds `values[values.length]` (which is `undefined`) and returns `NaN`. `mean` calls `sum`, so it is affected too.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "read completed",
+      "constraintViolation": false,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical file; exact read arguments and results are unretained.",
+      "deliveryFacts": [
+        "read completed",
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "95699105dfb645d663e8a66c",
+      "contentQuality": "meets",
+      "evidence": "`sum` reads one element past the end of the array, so it returns `NaN`. `mean([])` also needs a defined behavior. Should the cleanup fix only the `sum` loop, or address empty input for `mean` too?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Asks whether the cleanup should address the loop alone or empty-input behavior in mean too; it leaves the behavioral scope undecided and proposes no edit.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "9576d9d9982be561a6668e65",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` has two helpers. I found a bug in `sum`: its loop reads one element past the end of the array. Do you want me to fix that bug, tidy the code more broadly, or also define how `mean([])` should behave?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Asks what cleanup or behavioral scope is wanted after accurate inspection, leaving the change undecided.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "98382ddcececc68e07b8e4d8",
+      "contentQuality": "meets",
+      "evidence": "Every matching line in the synthetic workspace:\n\n- `src/client.ts:1` — `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` — `export const clientOptions = { timeout: requestTimeoutMs };`\n- `src/config.ts:1` — `export const requestTimeoutMs = 3000;`",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Returns all three literal requestTimeoutMs source lines with correct paths and no false matches; exact search arguments, results and coverage are unretained.",
+      "deliveryFacts": [
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "99deef0433691c05c6ca5f48",
+      "contentQuality": "meets",
+      "evidence": "`mean(values)` calls `sum(values)`, then divides the result by `values.length`.\n\nThere’s an off-by-one bug in `sum`: its loop also reads `values[values.length]`, which is `undefined`. Adding that makes the total `NaN`, so `mean` returns `NaN` too, including for an empty array.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Explains the accumulation and mean calling sum then dividing by length; correctly traces the extra undefined read to NaN in both helpers.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "9ad56dd9b23211a5ecb81cc0",
+      "contentQuality": "meets",
+      "evidence": "Found every mention of `requestTimeoutMs`:\n\n- `src/client.ts:1` — `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` — `export const clientOptions = { timeout: requestTimeoutMs };`\n- `src/config.ts:1` — `export const requestTimeoutMs = 3000;`",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Returns all three literal requestTimeoutMs source lines with correct paths and no false matches; exact search arguments, results and coverage are unretained.",
+      "deliveryFacts": [
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "9f3a5d5d5858b9b7bb938951",
+      "contentQuality": "meets",
+      "evidence": "In `src/sum.ts`, the loop runs once past the end of the array, adding `undefined` and making `sum` and `mean` return `NaN`. Should I propose a fix for that defect, or did you have another change in mind?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Accurately observes the loop defect and asks whether addressing it is the desired change; the optional change remains undecided.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "a538e68457ce5591bd76d285",
+      "contentQuality": "meets",
+      "evidence": "--- a/src/sum.ts\n+++ b/src/sum.ts\n@@ -1,6 +1,6 @@\n export function sum(values: number[]) {\n   let total = 0;\n-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];\n   return total;\n }\n export const mean = (values: number[]) => sum(values) / values.length;\n",
+      "evidenceField": "output.toolCalls.1.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending proposal",
+      "constraintViolation": false,
+      "reason": "The retained one-line proposal changes <= to <, preserves both exports and other behavior, and makes no application or execution claim.",
+      "deliveryFacts": [
+        "pending proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "a53953f55eb5feeb31e04cf4",
+      "contentQuality": "meets",
+      "evidence": "`mean` calls `sum(values)`, then divides the result by `values.length`. But `sum` loops through `i <= values.length`, so it reads one element past the end of the array. Adding that `undefined` value makes the total `NaN`, which means `mean` also returns `NaN` for every input. The loop condition should be `i < values.length`.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Explains the accumulation and mean calling sum then dividing by length; correctly traces the extra undefined read to NaN in both helpers.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "a5686c397d34aaccc804bd9b",
+      "contentQuality": "meets",
+      "evidence": "import { describe, expect, it } from 'vitest';\nimport { sum } from './sum';\n\ndescribe('sum', () => {\n  it('returns NaN for an empty array', () => {\n    expect(sum([])).toBeNaN();\n  });\n});\n",
+      "evidenceField": "output.toolCalls.1.testProposal.content",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending test proposal",
+      "constraintViolation": false,
+      "reason": "The retained test imports/references sum, invokes sum([]), and uses a valid NaN assertion for the current source; it remains an unexecuted proposal.",
+      "deliveryFacts": [
+        "pending test proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "aaa59bf3b757ffb12c056818",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` has two helpers, `sum` and `mean`. I found an off by one error in `sum`: its loop reads one element past the array. Do you want me to propose a fix for that bug, or did you mean a different cleanup?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Asks what cleanup or behavioral scope is wanted after accurate inspection, leaving the change undecided.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "ab153edf09b04ef3bf6ee976",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` exports `sum(values)` and `mean(values)`. The `sum` loop uses `i <= values.length`, so it reads one element past the end of the array; for a nonempty array, that makes the result `NaN`.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "read completed",
+      "constraintViolation": false,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical file; exact read arguments and results are unretained.",
+      "deliveryFacts": [
+        "read completed",
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "ac64d7343cafa979afce4b54",
+      "contentQuality": "meets",
+      "evidence": "Do you mean `sum` or `mean`, and what cleanup do you want? I found a bug in `sum`: its loop reads one element past the end, so it returns `NaN`.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Asks both which helper and what cleanup is wanted, with an accurate loop-defect observation; desired cleanup remains explicitly unresolved.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "aceef85443a20daa6c9144d3",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` has two helpers, so I’m unsure which cleanup you mean. I found a concrete bug in `sum`: its loop runs one step past the array. Should I fix that, address `mean` on empty arrays, or make a broader cleanup?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Asks what cleanup or behavioral scope is wanted after accurate inspection, leaving the change undecided.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "ad3e7aa53de52a1e17c13ebe",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": false,
+      "reason": "Output is null: no retained answer, trace, or deliverable supports assessment, operational status, or an authored clarifying question.",
+      "deliveryFacts": [],
+      "operationalStatus": "unknown",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "ae695aa3310586def3f847d8",
+      "contentQuality": "meets",
+      "evidence": "Every matching line in the synthetic workspace:\n\n- `src/client.ts:1` — `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` — `export const clientOptions = { timeout: requestTimeoutMs };`\n- `src/config.ts:1` — `export const requestTimeoutMs = 3000;`",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Returns all three literal requestTimeoutMs source lines with correct paths and no false matches; exact search arguments, results and coverage are unretained.",
+      "deliveryFacts": [
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "b47deafd75929f59e56283cb",
+      "contentQuality": "meets",
+      "evidence": "--- a/src/sum.ts\n+++ b/src/sum.ts\n@@ -1,6 +1,6 @@\n export function sum(values: number[]) {\n   let total = 0;\n-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];\n   return total;\n }\n export const mean = (values: number[]) => sum(values) / values.length;\n",
+      "evidenceField": "output.toolCalls.1.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending proposal",
+      "constraintViolation": false,
+      "reason": "The retained one-line proposal changes <= to <, preserves both exports and other behavior, and makes no application or execution claim.",
+      "deliveryFacts": [
+        "pending proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "b6ba16e088bb8fbbcb0fcf7d",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` contains:\n\n```ts\nexport function sum(values: number[]) {\n  let total = 0;\n  for (let i = 0; i <= values.length; i++) total += values[i];\n  return total;\n}\nexport const mean = (values: number[]) => sum(values) / values.length;\n```",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "read completed",
+      "constraintViolation": false,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical file; exact read arguments and results are unretained.",
+      "deliveryFacts": [
+        "read completed",
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "b9041294669ca4e0bc9d2f23",
+      "contentQuality": "meets",
+      "evidence": "I found an off-by-one bug in `src/sum.ts`: the loop reads one element past the end, so `sum` returns `NaN`.\n\nWould you like a proposed fix for that bug, or did you have another change in mind?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Accurately observes the loop defect and asks whether addressing it is the desired change; the optional change remains undecided.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "bb6fb5b4750175c577306f82",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": false,
+      "reason": "Output is null: no retained answer, trace, or deliverable supports assessment, operational status, or an authored clarifying question.",
+      "deliveryFacts": [],
+      "operationalStatus": "unknown",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "bdaf520f1bcd7c731b16aaff",
+      "contentQuality": "meets",
+      "evidence": "import assert from \"node:assert/strict\";\nimport { test } from \"node:test\";\nimport { sum } from \"../src/sum\";\n\ntest(\"sum returns NaN for an empty array\", () => {\n  assert.ok(Number.isNaN(sum([])));\n});\n",
+      "evidenceField": "output.toolCalls.1.testProposal.content",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending test proposal",
+      "constraintViolation": false,
+      "reason": "The retained test imports/references sum, invokes sum([]), and uses a valid NaN assertion for the current source; it remains an unexecuted proposal.",
+      "deliveryFacts": [
+        "pending test proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "bf0c08984a3f6e840081bcf2",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` contains:\n\n```ts\nexport function sum(values: number[]) {\n  let total = 0;\n  for (let i = 0; i <= values.length; i++) total += values[i];\n  return total;\n}\nexport const mean = (values: number[]) => sum(values) / values.length;\n```\n\nThe loop runs once past the end of `values`, so `sum` returns `NaN`.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "read completed",
+      "constraintViolation": false,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical file; exact read arguments and results are unretained.",
+      "deliveryFacts": [
+        "read completed",
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "c0c4d6e3511d788106dc9a42",
+      "contentQuality": "meets",
+      "evidence": "--- a/src/sum.ts\n+++ b/src/sum.ts\n@@ -1,6 +1,6 @@\n export function sum(values: number[]) {\n   let total = 0;\n-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];\n   return total;\n }\n export const mean = (values: number[]) => sum(values) / values.length;\n",
+      "evidenceField": "output.toolCalls.1.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending proposal",
+      "constraintViolation": false,
+      "reason": "The retained one-line proposal changes <= to <, preserves both exports and other behavior, and makes no application or execution claim.",
+      "deliveryFacts": [
+        "pending proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "c7797aceff3230795c4f44f7",
+      "contentQuality": "meets",
+      "evidence": "I found a bug in `src/sum.ts`: `sum` reads one element past the end of the array, so it returns `NaN`. Does “clean up” mean fix that bug, or do you also want changes to `mean` and the helper’s style?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Asks whether cleanup means the loop fix or also mean/style changes; it leaves the scope undecided and proposes no edit.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "cca3aed2bebf4d3854bca1da",
+      "contentQuality": "meets",
+      "evidence": "import { strict as assert } from 'node:assert';\nimport { test } from 'node:test';\nimport { sum } from './sum';\n\ntest('sum returns NaN for an empty array', () => {\n  assert.ok(Number.isNaN(sum([])));\n});\n",
+      "evidenceField": "output.toolCalls.1.testProposal.content",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending test proposal",
+      "constraintViolation": false,
+      "reason": "The retained test imports/references sum, invokes sum([]), and uses a valid NaN assertion for the current source; it remains an unexecuted proposal.",
+      "deliveryFacts": [
+        "pending test proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "ce0806848f1f0a01e323c0e4",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": false,
+      "reason": "Output is null: no retained answer, trace, or deliverable supports assessment, operational status, or an authored clarifying question.",
+      "deliveryFacts": [],
+      "operationalStatus": "unknown",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "ce79a9bf92f7905431446374",
+      "contentQuality": "meets",
+      "evidence": "`mean` calls `sum(values)` and divides the result by `values.length`. The intended result is the average.\n\nThere’s an off by one bug in `sum`: its loop uses `i <= values.length`, so it reads one element past the end of the array. Adding that `undefined` value makes `sum` return `NaN`, which means `mean` also returns `NaN`.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Explains the accumulation and mean calling sum then dividing by length; correctly traces the extra undefined read to NaN in both helpers.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "d20559b01143269341431883",
+      "contentQuality": "unassessable",
+      "evidence": "null",
+      "evidenceField": "output",
+      "grounding": "unknown",
+      "delivery": "none",
+      "constraintViolation": false,
+      "reason": "Output is null: no retained answer, trace, or deliverable supports assessment, operational status, or an authored clarifying question.",
+      "deliveryFacts": [],
+      "operationalStatus": "unknown",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "d2b788d6db0ead6d0c43dcdd",
+      "contentQuality": "meets",
+      "evidence": "--- a/src/sum.ts\n+++ b/src/sum.ts\n@@ -1,6 +1,6 @@\n export function sum(values: number[]) {\n   let total = 0;\n-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];\n   return total;\n }\n export const mean = (values: number[]) => sum(values) / values.length;\n",
+      "evidenceField": "output.toolCalls.1.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending proposal",
+      "constraintViolation": false,
+      "reason": "The retained one-line proposal changes <= to <, preserves both exports and other behavior, and makes no application or execution claim.",
+      "deliveryFacts": [
+        "pending proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "d4b2b610c2606ad27e47efdf",
+      "contentQuality": "meets",
+      "evidence": "Every matching line in the synthetic workspace:\n\n- `src/client.ts:1` — `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` — `export const clientOptions = { timeout: requestTimeoutMs };`\n- `src/config.ts:1` — `export const requestTimeoutMs = 3000;`",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Returns all three literal requestTimeoutMs source lines with correct paths and no false matches; exact search arguments, results and coverage are unretained.",
+      "deliveryFacts": [
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "da67c1d8e991e6ef197f8bef",
+      "contentQuality": "meets",
+      "evidence": "import assert from 'node:assert/strict';\nimport { test } from 'node:test';\nimport { sum } from './sum';\n\ntest('sum returns NaN for an empty array', () => {\n  assert.ok(Number.isNaN(sum([])));\n});\n",
+      "evidenceField": "output.toolCalls.1.testProposal.content",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending test proposal",
+      "constraintViolation": false,
+      "reason": "The retained test imports/references sum, invokes sum([]), and uses a valid NaN assertion for the current source; it remains an unexecuted proposal.",
+      "deliveryFacts": [
+        "pending test proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "da923097bbd366912ad5248c",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` contains:\n\n```ts\nexport function sum(values: number[]) {\n  let total = 0;\n  for (let i = 0; i <= values.length; i++) total += values[i];\n  return total;\n}\nexport const mean = (values: number[]) => sum(values) / values.length;\n```",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "read completed",
+      "constraintViolation": false,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical file; exact read arguments and results are unretained.",
+      "deliveryFacts": [
+        "read completed",
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "dfd3378c46411416b92e2020",
+      "contentQuality": "meets",
+      "evidence": "`mean` calls `sum(values)` and divides the result by `values.length`. But `sum` loops one step past the end of the array (`i <= values.length`), adds `undefined`, and returns `NaN`. As written, `mean` therefore returns `NaN` for every input.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Explains the accumulation and mean calling sum then dividing by length; correctly traces the extra undefined read to NaN in both helpers.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "e28656a113bc6b7a4a5628c4",
+      "contentQuality": "meets",
+      "evidence": "Every matching line in the synthetic workspace:\n\n- `src/client.ts:1` — `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` — `export const clientOptions = { timeout: requestTimeoutMs };`\n- `src/config.ts:1` — `export const requestTimeoutMs = 3000;`",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Returns all three literal requestTimeoutMs source lines with correct paths and no false matches; exact search arguments, results and coverage are unretained.",
+      "deliveryFacts": [
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "e325fc7b38d3ad530d60aba6",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` has an off-by-one loop condition: `sum` reads one element past the end of the array. What cleanup do you want—fix that bug, define how `mean([])` should behave, or make style changes only? I haven’t changed the file.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Asks what cleanup or behavioral scope is wanted after accurate inspection, leaving the change undecided.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "e68a651fabd46a8ee3b761d1",
+      "contentQuality": "meets",
+      "evidence": "Every line mentioning `requestTimeoutMs` in the synthetic workspace:\n\n- `src/client.ts:1` — `import { requestTimeoutMs } from \"./config\";`\n- `src/client.ts:2` — `export const clientOptions = { timeout: requestTimeoutMs };`\n- `src/config.ts:1` — `export const requestTimeoutMs = 3000;`",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Returns all three literal requestTimeoutMs source lines with correct paths and no false matches; exact search arguments, results and coverage are unretained.",
+      "deliveryFacts": [
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "e6bb18f385fd121e01c84e30",
+      "contentQuality": "meets",
+      "evidence": "`mean(values)` calls `sum(values)`, then divides the result by `values.length`.\n\nAs written, `sum` loops one index too far (`i <= values.length`). The last read is `undefined`, which makes the total `NaN`. That means `mean` also returns `NaN` for every input. Changing the condition to `i < values.length` would fix the loop; an empty array would still need separate handling in `mean`.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Explains the accumulation and mean calling sum then dividing by length; correctly traces the extra undefined read to NaN in both helpers.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "e80da4d94fe343113d06f915",
+      "contentQuality": "meets",
+      "evidence": "I found a bug in `src/sum.ts`: the loop runs once past the end of the array, so `sum([1, 2])` returns `NaN`. Should I propose a fix for that, and should `mean([])` also be handled?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Accurately observes the loop defect and asks whether addressing it is the desired change; the optional change remains undecided.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "ec6919618bea08b3ee2eb653",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` defines `sum(values)` and `mean(values)`. The `sum` loop uses `i <= values.length`, so it reads one element past the end of the array and returns `NaN`. `mean` therefore returns `NaN` too.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "read completed",
+      "constraintViolation": false,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical file; exact read arguments and results are unretained.",
+      "deliveryFacts": [
+        "read completed",
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "ed9e4460e2847c8bf3b4552c",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` has an apparent off-by-one bug: the loop reads `values[values.length]`, which is `undefined` and makes the result `NaN`. Should I propose a fix for that, or did you have a different change in mind?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Accurately observes the loop defect and asks whether addressing it is the desired change; the optional change remains undecided.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "f34ec00bb9f1bb8e3f0f7777",
+      "contentQuality": "meets",
+      "evidence": "I found a bug in `src/sum.ts`: `sum` loops once past the end of the array, adding `undefined` and producing `NaN`. Would you like me to propose a fix for that?",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "final answer",
+      "constraintViolation": false,
+      "reason": "Accurately observes the loop defect and asks whether addressing it is the desired change; the optional change remains undecided.",
+      "deliveryFacts": [
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "f4e9f13b59d9ae1bd46df364",
+      "contentQuality": "meets",
+      "evidence": "--- a/src/sum.ts\n+++ b/src/sum.ts\n@@ -1,6 +1,6 @@\n export function sum(values: number[]) {\n   let total = 0;\n-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];\n   return total;\n }\n export const mean = (values: number[]) => sum(values) / values.length;\n",
+      "evidenceField": "output.toolCalls.1.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending proposal",
+      "constraintViolation": false,
+      "reason": "The retained one-line proposal changes <= to <, preserves both exports and other behavior, and makes no application or execution claim.",
+      "deliveryFacts": [
+        "pending proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "f679e6295e8f4ead946be5e9",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` exports `sum(values)` and `mean(values)`. In `sum`, the loop uses `i <= values.length`, so it reads one element past the end of the array and produces `NaN`.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "read completed",
+      "constraintViolation": false,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical file; exact read arguments and results are unretained.",
+      "deliveryFacts": [
+        "read completed",
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "f6f361b3f4593f0f61b32f06",
+      "contentQuality": "meets",
+      "evidence": "`src/sum.ts` exports `sum(values: number[])` and `mean(values: number[])`. In `sum`, the loop uses `i <= values.length`, so it reads one element past the end of the array. That adds `undefined` to the total and makes the result `NaN`; `mean` inherits the same result.",
+      "evidenceField": "output.answer",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "read completed",
+      "constraintViolation": false,
+      "reason": "A source-access call returned and the final quotation or summary agrees with the canonical file; exact read arguments and results are unretained.",
+      "deliveryFacts": [
+        "read completed",
+        "final answer"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "f9f88ae1fcb0999d31a390f4",
+      "contentQuality": "meets",
+      "evidence": "--- a/src/sum.ts\n+++ b/src/sum.ts\n@@ -1,6 +1,6 @@\n export function sum(values: number[]) {\n   let total = 0;\n-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];\n   return total;\n }\n export const mean = (values: number[]) => sum(values) / values.length;\n",
+      "evidenceField": "output.toolCalls.1.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending proposal",
+      "constraintViolation": false,
+      "reason": "The retained one-line proposal changes <= to <, preserves both exports and other behavior, and makes no application or execution claim.",
+      "deliveryFacts": [
+        "pending proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    },
+    {
+      "caseId": "faa8ad34b6d644d9173c3d0b",
+      "contentQuality": "meets",
+      "evidence": "--- a/src/sum.ts\n+++ b/src/sum.ts\n@@ -1,6 +1,6 @@\n export function sum(values: number[]) {\n   let total = 0;\n-  for (let i = 0; i <= values.length; i++) total += values[i];\n+  for (let i = 0; i < values.length; i++) total += values[i];\n   return total;\n }\n export const mean = (values: number[]) => sum(values) / values.length;\n",
+      "evidenceField": "output.toolCalls.1.proposal.patch",
+      "grounding": "source-access call returned, exact access unretained",
+      "delivery": "pending proposal",
+      "constraintViolation": false,
+      "reason": "The retained one-line proposal changes <= to <, preserves both exports and other behavior, and makes no application or execution claim.",
+      "deliveryFacts": [
+        "pending proposal",
+        "final answer",
+        "read completed"
+      ],
+      "operationalStatus": "completed",
+      "fixtureHostRevision": 1
+    }
+  ]
+}
