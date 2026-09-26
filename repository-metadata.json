@@ -1,0 +1,17 @@
+{
+  "repository": "TypeSafeAI/jev-harness",
+  "description": "Unofficial proposal-review harness for coding agents: typed Jev evidence, deterministic policy, receipts, fixtures, and explicit host-owned authorization.",
+  "topics": [
+    "typesafe-ai",
+    "jev",
+    "ai-agents",
+    "coding-agents",
+    "agent-safety",
+    "ai-evaluation",
+    "typescript",
+    "policy-engine",
+    "developer-tools"
+  ],
+  "status": "proposed-not-applied",
+  "note": "Capability-focused discovery metadata. Committing this file does not itself change GitHub repository settings."
+}
