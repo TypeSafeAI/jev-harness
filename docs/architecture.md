@@ -303,9 +303,10 @@ evidence contract. All malformed distributions still produce `unavailable`;
 no automatic retry or normalization is introduced. See the [v4 wire diagnostic
 and bounded recovery results](routing-evaluation/2026-09-26-distribution-diagnostic.md)
 and [v5 wording](routing.md#desired-outcome-clarification-v5). The
-[two frozen v5 routing-only batches](routing-evaluation/2026-09-26-routing-v5.md)
-record all expected outcomes; full CLI and answer-quality acceptance remain
-separate gates.
+[v5 measurements](routing-evaluation/2026-09-26-routing-v5.md) record all expected
+outcomes in two routing-only batches, followed by one unavailable response in
+the full CLI batch. All delivered clear-task outputs meet the frozen blinded
+rubric. The remaining malformed response prevents a saturation claim.
 
 Fixture host revision 1 adds literal bounded search over supplied synthetic
 files and exact, unevaluated test-source recording in a separate

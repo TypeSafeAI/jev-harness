@@ -42,9 +42,9 @@ Files: `docs/routing.md`, `docs/architecture.md`, `docs/roadmap.md`; new develop
 - [x] Freeze the candidate source and runner with before/after hashes. Run the same 19 task/catalog combinations three times (57 cases), single attempt, no CLI or labels in the request.
 - [x] Audit every numeric wire projection and receipt using unchanged `routeTools`; compare exact task/catalog/model/policy/request construction with the frozen v4 control. Retain all failures and usage.
 - [x] Repeat the entire frozen 57-case candidate batch. Do not cherry-pick cases or increase retries to obtain a passing score.
-- [ ] If results regress, retain the candidate evidence and do not merge its default. If they justify integration, run the full paired CLI benchmark with existing prerequisites, retain all outputs, and assess delivered answer quality under the pre-existing blinded rubric before delivery.
+- [x] If results regress, retain the candidate evidence and do not merge its default. If they justify integration, run the full paired CLI benchmark with existing prerequisites, retain all outputs, and assess delivered answer quality under the pre-existing blinded rubric before delivery.
 
 ## Delivery gate
 
-- [ ] Report all candidates and repetitions, with labels held fixed and failures included. Do not claim saturation or savings from one successful run.
+- [x] Report all candidates and repetitions, with labels held fixed and failures included. Do not claim saturation or savings from one successful run.
 - [ ] Open a signed, verified PR only for the supported final change; resolve only addressed review threads; merge only after exact-head checks and conversations are clear. Sync the existing dev preview after a supported merge.

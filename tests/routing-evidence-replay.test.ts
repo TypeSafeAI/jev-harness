@@ -20,6 +20,7 @@ const batches = {
   E: "routing-package-v4-control",
   F: "routing-package-v4-integrated",
   G: "routing-package-v4-integrated-repeat",
+  H: "routing-package-v5-integrated",
 };
 
 test("retained routing blinder reads task definitions from its relocated checkout", async t => {
@@ -44,12 +45,13 @@ for (const [label, batch] of Object.entries(batches)) {
   test(`routing ${label} regenerates the exact blinded inputs and case mapping offline`, async t => {
     const directory = await mkdtemp(join(tmpdir(), "jev-evidence-replay-"));
     t.after(() => rm(directory, { recursive: true, force: true }));
-    const artifact = join(root, `examples/routing/runs/2026-09-25-${batch}.json`);
+    const date = label === "H" ? "2026-09-26" : "2026-09-25";
+    const artifact = join(root, `examples/routing/runs/${date}-${batch}.json`);
     const prefix = join(directory, "output");
     await exec(process.execPath, ["--import", import.meta.resolve("tsx"), blinder, artifact, prefix], { cwd: directory });
-    assert.equal(await readFile(`${prefix}.jsonl`, "utf8"), await readFile(join(runs, `2026-09-25-blind-${label}.jsonl`), "utf8"));
+    assert.equal(await readFile(`${prefix}.jsonl`, "utf8"), await readFile(join(runs, `${date}-blind-${label}.jsonl`), "utf8"));
     const actual = JSON.parse(await readFile(`${prefix}-mapping.json`, "utf8"));
-    const expected = JSON.parse(await readFile(join(runs, `2026-09-25-blind-${label}-mapping.json`), "utf8"));
+    const expected = JSON.parse(await readFile(join(runs, `${date}-blind-${label}-mapping.json`), "utf8"));
     for (const row of actual.cases) assert.equal(row.artifactPath, artifact);
     // Recorded bytes and identities stay fixed; only the location of the source file moves.
     for (const row of expected.cases) row.artifactPath = artifact;
