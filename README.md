@@ -249,6 +249,11 @@ not calibration. Run the paired synthetic comparison:
 pnpm --silent bench:routing > routing-run.json
 ```
 
+The example host also supports opt-in bounded recovery for probability-sum
+errors, with every physical request recorded. The reusable adapter defaults to
+one request; the candidate demo explicitly enables recovery as setup 7. The CLI
+still requires `--live --sum-recovery`. Effectiveness remains unmeasured; see the [host recovery and accounting rules](docs/routing.md#experiment-protocol-n-tools-in-context-vs-jev-top-k).
+
 For the dark, full-width **Agent arena**:
 
 ```sh

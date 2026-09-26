@@ -61,8 +61,9 @@ test("v1, v2, v3, v4 and v5 send exact serialized instructions and their version
 test("choice serialization rejects unsupported question versions before transport", async () => {
   const receipt = await routeTools(demo.DEMO_CATALOG, { intent: "Inspect the synthetic source.", availableIds: ["inspect_agent"] }, demo.DEMO_POLICY, demo.scenarioRouter(demo.SCENARIOS[2]!));
   let calls = 0;
-  const handle = createJevChoiceRouter({ key: "synthetic-test-credential", fetch: async () => { calls++; throw Error("must not call"); } });
   for (const version of [0, 6, 999, "1", null, "toString", "__proto__"]) {
+    const handle = createJevChoiceRouter({ key: "synthetic-test-credential", fetch: async () => { calls++; throw Error("must not call"); } });
+
     const query = { ...receipt.request, questionSetVersion: version } as unknown as RoutingRequest;
     assert.throws(() => jevChoiceBody(query), /Unsupported routing question-set version/);
     await assert.rejects(handle.router.review(query), /Unsupported routing question-set version/);

@@ -16,16 +16,20 @@ export function renderExperimentTable(artifact: ExperimentArtifact): string {
   lines.push(`### Routing experiment: N tools in context vs Jev top-k`, "", banner, "",
     `Generated ${artifact.generatedAt} · \`${artifact.command}\` · runs: ${artifact.runs} · sizes: ${artifact.sizes.join(", ")} · topK ${artifact.policy.topK}, confidence floor ${artifact.policy.confidenceFloor}`, "");
 
+  if (artifact.routingTransport) {
+    const s = summary.byArm.jev_top_k;
+    lines.push(`Routing transport v1: ${artifact.routingTransport.recovery}, cap ${artifact.routingTransport.maxAttempts}, one ${artifact.routingTransport.timeoutMs} ms deadline. Logical calls: ${s.jevCalls}; physical requests: ${s.providerRequests ?? "unknown"} (${s.observedProviderRequests ?? 0} observed); additional requests: ${s.retryRequests ?? 0}; recovered calls: ${s.recoveredCalls ?? 0}; exhausted calls: ${s.exhaustedCalls ?? 0}. All attempt usage is included.`, "");
+  }
   if (artifact.status === "cancelled") lines.push("> **Cancelled: partial results only. Planned runs did not finish.**", "");
   const withPrerequisites = artifact.toolContext?.mode === "with_prerequisites";
   if (withPrerequisites) lines.push("Arm B exposes routed roots plus host prerequisites (dependency version 1). topK limits roots; the all-tools baseline is unchanged. Host withholding is counted separately from provider unavailability.", "");
   const showWithheld = withPrerequisites || artifact.trials.some(t => t.outcome === "context_withheld");
   lines.push("#### Totals by arm", "",
-    row(["Arm", "Trials", "Correct tool", "First call correct", "Routed clarify / no-match", "No tool call", "Unavailable", ...(showWithheld ? ["Host withheld"] : []), "Failed", "Jev calls", "Jev latency median (ms)", "Reported input mean", "Reported output mean", "Proxy input mean", "Tools exposed mean"]),
-    row(Array(showWithheld ? 15 : 14).fill("---")));
+    row(["Arm", "Trials", "Correct tool", "First call correct", "Routed clarify / no-match", "No tool call", "Unavailable", ...(showWithheld ? ["Host withheld"] : []), "Failed", artifact.routingTransport ? "Logical Jev calls" : "Jev calls", ...(artifact.routingTransport ? ["Physical requests", "Additional requests"] : []), "Jev latency median (ms)", "Reported input mean", "Reported output mean", "Proxy input mean", "Tools exposed mean"]),
+    row(Array((showWithheld ? 15 : 14) + (artifact.routingTransport ? 2 : 0)).fill("---")));
   for (const arm of ARMS) {
     const s = summary.byArm[arm];
-    lines.push(row([ARM_LABEL[arm], String(s.trials), pct(s), String(s.firstCallCorrect), String(s.routedClarifications), String(s.noToolCalls), String(s.unavailable), ...(showWithheld ? [String(s.withheld ?? 0)] : []), String(s.failed), String(s.jevCalls), n(s.jevLatencyMedianMs, 1), reported(s, s.reportedInputMean), reported(s, s.reportedOutputMean, s.reportedOutputKnown), n(s.proxyInputMean), n(s.exposedToolsMean, 1)]));
+    lines.push(row([ARM_LABEL[arm], String(s.trials), pct(s), String(s.firstCallCorrect), String(s.routedClarifications), String(s.noToolCalls), String(s.unavailable), ...(showWithheld ? [String(s.withheld ?? 0)] : []), String(s.failed), String(s.jevCalls), ...(artifact.routingTransport ? [s.providerRequests == null ? `unknown (${s.observedProviderRequests ?? 0} observed)` : String(s.providerRequests), String(s.retryRequests ?? 0)] : []), n(s.jevLatencyMedianMs, 1), reported(s, s.reportedInputMean), reported(s, s.reportedOutputMean, s.reportedOutputKnown), n(s.proxyInputMean), n(s.exposedToolsMean, 1)]));
   }
 
   lines.push("", "#### By catalog size", "", row(["Size", "N", "Arm", "Correct tool", "Reported input mean", "Proxy input mean"]), row(Array(6).fill("---")));

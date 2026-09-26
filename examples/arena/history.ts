@@ -1,19 +1,22 @@
 import type { CliResult } from "../host/codex";
 import { FIXTURE_HOST_REVISION } from "../host/fixture-tools.mjs";
 import { parseFixtureHostRevision, parseFixtureToolCalls } from "../host/fixture-records";
-import type { RouterMeasurement } from "../routing/live-client";
+import { parseMeasurement, parseRoutingTransport, routingTransport, type RoutingTransport, type RouterMeasurement } from "../routing/measurement";
+import { DEMO_CATALOG } from "../routing/scenarios";
+import { HOST_ROUTING_RECOVERY, arenaSetupVersion } from "../routing/host-policy";
 import type { RoutingReceipt, RoutingPolicy, ToolDefinition } from "../../src/routing";
 
 export const HISTORY_KEY = "jev-arena-history-v1";
 export const MAX_RUNS = 30;
 export const MAX_BYTES = 2_000_000;
 // Bump when prompt, fixture isolation, catalog or host settings change comparability.
-export const ARENA_SETUP_VERSION = 6;
+export const ARENA_SETUP_VERSION = arenaSetupVersion(HOST_ROUTING_RECOVERY);
 export interface SavedFixture { id: string; title: string; task: string; files: Record<string, string> }
 export interface SavedLane { tools: string[]; result: CliResult }
 export interface ArenaRun {
   schemaVersion: 1; id: string; startedAt: string; finishedAt: string; setupVersion: number;
   fixtureHostRevision?: typeof FIXTURE_HOST_REVISION;
+  routingTransport?: RoutingTransport;
   fixture: SavedFixture; status: "complete" | "partial" | "cancelled" | "failed"; message: string;
   lanes: Partial<Record<"baseline" | "integrated", SavedLane>>;
   receipt: RoutingReceipt | null; jevUsage: RouterMeasurement | null;
@@ -57,10 +60,6 @@ function lane(value: unknown, files: SavedFixture["files"], revision: typeof FIX
   const v = record(value), r = record(v.result);
   return { tools: list(v.tools, text), result: { status: literal(r.status, ["completed", "failed", "cancelled"]), answer: text(r.answer), durationMs: duration(r.durationMs), inputTokens: nullable(r.inputTokens), cachedInputTokens: nullable(r.cachedInputTokens), outputTokens: nullable(r.outputTokens), toolCallCount: integer(r.toolCallCount), traceTruncated: bool(r.traceTruncated), toolCalls: parseFixtureToolCalls(r.toolCalls, files, revision), error: r.error === null ? null : text(r.error) } };
 }
-function measurement(value: unknown): RouterMeasurement | null {
-  if (value === null) return null;
-  const v = record(value); return { inputTokens: nullable(v.inputTokens), outputTokens: nullable(v.outputTokens), latencyMs: duration(v.latencyMs), requestBytes: integer(v.requestBytes), responseBytes: nullable(v.responseBytes) };
-}
 function parseRun(value: unknown): ArenaRun {
   const v = record(value), f = record(v.fixture), lanes = record(v.lanes);
   if (v.schemaVersion !== 1) throw Error();
@@ -69,14 +68,25 @@ function parseRun(value: unknown): ArenaRun {
   if (Date.parse(finishedAt) < Date.parse(startedAt)) throw Error();
   const fixtureHostRevision = parseFixtureHostRevision(v.fixtureHostRevision);
   const files = Object.fromEntries(Object.entries(record(f.files)).map(([key, value]) => [key, text(value)]));
+  const routed = receipt(v.receipt);
+  const measured = v.jevUsage === null ? null : parseMeasurement(v.jevUsage, routed?.request.options.map(o => o.id) ?? [...DEMO_CATALOG.map(t => t.id), "needs_clarification"], v.status === "cancelled" && routed?.evidence === null ? undefined : routed?.evidence, !routed);
+  const transport = v.routingTransport === undefined ? undefined : parseRoutingTransport(v.routingTransport);
+  if (transport && v.setupVersion !== arenaSetupVersion(transport.recovery)) throw Error();
+  if (transport && measured?.attemptLedger && (transport.recovery !== measured.attemptLedger.recovery || transport.maxAttempts !== measured.attemptLedger.maxAttempts || transport.timeoutMs !== measured.attemptLedger.timeoutMs)) throw Error();
+  if (measured?.attemptLedger && v.setupVersion !== arenaSetupVersion(measured.attemptLedger.recovery)) throw Error();
   return { schemaVersion: 1, id, startedAt, finishedAt, setupVersion: integer(v.setupVersion),
     ...(fixtureHostRevision === undefined ? {} : { fixtureHostRevision }),
+    ...(transport ? { routingTransport: transport } : {}),
     fixture: { id: text(f.id), title: text(f.title), task: text(f.task), files },
     status: literal(v.status, ["complete", "partial", "cancelled", "failed"]), message: text(v.message),
-    lanes: { ...(lanes.baseline ? { baseline: lane(lanes.baseline, files, fixtureHostRevision) } : {}), ...(lanes.integrated ? { integrated: lane(lanes.integrated, files, fixtureHostRevision) } : {}) }, receipt: receipt(v.receipt), jevUsage: measurement(v.jevUsage),
+    lanes: { ...(lanes.baseline ? { baseline: lane(lanes.baseline, files, fixtureHostRevision) } : {}), ...(lanes.integrated ? { integrated: lane(lanes.integrated, files, fixtureHostRevision) } : {}) }, receipt: routed, jevUsage: measured,
   };
 }
-export function createRun(value: Omit<ArenaRun, "schemaVersion" | "setupVersion" | "fixtureHostRevision">): ArenaRun { return parseRun({ ...value, schemaVersion: 1, setupVersion: ARENA_SETUP_VERSION, fixtureHostRevision: FIXTURE_HOST_REVISION }); }
+export function createRun(value: Omit<ArenaRun, "schemaVersion" | "setupVersion" | "fixtureHostRevision">): ArenaRun {
+  const ledger = value.jevUsage?.attemptLedger;
+  const transport = value.routingTransport ?? routingTransport(ledger?.recovery ?? HOST_ROUTING_RECOVERY, ledger?.timeoutMs);
+  return parseRun({ ...value, schemaVersion: 1, setupVersion: arenaSetupVersion(transport.recovery), routingTransport: transport, fixtureHostRevision: FIXTURE_HOST_REVISION });
+}
 export function retainRuns(runs: readonly ArenaRun[]): ArenaRun[] {
   const unique = [...new Map(runs.map(run => [run.id, run])).values()].sort((a, b) => Date.parse(b.finishedAt) - Date.parse(a.finishedAt)).slice(0, MAX_RUNS);
   while (unique.length && bytes(encode(unique)) > MAX_BYTES) unique.pop();
@@ -109,15 +119,17 @@ export function clearHistory(storage: HistoryStorage): string | null { try { sto
 export type PerformanceMetric = "input" | "duration";
 export function runMetrics(run: ArenaRun, metric: PerformanceMetric) {
   const base = run.lanes.baseline?.result, integrated = run.lanes.integrated?.result;
-  if (metric === "duration") return { baseline: base?.durationMs ?? null, integrated: integrated && run.jevUsage ? integrated.durationMs + run.jevUsage.latencyMs : null };
+  if (metric === "duration") return { baseline: base?.durationMs ?? null, integrated: integrated && run.jevUsage?.latencyMs != null ? integrated.durationMs + run.jevUsage.latencyMs : null };
   return { baseline: base?.inputTokens ?? null, integrated: integrated?.inputTokens != null && run.jevUsage?.inputTokens != null ? integrated.inputTokens + run.jevUsage.inputTokens : null };
 }
 function sameFixture(a: SavedFixture, b: SavedFixture) { return a.id === b.id && a.task === b.task && JSON.stringify(Object.entries(a.files).sort()) === JSON.stringify(Object.entries(b.files).sort()); }
-export function performanceSeries(runs: readonly ArenaRun[], fixture: SavedFixture, metric: PerformanceMetric) {
+export function performanceSeries(runs: readonly ArenaRun[], fixture: SavedFixture, metric: PerformanceMetric, setupVersion = ARENA_SETUP_VERSION, transport = routingTransport(setupVersion === 7 ? "probability_sum_only_v1" : "none")) {
   const related = runs.filter(run => run.fixture.id === fixture.id);
   const points = related.flatMap(run => {
     const values = runMetrics(run, metric);
-    return sameFixture(run.fixture, fixture) && run.setupVersion === ARENA_SETUP_VERSION && run.status === "complete" && run.lanes.baseline?.result.status === "completed" && run.lanes.integrated?.result.status === "completed" && values.baseline !== null && values.integrated !== null && Number.isFinite(values.baseline) && Number.isFinite(values.integrated) ? [{ run, baseline: values.baseline, integrated: values.integrated }] : [];
+    const config = run.routingTransport ?? routingTransport();
+    const sameTransport = config.recovery === transport.recovery && config.maxAttempts === transport.maxAttempts && config.timeoutMs === transport.timeoutMs;
+    return sameTransport && sameFixture(run.fixture, fixture) && run.setupVersion === setupVersion && run.status === "complete" && run.lanes.baseline?.result.status === "completed" && run.lanes.integrated?.result.status === "completed" && values.baseline !== null && values.integrated !== null && Number.isFinite(values.baseline) && Number.isFinite(values.integrated) ? [{ run, baseline: values.baseline, integrated: values.integrated }] : [];
   }).sort((a, b) => Date.parse(a.run.finishedAt) - Date.parse(b.run.finishedAt));
   return { points, excluded: related.length - points.length };
 }
