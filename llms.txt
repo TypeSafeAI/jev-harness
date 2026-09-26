@@ -12,6 +12,8 @@
 - [Roadmap](https://github.com/TypeSafeAI/jev-harness/blob/main/docs/roadmap.md)
 - [Routing contract](https://github.com/TypeSafeAI/jev-harness/blob/main/docs/routing.md)
 - [Screenshot and run provenance](https://github.com/TypeSafeAI/jev-harness/blob/main/docs/discovery/SCREENSHOTS.md)
+- [Web sharing verification](https://github.com/TypeSafeAI/jev-harness/blob/main/docs/discovery/WEB_SHARING.md)
+- [Public community arena](https://jev.guru)
 
 ## Boundaries
 
