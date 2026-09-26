@@ -12,7 +12,6 @@
     "policy-engine",
     "developer-tools"
   ],
-  "social_preview": "docs/discovery/assets/social-preview.png",
   "status": "proposed-not-applied",
   "note": "Capability-focused discovery metadata. Committing this file does not itself change GitHub repository settings."
 }
