@@ -355,7 +355,7 @@ export async function parseExperimentArtifact(raw: unknown): Promise<ExperimentA
   if (a.status !== "complete" && a.status !== "cancelled") fail("completion status");
   if (!isObj(a.models) || a.models.jev !== JEV_MODEL || !text(a.models.proposer)) fail("model pin or proposer");
   const questionSetVersion = a.routingQuestionSetVersion;
-  if ((questionSetVersion !== 1 && questionSetVersion !== 2 && questionSetVersion !== 3 && questionSetVersion !== 4) || a.untrustedDataNote !== ROUTING_UNTRUSTED_DATA_NOTE) return fail("routing metadata");
+  if ((questionSetVersion !== 1 && questionSetVersion !== 2 && questionSetVersion !== 3 && questionSetVersion !== 4 && questionSetVersion !== 5) || a.untrustedDataNote !== ROUTING_UNTRUSTED_DATA_NOTE) return fail("routing metadata");
   const catalog = EXPERIMENT_CATALOGS[questionSetVersion];
   let fixtureHostRevision: typeof FIXTURE_HOST_REVISION | undefined;
   try { fixtureHostRevision = parseFixtureHostRevision(a.fixtureHostRevision); } catch { return fail("fixture host revision"); }

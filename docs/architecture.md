@@ -264,8 +264,8 @@ the unchanged routing evidence. Neither selection nor a dependency grants
 permission. The Arena host declares `propose_patch → read_file`, records the
 actual menu per lane. Prerequisite support introduced setup revision 2; routing
 semantics v2 introduced setup revision 3 and v3 introduced setup revision 4.
-Routing semantics v4 uses setup revision 5 so earlier setups do not enter current
-comparison trends. Prerequisites do not change review verdicts or routing policy.
+Routing semantics v4 introduced setup revision 5; v5 introduces setup revision 6
+so earlier setups do not enter current comparison trends. Prerequisites do not change review verdicts or routing policy.
 
 Routing question-set version 2 clarifies that `inspect_agent` returns synthetic
 source context for inspecting behavior, relationships, and defects. The host
@@ -281,9 +281,9 @@ availability, costs, host prerequisites, and routing policy remain unchanged,
 including the `0.7` confidence floor. Proposal-review questions and verdicts
 are unchanged.
 
-Versions 1, 2, and 3 retain their exact wire instructions and catalog semantics for
+Versions 1, 2, 3, and 4 retain their exact wire instructions and catalog semantics for
 replay; artifact parsing uses the matching catalog for policy and prerequisite
-checks. Versions 3 and 4 share the v2 catalog. Arena history preserves all four
+checks. Versions 3, 4 and 5 share the v2 catalog. Arena history preserves all five
 receipt versions. Unsupported question versions are rejected. The v4 hypothesis
 is that matching the requested operation preserves edit roots and recognizes
 source inspection for explanation tasks. This integration preserves the frozen
@@ -294,6 +294,15 @@ batches restore all clear-task outputs in this synthetic suite; malformed
 distributions on ambiguity tasks remain unavailable. This is development
 evidence, not calibration or full benchmark saturation. See
 [requested-operation instruction v4](routing.md#requested-operation-instruction-v4).
+
+Version 5 changes only the generic clarification wording: naming a target does
+not specify the desired outcome, materially different possible outcomes require
+clarification, and a vague improvement request must not be turned into an
+invented concrete edit. This is a candidate semantic improvement, not a relaxed
+evidence contract. All malformed distributions still produce `unavailable`;
+no automatic retry or normalization is introduced. See the [v4 wire diagnostic
+and bounded recovery results](routing-evaluation/2026-09-26-distribution-diagnostic.md)
+and [v5 wording](routing.md#desired-outcome-clarification-v5).
 
 Fixture host revision 1 adds literal bounded search over supplied synthetic
 files and exact, unevaluated test-source recording in a separate

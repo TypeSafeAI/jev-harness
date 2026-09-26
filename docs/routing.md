@@ -102,7 +102,7 @@ prerequisite artifacts retain their original version and evidence.
 
 ### Requested-operation instruction v4
 
-New requests use routing question-set version 4. Its generic instruction separates
+Routing question-set version 4 introduced requested-operation matching. Its generic instruction separates
 reading source as the requested action, inspecting source to explain behavior,
 and recording a proposed edit or test:
 
@@ -128,12 +128,32 @@ clarification option, untrusted-data note, and routing policy remain unchanged,
 including the `0.7` confidence floor. Proposal-review questions and verdicts are
 unchanged.
 
-`RoutingRequest` supports versions 1, 2, 3, and 4; `jevChoiceBody` sends each exact
+`RoutingRequest` supports versions 1, 2, 3, 4, and 5; `jevChoiceBody` sends each exact
 versioned instruction and rejects unsupported versions before transport. Artifact
 replay selects the recorded version's catalog and preserves old artifacts,
-including prerequisite bundles. Arena history reads all four receipt versions
-without relabeling them. New Arena runs use setup revision 5, so earlier setups
+including prerequisite bundles. Arena history reads all five receipt versions
+without relabeling them. New Arena runs use setup revision 6, so earlier setups
 remain readable but do not enter current trend comparisons.
+
+### Desired-outcome clarification v5
+
+The v5 candidate keeps the requested-operation distinction and replaces only
+the generic clarification sentence. A named target is not a specified outcome;
+materially different possible outcomes or a missing capability require
+clarification. The router must not invent a concrete change for a vague
+improvement request. This instruction contains no fixture ids, expected tool
+labels or numeric answers.
+
+The [distribution diagnostic and recovery repeat](routing-evaluation/2026-09-26-distribution-diagnostic.md)
+locate malformed numeric distributions at the response boundary. Bounded
+recovery did not eliminate them, so this candidate tests whether clearer generic
+ambiguity wording improves the evidence instead. It is an unmeasured hypothesis
+until the candidate's fixed batches complete.
+
+The v2 catalog, model pin, pure validation, thresholds, costs, availability,
+fixture text, labels, mocks, host prerequisites and proposal-review questions
+are unchanged. No automatic recovery is added. V1–v4 keep their exact wire
+instructions and historical provenance. V5 introduces Arena setup revision 6.
 
 ## Reproduce the synthetic comparison
 
