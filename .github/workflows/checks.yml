@@ -29,6 +29,25 @@ jobs:
       - run: pnpm typecheck
       - run: pnpm test
       - run: pnpm build
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+      - name: Verify real sharing metadata and PNG responses
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+          TYPESAFE_API_KEY: ""
+        run: |
+          pnpm start > "$RUNNER_TEMP/jev-sharing-server.log" 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid" 2>/dev/null || true' EXIT
+          node scripts/check-sharing-http.mjs
+      - name: Retain generated image evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: jev-sharing-evidence
+          path: test-results/sharing/
+          if-no-files-found: ignore
+          retention-days: 14
 
   secrets:
     name: secret scan
