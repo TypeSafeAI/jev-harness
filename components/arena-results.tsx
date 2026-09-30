@@ -1,3 +1,4 @@
+import { RoutingAttempts } from "./routing-attempts";
 import { useEffect, useState } from "react";
 import { DetailPanel } from "./detail-panel";
 import { DEMO_CATALOG } from "../examples/routing/scenarios";
@@ -55,7 +56,7 @@ export function ArenaResults({ lanes, receipt, jevUsage, pending, progress, fini
   const integratedInput = integrated?.result.inputTokens != null && jevUsage?.inputTokens != null ? integrated.result.inputTokens + jevUsage.inputTokens : null;
   const baseInput = base?.result.inputTokens ?? null;
   const delta = ready && baseInput != null && integratedInput != null ? integratedInput - baseInput : null;
-  const integratedTime = integrated && jevUsage ? integrated.result.durationMs + jevUsage.latencyMs : null;
+  const integratedTime = integrated && jevUsage?.latencyMs != null ? integrated.result.durationMs + jevUsage.latencyMs : null;
   const timeDelta = ready && integratedTime != null ? integratedTime - base.result.durationMs : null;
   return <>
     <section className="arena-overview" aria-label="Comparison at a glance">
@@ -80,7 +81,7 @@ export function ArenaResults({ lanes, receipt, jevUsage, pending, progress, fini
           <dl className="lane-metrics">
             <div><dt>Available tools</dt><dd><strong>{selected ? selected.length : pending ? "Pending" : "—"}</strong><small>{id === "baseline" ? "Full fixture catalog" : selected ? !receipt ? "Reported tool menu" : hasPrerequisites ? "Selected + prerequisites" : "Selected tools" : finished ? "Not reported" : "Awaiting tool access"}</small></dd></div>
             <div><dt>Input tokens</dt><dd><strong>{input != null ? number(input) : waiting}</strong><small>{id === "baseline" ? "CLI only" : lane ? `${number(lane.result.inputTokens)} CLI + ${number(jevUsage?.inputTokens)} Jev` : "CLI + Jev"}</small></dd></div>
-            <div><dt>Time</dt><dd><strong>{duration != null ? seconds(duration) : waiting}</strong><small>{id === "baseline" ? "CLI only" : lane ? `${seconds(lane.result.durationMs)} CLI + ${jevUsage ? seconds(jevUsage.latencyMs) : "Unknown"} Jev` : "CLI + routing"}</small></dd></div>
+            <div><dt>Time</dt><dd><strong>{duration != null ? seconds(duration) : waiting}</strong><small>{id === "baseline" ? "CLI only" : lane ? `${seconds(lane.result.durationMs)} CLI + ${jevUsage?.latencyMs != null ? seconds(jevUsage.latencyMs) : "Unknown"} Jev` : "CLI + routing"}</small></dd></div>
           </dl>
           <div className="lane-answer">
             {lane ? <><LaneAnswer key={answer} text={answer} />{lane.result.error && lane.result.answer && <p className="lane-error">{lane.result.error}</p>}</> : <><h3>Agent answer</h3><p className="answer-placeholder">{running ? "The agent is running. Its answer appears here when ready." : activity || finished ? "No answer returned for this lane. Results are incomplete." : "Run a comparison to see the agent’s answer."}</p></>}
@@ -105,7 +106,7 @@ export function ArenaAccounting({ lanes, jevUsage }: { lanes: Partial<Record<"ba
   const baseInput = base?.result.inputTokens ?? null;
   const integratedInput = integrated?.result.inputTokens != null && jevUsage?.inputTokens != null ? integrated.result.inputTokens + jevUsage.inputTokens : null;
   const scale = Math.max(baseInput ?? 0, integratedInput ?? 0, 1);
-  if (!base && !integrated) return <p className="inspector-empty">Usage appears as the agents finish. Jev’s routing overhead is included in the comparison.</p>;
+  if (!base && !integrated) return <><p className="inspector-empty">No CLI usage returned. Jev whole-call input: {number(jevUsage?.inputTokens)}; output: {number(jevUsage?.outputTokens)}. Routing failure usage remains part of this run.</p><RoutingAttempts measurement={jevUsage} /></>;
   return <><div className="accounting-chart" aria-label="Reported input tokens including router overhead">{([['Without Jev', baseInput, 0], ['With Jev', integratedInput, jevUsage?.inputTokens ?? 0]] as const).map(([label, total, router]) => <div className="accounting-row" key={label}><div><span>{label}</span><strong>{number(total)} tokens</strong></div><div className="token-track" aria-hidden="true">{total != null && <><span className="cli-bar" style={{ width: `${Math.max(0, total - router) / scale * 100}%` }} /><span className="router-bar" style={{ width: `${router / scale * 100}%` }} /></>}</div></div>)}<p className="hint chart-key"><span>CLI input</span><span>Jev input</span></p></div>
       <div className="table-scroll"><table><caption>Reported usage, not a price or quality benchmark. Unknown means unreported.</caption><thead><tr><th>Measure</th><th>Without Jev</th><th>With Jev</th></tr></thead><tbody>
         <tr><td>CLI input tokens</td><td>{number(base?.result.inputTokens)}</td><td>{number(integrated?.result.inputTokens)}</td></tr>
@@ -115,7 +116,7 @@ export function ArenaAccounting({ lanes, jevUsage }: { lanes: Partial<Record<"ba
         <tr><td>CLI output tokens</td><td>{number(base?.result.outputTokens)}</td><td>{number(integrated?.result.outputTokens)}</td></tr>
         <tr><td>Jev output tokens</td><td>Not called</td><td>{number(jevUsage?.outputTokens)}</td></tr>
         <tr><td>CLI duration</td><td>{base ? seconds(base.result.durationMs) : "Unknown"}</td><td>{integrated ? seconds(integrated.result.durationMs) : "Unknown"}</td></tr>
-        <tr><td>Additional Jev duration</td><td>Not called</td><td>{jevUsage ? seconds(jevUsage.latencyMs) : "Unknown"}</td></tr>
-      </tbody></table></div><p className="hint">Different providers, cache effects and independent model trajectories prevent a direct dollar comparison. A smaller tool menu may still use more tokens. Neither lane applies proposed patches.</p>
+        <tr><td>Additional Jev duration</td><td>Not called</td><td>{jevUsage?.latencyMs != null ? seconds(jevUsage.latencyMs) : "Unknown"}</td></tr>
+      </tbody></table></div><RoutingAttempts measurement={jevUsage} /><p className="hint">Different providers, cache effects and independent model trajectories prevent a direct dollar comparison. A smaller tool menu may still use more tokens. Neither lane applies proposed patches.</p>
 </>;
 }

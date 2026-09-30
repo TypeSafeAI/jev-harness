@@ -1,0 +1,1146 @@
+{
+  "sourceHash": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+  "blindedSha256": "8ea5ea365ce80c3763bb2e8ad133128327e93b8b289b90eb25087e498ff34ea7",
+  "cases": [
+    {
+      "caseId": "76d86d87acb849dde266f991",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 0,
+      "taskId": "read-small",
+      "baseId": "read",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "b6ba16e088bb8fbbcb0fcf7d",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 1,
+      "taskId": "read-small",
+      "baseId": "read",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "93f96c3b47eec3e4b8983e89",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 2,
+      "taskId": "read-medium",
+      "baseId": "read",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "23204c33521719ce9bf5ae39",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 3,
+      "taskId": "read-medium",
+      "baseId": "read",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "bf0c08984a3f6e840081bcf2",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 4,
+      "taskId": "read-large",
+      "baseId": "read",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "08a2885834ca03619d7ff115",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 5,
+      "taskId": "read-large",
+      "baseId": "read",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "50d1c6b75152fb18dde08e5e",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 6,
+      "taskId": "patch-small",
+      "baseId": "patch",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "f4e9f13b59d9ae1bd46df364",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 7,
+      "taskId": "patch-small",
+      "baseId": "patch",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "b47deafd75929f59e56283cb",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 8,
+      "taskId": "patch-medium",
+      "baseId": "patch",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "4ad0d956ff5e5234bdde3287",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 9,
+      "taskId": "patch-medium",
+      "baseId": "patch",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "f9f88ae1fcb0999d31a390f4",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 10,
+      "taskId": "patch-large",
+      "baseId": "patch",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "3c9f382034a025d65dc41e66",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 11,
+      "taskId": "patch-large",
+      "baseId": "patch",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "0f31be24e470c4c1fb078fb0",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 12,
+      "taskId": "inspect-small",
+      "baseId": "inspect",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "65c28f30df271e9b8cb4ff20",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 13,
+      "taskId": "inspect-small",
+      "baseId": "inspect",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "245afd37f68eb2381e05989a",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 14,
+      "taskId": "inspect-medium",
+      "baseId": "inspect",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "2510e79db053315a8f1e38c1",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 15,
+      "taskId": "inspect-medium",
+      "baseId": "inspect",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "99deef0433691c05c6ca5f48",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 16,
+      "taskId": "inspect-large",
+      "baseId": "inspect",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "92bbe58c2c97da784eb48001",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 17,
+      "taskId": "inspect-large",
+      "baseId": "inspect",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "95699105dfb645d663e8a66c",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 18,
+      "taskId": "ambiguous-small",
+      "baseId": "ambiguous",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "0ea4b08f8f0524a6ee44c9a4",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 19,
+      "taskId": "ambiguous-small",
+      "baseId": "ambiguous",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "bb6fb5b4750175c577306f82",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 20,
+      "taskId": "ambiguous-medium",
+      "baseId": "ambiguous",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "e325fc7b38d3ad530d60aba6",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 21,
+      "taskId": "ambiguous-medium",
+      "baseId": "ambiguous",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "0779e2cabf24ac0e79626798",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 22,
+      "taskId": "ambiguous-large",
+      "baseId": "ambiguous",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "668e7d3c04c03844e0a22568",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 23,
+      "taskId": "ambiguous-large",
+      "baseId": "ambiguous",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "92acc410aa245095b7eaee12",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 24,
+      "taskId": "uncertain-small",
+      "baseId": "uncertain",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "e80da4d94fe343113d06f915",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 25,
+      "taskId": "uncertain-small",
+      "baseId": "uncertain",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "ed9e4460e2847c8bf3b4552c",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 26,
+      "taskId": "uncertain-medium",
+      "baseId": "uncertain",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "47162d58fe81144100fd43db",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 27,
+      "taskId": "uncertain-medium",
+      "baseId": "uncertain",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "40760d43c7632c80fd0b17ee",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 28,
+      "taskId": "uncertain-large",
+      "baseId": "uncertain",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "9f3a5d5d5858b9b7bb938951",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 29,
+      "taskId": "uncertain-large",
+      "baseId": "uncertain",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "ae695aa3310586def3f847d8",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 30,
+      "taskId": "search-medium",
+      "baseId": "search",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "54f6be850c7bc390b98dc5cc",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 31,
+      "taskId": "search-medium",
+      "baseId": "search",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "9ad56dd9b23211a5ecb81cc0",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 32,
+      "taskId": "search-large",
+      "baseId": "search",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "2058370a568722c3107ec09c",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 33,
+      "taskId": "search-large",
+      "baseId": "search",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "4719f8a8cfcc4d0341014296",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 34,
+      "taskId": "test_draft-medium",
+      "baseId": "test_draft",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "6e25962abc497299c44385c2",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 35,
+      "taskId": "test_draft-medium",
+      "baseId": "test_draft",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "24040a46f834df5c2937e602",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 36,
+      "taskId": "test_draft-large",
+      "baseId": "test_draft",
+      "run": 1,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "da67c1d8e991e6ef197f8bef",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 37,
+      "taskId": "test_draft-large",
+      "baseId": "test_draft",
+      "run": 1,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "0cc7d013ce5c4ae0f90d4d87",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 38,
+      "taskId": "read-small",
+      "baseId": "read",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "4bd18feaf7a51ea5fee23139",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 39,
+      "taskId": "read-small",
+      "baseId": "read",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "ab153edf09b04ef3bf6ee976",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 40,
+      "taskId": "read-medium",
+      "baseId": "read",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "36f66a750a7390ccab23f648",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 41,
+      "taskId": "read-medium",
+      "baseId": "read",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "31ee08c3c1f91d68714ff76c",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 42,
+      "taskId": "read-large",
+      "baseId": "read",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "844fe04d4b9bcd6fd8221417",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 43,
+      "taskId": "read-large",
+      "baseId": "read",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "118ccb106977327b24550a1f",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 44,
+      "taskId": "patch-small",
+      "baseId": "patch",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "c0c4d6e3511d788106dc9a42",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 45,
+      "taskId": "patch-small",
+      "baseId": "patch",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "938e888f05d4411d19816af4",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 46,
+      "taskId": "patch-medium",
+      "baseId": "patch",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "a538e68457ce5591bd76d285",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 47,
+      "taskId": "patch-medium",
+      "baseId": "patch",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "faa8ad34b6d644d9173c3d0b",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 48,
+      "taskId": "patch-large",
+      "baseId": "patch",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "d2b788d6db0ead6d0c43dcdd",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 49,
+      "taskId": "patch-large",
+      "baseId": "patch",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "85c7fa9126120974ab676a7c",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 50,
+      "taskId": "inspect-small",
+      "baseId": "inspect",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "8a29f0e069d7b463c9734636",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 51,
+      "taskId": "inspect-small",
+      "baseId": "inspect",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "286e6931aa512289b02921bf",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 52,
+      "taskId": "inspect-medium",
+      "baseId": "inspect",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "dfd3378c46411416b92e2020",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 53,
+      "taskId": "inspect-medium",
+      "baseId": "inspect",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "01a8ed8c00603fe28c14e1d4",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 54,
+      "taskId": "inspect-large",
+      "baseId": "inspect",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "1c77cb1ae24809eb1a7fc012",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 55,
+      "taskId": "inspect-large",
+      "baseId": "inspect",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "ce0806848f1f0a01e323c0e4",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 56,
+      "taskId": "ambiguous-small",
+      "baseId": "ambiguous",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "8d31cb810585cf036323d014",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 57,
+      "taskId": "ambiguous-small",
+      "baseId": "ambiguous",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "aceef85443a20daa6c9144d3",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 58,
+      "taskId": "ambiguous-medium",
+      "baseId": "ambiguous",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "ad3e7aa53de52a1e17c13ebe",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 59,
+      "taskId": "ambiguous-medium",
+      "baseId": "ambiguous",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "5fe65b2cec4e27b91b6c93cd",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 60,
+      "taskId": "ambiguous-large",
+      "baseId": "ambiguous",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "c7797aceff3230795c4f44f7",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 61,
+      "taskId": "ambiguous-large",
+      "baseId": "ambiguous",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "10cc76a20095dc46efd51ba0",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 62,
+      "taskId": "uncertain-small",
+      "baseId": "uncertain",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "631ce91e66aaa00d4710b48f",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 63,
+      "taskId": "uncertain-small",
+      "baseId": "uncertain",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "147e97372e57c0914a47090a",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 64,
+      "taskId": "uncertain-medium",
+      "baseId": "uncertain",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "b9041294669ca4e0bc9d2f23",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 65,
+      "taskId": "uncertain-medium",
+      "baseId": "uncertain",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "21d3a2e764e251c40f2243e3",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 66,
+      "taskId": "uncertain-large",
+      "baseId": "uncertain",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "1c4d803e98c1ce998c1535d7",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 67,
+      "taskId": "uncertain-large",
+      "baseId": "uncertain",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "e68a651fabd46a8ee3b761d1",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 68,
+      "taskId": "search-medium",
+      "baseId": "search",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "8fac08233aad41c3cf3dd3ef",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 69,
+      "taskId": "search-medium",
+      "baseId": "search",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "148d3dd00e831ab1aacba841",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 70,
+      "taskId": "search-large",
+      "baseId": "search",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "e28656a113bc6b7a4a5628c4",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 71,
+      "taskId": "search-large",
+      "baseId": "search",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "5ab912933eac50803cd32a04",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 72,
+      "taskId": "test_draft-medium",
+      "baseId": "test_draft",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "29a0db31622d66ed5ae673ff",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 73,
+      "taskId": "test_draft-medium",
+      "baseId": "test_draft",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "a5686c397d34aaccc804bd9b",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 74,
+      "taskId": "test_draft-large",
+      "baseId": "test_draft",
+      "run": 2,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "01c9a8a09880b05abc23bbc5",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 75,
+      "taskId": "test_draft-large",
+      "baseId": "test_draft",
+      "run": 2,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "473161b242955490bbebff21",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 76,
+      "taskId": "read-small",
+      "baseId": "read",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "ec6919618bea08b3ee2eb653",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 77,
+      "taskId": "read-small",
+      "baseId": "read",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "da923097bbd366912ad5248c",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 78,
+      "taskId": "read-medium",
+      "baseId": "read",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "1a64d38d913eedb13b5c4837",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 79,
+      "taskId": "read-medium",
+      "baseId": "read",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "f679e6295e8f4ead946be5e9",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 80,
+      "taskId": "read-large",
+      "baseId": "read",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "f6f361b3f4593f0f61b32f06",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 81,
+      "taskId": "read-large",
+      "baseId": "read",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "8d0ef6e3269e96d193718082",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 82,
+      "taskId": "patch-small",
+      "baseId": "patch",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "20a0b9a0c54272c77d8e8c20",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 83,
+      "taskId": "patch-small",
+      "baseId": "patch",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "32b661503707597d71f1e152",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 84,
+      "taskId": "patch-medium",
+      "baseId": "patch",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "004377172aa89bed90f9f974",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 85,
+      "taskId": "patch-medium",
+      "baseId": "patch",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "08a6626000b1f444d33bd556",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 86,
+      "taskId": "patch-large",
+      "baseId": "patch",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "33480121ab68314ea6d0ea7b",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 87,
+      "taskId": "patch-large",
+      "baseId": "patch",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "0bf108331c8d69b489bd5ed0",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 88,
+      "taskId": "inspect-small",
+      "baseId": "inspect",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "e6bb18f385fd121e01c84e30",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 89,
+      "taskId": "inspect-small",
+      "baseId": "inspect",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "47b5dd0812c06738744e6fa3",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 90,
+      "taskId": "inspect-medium",
+      "baseId": "inspect",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "a53953f55eb5feeb31e04cf4",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 91,
+      "taskId": "inspect-medium",
+      "baseId": "inspect",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "52309006ee184f37ef86107c",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 92,
+      "taskId": "inspect-large",
+      "baseId": "inspect",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "ce79a9bf92f7905431446374",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 93,
+      "taskId": "inspect-large",
+      "baseId": "inspect",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "9576d9d9982be561a6668e65",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 94,
+      "taskId": "ambiguous-small",
+      "baseId": "ambiguous",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "2f4a65c47bf19b0fddf201fc",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 95,
+      "taskId": "ambiguous-small",
+      "baseId": "ambiguous",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "501136bcb33c88a8a7286220",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 96,
+      "taskId": "ambiguous-medium",
+      "baseId": "ambiguous",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "aaa59bf3b757ffb12c056818",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 97,
+      "taskId": "ambiguous-medium",
+      "baseId": "ambiguous",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "ac64d7343cafa979afce4b54",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 98,
+      "taskId": "ambiguous-large",
+      "baseId": "ambiguous",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "d20559b01143269341431883",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 99,
+      "taskId": "ambiguous-large",
+      "baseId": "ambiguous",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "199ded87860298cc2ba9beb0",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 100,
+      "taskId": "uncertain-small",
+      "baseId": "uncertain",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "7ae8baf7720932c37267aa29",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 101,
+      "taskId": "uncertain-small",
+      "baseId": "uncertain",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "f34ec00bb9f1bb8e3f0f7777",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 102,
+      "taskId": "uncertain-medium",
+      "baseId": "uncertain",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "54f1d7e647541df73a4a1308",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 103,
+      "taskId": "uncertain-medium",
+      "baseId": "uncertain",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "46c3667998a5774b73fc2fe9",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 104,
+      "taskId": "uncertain-large",
+      "baseId": "uncertain",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "032ba31b6dfb6c9fd486d990",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 105,
+      "taskId": "uncertain-large",
+      "baseId": "uncertain",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "d4b2b610c2606ad27e47efdf",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 106,
+      "taskId": "search-medium",
+      "baseId": "search",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "98382ddcececc68e07b8e4d8",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 107,
+      "taskId": "search-medium",
+      "baseId": "search",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "7d624ccbaae03484a9ba168d",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 108,
+      "taskId": "search-large",
+      "baseId": "search",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "874f28ae2a38cee6390e1c84",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 109,
+      "taskId": "search-large",
+      "baseId": "search",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "180a0215d459e6b8a6af5eb5",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 110,
+      "taskId": "test_draft-medium",
+      "baseId": "test_draft",
+      "run": 3,
+      "arm": "all_tools"
+    },
+    {
+      "caseId": "bdaf520f1bcd7c731b16aaff",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 111,
+      "taskId": "test_draft-medium",
+      "baseId": "test_draft",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "459fae7e688a733b43fc6021",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 112,
+      "taskId": "test_draft-large",
+      "baseId": "test_draft",
+      "run": 3,
+      "arm": "jev_top_k"
+    },
+    {
+      "caseId": "cca3aed2bebf4d3854bca1da",
+      "artifactPath": "/tmp/jev-performance-2026-09-24/recovery-full.json",
+      "artifactSha256": "aa605a23591c3e84e135d787c925eb9a96a4922eff61d112d143abcc00f51e57",
+      "trialIndex": 113,
+      "taskId": "test_draft-large",
+      "baseId": "test_draft",
+      "run": 3,
+      "arm": "all_tools"
+    }
+  ]
+}

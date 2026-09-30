@@ -237,11 +237,26 @@ historical label corrections rather than silently rewriting old results.
 
 ## Dynamic tool context experiment
 
-`src/routing/` adds an injected `ToolRouter` seam, a schema catalog, availability snapshots, cost-aware top-k selection and explicit schema loading/eviction. No tool or sub-agent executes. Run the paired synthetic comparison:
+`src/routing/` adds an injected `ToolRouter` seam, a schema catalog, availability snapshots, cost-aware top-k selection and explicit schema loading/eviction. No tool or sub-agent executes.
+
+Routing question set v5 separates a named target from a specified desired
+outcome, so vague improvement requests call for clarification. The
+[v5 development comparison](docs/routing-evaluation/2026-09-26-routing-v5.md)
+retains fixed single-attempt measurements and historical request replay.
+Validation, model and thresholds remain unchanged; these synthetic results are
+not calibration. Run the paired synthetic comparison:
 
 ```sh
 pnpm --silent bench:routing > routing-run.json
 ```
+
+The example host also supports opt-in bounded recovery for probability-sum
+errors, with every physical request recorded. The reusable adapter defaults to
+one request; the demo explicitly enables recovery as setup 7. The CLI still
+requires `--live --sum-recovery`. The [frozen comparison](docs/routing-evaluation/2026-09-26-host-recovery.md)
+records 171/171 expected routing outcomes and 39/39 assessable routed outputs
+meeting the blinded rubric. Every first response was valid, so no live recovery
+benefit was observed. See the [host recovery and accounting rules](docs/routing.md#experiment-protocol-n-tools-in-context-vs-jev-top-k).
 
 For the dark, full-width **Agent arena**:
 

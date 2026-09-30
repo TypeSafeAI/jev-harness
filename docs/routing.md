@@ -102,7 +102,7 @@ prerequisite artifacts retain their original version and evidence.
 
 ### Requested-operation instruction v4
 
-New requests use routing question-set version 4. Its generic instruction separates
+Routing question-set version 4 introduced requested-operation matching. Its generic instruction separates
 reading source as the requested action, inspecting source to explain behavior,
 and recording a proposed edit or test:
 
@@ -128,12 +128,36 @@ clarification option, untrusted-data note, and routing policy remain unchanged,
 including the `0.7` confidence floor. Proposal-review questions and verdicts are
 unchanged.
 
-`RoutingRequest` supports versions 1, 2, 3, and 4; `jevChoiceBody` sends each exact
+`RoutingRequest` supports versions 1, 2, 3, 4, and 5; `jevChoiceBody` sends each exact
 versioned instruction and rejects unsupported versions before transport. Artifact
 replay selects the recorded version's catalog and preserves old artifacts,
-including prerequisite bundles. Arena history reads all four receipt versions
-without relabeling them. New Arena runs use setup revision 5, so earlier setups
+including prerequisite bundles. Arena history reads all five receipt versions
+without relabeling them. New Arena runs use setup revision 6, so earlier setups
 remain readable but do not enter current trend comparisons.
+
+### Desired-outcome clarification v5
+
+The v5 candidate keeps the requested-operation distinction and replaces only
+the generic clarification sentence. A named target is not a specified outcome;
+materially different possible outcomes or a missing capability require
+clarification. The router must not invent a concrete change for a vague
+improvement request. This instruction contains no fixture ids, expected tool
+labels or numeric answers.
+
+The [distribution diagnostic and recovery repeat](routing-evaluation/2026-09-26-distribution-diagnostic.md)
+locate malformed numeric distributions at the response boundary. Bounded
+recovery did not eliminate them, so this candidate tests whether clearer generic
+ambiguity wording improves the evidence instead. The [two frozen v5 routing-only batches](routing-evaluation/2026-09-26-routing-v5.md)
+record every expected outcome without retries. The subsequent
+[full CLI comparison](routing-evaluation/2026-09-26-routing-v5.md#full-cli-comparison)
+retains one malformed response as unavailable and assesses every delivered
+output under the frozen blinded rubric. These repeated development cases do
+not establish full saturation or general reliability.
+
+The v2 catalog, model pin, pure validation, thresholds, costs, availability,
+fixture text, labels, mocks, host prerequisites and proposal-review questions
+are unchanged. That wording change added no automatic recovery. V1–v4 keep their exact wire
+instructions and historical provenance. V5 introduces Arena setup revision 6.
 
 ## Reproduce the synthetic comparison
 
@@ -262,12 +286,39 @@ separate quality assessment. Structural routing diagnostics identify missing
 options, probability-sum issues or model mismatches without retaining unexpected
 provider text. Historical artifacts without these fields remain readable.
 
+**Bounded host recovery.** Add `--sum-recovery` to an explicit `--live` run to
+select `probability_sum_only_v1`. The shared host adapter defaults to `none`.
+The demo explicitly selects recovery through `HOST_ROUTING_RECOVERY`
+and records Arena setup 7; single-request controls retain setup 6.
+The option permits three total physical requests, not three retries, with an
+identical request body and one 45-second deadline across fetches and body reads.
+Only a sole probability-sum defect can trigger another request. The pinned model,
+answer type, exact option set, unit confidence/probabilities, and leading choice
+must already satisfy the unchanged pure parser. Valid clarification, low
+confidence, ties, and any other valid choice stop immediately. All other errors
+are terminal; exhaustion is unavailable. No distribution is normalized.
+
+New CLI artifacts record `routingTransport` version 1, the effective policy,
+cap, and timeout. Each live routing record retains `attemptLedger`,
+`providerRequests`, and `observedProviderRequests`; fakes record zero physical
+requests. The strict reader checks transitions, numeric projections, totals, and
+returned evidence. Historical unmarked artifacts and frozen wrappers keep their
+original semantics. `--table` and offline mode reject `--sum-recovery`.
+
+The ledger stores only sanitized structural facts and known-option numeric
+projections. Missing metrics remain independently unknown while reported
+subtotals remain available. A partial ledger reports an observed lower bound,
+not an exact physical request total. The [frozen live comparison](routing-evaluation/2026-09-26-host-recovery.md)
+records 171/171 expected outcomes and all 39 assessable routed outputs meeting
+the blinded rubric. Every first response was valid, so recovery was not exercised
+live and its benefit remains unmeasured.
+
 **Metrics**, per trial, per arm, per catalog size and paired per task:
 
 - **Correct tool.** Task labelled *selected*: the proposer completed and called at least one acceptable id. Task labelled *clarify*: no tool was called (routed clarification, or a proposer answer with no call). The answer text is not graded, so a no-call refusal also counts as asking. *First call correct* is reported separately.
-- **Reported usage.** Proposer input, cached input and output tokens as reported by the CLI, plus Jev input and output as reported by the provider. A trial total exists only when every called component reported that metric. Input and output have independent unknown counts. Unknown is never counted as zero.
-- **Proxies.** `ceil(UTF-8 bytes / 4)` of the arena prompt plus exposed schemas, and of the exact Jev request body. They are labelled as proxies, kept apart from reported usage, and exclude the CLI's own system prompt and tool framing.
-- **Jev calls and latency.** Call count and wall time around each routing call on the host.
+- **Reported usage.** Proposer input, cached input and output tokens as reported by the CLI, plus Jev input and output across every dispatched attempt. A trial total exists only when every called component reported that metric. Input and output have independent unknown counts. Unknown is never counted as zero.
+- **Proxies.** `ceil(UTF-8 bytes / 4)` of the arena prompt plus exposed schemas, and of the exact Jev request body. New transport-marked artifacts retain the one-body `jevRequestTokens` proxy and add `jevPhysicalRequestTokens` across all physical requests; their total uses the physical proxy. Historical totals remain unchanged. These are labelled as proxies, kept apart from reported usage, and exclude the CLI's own system prompt and tool framing.
+- **Jev calls and latency.** `jevCalls` counts logical routing calls (at most one per trial). `providerRequests` counts physical requests separately. Whole-call latency includes every attempt once; per-attempt durations identify retry overhead.
 - **Failures.** Routing unavailable, proposer failed or cancelled, routed clarification or no-match, and no-call answers are counted separately. Failed and cancelled attempts remain incorrect in the accuracy denominator, even if their trace was truncated. A completed truncated trace with no observed acceptable call is unknown; it cannot prove there was no acceptable call.
 
 **What a result can claim.** Paired correct-tool rates and reported token totals on these 19 synthetic tasks, with this catalog, `jev-1.13.0`, the recorded proposer settings and this policy. **What it cannot claim.** One run is a signal, not a calibration. Proxies are not provider savings. The tasks are synthetic, so the result says nothing about real repositories. It does not measure dollars (Codex and Jev price differently), cache effects across trials, answer quality, or execution speed. Top-1 routing can starve a task that needs two tools (read, then patch); that shows up as a correct-tool miss in arm B and is part of the result, not noise.
@@ -286,7 +337,7 @@ pnpm experiment:routing --table examples/routing/runs/<file>.json  # table from 
 pnpm --silent experiment:routing --live --model gpt-6-sol --runs 3
 ```
 
-This writes `examples/routing/runs/<date>-experiment.json` (it refuses to overwrite) and prints the table, which can be regenerated with `--table`. Three runs make 57 Jev calls and up to 114 Codex CLI runs (fewer when Jev routes to clarification), sequentially, so expect tens of minutes and both providers' usage. Use `--sizes small,large` or `--runs 1` for a smaller first pass, and `--top-k 2` to test the two-tool starvation case. Commit the artifact and link it next to any number quoted from it.
+This writes `examples/routing/runs/<date>-experiment.json` (it refuses to overwrite) and prints the table, which can be regenerated with `--table`. Three runs make 57 logical Jev calls (up to 171 physical requests with `--sum-recovery`) and up to 114 Codex CLI runs (fewer when Jev routes to clarification), sequentially, so expect tens of minutes and both providers' usage. Use `--sizes small,large` or `--runs 1` for a smaller first pass, and `--top-k 2` to test the two-tool starvation case. Commit the artifact and link it next to any number quoted from it.
 
 Ctrl-C or termination aborts the active request or Codex child, waits for cleanup, and saves completed and interrupted trials with `status: "cancelled"`. The table labels these as partial results; planned repetitions are not completed repetitions. The CLI exits with 130 for SIGINT or 143 for SIGTERM.
 

@@ -286,8 +286,8 @@ the unchanged routing evidence. Neither selection nor a dependency grants
 permission. The Arena host declares `propose_patch → read_file`, records the
 actual menu per lane. Prerequisite support introduced setup revision 2; routing
 semantics v2 introduced setup revision 3 and v3 introduced setup revision 4.
-Routing semantics v4 uses setup revision 5 so earlier setups do not enter current
-comparison trends. Prerequisites do not change review verdicts or routing policy.
+Routing semantics v4 introduced setup revision 5; v5 introduces setup revision 6
+so earlier setups do not enter current comparison trends. Prerequisites do not change review verdicts or routing policy.
 
 Routing question-set version 2 clarifies that `inspect_agent` returns synthetic
 source context for inspecting behavior, relationships, and defects. The host
@@ -303,9 +303,9 @@ availability, costs, host prerequisites, and routing policy remain unchanged,
 including the `0.7` confidence floor. Proposal-review questions and verdicts
 are unchanged.
 
-Versions 1, 2, and 3 retain their exact wire instructions and catalog semantics for
+Versions 1, 2, 3, and 4 retain their exact wire instructions and catalog semantics for
 replay; artifact parsing uses the matching catalog for policy and prerequisite
-checks. Versions 3 and 4 share the v2 catalog. Arena history preserves all four
+checks. Versions 3, 4 and 5 share the v2 catalog. Arena history preserves all five
 receipt versions. Unsupported question versions are rejected. The v4 hypothesis
 is that matching the requested operation preserves edit roots and recognizes
 source inspection for explanation tasks. This integration preserves the frozen
@@ -317,6 +317,19 @@ distributions on ambiguity tasks remain unavailable. This is development
 evidence, not calibration or full benchmark saturation. See
 [requested-operation instruction v4](routing.md#requested-operation-instruction-v4).
 
+Version 5 changes only the generic clarification wording: naming a target does
+not specify the desired outcome, materially different possible outcomes require
+clarification, and a vague improvement request must not be turned into an
+invented concrete edit. This is a candidate semantic improvement, not a relaxed
+evidence contract. All malformed distributions still produce `unavailable`;
+the v5 wording change introduced no retry or normalization. See the [v4 wire diagnostic
+and bounded recovery results](routing-evaluation/2026-09-26-distribution-diagnostic.md)
+and [v5 wording](routing.md#desired-outcome-clarification-v5). The
+[v5 measurements](routing-evaluation/2026-09-26-routing-v5.md) record all expected
+outcomes in two routing-only batches, followed by one unavailable response in
+the full CLI batch. All delivered clear-task outputs meet the frozen blinded
+rubric. The remaining malformed response prevents a saturation claim.
+
 Fixture host revision 1 adds literal bounded search over supplied synthetic
 files and exact, unevaluated test-source recording in a separate
 `ToolCall.testProposal` field. New experiment artifacts and Arena snapshots
@@ -327,3 +340,35 @@ parsed, imported or executed, and no proposed files are created or modified.
 This host revision does not change contract verdicts, the default Arena menu,
 or routing question semantics. See
 [fixture host bounds and assessment limits](routing.md#fixture-host-revision-1).
+
+### Bounded routing recovery in the example host
+
+`examples/host/jev-choice.ts` owns an opt-in `probability_sum_only_v1`
+transport policy. The reusable adapter defaults to `none` (one physical request).
+The demo explicitly selects recovery. Recovery permits
+at most three total requests with identical bodies under one 45-second deadline
+and caller cancellation, including response reads. Each response is capped at
+64,000 bytes. Only a sole probability-sum defect relative to the unchanged pure
+parser permits another request. Every valid answer, including clarification,
+ties, and low-confidence evidence, stops the loop. Other malformed evidence,
+HTTP errors, transport failures, and body failures are terminal. Exhaustion stays
+`unavailable`; no probabilities are normalized and no fallback tool is selected.
+
+The host records every dispatched request in a versioned attempt ledger. Its
+sanitized projection contains only known option IDs and finite unit numbers.
+It never contains raw provider text, unexpected keys, or credentials. Whole-call
+usage sums all attempts; each metric stays unknown if any attempt omits it.
+Reported subtotals remain separate. Whole-call latency includes the full recovery
+chain once. Browser disconnects preserve observed attempts as a lower bound,
+with an unknown physical total until a terminal ledger arrives.
+
+The pure routing API, policy, model pin, question versions, prerequisites, and
+execution boundary are unchanged. New transport-marked artifacts retain logical
+`jevCalls`, explicit physical counts, and physical request proxies. Unmarked
+historical artifacts retain their original interpretation. The demo selects
+`probability_sum_only_v1` in `examples/routing/host-policy.ts`, using Arena setup 7;
+explicit `none` controls retain setup 6. The [frozen comparison](routing-evaluation/2026-09-26-host-recovery.md)
+records all 171 expected routing outcomes and all 39 assessable routed outputs
+meeting the blinded rubric. Every first response was valid. These gates support
+the measured configuration, but establish no observed recovery benefit or
+calibration.

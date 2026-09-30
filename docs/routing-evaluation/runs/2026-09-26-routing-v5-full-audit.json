@@ -1,0 +1,1196 @@
+{
+  "schemaVersion": 1,
+  "kind": "routing-v5-full-independent-audit",
+  "auditedAt": "2026-09-26T07:57:35.924Z",
+  "status": "pass",
+  "sourceCommit": "fda2774667872968e1ef48271faa040e435ffdfc",
+  "inputs": [
+    {
+      "path": "/tmp/jev-performance-2026-09-24/routing-package-v5-integrated.json",
+      "sha256": "66550750641134831680c40109dface7900b838bcb2bd9ace9e9998c036ce1ab"
+    },
+    {
+      "path": "/tmp/jev-performance-2026-09-24/routing-package-v5-integrated-provenance.json",
+      "sha256": "a54f97d109f6c6db28b7f05de17801fb656bff37917f8bae0efc261ec805bcc3"
+    },
+    {
+      "path": "/tmp/jev-performance-2026-09-24/routing-package-v5-integrated-completion.json",
+      "sha256": "3d61b6ef8249522b768f12163d9a2e2b378f61cfff9f111a37bedaa6ee803eb8"
+    },
+    {
+      "path": "/tmp/jev-routing-v5-package.mts",
+      "sha256": "c465fff0498449f5c618083d964e9f4335a077896e83488c2b26a8078972ca32"
+    }
+  ],
+  "checks": {
+    "cleanCandidate": true,
+    "sourceFileCount": 82,
+    "allSourceFilesMatchFrozenCommitAndWorkingTree": true,
+    "sourceManifestComplete": true,
+    "packageFileCount": 42,
+    "allPackageFilesMatchManifest": true,
+    "packageManifestHashMatches": true,
+    "cliExecutableHashMatches": true,
+    "runnerHashMatchesProvenanceAndReviewedWrapper": true,
+    "completionFlagsAllTrue": true,
+    "completionExitCode": 0,
+    "versionAwareParse": true,
+    "parsedRows": 114,
+    "artifactUnmodifiedByParser": true,
+    "summaryRecomputedExactly": true,
+    "independentRoutingPolicyReplays": 57,
+    "independentPrerequisiteReplays": 57,
+    "fixedTaskOrderAndPairedArmOrder": true,
+    "canonicalLabelsPolicyCatalogPrerequisitesHostRevision": true,
+    "taskTextFilesLabelsMocksUnchangedFromV4": true,
+    "hostCliHandlersAndRoutingPolicyUnchangedFromV4": true,
+    "sameRequestedCliModelAndReasoningAsV4": true
+  },
+  "protocol": {
+    "routingQuestionSetVersion": 5,
+    "fixtureHostRevision": 1,
+    "cliVersion": "codex-cli 0.156.1",
+    "requestedProposerModel": "gpt-6-sol",
+    "requestedReasoningEffort": "medium",
+    "jevModel": "jev-1.13.0",
+    "pairedCases": 57,
+    "rows": 114,
+    "jevCalls": 57,
+    "expectedRoutingOutcomes": 56,
+    "proposerDispatches": 96,
+    "completedProposers": 96,
+    "harnessRetries": 0,
+    "cliInternalProviderAttemptsAuditable": false,
+    "retryEvidence": "All 57 routing rows record exactly one Jev call; all fixed (run, task, arm) identities occur once; frozen wrapper, runExperiment, runTrial, routing transport and CLI host contain no harness retry loop. CLI-internal provider attempts are not retained."
+  },
+  "byArm": {
+    "all_tools": {
+      "trials": 57,
+      "correctToolOrClarification": 30,
+      "outcomes": {
+        "tool_called": 57
+      },
+      "routingOutcomes": {},
+      "jevCalls": 0,
+      "proposerDispatches": 57,
+      "proposerStatuses": {
+        "completed": 57
+      },
+      "absentProposers": 0,
+      "traceTruncated": 0,
+      "recordedToolCalls": 75,
+      "toolCallStatuses": {
+        "returned": 75
+      },
+      "toolCallIds": {
+        "read_file": 51,
+        "propose_patch": 11,
+        "inspect_agent": 1,
+        "search_text": 6,
+        "draft_test_proposal": 6
+      },
+      "proposerReported": {
+        "input": {
+          "known": 57,
+          "unknown": 0,
+          "sumKnown": 2018200
+        },
+        "cachedInput": {
+          "known": 57,
+          "unknown": 0,
+          "sumKnown": 1681024
+        },
+        "output": {
+          "known": 57,
+          "unknown": 0,
+          "sumKnown": 18919
+        }
+      },
+      "jevReported": {
+        "input": {
+          "known": 0,
+          "unknown": 0,
+          "sumKnown": 0
+        },
+        "output": {
+          "known": 0,
+          "unknown": 0,
+          "sumKnown": 0
+        }
+      },
+      "totalReported": {
+        "input": {
+          "known": 57,
+          "unknown": 0,
+          "sumKnown": 2018200
+        },
+        "output": {
+          "known": 57,
+          "unknown": 0,
+          "sumKnown": 18919
+        }
+      },
+      "latencyMs": {
+        "jevTotal": 0,
+        "jevMedian": null,
+        "proposerTotal": 754053.2777469996,
+        "proposerMedian": 12822.231249999953,
+        "combinedTotal": 754053.2777469996
+      }
+    },
+    "jev_top_k": {
+      "trials": 57,
+      "correctToolOrClarification": 56,
+      "outcomes": {
+        "tool_called": 39,
+        "routed_clarification": 17,
+        "routing_unavailable": 1
+      },
+      "routingOutcomes": {
+        "selected": 39,
+        "needs_clarification": 17,
+        "unavailable": 1
+      },
+      "jevCalls": 57,
+      "proposerDispatches": 39,
+      "proposerStatuses": {
+        "completed": 39
+      },
+      "absentProposers": 18,
+      "traceTruncated": 0,
+      "recordedToolCalls": 54,
+      "toolCallStatuses": {
+        "returned": 54
+      },
+      "toolCallIds": {
+        "read_file": 24,
+        "propose_patch": 9,
+        "inspect_agent": 9,
+        "search_text": 6,
+        "draft_test_proposal": 6
+      },
+      "proposerReported": {
+        "input": {
+          "known": 39,
+          "unknown": 0,
+          "sumKnown": 1326909
+        },
+        "cachedInput": {
+          "known": 39,
+          "unknown": 0,
+          "sumKnown": 1152512
+        },
+        "output": {
+          "known": 39,
+          "unknown": 0,
+          "sumKnown": 12048
+        }
+      },
+      "jevReported": {
+        "input": {
+          "known": 57,
+          "unknown": 0,
+          "sumKnown": 45741
+        },
+        "output": {
+          "known": 57,
+          "unknown": 0,
+          "sumKnown": 7185
+        }
+      },
+      "totalReported": {
+        "input": {
+          "known": 57,
+          "unknown": 0,
+          "sumKnown": 1372650
+        },
+        "output": {
+          "known": 57,
+          "unknown": 0,
+          "sumKnown": 19233
+        }
+      },
+      "latencyMs": {
+        "jevTotal": 15188.740206000039,
+        "jevMedian": 257.76833300001454,
+        "proposerTotal": 506876.11975199997,
+        "proposerMedian": 12249.811791999993,
+        "combinedTotal": 522064.859958
+      }
+    }
+  },
+  "byRun": [
+    {
+      "run": 1,
+      "arms": {
+        "all_tools": {
+          "trials": 19,
+          "correctToolOrClarification": 10,
+          "outcomes": {
+            "tool_called": 19
+          },
+          "routingOutcomes": {},
+          "jevCalls": 0,
+          "proposerDispatches": 19,
+          "proposerStatuses": {
+            "completed": 19
+          },
+          "absentProposers": 0,
+          "traceTruncated": 0,
+          "recordedToolCalls": 25,
+          "toolCallStatuses": {
+            "returned": 25
+          },
+          "toolCallIds": {
+            "read_file": 17,
+            "propose_patch": 3,
+            "inspect_agent": 1,
+            "search_text": 2,
+            "draft_test_proposal": 2
+          },
+          "proposerReported": {
+            "input": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 674102
+            },
+            "cachedInput": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 538496
+            },
+            "output": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 6403
+            }
+          },
+          "jevReported": {
+            "input": {
+              "known": 0,
+              "unknown": 0,
+              "sumKnown": 0
+            },
+            "output": {
+              "known": 0,
+              "unknown": 0,
+              "sumKnown": 0
+            }
+          },
+          "totalReported": {
+            "input": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 674102
+            },
+            "output": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 6403
+            }
+          },
+          "latencyMs": {
+            "jevTotal": 0,
+            "jevMedian": null,
+            "proposerTotal": 243581.263542,
+            "proposerMedian": 11478.861291999987,
+            "combinedTotal": 243581.263542
+          }
+        },
+        "jev_top_k": {
+          "trials": 19,
+          "correctToolOrClarification": 18,
+          "outcomes": {
+            "tool_called": 13,
+            "routed_clarification": 5,
+            "routing_unavailable": 1
+          },
+          "routingOutcomes": {
+            "selected": 13,
+            "needs_clarification": 5,
+            "unavailable": 1
+          },
+          "jevCalls": 19,
+          "proposerDispatches": 13,
+          "proposerStatuses": {
+            "completed": 13
+          },
+          "absentProposers": 6,
+          "traceTruncated": 0,
+          "recordedToolCalls": 18,
+          "toolCallStatuses": {
+            "returned": 18
+          },
+          "toolCallIds": {
+            "read_file": 8,
+            "propose_patch": 3,
+            "inspect_agent": 3,
+            "search_text": 2,
+            "draft_test_proposal": 2
+          },
+          "proposerReported": {
+            "input": {
+              "known": 13,
+              "unknown": 0,
+              "sumKnown": 442261
+            },
+            "cachedInput": {
+              "known": 13,
+              "unknown": 0,
+              "sumKnown": 369408
+            },
+            "output": {
+              "known": 13,
+              "unknown": 0,
+              "sumKnown": 3928
+            }
+          },
+          "jevReported": {
+            "input": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 15247
+            },
+            "output": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 2395
+            }
+          },
+          "totalReported": {
+            "input": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 457508
+            },
+            "output": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 6323
+            }
+          },
+          "latencyMs": {
+            "jevTotal": 4869.782791999977,
+            "jevMedian": 256.2707919999957,
+            "proposerTotal": 168399.94866800003,
+            "proposerMedian": 12249.811791999993,
+            "combinedTotal": 173269.73146
+          }
+        }
+      }
+    },
+    {
+      "run": 2,
+      "arms": {
+        "all_tools": {
+          "trials": 19,
+          "correctToolOrClarification": 10,
+          "outcomes": {
+            "tool_called": 19
+          },
+          "routingOutcomes": {},
+          "jevCalls": 0,
+          "proposerDispatches": 19,
+          "proposerStatuses": {
+            "completed": 19
+          },
+          "absentProposers": 0,
+          "traceTruncated": 0,
+          "recordedToolCalls": 25,
+          "toolCallStatuses": {
+            "returned": 25
+          },
+          "toolCallIds": {
+            "read_file": 17,
+            "propose_patch": 4,
+            "search_text": 2,
+            "draft_test_proposal": 2
+          },
+          "proposerReported": {
+            "input": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 672173
+            },
+            "cachedInput": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 579584
+            },
+            "output": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 6501
+            }
+          },
+          "jevReported": {
+            "input": {
+              "known": 0,
+              "unknown": 0,
+              "sumKnown": 0
+            },
+            "output": {
+              "known": 0,
+              "unknown": 0,
+              "sumKnown": 0
+            }
+          },
+          "totalReported": {
+            "input": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 672173
+            },
+            "output": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 6501
+            }
+          },
+          "latencyMs": {
+            "jevTotal": 0,
+            "jevMedian": null,
+            "proposerTotal": 263547.7156669998,
+            "proposerMedian": 13082.94070799998,
+            "combinedTotal": 263547.7156669998
+          }
+        },
+        "jev_top_k": {
+          "trials": 19,
+          "correctToolOrClarification": 19,
+          "outcomes": {
+            "tool_called": 13,
+            "routed_clarification": 6
+          },
+          "routingOutcomes": {
+            "selected": 13,
+            "needs_clarification": 6
+          },
+          "jevCalls": 19,
+          "proposerDispatches": 13,
+          "proposerStatuses": {
+            "completed": 13
+          },
+          "absentProposers": 6,
+          "traceTruncated": 0,
+          "recordedToolCalls": 18,
+          "toolCallStatuses": {
+            "returned": 18
+          },
+          "toolCallIds": {
+            "read_file": 8,
+            "propose_patch": 3,
+            "inspect_agent": 3,
+            "search_text": 2,
+            "draft_test_proposal": 2
+          },
+          "proposerReported": {
+            "input": {
+              "known": 13,
+              "unknown": 0,
+              "sumKnown": 442436
+            },
+            "cachedInput": {
+              "known": 13,
+              "unknown": 0,
+              "sumKnown": 394496
+            },
+            "output": {
+              "known": 13,
+              "unknown": 0,
+              "sumKnown": 4102
+            }
+          },
+          "jevReported": {
+            "input": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 15247
+            },
+            "output": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 2395
+            }
+          },
+          "totalReported": {
+            "input": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 457683
+            },
+            "output": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 6497
+            }
+          },
+          "latencyMs": {
+            "jevTotal": 5326.848289999878,
+            "jevMedian": 282.3277089999756,
+            "proposerTotal": 168469.88462600013,
+            "proposerMedian": 12230.883917000028,
+            "combinedTotal": 173796.732916
+          }
+        }
+      }
+    },
+    {
+      "run": 3,
+      "arms": {
+        "all_tools": {
+          "trials": 19,
+          "correctToolOrClarification": 10,
+          "outcomes": {
+            "tool_called": 19
+          },
+          "routingOutcomes": {},
+          "jevCalls": 0,
+          "proposerDispatches": 19,
+          "proposerStatuses": {
+            "completed": 19
+          },
+          "absentProposers": 0,
+          "traceTruncated": 0,
+          "recordedToolCalls": 25,
+          "toolCallStatuses": {
+            "returned": 25
+          },
+          "toolCallIds": {
+            "read_file": 17,
+            "propose_patch": 4,
+            "search_text": 2,
+            "draft_test_proposal": 2
+          },
+          "proposerReported": {
+            "input": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 671925
+            },
+            "cachedInput": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 562944
+            },
+            "output": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 6015
+            }
+          },
+          "jevReported": {
+            "input": {
+              "known": 0,
+              "unknown": 0,
+              "sumKnown": 0
+            },
+            "output": {
+              "known": 0,
+              "unknown": 0,
+              "sumKnown": 0
+            }
+          },
+          "totalReported": {
+            "input": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 671925
+            },
+            "output": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 6015
+            }
+          },
+          "latencyMs": {
+            "jevTotal": 0,
+            "jevMedian": null,
+            "proposerTotal": 246924.29853799986,
+            "proposerMedian": 13487.486832999857,
+            "combinedTotal": 246924.29853799986
+          }
+        },
+        "jev_top_k": {
+          "trials": 19,
+          "correctToolOrClarification": 19,
+          "outcomes": {
+            "tool_called": 13,
+            "routed_clarification": 6
+          },
+          "routingOutcomes": {
+            "selected": 13,
+            "needs_clarification": 6
+          },
+          "jevCalls": 19,
+          "proposerDispatches": 13,
+          "proposerStatuses": {
+            "completed": 13
+          },
+          "absentProposers": 6,
+          "traceTruncated": 0,
+          "recordedToolCalls": 18,
+          "toolCallStatuses": {
+            "returned": 18
+          },
+          "toolCallIds": {
+            "read_file": 8,
+            "propose_patch": 3,
+            "inspect_agent": 3,
+            "search_text": 2,
+            "draft_test_proposal": 2
+          },
+          "proposerReported": {
+            "input": {
+              "known": 13,
+              "unknown": 0,
+              "sumKnown": 442212
+            },
+            "cachedInput": {
+              "known": 13,
+              "unknown": 0,
+              "sumKnown": 388608
+            },
+            "output": {
+              "known": 13,
+              "unknown": 0,
+              "sumKnown": 4018
+            }
+          },
+          "jevReported": {
+            "input": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 15247
+            },
+            "output": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 2395
+            }
+          },
+          "totalReported": {
+            "input": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 457459
+            },
+            "output": {
+              "known": 19,
+              "unknown": 0,
+              "sumKnown": 6413
+            }
+          },
+          "latencyMs": {
+            "jevTotal": 4992.109124000184,
+            "jevMedian": 244.59070800000336,
+            "proposerTotal": 170006.28645799984,
+            "proposerMedian": 13096.708250000025,
+            "combinedTotal": 174998.39558200003
+          }
+        }
+      }
+    }
+  ],
+  "bySize": [
+    {
+      "size": "small",
+      "arms": {
+        "all_tools": {
+          "trials": 15,
+          "correctToolOrClarification": 6,
+          "outcomes": {
+            "tool_called": 15
+          },
+          "routingOutcomes": {},
+          "jevCalls": 0,
+          "proposerDispatches": 15,
+          "proposerStatuses": {
+            "completed": 15
+          },
+          "absentProposers": 0,
+          "traceTruncated": 0,
+          "recordedToolCalls": 20,
+          "toolCallStatuses": {
+            "returned": 20
+          },
+          "toolCallIds": {
+            "read_file": 15,
+            "propose_patch": 5
+          },
+          "proposerReported": {
+            "input": {
+              "known": 15,
+              "unknown": 0,
+              "sumKnown": 509118
+            },
+            "cachedInput": {
+              "known": 15,
+              "unknown": 0,
+              "sumKnown": 418176
+            },
+            "output": {
+              "known": 15,
+              "unknown": 0,
+              "sumKnown": 4958
+            }
+          },
+          "jevReported": {
+            "input": {
+              "known": 0,
+              "unknown": 0,
+              "sumKnown": 0
+            },
+            "output": {
+              "known": 0,
+              "unknown": 0,
+              "sumKnown": 0
+            }
+          },
+          "totalReported": {
+            "input": {
+              "known": 15,
+              "unknown": 0,
+              "sumKnown": 509118
+            },
+            "output": {
+              "known": 15,
+              "unknown": 0,
+              "sumKnown": 4958
+            }
+          },
+          "latencyMs": {
+            "jevTotal": 0,
+            "jevMedian": null,
+            "proposerTotal": 199076.53458200002,
+            "proposerMedian": 12077.677333,
+            "combinedTotal": 199076.53458200002
+          }
+        },
+        "jev_top_k": {
+          "trials": 15,
+          "correctToolOrClarification": 15,
+          "outcomes": {
+            "tool_called": 9,
+            "routed_clarification": 6
+          },
+          "routingOutcomes": {
+            "selected": 9,
+            "needs_clarification": 6
+          },
+          "jevCalls": 15,
+          "proposerDispatches": 9,
+          "proposerStatuses": {
+            "completed": 9
+          },
+          "absentProposers": 6,
+          "traceTruncated": 0,
+          "recordedToolCalls": 12,
+          "toolCallStatuses": {
+            "returned": 12
+          },
+          "toolCallIds": {
+            "read_file": 6,
+            "propose_patch": 3,
+            "inspect_agent": 3
+          },
+          "proposerReported": {
+            "input": {
+              "known": 9,
+              "unknown": 0,
+              "sumKnown": 301299
+            },
+            "cachedInput": {
+              "known": 9,
+              "unknown": 0,
+              "sumKnown": 253696
+            },
+            "output": {
+              "known": 9,
+              "unknown": 0,
+              "sumKnown": 2687
+            }
+          },
+          "jevReported": {
+            "input": {
+              "known": 15,
+              "unknown": 0,
+              "sumKnown": 8898
+            },
+            "output": {
+              "known": 15,
+              "unknown": 0,
+              "sumKnown": 831
+            }
+          },
+          "totalReported": {
+            "input": {
+              "known": 15,
+              "unknown": 0,
+              "sumKnown": 310197
+            },
+            "output": {
+              "known": 15,
+              "unknown": 0,
+              "sumKnown": 3518
+            }
+          },
+          "latencyMs": {
+            "jevTotal": 3968.4222090003177,
+            "jevMedian": 257.76833300001454,
+            "proposerTotal": 113830.44354300015,
+            "proposerMedian": 12249.811791999993,
+            "combinedTotal": 117798.86575200046
+          }
+        }
+      }
+    },
+    {
+      "size": "medium",
+      "arms": {
+        "all_tools": {
+          "trials": 21,
+          "correctToolOrClarification": 12,
+          "outcomes": {
+            "tool_called": 21
+          },
+          "routingOutcomes": {},
+          "jevCalls": 0,
+          "proposerDispatches": 21,
+          "proposerStatuses": {
+            "completed": 21
+          },
+          "absentProposers": 0,
+          "traceTruncated": 0,
+          "recordedToolCalls": 27,
+          "toolCallStatuses": {
+            "returned": 27
+          },
+          "toolCallIds": {
+            "read_file": 18,
+            "propose_patch": 3,
+            "search_text": 3,
+            "draft_test_proposal": 3
+          },
+          "proposerReported": {
+            "input": {
+              "known": 21,
+              "unknown": 0,
+              "sumKnown": 723327
+            },
+            "cachedInput": {
+              "known": 21,
+              "unknown": 0,
+              "sumKnown": 609664
+            },
+            "output": {
+              "known": 21,
+              "unknown": 0,
+              "sumKnown": 6861
+            }
+          },
+          "jevReported": {
+            "input": {
+              "known": 0,
+              "unknown": 0,
+              "sumKnown": 0
+            },
+            "output": {
+              "known": 0,
+              "unknown": 0,
+              "sumKnown": 0
+            }
+          },
+          "totalReported": {
+            "input": {
+              "known": 21,
+              "unknown": 0,
+              "sumKnown": 723327
+            },
+            "output": {
+              "known": 21,
+              "unknown": 0,
+              "sumKnown": 6861
+            }
+          },
+          "latencyMs": {
+            "jevTotal": 0,
+            "jevMedian": null,
+            "proposerTotal": 275749.17283199966,
+            "proposerMedian": 12822.231249999953,
+            "combinedTotal": 275749.17283199966
+          }
+        },
+        "jev_top_k": {
+          "trials": 21,
+          "correctToolOrClarification": 20,
+          "outcomes": {
+            "tool_called": 15,
+            "routed_clarification": 5,
+            "routing_unavailable": 1
+          },
+          "routingOutcomes": {
+            "selected": 15,
+            "needs_clarification": 5,
+            "unavailable": 1
+          },
+          "jevCalls": 21,
+          "proposerDispatches": 15,
+          "proposerStatuses": {
+            "completed": 15
+          },
+          "absentProposers": 6,
+          "traceTruncated": 0,
+          "recordedToolCalls": 21,
+          "toolCallStatuses": {
+            "returned": 21
+          },
+          "toolCallIds": {
+            "read_file": 9,
+            "propose_patch": 3,
+            "inspect_agent": 3,
+            "search_text": 3,
+            "draft_test_proposal": 3
+          },
+          "proposerReported": {
+            "input": {
+              "known": 15,
+              "unknown": 0,
+              "sumKnown": 512858
+            },
+            "cachedInput": {
+              "known": 15,
+              "unknown": 0,
+              "sumKnown": 466816
+            },
+            "output": {
+              "known": 15,
+              "unknown": 0,
+              "sumKnown": 4754
+            }
+          },
+          "jevReported": {
+            "input": {
+              "known": 21,
+              "unknown": 0,
+              "sumKnown": 15135
+            },
+            "output": {
+              "known": 21,
+              "unknown": 0,
+              "sumKnown": 2043
+            }
+          },
+          "totalReported": {
+            "input": {
+              "known": 21,
+              "unknown": 0,
+              "sumKnown": 527993
+            },
+            "output": {
+              "known": 21,
+              "unknown": 0,
+              "sumKnown": 6797
+            }
+          },
+          "latencyMs": {
+            "jevTotal": 5227.657415999711,
+            "jevMedian": 243.607582999859,
+            "proposerTotal": 196418.042541,
+            "proposerMedian": 12685.012541000004,
+            "combinedTotal": 201645.6999569997
+          }
+        }
+      }
+    },
+    {
+      "size": "large",
+      "arms": {
+        "all_tools": {
+          "trials": 21,
+          "correctToolOrClarification": 12,
+          "outcomes": {
+            "tool_called": 21
+          },
+          "routingOutcomes": {},
+          "jevCalls": 0,
+          "proposerDispatches": 21,
+          "proposerStatuses": {
+            "completed": 21
+          },
+          "absentProposers": 0,
+          "traceTruncated": 0,
+          "recordedToolCalls": 28,
+          "toolCallStatuses": {
+            "returned": 28
+          },
+          "toolCallIds": {
+            "read_file": 18,
+            "propose_patch": 3,
+            "inspect_agent": 1,
+            "search_text": 3,
+            "draft_test_proposal": 3
+          },
+          "proposerReported": {
+            "input": {
+              "known": 21,
+              "unknown": 0,
+              "sumKnown": 785755
+            },
+            "cachedInput": {
+              "known": 21,
+              "unknown": 0,
+              "sumKnown": 653184
+            },
+            "output": {
+              "known": 21,
+              "unknown": 0,
+              "sumKnown": 7100
+            }
+          },
+          "jevReported": {
+            "input": {
+              "known": 0,
+              "unknown": 0,
+              "sumKnown": 0
+            },
+            "output": {
+              "known": 0,
+              "unknown": 0,
+              "sumKnown": 0
+            }
+          },
+          "totalReported": {
+            "input": {
+              "known": 21,
+              "unknown": 0,
+              "sumKnown": 785755
+            },
+            "output": {
+              "known": 21,
+              "unknown": 0,
+              "sumKnown": 7100
+            }
+          },
+          "latencyMs": {
+            "jevTotal": 0,
+            "jevMedian": null,
+            "proposerTotal": 279227.570333,
+            "proposerMedian": 12874.529458999983,
+            "combinedTotal": 279227.570333
+          }
+        },
+        "jev_top_k": {
+          "trials": 21,
+          "correctToolOrClarification": 21,
+          "outcomes": {
+            "tool_called": 15,
+            "routed_clarification": 6
+          },
+          "routingOutcomes": {
+            "selected": 15,
+            "needs_clarification": 6
+          },
+          "jevCalls": 21,
+          "proposerDispatches": 15,
+          "proposerStatuses": {
+            "completed": 15
+          },
+          "absentProposers": 6,
+          "traceTruncated": 0,
+          "recordedToolCalls": 21,
+          "toolCallStatuses": {
+            "returned": 21
+          },
+          "toolCallIds": {
+            "read_file": 9,
+            "propose_patch": 3,
+            "inspect_agent": 3,
+            "search_text": 3,
+            "draft_test_proposal": 3
+          },
+          "proposerReported": {
+            "input": {
+              "known": 15,
+              "unknown": 0,
+              "sumKnown": 512752
+            },
+            "cachedInput": {
+              "known": 15,
+              "unknown": 0,
+              "sumKnown": 432000
+            },
+            "output": {
+              "known": 15,
+              "unknown": 0,
+              "sumKnown": 4607
+            }
+          },
+          "jevReported": {
+            "input": {
+              "known": 21,
+              "unknown": 0,
+              "sumKnown": 21708
+            },
+            "output": {
+              "known": 21,
+              "unknown": 0,
+              "sumKnown": 4311
+            }
+          },
+          "totalReported": {
+            "input": {
+              "known": 21,
+              "unknown": 0,
+              "sumKnown": 534460
+            },
+            "output": {
+              "known": 21,
+              "unknown": 0,
+              "sumKnown": 8918
+            }
+          },
+          "latencyMs": {
+            "jevTotal": 5992.660581000011,
+            "jevMedian": 273.91112499998417,
+            "proposerTotal": 196627.63366799985,
+            "proposerMedian": 11553.641291999957,
+            "combinedTotal": 202620.29424899985
+          }
+        }
+      }
+    }
+  ],
+  "unavailable": [
+    {
+      "run": 1,
+      "taskId": "uncertain-medium",
+      "diagnostic": {
+        "modelMatches": true,
+        "answerTypeMatches": true,
+        "confidenceValid": true,
+        "missingOptions": 0,
+        "unexpectedOptions": 0,
+        "probabilitySum": 0.9900000000000001,
+        "choiceInSet": true,
+        "leadingChoice": true
+      },
+      "reported": {
+        "input": 716,
+        "output": 99
+      },
+      "latencyMs": 307.52799999999115,
+      "proposerDispatched": false,
+      "reason": "Routing evidence was missing, malformed, outside the closed set, or from a different model."
+    }
+  ],
+  "limitations": [
+    "The full artifact retains diagnostics rather than rejected raw probability vectors; unavailable evidence replays as null. The malformed vector itself cannot be independently reconstructed from this full artifact.",
+    "Provider-reported usage and requested CLI model metadata are not independent provider attestations.",
+    "CLI-internal provider attempts are not retained; this audit establishes no harness retries, not one physical model request per CLI dispatch.",
+    "Correct-tool/clarification scoring is not delivered-answer quality; blinded answer grading is separate and was not inspected.",
+    "A complete run and 56/57 expected outcomes do not establish saturation, calibration or general reliability.",
+    "Reported input totals combine provider token counts; they do not measure dollars. Latency includes host and CLI overhead and does not establish causal speedup."
+  ],
+  "findings": []
+}

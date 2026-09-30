@@ -1,0 +1,207 @@
+/** OFFLINE ONLY: real CLI main + real host adapter, injected fake fetch and fake CLI. */
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { resolve, join, isAbsolute } from 'node:path';
+import { pathToFileURL, fileURLToPath } from 'node:url';
+
+const argv = process.argv.slice(2);
+const argument = name => { const index = argv.indexOf(name); assert.ok(index >= 0 && argv[index + 1], `Required ${name}`); return argv[index + 1]; };
+assert.equal(argv.length, 6, 'Exactly --repo, --source-sha and --out-dir are required.');
+const repo = resolve(argument('--repo'));
+const expectedSha = argument('--source-sha');
+const outDir = resolve(argument('--out-dir'));
+assert.match(expectedSha, /^[a-f0-9]{40}$/);
+assert.ok(outDir.startsWith('/tmp/jev-performance-2026-09-24/'), 'Output must be a fresh external preflight directory.');
+const git = (...args) => execFileSync('git', ['-C', repo, ...args], { encoding: 'utf8' }).trim();
+assert.equal(git('rev-parse', 'HEAD'), expectedSha, 'Wait for the supplied frozen source SHA.');
+assert.equal(git('status', '--porcelain', '--untracked-files=normal'), '', 'Frozen source must be clean before preflight.');
+const sha = value => createHash('sha256').update(value).digest('hex');
+const sourceFiles = execFileSync('git', ['-C', repo, 'ls-files', '-z'], { encoding: 'utf8' }).split('\0').filter(Boolean);
+async function manifest() { return Object.fromEntries(await Promise.all(sourceFiles.map(async name => [name, sha(await readFile(join(repo, name)))]))); }
+const before = await manifest();
+await mkdir(outDir); // Deliberately refuses an existing directory: failed candidates are retained.
+const notes = 'OFFLINE PREFLIGHT ONLY. The real experiment CLI main is exercised through --live, with an injected fake Jev fetch and an absolute fake CLI executable. The artifact source:live marker and generated Live run table label identify the code path, not a provider measurement. Scripted responses and answers are test data, never benchmark-quality evidence. No provider, real Codex CLI, model call, proposed source execution, or repository edits occur.\n';
+await writeFile(join(outDir, 'README.txt'), notes, { flag: 'wx' });
+const networkDenied = async () => { throw Error('Network forbidden in this offline preflight.'); };
+globalThis.fetch = networkDenied;
+const load = name => import(pathToFileURL(join(repo, name)).href);
+const { main } = await load('examples/routing/experiment-cli.ts');
+const { parseExperimentArtifact, reportedTotals, summarizeExperiment } = await load('examples/routing/experiment.ts');
+const { EXPERIMENT_TASKS, EXPERIMENT_LABELS, TIER_AVAILABLE_IDS } = await load('examples/routing/experiment-tasks.ts');
+const { attemptTotals, measureLedger, parseMeasurement, routingTransport } = await load('examples/routing/measurement.ts');
+const { arenaPrompt } = await load('examples/host/codex.ts');
+const { JEV_SYSTEMONE_URL } = await load('examples/host/jev-choice.ts');
+assert.equal(EXPERIMENT_TASKS.length, 19);
+const semanticSnapshot = JSON.stringify({ tasks: EXPERIMENT_TASKS, labels: EXPERIMENT_LABELS, tiers: TIER_AVAILABLE_IDS });
+
+const fakeCli = join(outDir, 'fake-codex.cjs');
+const cliTracePath = join(outDir, 'fake-cli-spawns.jsonl');
+assert.ok(isAbsolute(fakeCli) && fakeCli !== 'codex');
+const fakeSource = `#!${process.execPath}
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const crypto = require('node:crypto');
+const args = process.argv.slice(2);
+const digest = value => crypto.createHash('sha256').update(value).digest('hex');
+assert.equal(args[0], 'exec');
+assert.equal(args[args.indexOf('--model') + 1], 'gpt-6-sol');
+assert.equal(args[args.indexOf('--sandbox') + 1], 'read-only');
+for (const item of ['--ignore-user-config', '--ignore-rules', '--ephemeral', '--skip-git-repo-check', 'model_reasoning_effort="medium"', 'web_search="disabled"']) assert.ok(args.includes(item));
+for (const feature of ['shell_tool','unified_exec','plugins','apps','browser_use','computer_use','multi_agent','image_generation','memories','hooks','view_image']) assert.ok(args.some((a, i) => a === '--disable' && args[i + 1] === feature));
+assert.equal(process.env.TYPESAFE_API_KEY, undefined);
+assert.ok(process.env.HOME && process.env.CODEX_HOME);
+assert.equal(fs.realpathSync(process.cwd()), fs.realpathSync(process.env.HOME));
+assert.equal(fs.existsSync(path.join(process.env.CODEX_HOME, 'auth.json')), false);
+const arg = args.find(a => a.startsWith('mcp_servers.arena.args='));
+const [, fixturePath, tracePath] = JSON.parse(arg.slice('mcp_servers.arena.args='.length));
+const fixture = JSON.parse(fs.readFileSync(fixturePath, 'utf8'));
+assert.deepEqual(Object.keys(fixture).sort(), ['files', 'tools']);
+assert.equal(fixture.tools[0].id, 'read_file');
+let prompt = '';
+process.stdin.setEncoding('utf8');
+process.stdin.on('data', chunk => { prompt += chunk; assert.ok(prompt.length < 1000000); });
+process.stdin.on('end', () => {
+  const usage = { input_tokens: 900 + fixture.tools.length, cached_input_tokens: 0, output_tokens: 30 };
+  fs.appendFileSync(tracePath, JSON.stringify({ tool: 'read_file', status: 'returned', at: '2026-09-26T00:00:00Z' }) + '\\n');
+  fs.appendFileSync(${JSON.stringify(cliTracePath)}, JSON.stringify({ tools: fixture.tools.map(t => t.id), filesSha256: digest(JSON.stringify(fixture.files)), promptSha256: digest(prompt), usage, authAbsent: true, isolationChecked: true }) + '\\n');
+  console.log(JSON.stringify({ type: 'item.completed', item: { type: 'agent_message', text: 'OFFLINE PREFLIGHT: scripted answer; no task-quality claim.' } }));
+  console.log(JSON.stringify({ type: 'turn.completed', usage }));
+});
+`;
+await writeFile(fakeCli, fakeSource, { flag: 'wx', mode: 0o700 });
+execFileSync(process.execPath, ['--check', fakeCli], { stdio: 'pipe' });
+
+const physical = [], logical = [];
+let current = null;
+const credential = 'synthetic-test-credential';
+const fakeFetch = async (url, init) => {
+  assert.equal(String(url), JEV_SYSTEMONE_URL);
+  assert.equal(init.method, 'POST');
+  assert.equal(new Headers(init.headers).get('authorization'), 'Bearer ' + credential);
+  assert.ok(init.signal instanceof AbortSignal && !init.signal.aborted);
+  const body = String(init.body), sent = JSON.parse(body), ids = Object.keys(sent.questions.tool.criteria);
+  assert.deepEqual(Object.keys(sent).sort(), ['model', 'questions', 'state']);
+  assert.deepEqual(Object.keys(sent.state).sort(), ['note', 'task']);
+  assert.deepEqual(Object.keys(sent.questions), ['tool']);
+  assert.equal(sent.model, 'jev-1.13.0');
+  assert.equal(sent.questions.tool.type, 'choice');
+  assert.equal(ids.at(-1), 'needs_clarification');
+  assert.ok(ids.includes('read_file'));
+  if (current === null) {
+    const index = logical.length + 1, task = EXPERIMENT_TASKS[(index - 1) % 19];
+    assert.equal(sent.state.task, task.intent);
+    assert.deepEqual(ids, [...TIER_AVAILABLE_IDS[task.size], 'needs_clarification']);
+    current = { index, run: Math.floor((index - 1) / 19) + 1, taskId: task.id, invalidCount: (index - 1) % 3, requestBody: body, signal: init.signal, attempts: [] };
+    logical.push(current);
+  }
+  assert.equal(body, current.requestBody, 'Recovery sends an identical request body.');
+  assert.equal(init.signal, current.signal, 'All physical attempts share one deadline/cancellation signal.');
+  const attemptIndex = current.attempts.length + 1, dispatchIndex = physical.length + 1;
+  const invalid = attemptIndex <= current.invalidCount;
+  const probabilities = Object.fromEntries(ids.map(id => [id, id === 'read_file' ? .9 : (invalid ? .09 : .1) / (ids.length - 1)]));
+  const usage = { input_tokens: 100 + dispatchIndex, output_tokens: 10 + dispatchIndex };
+  if (dispatchIndex === 17) delete usage.input_tokens;
+  if (dispatchIndex === 29) delete usage.output_tokens;
+  const raw = { model: 'jev-1.13.0', answers: { tool: { type: 'choice', choice: 'read_file', confidence: .9, probabilities } }, usage };
+  const item = { logicalIndex: current.index, run: current.run, taskId: current.taskId, index: attemptIndex, status: invalid ? 'invalid_sum' : 'valid', requestBytes: Buffer.byteLength(body), responseBytes: Buffer.byteLength(JSON.stringify(raw)), requestBodySha256: sha(body), inputTokens: usage.input_tokens ?? null, outputTokens: usage.output_tokens ?? null };
+  current.attempts.push(item); physical.push(item);
+  if (!invalid) current = null;
+  return Response.json(raw);
+};
+const artifactPath = join(outDir, 'artifact.fake-injected.json');
+const cliArgs = ['--live', '--sum-recovery', '--model', 'gpt-6-sol', '--runs', '3', '--sizes', 'small,medium,large', '--with-prerequisites', '--out', artifactPath];
+let stdout = '', stderr = '';
+const beganAt = new Date().toISOString();
+const code = await main(cliArgs, { env: { TYPESAFE_API_KEY: credential }, fetch: fakeFetch, codexExecutable: fakeCli, cwd: outDir, now: () => new Date('2026-09-26T00:00:00Z'), stdout: text => { stdout += text; }, stderr: text => { stderr += text; } });
+await writeFile(join(outDir, 'main-table.fake-injected.md'), stdout, { flag: 'wx' });
+await writeFile(join(outDir, 'main-progress.log'), stderr, { flag: 'wx' });
+assert.equal(code, 0); assert.equal(current, null);
+const artifactText = await readFile(artifactPath, 'utf8');
+assert.ok(!artifactText.includes(credential) && !stdout.includes(credential) && !stderr.includes(credential));
+const rawArtifact = JSON.parse(artifactText);
+const artifact = await parseExperimentArtifact(rawArtifact);
+assert.deepEqual(artifact, rawArtifact, 'Strict reader preserves the real main artifact exactly.');
+assert.equal(artifact.source, 'live');
+assert.equal(artifact.status, 'complete');
+assert.deepEqual(artifact.routingTransport, routingTransport('probability_sum_only_v1'));
+assert.equal(artifact.trials.length, 114);
+assert.equal(logical.length, 57); assert.equal(physical.length, 114);
+assert.deepEqual([...new Set(artifact.trials.map(t => t.taskId))].sort(), EXPERIMENT_TASKS.map(t => t.id).sort());
+for (const task of EXPERIMENT_TASKS) {
+  const rows = artifact.trials.filter(t => t.taskId === task.id);
+  assert.equal(rows.length, 6);
+  for (const run of [1, 2, 3]) assert.deepEqual(rows.filter(t => t.run === run).map(t => t.arm).sort(), ['all_tools', 'jev_top_k']);
+}
+assert.deepEqual(artifact.labels, EXPERIMENT_LABELS);
+assert.equal(JSON.stringify({ tasks: EXPERIMENT_TASKS, labels: EXPERIMENT_LABELS, tiers: TIER_AVAILABLE_IDS }), semanticSnapshot);
+const cliRows = (await readFile(cliTracePath, 'utf8')).trim().split('\n').map(JSON.parse);
+assert.equal(cliRows.length, 114);
+let routedIndex = 0, inputReported = 0, outputReported = 0, inputUnknown = 0, outputUnknown = 0;
+for (const [trialIndex, trial] of artifact.trials.entries()) {
+  const task = EXPERIMENT_TASKS.find(t => t.id === trial.taskId);
+  assert.ok(task);
+  assert.equal(trial.proposer.status, 'completed');
+  assert.equal(trial.outcome, 'tool_called');
+  assert.deepEqual(trial.proposer.calledToolIds, ['read_file']);
+  assert.match(trial.proposer.answer, /^OFFLINE PREFLIGHT:/);
+  const child = cliRows[trialIndex];
+  assert.deepEqual(child.tools, trial.exposedToolIds);
+  assert.equal(child.filesSha256, sha(JSON.stringify(task.files)));
+  assert.equal(child.promptSha256, sha(arenaPrompt({ task: task.intent, files: task.files })));
+  assert.deepEqual(trial.proposer.reported, { input: child.usage.input_tokens, output: 30, cachedInput: 0 });
+  if (trial.arm === 'all_tools') {
+    assert.equal(trial.routing, null);
+    assert.equal(trial.proxies.jevRequestTokens, 0); assert.equal(trial.proxies.jevPhysicalRequestTokens, 0);
+    assert.equal(trial.proxies.totalInputTokens, trial.proxies.proposerInputTokens);
+    assert.deepEqual(reportedTotals(trial), { input: child.usage.input_tokens, output: 30 });
+    continue;
+  }
+  const expected = logical[routedIndex++], routing = trial.routing, ledger = routing.attemptLedger;
+  assert.equal(trial.run, expected.run); assert.equal(trial.taskId, expected.taskId);
+  assert.equal(routing.jevCalls, 1); assert.equal(routing.providerRequests, expected.attempts.length);
+  assert.equal(routing.observedProviderRequests, expected.attempts.length);
+  assert.deepEqual(ledger.attempts.map(a => a.status), expected.attempts.map(a => a.status));
+  assert.equal(ledger.complete, true); assert.equal(ledger.stopReason, 'valid');
+  assert.equal(ledger.returnedAttempt, expected.attempts.length);
+  for (const [i, attempt] of ledger.attempts.entries()) {
+    for (const key of ['index', 'status', 'requestBytes', 'responseBytes', 'inputTokens', 'outputTokens']) assert.equal(attempt[key], expected.attempts[i][key], `${trial.taskId} attempt ${i + 1} ${key}`);
+    assert.equal(attempt.httpStatus, 200); assert.ok(attempt.latencyMs >= 0);
+  }
+  const measurement = parseMeasurement(measureLedger(ledger, routing.latencyMs), routing.optionIds, routing.evidence);
+  const totals = attemptTotals(ledger);
+  const expectedInput = expected.attempts.reduce((n, a) => n + (a.inputTokens ?? 0), 0);
+  const expectedOutput = expected.attempts.reduce((n, a) => n + (a.outputTokens ?? 0), 0);
+  const missingInput = expected.attempts.filter(a => a.inputTokens === null).length;
+  const missingOutput = expected.attempts.filter(a => a.outputTokens === null).length;
+  assert.deepEqual(totals.input, { total: missingInput ? null : expectedInput, reported: expectedInput, unknown: missingInput });
+  assert.deepEqual(totals.output, { total: missingOutput ? null : expectedOutput, reported: expectedOutput, unknown: missingOutput });
+  assert.deepEqual(routing.reported, { input: measurement.inputTokens, output: measurement.outputTokens });
+  assert.equal(trial.proxies.jevRequestTokens, Math.ceil(expected.attempts[0].requestBytes / 4));
+  assert.equal(trial.proxies.jevPhysicalRequestTokens, trial.proxies.jevRequestTokens * expected.attempts.length);
+  assert.equal(trial.proxies.totalInputTokens, trial.proxies.proposerInputTokens + trial.proxies.jevPhysicalRequestTokens);
+  assert.deepEqual(reportedTotals(trial), { input: missingInput ? null : child.usage.input_tokens + expectedInput, output: missingOutput ? null : 30 + expectedOutput });
+  inputReported += expectedInput; outputReported += expectedOutput; inputUnknown += missingInput; outputUnknown += missingOutput;
+}
+assert.equal(routedIndex, 57);
+const summary = summarizeExperiment(artifact.trials, EXPERIMENT_LABELS);
+assert.equal(summary.byArm.jev_top_k.jevCalls, 57);
+assert.equal(summary.byArm.jev_top_k.providerRequests, 114);
+assert.equal(summary.byArm.jev_top_k.retryRequests, 57);
+assert.equal(summary.byArm.jev_top_k.recoveredCalls, 38);
+assert.equal(summary.byArm.jev_top_k.exhaustedCalls, 0);
+assert.equal(inputUnknown, 1); assert.equal(outputUnknown, 1);
+let replayTable = '', replayError = '';
+const replayCode = await main(['--table', artifactPath], { env: {}, fetch: networkDenied, codexExecutable: fakeCli, cwd: outDir, stdout: text => { replayTable += text; }, stderr: text => { replayError += text; } });
+assert.equal(replayCode, 0); assert.equal(replayError, ''); assert.equal(replayTable, stdout);
+await writeFile(join(outDir, 'table-replay.fake-injected.md'), replayTable, { flag: 'wx' });
+assert.equal(git('rev-parse', 'HEAD'), expectedSha);
+assert.equal(git('status', '--porcelain', '--untracked-files=normal'), '');
+assert.deepEqual(await manifest(), before, 'Tracked repository bytes remain frozen.');
+const result = { schemaVersion: 1, kind: 'offline-real-main-recovery-preflight', status: 'passed', beganAt, finishedAt: new Date().toISOString(), repo, sourceSha: expectedSha, wrapperSha256: sha(await readFile(fileURLToPath(import.meta.url))), fakeCliSha256: sha(fakeSource), artifactSha256: sha(artifactText), nodeVersion: process.version, mainArguments: cliArgs, codePathMarker: 'Artifact source:live means the exercised real-main path only; all I/O is injected fake data.', liveProviderRequests: 0, actualCodexCliRuns: 0, fakeCliRuns: cliRows.length, taskCount: 19, repetitions: 3, trialRows: 114, logicalRoutingCalls: 57, physicalFakeRequests: physical.length, firstAttemptValidCalls: 19, recoveredCalls: 38, oneRetryCalls: 19, twoRetryCalls: 19, exhaustedCalls: 0, retryRequests: 57, reportedInputSubtotal: inputReported, reportedOutputSubtotal: outputReported, unknownInputAttempts: inputUnknown, unknownOutputAttempts: outputUnknown, strictArtifactReplay: true, mainTableReplayIdentical: true, unchangedTasksLabelsAndTrackedSource: true, taskQualityAssessed: false };
+await writeFile(join(outDir, 'physical-fake-attempts.json'), JSON.stringify(physical, null, 2) + '\n', { flag: 'wx' });
+await writeFile(join(outDir, 'source-files-sha256.json'), JSON.stringify(before, null, 2) + '\n', { flag: 'wx' });
+await writeFile(join(outDir, 'preflight-result.json'), JSON.stringify(result, null, 2) + '\n', { flag: 'wx' });
+console.log(JSON.stringify(result, null, 2));

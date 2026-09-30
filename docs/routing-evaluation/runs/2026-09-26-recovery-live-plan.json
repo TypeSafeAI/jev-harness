@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-09-26T08:18:55.491462+00:00",
+  "status": "predeclared before source freeze or live recovery measurement",
+  "scope": "fixed synthetic development cases only; no proposal execution",
+  "questionSet": 5,
+  "model": "jev-1.13.0",
+  "routingTransport": {
+    "version": 1,
+    "recovery": "probability_sum_only_v1",
+    "maxAttempts": 3,
+    "timeoutMs": 45000
+  },
+  "fixedCases": "19 unchanged task/catalog combinations x3 repetitions per batch",
+  "batches": [
+    {
+      "name": "host-recovery-initial",
+      "logicalRoutingCases": 57,
+      "maxPhysicalRequests": 171,
+      "cliTurns": 0
+    },
+    {
+      "name": "host-recovery-repeat",
+      "logicalRoutingCases": 57,
+      "maxPhysicalRequests": 171,
+      "cliTurns": 0
+    },
+    {
+      "name": "host-recovery-full",
+      "logicalRoutingCases": 57,
+      "maxPhysicalRequests": 171,
+      "pairedArmObservations": 114,
+      "maxCliTurns": 114,
+      "condition": "only after diagnostic and accounting audits support full integration"
+    }
+  ],
+  "totalPlannedLogicalCases": 171,
+  "sourceFreeze": "Must be signed, clean, independently reviewed, all offline gates passed; exact40charpin and source/runner hashes supplied to each wrapper after implementation",
+  "stopRules": [
+    "Stop full batch on terminalHTTP401/402/403/429 and record partial evidence",
+    "Cancel all provider/CLI work on user cancellation or integrity failure",
+    "No selective failed-case reruns; every malformed attempt and final failure retained",
+    "No live providers in automated tests"
+  ],
+  "analysis": [
+    "First-response vs final expected routing outcome",
+    "Every physical request, failed attempt, recovered or exhausted case",
+    "Independent request/ledger/projection/aggregate replay",
+    "Strict usage totals plus reported subtotals and missing-metric counts",
+    "Full output blind grade against frozen rubricv2 before joining arm labels",
+    "Matched grounded-meets output usage includes all Jev attempts"
+  ],
+  "rubricSha256": "b90742ed9c4367f1ad8282a2d48349a69401e4fe077ebb6616301c3950109ce4",
+  "activationGates": [
+    "All existing57 routing expectations match in full batch",
+    "No clear-task delivered-output regression under frozen rubric",
+    "No malformed acceptance, retry of valid answer, hidden request or alteredpolicy",
+    "Final source and package hashes unchanged",
+    "CI and addressed reviews complete before merged activation"
+  ],
+  "limits": [
+    "Repeated adaptive development data, not calibration or unseen-task coverage",
+    "Recovery cannot guarantee a valid next response",
+    "No dollar savings or isolated speed claims",
+    "Proposal-review source remains unchanged; reuse its existing200/200 measured evidence"
+  ]
+}

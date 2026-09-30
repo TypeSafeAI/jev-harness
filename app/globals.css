@@ -583,3 +583,17 @@ body:has(dialog[open]) { overflow: hidden; }
 .lesson-footer > button + button { margin-left: 10px; }
 @media (max-width: 1000px) { .integration-workspace { grid-template-columns: 1fr; } .integration-loop { padding-inline: 0; } }
 @media (max-width: 600px) { .integration-handoff { padding: 20px; } .integration-handoff h2 { font-size: 24px; } .integration-flow { gap: 8px; font-size: 11px; } .integration-flow b { display: none; } .integration-flow > span { flex: 1; } .integration-prompt { min-height: 220px; } .assessment-lanes { grid-template-columns: 1fr; } .integration-technical .summary-meta { display: none; } .lesson-footer > button + button { margin: 10px 0 0; } }
+
+/* Attempt telemetry stays readable inside both the inspector and usage history. */
+.routing-attempt-list { list-style: none; display: grid; gap: 12px; margin: 16px 0 0; padding: 0; }
+.routing-attempt-card { min-width: 0; padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); text-align: left; }
+.routing-attempt-heading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; }
+.routing-attempt-heading strong { font-size: 13px; font-weight: 500; }
+.routing-attempt-heading > span { color: var(--muted); font-size: 12px; }
+.routing-attempt-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr)); gap: 14px 16px; margin: 16px 0; }
+.routing-attempt-metrics > div { min-width: 0; }
+.routing-attempt-metrics dt { font-size: 12px; color: var(--muted); margin-bottom: 5px; }
+.routing-attempt-metrics dd { margin: 0; font-size: 16px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.routing-attempt-diagnostic { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
+.routing-attempt-diagnostic span { color: var(--ink); font-variant-numeric: tabular-nums; }
+#usage-dialog .routing-attempts { min-width: 240px; }

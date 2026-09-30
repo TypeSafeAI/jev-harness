@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "kind": "blinded-assessment-integrity-audit",
+  "cases": 114,
+  "uniqueCaseIds": 114,
+  "assessmentSha256": "8f87c78ba1a41e25ba2b2d7730ef0946e5555f53cb4782adf1b2280be9f5ccdc",
+  "inputSha256": "44d25d8d41a0798b5c082cdbb33d99d84997723f717d23cfdac9bdf3033391fe",
+  "rubricSha256": "b90742ed9c4367f1ad8282a2d48349a69401e4fe077ebb6616301c3950109ce4",
+  "exactEvidenceExcerpts": 114,
+  "nullOutputs": 18,
+  "status": "passed",
+  "limitation": "Integrity validation only; does not validate agent judgments as human gold."
+}
