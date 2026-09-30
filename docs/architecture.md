@@ -247,7 +247,8 @@ recall and byte/token proxies while preserving the original context.
 
 Versioned JSON and Markdown artifacts are labeled **synthetic demonstration**.
 Counterfactual cost arithmetic requires dated prices and explicit segment-level
-token/cache observations, including scoring overhead. Aggregate cached-token
+token/cache counts (observed baseline, modeled counterfactual), including
+scoring overhead. Aggregate cached-token
 counts do not identify the context block's cache share, and missing inputs
 produce an unknown estimate. Scripted evidence cannot establish live accuracy,
 latency or savings. See [the experiment guide](../examples/context-scoring-shadow/README.md).

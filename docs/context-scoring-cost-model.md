@@ -259,7 +259,8 @@ of the following on synthetic or consented context:
    with a measured `τ`, or the host overlaps scoring with other work and the
    p95 Jev latency at the real state size is acceptable.
 5. **The request fits Jev's limits.** `K` plus the longest question fits in
-   32k tokens per request (TS), or the scorer splits requests and pays the
+   32k tokens per request, and a one-request layout also fits 64k tokens for
+   the state plus all questions (TS), or the scorer splits requests and pays the
    parallel-tail latency above. Rate limits: 1,200 requests/min means 50
    chunk-per-request calls per turn uses up the whole budget within 24 turns
    per minute.
@@ -281,7 +282,13 @@ fixed untrusted-data note.
 TF also warns that accuracy falls as irrelevant detail grows in the state.
 Packing all chunks into one state is cheapest (`ε` small) but is exactly that
 failure shape. One request per chunk avoids it and costs more. The shadow
-experiment should measure both layouts.
+experiment should measure the packed layout and one request per chunk.
+
+The offline kit's `fan_out` layout does not pack chunks into shared state. Its
+state holds only the task and the untrusted-data note, and each chunk appears
+only in its own question's instructions. It therefore does not exercise this
+state-growth hypothesis. A packed shared-state layout remains for the live
+shadow study.
 
 ## What would change the decision
 
@@ -309,13 +316,14 @@ current arena fixtures are too small to be useful.
 Record per turn:
 
 - `C`, `k` and `K`
-- segment-level input, cache-read and cache-write observations for the context block, static prefix and any suffix, for both baseline and counterfactual layouts; aggregate proposer `cached_tokens` alone cannot establish the context block's `s`
-- Jev `usage.input_tokens`, wall-clock latency, and state size for both the fan-out and the per-chunk layout
+- baseline segment counts (uncached, cache-read and cache-write tokens for the context block, static prefix and any suffix), observed on the real turn; aggregate proposer `cached_tokens` alone cannot establish the context block's `s`
+- counterfactual segment counts for the same segments, modeled from the kept set under stated `s'` and `X` assumptions; these are projections, not observations, until a later paired live run observes them
+- Jev `usage.input_tokens`, wall-clock latency, and state and total request size for each layout: packed shared state, one question per chunk (the offline kit's `fan_out`), and one request per chunk
 - the drop set at a frozen threshold, and so the would-be `d`
 - recall against independently labeled relevant chunks
 
 Use dated price assumptions and explicit scoring token observations when
-computing counterfactual cost; missing segment observations mean unknown cost,
+computing counterfactual cost; missing segment counts mean unknown cost,
 not zero savings. Byte/token proxies cannot fill this gap. Compute the
 counterfactual cost with the formulas above. Do not change the
 proposer's context during the shadow run. Only if the conditions for go hold

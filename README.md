@@ -300,8 +300,9 @@ evidence for one request with all chunks versus one request per chunk. No live
 mode, provider client, production `ContextScorer`, or root export is added.
 Uncertain chunks are retained; incomplete evidence withholds a complete drop
 recommendation. Byte/token proxies are not billing measurements. Cost estimates
-require explicit segment-level observations and dated assumptions; aggregate
-cached-token totals cannot establish the context block's cache share.
+require explicit segment-level counts (observed baseline, modeled
+counterfactual) and dated assumptions; aggregate cached-token totals cannot
+establish the context block's cache share.
 See [the experiment guide](examples/context-scoring-shadow/README.md) and
 [the cost-model decision](docs/context-scoring-cost-model.md). Production
 integration and live shadow measurement remain pending.

@@ -2,20 +2,23 @@ import type { ContextShadowArtifact, LayoutResult, RequestLayout } from "./types
 
 export type ReportFormat = "json" | "markdown";
 
+export const CONTEXT_SHADOW_USAGE = "pnpm experiment:context-shadow [--format json|markdown]";
+
 export function parseReportFormat(args: readonly string[]): ReportFormat {
   let format: ReportFormat = "json";
   for (let index = 0; index < args.length; index += 1) {
     const argument = args[index];
+    if (argument === "--") continue;
     if (argument === "--format") {
       const value = args[index + 1];
       if (value !== "json" && value !== "markdown") {
-        throw new Error("Usage: pnpm experiment:context-shadow [--format json|markdown]");
+        throw new Error(`Usage: ${CONTEXT_SHADOW_USAGE}`);
       }
       format = value;
       index += 1;
     } else {
       // In particular, no live option is accepted by this offline example.
-      throw new Error(`Unsupported option: ${argument ?? ""}. Usage: pnpm experiment:context-shadow [--format json|markdown]`);
+      throw new Error(`Unsupported option: ${argument ?? ""}. Usage: ${CONTEXT_SHADOW_USAGE}`);
     }
   }
   return format;
@@ -44,7 +47,7 @@ function formatCost(result: LayoutResult): string {
     return `Unknown (${result.costEstimate.reason}).`;
   }
   const cost = result.costEstimate;
-  return `Illustrative estimate: baseline proposer $${cost.baselineProposerUsd!.toFixed(8)}, counterfactual proposer $${cost.counterfactualProposerUsd!.toFixed(8)}, scoring $${cost.scoringUsd!.toFixed(8)}, net $${cost.netSavingsUsd!.toFixed(8)}. Assumptions dated ${cost.assumptions!.asOf}; synthetic observations only.`;
+  return `Illustrative estimate: baseline proposer $${cost.baselineProposerUsd.toFixed(8)}, counterfactual proposer $${cost.counterfactualProposerUsd.toFixed(8)}, scoring $${cost.scoringUsd.toFixed(8)}, net savings $${cost.netSavingsUsd.toFixed(8)} (positive means scoring is cheaper; excludes recall-error cost and latency). Assumptions dated ${cost.assumptions.asOf}; synthetic observations only.`;
 }
 
 function layoutMarkdown(name: string, layout: RequestLayout, result: LayoutResult): string[] {
@@ -64,6 +67,9 @@ function layoutMarkdown(name: string, layout: RequestLayout, result: LayoutResul
     `Planned scoring requests: ${result.metrics.plannedRequestCount}; ${result.metrics.plannedRequestBytes} request bytes; ${result.metrics.plannedRequestTokenProxy} estimated tokens at ceil(bytes/4).`,
     `Cost: ${formatCost(result)}`,
     "",
+    ...(result.status === "unavailable"
+      ? ["Classifications from an incomplete turn are not drop recommendations; every chunk is retained.", ""]
+      : []),
     "| Chunk | Noul probability | Evidence |",
     "| --- | ---: | --- |",
     ...evidence,

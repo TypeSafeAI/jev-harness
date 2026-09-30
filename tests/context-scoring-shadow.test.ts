@@ -1,8 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
+import { main } from "../examples/context-scoring-shadow/cli.js";
 import { DEMO_INPUT, scriptedFakeAdapter } from "../examples/context-scoring-shadow/demo.js";
 import { runContextShadowExperiment } from "../examples/context-scoring-shadow/experiment.js";
 import { parseReportFormat, renderReport } from "../examples/context-scoring-shadow/report.js";
@@ -25,6 +24,25 @@ function responseFor(
     answers,
     ...(options.usage === undefined ? {} : { usage: options.usage }),
   };
+}
+
+const DEMO_PROBABILITIES = Object.freeze({ timeout_config: 0.94, timeout_caller: 0.68, button_styles: 0.08 });
+
+function capture() {
+  let stdout = "";
+  let stderr = "";
+  return {
+    io: { stdout: (text: string) => { stdout += text; }, stderr: (text: string) => { stderr += text; } },
+    stdout: () => stdout,
+    stderr: () => stderr,
+  };
+}
+
+function markdownSection(markdown: string, heading: string): string {
+  const start = markdown.indexOf(heading);
+  assert.notEqual(start, -1);
+  const end = markdown.indexOf("\n#", start + heading.length);
+  return markdown.slice(start, end === -1 ? undefined : end);
 }
 
 function fixedAdapter(
@@ -69,6 +87,8 @@ test("both layouts preserve chunk identity and send only Noul request fields", a
         false: "The chunk is unrelated, decorative, or otherwise does not help answer the task.",
       });
       const instructions = question.instructions as { question: string; context_chunk: { id: string; text: string } };
+      assert.equal(instructions.question, "Could this context chunk help answer the task as stated?");
+      assert.deepEqual(Object.keys(instructions), ["question", "context_chunk"]);
       assert.equal(instructions.context_chunk.id, chunkId);
       assert.equal(instructions.context_chunk.text, DEMO_INPUT.chunks.find(chunk => chunk.id === chunkId)!.text);
     }
@@ -80,6 +100,14 @@ test("both layouts preserve chunk identity and send only Noul request fields", a
     assert.deepEqual(Object.keys(call.body.questions), ["is_relevant"]);
     assert.equal(typeof call.body.questions.is_relevant!.instructions, "string");
     assert.ok(call.body.questions.is_relevant!.criteria.true);
+    assert.deepEqual(call.body.questions.is_relevant, {
+      type: "noul",
+      instructions: "Could this context chunk help answer the task as stated?",
+      criteria: {
+        true: "The chunk contains information that could materially help answer the task.",
+        false: "The chunk is unrelated, decorative, or otherwise does not help answer the task.",
+      },
+    });
   }
   for (const call of calls) {
     const wire = JSON.stringify(call.body);
@@ -136,16 +164,34 @@ test("each layout serializes each chunk text once and measures its actual reques
   }
 });
 
-test("the committed sample exactly matches CLI JSON and Markdown has distinct layout headings", () => {
-  const cli = fileURLToPath(new URL("../examples/context-scoring-shadow/cli.ts", import.meta.url));
-  const options = { cwd: fileURLToPath(new URL("..", import.meta.url)), encoding: "utf8" as const, timeout: 10_000 };
-  const json = execFileSync(process.execPath, ["--import", "tsx", cli], options);
+test("the committed sample exactly matches CLI JSON and Markdown has distinct layout headings", async () => {
+  const jsonRun = capture();
+  assert.equal(await main([], jsonRun.io), 0);
+  assert.equal(jsonRun.stderr(), "");
+  const json = jsonRun.stdout();
   const sample = readFileSync(new URL("../examples/context-scoring-shadow/sample-result.json", import.meta.url), "utf8");
   assert.equal(json, sample, "Regenerate with pnpm --silent experiment:context-shadow > examples/context-scoring-shadow/sample-result.json");
-  const markdown = execFileSync(process.execPath, ["--import", "tsx", cli, "--format", "markdown"], options);
+  const markdownRun = capture();
+  assert.equal(await main(["--format", "markdown"], markdownRun.io), 0);
+  const markdown = markdownRun.stdout();
   assert.equal(markdown, renderReport(JSON.parse(json), "markdown"));
   assert.ok(markdown.includes("### All chunks in one request (fan_out)"));
   assert.ok(markdown.includes("### One request per chunk (per_chunk)"));
+  assert.equal(markdown.includes("not drop recommendations"), false);
+});
+
+test("the CLI returns 2 on usage errors without output and accepts a pnpm argument separator", async () => {
+  const bogus = capture();
+  assert.equal(await main(["--bogus"], bogus.io), 2);
+  assert.equal(bogus.stdout(), "");
+  assert.match(bogus.stderr(), /Unsupported option: --bogus\. Usage: pnpm experiment:context-shadow/);
+  const badFormat = capture();
+  assert.equal(await main(["--format", "live"], badFormat.io), 2);
+  assert.equal(badFormat.stdout(), "");
+  const separated = capture();
+  assert.equal(await main(["--", "--format", "markdown"], separated.io), 0);
+  assert.equal(separated.stderr(), "");
+  assert.ok(separated.stdout().startsWith("# Context scoring shadow experiment\n"));
 });
 
 test("the runner preserves caller context and snapshots task, chunks, labels, and cost before awaiting", async () => {
@@ -359,7 +405,7 @@ function measuredCostInput(): ContextShadowInput {
       source: "Synthetic test price assumptions.",
       proposerModel: "synthetic-proposer",
       proposer: { inputUsdPerMillion: 2, cacheReadUsdPerMillion: 0.2, cacheWriteUsdPerMillion: 4 },
-      jev: { inputUsdPerMillion: 0.042, outputUsdPerMillion: 0 },
+      jev: { inputUsdPerMillion: 0.042, outputUsdPerMillion: 0.5 },
     },
     byLayout: {
       fan_out: {
@@ -398,13 +444,16 @@ test("aggregate-only cache counts stay unknown; complete bound observations perm
   const fanOutCost = withObservations.layouts.fan_out.costEstimate;
   assert.ok(Math.abs(fanOutCost.baselineProposerUsd! - 0.000294) < 1e-15);
   assert.ok(Math.abs(fanOutCost.counterfactualProposerUsd! - 0.00015) < 1e-15);
-  assert.ok(Math.abs(fanOutCost.scoringUsd! - 0.0000042) < 1e-15);
-  assert.ok(Math.abs(fanOutCost.netSavingsUsd! - 0.0001398) < 1e-15);
+  assert.ok(Math.abs(fanOutCost.scoringUsd! - 0.0000052) < 1e-15);
+  assert.ok(Math.abs(fanOutCost.netSavingsUsd! - 0.0001388) < 1e-15);
   const perChunkCost = withObservations.layouts.per_chunk.costEstimate;
   assert.ok(Math.abs(perChunkCost.baselineProposerUsd! - 0.000294) < 1e-15);
   assert.ok(Math.abs(perChunkCost.counterfactualProposerUsd! - 0.00015) < 1e-15);
-  assert.ok(Math.abs(perChunkCost.scoringUsd! - 0.0000063) < 1e-15);
-  assert.ok(Math.abs(perChunkCost.netSavingsUsd! - 0.0001377) < 1e-15);
+  assert.ok(Math.abs(perChunkCost.scoringUsd! - 0.0000093) < 1e-15);
+  assert.ok(Math.abs(perChunkCost.netSavingsUsd! - 0.0001347) < 1e-15);
+  assert.match(fanOutCost.reason, /caller-supplied baseline and counterfactual segment inputs/);
+  const markdown = renderReport(withObservations, "markdown");
+  assert.ok(markdown.includes("net savings $0.00013880 (positive means scoring is cheaper; excludes recall-error cost and latency)"));
 });
 
 test("cost remains unknown for incomplete segment or turn/layout bindings", async () => {
@@ -432,11 +481,30 @@ test("null and malformed cache evidence safely produces unknown cost", async () 
   const nullResult = await runContextShadowExperiment(nullInput, scriptedFakeAdapter);
   assert.equal(nullResult.layouts.fan_out.costEstimate.status, "unknown");
 
+  const adapter = fixedAdapter(DEMO_PROBABILITIES, () => ({ usage: { inputTokens: 100, outputTokens: 2 } }));
   const malformed = measuredCostInput();
   const rows = malformed.cacheObservations!.byLayout!.fan_out!.baselineSegments as unknown as unknown[];
   rows[0] = { segment: ["prefix"], uncachedTokens: 10, cacheReadTokens: 20, cacheWriteTokens: 0 };
-  const malformedResult = await runContextShadowExperiment(malformed, scriptedFakeAdapter);
+  const malformedResult = await runContextShadowExperiment(malformed, adapter);
   assert.equal(malformedResult.layouts.fan_out.costEstimate.status, "unknown");
+  assert.match(malformedResult.layouts.fan_out.costEstimate.reason, /prefix, context, and suffix/);
+  assert.equal(malformedResult.layouts.per_chunk.costEstimate.status, "estimated");
+
+  const threeRowCases: Array<(rows: Array<Record<string, unknown>>) => void> = [
+    rows => { rows[1]!.segment = "prefix"; },
+    rows => { rows[1]!.cacheReadTokens = -1; },
+    rows => { rows[2]!.cacheWriteTokens = 2.5; },
+  ];
+  for (const mutate of threeRowCases) {
+    const input = measuredCostInput();
+    const segments = input.cacheObservations!.byLayout!.fan_out!.baselineSegments as unknown as Array<Record<string, unknown>>;
+    mutate(segments);
+    assert.equal(segments.length, 3);
+    const result = await runContextShadowExperiment(input, adapter);
+    assert.equal(result.layouts.fan_out.status, "complete");
+    assert.equal(result.layouts.fan_out.costEstimate.status, "unknown");
+    assert.match(result.layouts.fan_out.costEstimate.reason, /prefix, context, and suffix/);
+  }
 });
 
 test("scripted evidence does not read inherited object properties for chunk ids", async () => {
@@ -488,6 +556,10 @@ test("pre-aborted turns make no adapter calls and report request sizes as planne
   assert.equal(result.layouts.per_chunk.metrics.plannedRequestCount, DEMO_INPUT.chunks.length);
   assert.deepEqual(result.layouts.fan_out.proposedDropIds, []);
   assert.equal(result.layouts.fan_out.status, "unavailable");
+  assert.deepEqual(result.layouts.fan_out.failures, [{ requestId: "fan_out:all", code: "cancelled" }]);
+  assert.deepEqual(result.layouts.per_chunk.failures, DEMO_INPUT.chunks.map(chunk => ({ requestId: `per_chunk:${chunk.id}`, code: "cancelled" })));
+  const section = markdownSection(renderReport(result, "markdown"), "### One request per chunk (per_chunk)");
+  assert.ok(section.includes("\nClassifications from an incomplete turn are not drop recommendations; every chunk is retained.\n"));
 });
 
 test("duplicate chunk ids are rejected instead of aliasing evidence", async () => {
@@ -498,7 +570,7 @@ test("duplicate chunk ids are rejected instead of aliasing evidence", async () =
 
 test("JSON and Markdown render the same versioned artifact and task text cannot inject report sections", async () => {
   const input = structuredClone(DEMO_INPUT);
-  input.task = "Synthetic task\n## forged heading\n```json\nnot an artifact";
+  input.task = "Synthetic task\n## forged heading\n```json\nnot an artifact\n===";
   const artifact = await runContextShadowExperiment(input, scriptedFakeAdapter);
   const json = renderReport(artifact, "json");
   const markdown = renderReport(artifact, "markdown");
@@ -515,11 +587,345 @@ test("JSON and Markdown render the same versioned artifact and task text cannot 
   assert.equal(markdown.includes("\n## forged heading"), false);
   assert.ok(markdown.includes(String.raw`\#\# forged heading`));
   assert.ok(markdown.includes(`Model:** \`${JEV_MODEL}\``));
+  assert.doesNotMatch(markdown, /^=+$/m);
 });
 
 test("CLI format options are closed and default to JSON", () => {
   assert.equal(parseReportFormat([]), "json");
   assert.equal(parseReportFormat(["--format", "markdown"]), "markdown");
+  assert.equal(parseReportFormat(["--", "--format", "markdown"]), "markdown");
+  assert.equal(parseReportFormat(["--"]), "json");
   assert.throws(() => parseReportFormat(["--live"]), /Unsupported option/);
   assert.throws(() => parseReportFormat(["--format", "live"]), /Usage:/);
+});
+
+test("recall drops below 1 when a relevant chunk scores under the drop threshold", async () => {
+  const input: ContextShadowInput = {
+    task: "Synthetic recall check.",
+    chunks: [
+      { id: "relevant_high", text: "Synthetic relevant chunk A.", relevant: true },
+      { id: "relevant_low", text: "Synthetic relevant chunk B.", relevant: true },
+      { id: "unrelated", text: "Synthetic unrelated chunk.", relevant: false },
+    ],
+  };
+  const result = await runContextShadowExperiment(input, fixedAdapter({ relevant_high: 0.9, relevant_low: 0.1, unrelated: 0.05 }));
+  for (const layout of ["fan_out", "per_chunk"] as const) {
+    assert.equal(result.layouts[layout].status, "complete");
+    assert.equal(result.layouts[layout].relevanceRecall, 0.5);
+    assert.deepEqual(result.layouts[layout].proposedDropIds, ["relevant_low", "unrelated"]);
+    assert.deepEqual(result.layouts[layout].proposedKeepIds, ["relevant_high"]);
+  }
+});
+
+test("cost stays unknown when counterfactual kept ids do not match this turn", async () => {
+  const input = measuredCostInput();
+  input.cacheObservations!.byLayout!.fan_out!.counterfactual.keptChunkIds = ["timeout_config"];
+  const result = await runContextShadowExperiment(
+    input,
+    fixedAdapter(DEMO_PROBABILITIES, () => ({ usage: { inputTokens: 100, outputTokens: 2 } })),
+  );
+  assert.deepEqual(result.layouts.fan_out.proposedDropIds, ["button_styles"]);
+  assert.equal(result.layouts.fan_out.costEstimate.status, "unknown");
+  assert.match(result.layouts.fan_out.costEstimate.reason, /exact keep\/drop sets/);
+  assert.equal(result.layouts.per_chunk.costEstimate.status, "estimated");
+});
+
+test("cost stays unknown unless every scoring request reports token usage", async () => {
+  const partial = await runContextShadowExperiment(
+    measuredCostInput(),
+    fixedAdapter(DEMO_PROBABILITIES, call =>
+      call.requestId === "per_chunk:button_styles" ? {} : { usage: { inputTokens: 50, outputTokens: 2 } }),
+  );
+  assert.equal(partial.layouts.per_chunk.status, "complete");
+  assert.equal(partial.layouts.per_chunk.costEstimate.status, "unknown");
+  assert.match(partial.layouts.per_chunk.costEstimate.reason, /token observations are incomplete/);
+  assert.equal(partial.layouts.fan_out.costEstimate.status, "estimated");
+
+  const none = await runContextShadowExperiment(measuredCostInput(), fixedAdapter(DEMO_PROBABILITIES));
+  for (const layout of ["fan_out", "per_chunk"] as const) {
+    assert.equal(none.layouts[layout].status, "complete");
+    assert.equal(none.layouts[layout].costEstimate.status, "unknown");
+    assert.match(none.layouts[layout].costEstimate.reason, /token observations are incomplete/);
+  }
+});
+
+test("a non-abort adapter error marks one request and later requests are still sent", async () => {
+  const sent: string[] = [];
+  const result = await runContextShadowExperiment(structuredClone(DEMO_INPUT), {
+    kind: "scripted_fake",
+    async score(call) {
+      sent.push(call.requestId);
+      if (call.requestId === "per_chunk:timeout_caller") throw new Error("synthetic adapter failure");
+      return scriptedFakeAdapter.score(call);
+    },
+  });
+  assert.deepEqual(sent, ["fan_out:all", "per_chunk:timeout_config", "per_chunk:timeout_caller", "per_chunk:button_styles"]);
+  assert.equal(result.layouts.per_chunk.status, "unavailable");
+  assert.deepEqual(result.layouts.per_chunk.failures, [{ requestId: "per_chunk:timeout_caller", code: "adapter_error" }]);
+  assert.deepEqual(result.layouts.per_chunk.proposedDropIds, []);
+  assert.deepEqual(result.layouts.per_chunk.evidence.map(row => row.probability), [0.94, null, 0.08]);
+  assert.equal(result.layouts.fan_out.status, "complete");
+  assert.deepEqual(result.layouts.fan_out.failures, []);
+});
+
+test("nested cost evidence is snapshotted before the first await", async () => {
+  const adapterFor = (hold: boolean) => {
+    let release: ((value: unknown) => void) | undefined;
+    let started: (() => void) | undefined;
+    const didStart = new Promise<void>(resolve => { started = resolve; });
+    const adapter: ScoringAdapter = {
+      kind: "scripted_fake",
+      score(call) {
+        const response = responseFor(call, DEMO_PROBABILITIES, { usage: { inputTokens: call.layout === "fan_out" ? 100 : 50, outputTokens: 2 } });
+        if (hold && call.layout === "fan_out") {
+          started!();
+          return new Promise(resolve => { release = () => resolve(response); });
+        }
+        return Promise.resolve(response);
+      },
+    };
+    return { adapter, didStart, release: () => release!(undefined) };
+  };
+  const reference = await runContextShadowExperiment(measuredCostInput(), adapterFor(false).adapter);
+  assert.equal(reference.layouts.per_chunk.costEstimate.status, "estimated");
+
+  const input = measuredCostInput();
+  const original = structuredClone(input);
+  const held = adapterFor(true);
+  const pending = runContextShadowExperiment(input, held.adapter);
+  await held.didStart;
+  const perChunk = input.cacheObservations!.byLayout!.per_chunk!;
+  perChunk.baselineSegments[1]!.uncachedTokens = 999_999;
+  perChunk.baselineSegments[0]!.cacheReadTokens = 7;
+  input.cacheObservations!.assumptions!.proposer.inputUsdPerMillion = 1_000;
+  held.release();
+  const artifact = await pending;
+  assert.deepEqual(artifact.input, original);
+  assert.deepEqual(artifact.layouts.per_chunk.costEstimate, reference.layouts.per_chunk.costEstimate);
+  assert.deepEqual(artifact.layouts.fan_out.costEstimate, reference.layouts.fan_out.costEstimate);
+  assert.notEqual(artifact.input.cacheObservations, input.cacheObservations);
+});
+
+test("non-finite, negative, and non-number probabilities are malformed", async () => {
+  for (const value of [-0.01, Number.NaN, Number.POSITIVE_INFINITY, "0.5"]) {
+    const result = await runContextShadowExperiment(structuredClone(DEMO_INPUT), {
+      kind: "scripted_fake",
+      async score(call) {
+        return {
+          source: "scripted_fake",
+          model: JEV_MODEL,
+          answers: Object.fromEntries(Object.keys(call.questionToChunkId).map(id => [id, value])),
+        };
+      },
+    });
+    for (const layout of ["fan_out", "per_chunk"] as const) {
+      assert.equal(result.layouts[layout].status, "unavailable", String(value));
+      assert.deepEqual(result.layouts[layout].proposedDropIds, []);
+      assert.ok(result.layouts[layout].failures.length > 0);
+      assert.ok(result.layouts[layout].failures.every(failure => failure.code === "malformed_response"), String(value));
+    }
+  }
+});
+
+test("an extra answer id beside the expected ids is missing evidence", async () => {
+  // One extra id sorts before and one after every expected id, so both the
+  // count check and the pairwise id check are needed to reject them.
+  for (const extra of ["aa_extra_answer", "zz_extra_answer"]) {
+    const result = await runContextShadowExperiment(structuredClone(DEMO_INPUT), {
+      kind: "scripted_fake",
+      async score(call) {
+        const response = responseFor(call, DEMO_PROBABILITIES);
+        return { ...response, answers: { ...response.answers, [extra]: 0.5 } };
+      },
+    });
+    for (const layout of ["fan_out", "per_chunk"] as const) {
+      assert.equal(result.layouts[layout].status, "unavailable", extra);
+      assert.deepEqual(result.layouts[layout].proposedDropIds, []);
+      assert.ok(result.layouts[layout].failures.every(failure => failure.code === "missing_evidence"), extra);
+    }
+  }
+});
+
+test("an adapter claiming another kind is never called", async () => {
+  let calls = 0;
+  const result = await runContextShadowExperiment(structuredClone(DEMO_INPUT), {
+    kind: "live" as never,
+    async score() { calls += 1; return {}; },
+  });
+  assert.equal(calls, 0);
+  for (const layout of ["fan_out", "per_chunk"] as const) {
+    assert.equal(result.layouts[layout].status, "unavailable");
+    assert.ok(result.layouts[layout].failures.length > 0);
+    assert.ok(result.layouts[layout].failures.every(failure => failure.code === "unsupported_provenance"));
+  }
+  assert.equal(result.layouts.per_chunk.failures.length, DEMO_INPUT.chunks.length);
+  assert.deepEqual(result.provenance, { label: "synthetic demonstration", adapter: "scripted_fake", live: false });
+});
+
+test("an abort in the same tick as starting the run sends no adapter call", async () => {
+  const controller = new AbortController();
+  let calls = 0;
+  const pending = runContextShadowExperiment(structuredClone(DEMO_INPUT), {
+    kind: "scripted_fake",
+    async score(call) { calls += 1; return scriptedFakeAdapter.score(call); },
+  }, { signal: controller.signal });
+  controller.abort();
+  const result = await pending;
+  assert.equal(calls, 0);
+  assert.deepEqual(result.layouts.fan_out.failures, [{ requestId: "fan_out:all", code: "cancelled" }]);
+  assert.deepEqual(result.layouts.per_chunk.failures, DEMO_INPUT.chunks.map(chunk => ({ requestId: `per_chunk:${chunk.id}`, code: "cancelled" })));
+});
+
+test("an abort just after the first per-chunk response cancels each per-chunk id once", async () => {
+  const controller = new AbortController();
+  const sent: string[] = [];
+  const result = await runContextShadowExperiment(structuredClone(DEMO_INPUT), {
+    kind: "scripted_fake",
+    async score(call) {
+      sent.push(call.requestId);
+      const response = await scriptedFakeAdapter.score(call);
+      if (call.requestId === "per_chunk:timeout_config") {
+        queueMicrotask(() => queueMicrotask(() => controller.abort()));
+      }
+      return response;
+    },
+  }, { signal: controller.signal });
+  assert.deepEqual(sent, ["fan_out:all", "per_chunk:timeout_config"]);
+  assert.equal(result.layouts.fan_out.status, "complete");
+  const failures = result.layouts.per_chunk.failures;
+  assert.deepEqual(failures, DEMO_INPUT.chunks.map(chunk => ({ requestId: `per_chunk:${chunk.id}`, code: "cancelled" })));
+  assert.equal(new Set(failures.map(failure => failure.requestId)).size, failures.length);
+  assert.deepEqual(result.layouts.per_chunk.proposedDropIds, []);
+});
+
+test("scoring calls are frozen so an adapter cannot rewrite bookkeeping or request bodies", async () => {
+  const mutationErrors: boolean[] = [];
+  const tryMutate = (mutate: () => void) => {
+    try { mutate(); mutationErrors.push(false); } catch (error) { mutationErrors.push(error instanceof TypeError); }
+  };
+  const mutated = await runContextShadowExperiment(structuredClone(DEMO_INPUT), {
+    kind: "scripted_fake",
+    async score(call) {
+      const firstQuestion = Object.keys(call.questionToChunkId)[0]!;
+      tryMutate(() => { (call.questionToChunkId as Record<string, string>)[firstQuestion] = "button_styles"; });
+      tryMutate(() => { (call.questionToChunkId as Record<string, string>).injected = "timeout_config"; });
+      tryMutate(() => { (call.body as { model: string }).model = "jev-latest"; });
+      tryMutate(() => { call.body.state.task = "mutated task"; });
+      tryMutate(() => { delete call.body.questions[firstQuestion]; });
+      return scriptedFakeAdapter.score(call);
+    },
+  });
+  assert.equal(mutationErrors.length, 5 * (1 + DEMO_INPUT.chunks.length));
+  assert.ok(mutationErrors.every(Boolean));
+  const untouched = await runContextShadowExperiment(structuredClone(DEMO_INPUT), scriptedFakeAdapter);
+  for (const layout of ["fan_out", "per_chunk"] as const) {
+    assert.deepEqual(mutated.layouts[layout].evidence, untouched.layouts[layout].evidence);
+    assert.equal(mutated.layouts[layout].metrics.plannedRequestBytes, untouched.layouts[layout].metrics.plannedRequestBytes);
+  }
+});
+
+test("aggregate cached tokens that are not a token count are omitted, not aliased", async () => {
+  const aggregate = { tokens: 1200 };
+  for (const value of [aggregate, Number.NaN, 1200n] as unknown[]) {
+    const input: ContextShadowInput = {
+      ...structuredClone(DEMO_INPUT),
+      cacheObservations: { aggregateCachedInputTokens: value as number },
+    };
+    const artifact = await runContextShadowExperiment(input, scriptedFakeAdapter);
+    assert.notEqual(artifact.input.cacheObservations, input.cacheObservations);
+    assert.equal(Object.hasOwn(artifact.input.cacheObservations!, "aggregateCachedInputTokens"), false);
+    assert.deepEqual(JSON.parse(renderReport(artifact, "json")), artifact);
+    assert.ok(renderReport(artifact, "markdown").includes("## Versioned JSON artifact"));
+  }
+});
+
+test("functions and BigInts in cost evidence make cost unknown without rejecting the run", async () => {
+  const cases: Array<{ mutate: (input: ContextShadowInput) => void; unknown: Array<"fan_out" | "per_chunk"> }> = [
+    { mutate: input => { (input.cacheObservations!.assumptions!.proposer as Record<string, unknown>).inputUsdPerMillion = 2n; }, unknown: ["fan_out", "per_chunk"] },
+    { mutate: input => { (input.cacheObservations!.assumptions!.jev as Record<string, unknown>).outputUsdPerMillion = () => 0.5; }, unknown: ["fan_out", "per_chunk"] },
+    { mutate: input => { (input.cacheObservations!.byLayout!.per_chunk!.baselineSegments[0] as unknown as Record<string, unknown>).uncachedTokens = 10n; }, unknown: ["per_chunk"] },
+    { mutate: input => { (input.cacheObservations!.byLayout!.fan_out!.counterfactual.segments[1] as unknown as Record<string, unknown>).cacheReadTokens = () => 30; }, unknown: ["fan_out"] },
+  ];
+  const adapter = fixedAdapter(DEMO_PROBABILITIES, () => ({ usage: { inputTokens: 100, outputTokens: 2 } }));
+  for (const { mutate, unknown } of cases) {
+    const input = measuredCostInput();
+    mutate(input);
+    const artifact = await runContextShadowExperiment(input, adapter);
+    for (const layout of ["fan_out", "per_chunk"] as const) {
+      assert.equal(artifact.layouts[layout].status, "complete");
+      assert.ok(artifact.layouts[layout].evidence.every(row => row.probability !== null));
+      assert.equal(artifact.layouts[layout].costEstimate.status, unknown.includes(layout) ? "unknown" : "estimated");
+    }
+    assert.deepEqual(JSON.parse(renderReport(artifact, "json")), artifact);
+    assert.ok(renderReport(artifact, "markdown").includes("## Versioned JSON artifact"));
+  }
+});
+
+test("sparse chunk arrays are rejected at the hole", async () => {
+  const input = structuredClone(DEMO_INPUT);
+  // eslint-disable-next-line no-sparse-arrays
+  input.chunks = [, ...input.chunks.slice(1)] as ContextShadowInput["chunks"];
+  await assert.rejects(runContextShadowExperiment(input, scriptedFakeAdapter), /Chunk 0 must be an object/);
+});
+
+test("chunks are read by index, not through a caller-supplied iterator", async () => {
+  const input = structuredClone(DEMO_INPUT);
+  Object.defineProperty(input.chunks, Symbol.iterator, {
+    value: function* () { yield { id: "injected", text: "Injected chunk.", relevant: false }; },
+  });
+  const result = await runContextShadowExperiment(input, scriptedFakeAdapter);
+  assert.deepEqual(result.input.chunks.map(chunk => chunk.id), ["timeout_config", "timeout_caller", "button_styles"]);
+
+  const empty = structuredClone(DEMO_INPUT);
+  Object.defineProperty(empty.chunks, Symbol.iterator, { value: function* () {} });
+  const emptied = await runContextShadowExperiment(empty, scriptedFakeAdapter);
+  assert.equal(emptied.input.chunks.length, 3);
+});
+
+test("the task is read once, so a changing getter cannot bypass validation", async () => {
+  const input = structuredClone(DEMO_INPUT);
+  let reads = 0;
+  Object.defineProperty(input, "task", {
+    enumerable: true,
+    get: () => (reads++ === 0 ? DEMO_INPUT.task : 42),
+  });
+  const sent: ScoringCall[] = [];
+  const result = await runContextShadowExperiment(input, {
+    kind: "scripted_fake",
+    async score(call) { sent.push(call); return scriptedFakeAdapter.score(call); },
+  });
+  assert.equal(reads, 1);
+  assert.equal(result.input.task, DEMO_INPUT.task);
+  assert.ok(sent.every(call => call.body.state.task === DEMO_INPUT.task));
+});
+
+test("baseline counts that differ between request layouts make both costs unknown", async () => {
+  for (const field of ["uncachedTokens", "cacheReadTokens", "cacheWriteTokens"] as const) {
+    const input = measuredCostInput();
+    input.cacheObservations!.byLayout!.per_chunk!.baselineSegments[1]![field] += 7;
+    const result = await runContextShadowExperiment(
+      input,
+      fixedAdapter(DEMO_PROBABILITIES, () => ({ usage: { inputTokens: 100, outputTokens: 2 } })),
+    );
+    for (const layout of ["fan_out", "per_chunk"] as const) {
+      assert.equal(result.layouts[layout].status, "complete", field);
+      assert.equal(result.layouts[layout].costEstimate.status, "unknown", field);
+      assert.match(result.layouts[layout].costEstimate.reason, /baseline counts differ/, field);
+    }
+  }
+});
+
+test("an unavailable layout's Markdown says its classifications are not drop recommendations", async () => {
+  const result = await runContextShadowExperiment(structuredClone(DEMO_INPUT), {
+    kind: "scripted_fake",
+    async score(call) {
+      if (call.requestId === "per_chunk:timeout_caller") throw new Error("synthetic adapter failure");
+      return scriptedFakeAdapter.score(call);
+    },
+  });
+  const markdown = renderReport(result, "markdown");
+  const line = "Classifications from an incomplete turn are not drop recommendations; every chunk is retained.";
+  assert.ok(markdownSection(markdown, "### One request per chunk (per_chunk)").includes(line));
+  assert.equal(markdownSection(markdown, "### All chunks in one request (fan_out)").includes(line), false);
+  assert.equal(result.layouts.per_chunk.evidence[2]!.classification, "would_drop", "JSON classifications are unchanged");
 });
