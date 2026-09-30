@@ -13,7 +13,6 @@ import {
   type CostEstimate,
   type CostEvidence,
   type Failure,
-  type LayoutCostObservations,
   type LayoutResult,
   type NoulQuestion,
   type NoulRequestBody,
@@ -48,6 +47,7 @@ function copyCostEvidence(value: CostEvidence | undefined): CostEvidence | undef
   if (value === undefined || value === null) return undefined;
   const record = ownDataRecord(value);
   if (!record) return undefined;
+  const observations = ownDataRecord(record.byLayout);
   return {
     ...(record.assumptions === undefined
       ? {}
@@ -60,7 +60,6 @@ function copyCostEvidence(value: CostEvidence | undefined): CostEvidence | undef
       : {
           byLayout: Object.fromEntries(
             REQUEST_LAYOUTS.flatMap(layout => {
-              const observations = ownDataRecord(record.byLayout);
               const observation = observations?.[layout];
               return observation === undefined
                 ? []
@@ -136,10 +135,12 @@ function buildCalls(
     }
     const body: NoulRequestBody = {
       model: JEV_MODEL,
+      // Share only the task and note. Each question already carries its target
+      // chunk, following Noul's structured-instructions pattern. Repeating all
+      // chunks here would duplicate text and inflate the request-size proxy.
       state: {
         note: UNTRUSTED_DATA_NOTE,
         task: snapshot.task,
-        chunks: snapshot.chunks.map(({ id, text }) => ({ id, text })),
       },
       questions,
     };
@@ -312,7 +313,7 @@ function validSegments(value: unknown): value is SegmentTokenObservation[] {
   const seen = new Set<string>();
   for (const row of value) {
     const record = ownDataRecord(row);
-  if (
+    if (
       !record ||
       typeof record.segment !== "string" ||
       !["prefix", "context", "suffix"].includes(record.segment) ||
@@ -496,10 +497,10 @@ async function runLayout(
   }
   const successes: RequestSuccess[] = [];
   const failures: Failure[] = [];
-  for (const call of calls) {
+  for (const [index, call] of calls.entries()) {
     if (signal?.aborted) {
       failures.push({ requestId: call.requestId, code: "cancelled" });
-      for (const remaining of calls.slice(calls.indexOf(call) + 1)) {
+      for (const remaining of calls.slice(index + 1)) {
         failures.push({ requestId: remaining.requestId, code: "cancelled" });
       }
       break;
@@ -508,7 +509,7 @@ async function runLayout(
       const raw = await scoreCall(adapter, call, signal);
       if (signal?.aborted) {
         failures.push({ requestId: call.requestId, code: "cancelled" });
-        for (const remaining of calls.slice(calls.indexOf(call) + 1)) {
+        for (const remaining of calls.slice(index + 1)) {
           failures.push({ requestId: remaining.requestId, code: "cancelled" });
         }
         break;
@@ -519,7 +520,7 @@ async function runLayout(
     } catch {
       failures.push({ requestId: call.requestId, code: signal?.aborted ? "cancelled" : "adapter_error" });
       if (signal?.aborted) {
-        for (const remaining of calls.slice(calls.indexOf(call) + 1)) {
+        for (const remaining of calls.slice(index + 1)) {
           failures.push({ requestId: remaining.requestId, code: "cancelled" });
         }
         break;

@@ -1,9 +1,12 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import { DEMO_INPUT, scriptedFakeAdapter } from "../examples/context-scoring-shadow/demo.js";
 import { runContextShadowExperiment } from "../examples/context-scoring-shadow/experiment.js";
 import { parseReportFormat, renderReport } from "../examples/context-scoring-shadow/report.js";
-import { JEV_MODEL, UNTRUSTED_DATA_NOTE, type ContextShadowInput, type ScoringAdapter, type ScoringCall } from "../examples/context-scoring-shadow/types.js";
+import { JEV_MODEL, QUESTION_SET_VERSION, UNTRUSTED_DATA_NOTE, type ContextShadowInput, type ScoringAdapter, type ScoringCall } from "../examples/context-scoring-shadow/types.js";
 
 function responseFor(
   call: ScoringCall,
@@ -52,8 +55,9 @@ test("both layouts preserve chunk identity and send only Noul request fields", a
   assert.deepEqual(fanOut[0]!.body.state, {
     note: UNTRUSTED_DATA_NOTE,
     task: DEMO_INPUT.task,
-    chunks: DEMO_INPUT.chunks.map(({ id, text }) => ({ id, text })),
   });
+  assert.equal(QUESTION_SET_VERSION, "context-relevance-v2");
+  assert.equal(result.questionSetVersion, QUESTION_SET_VERSION);
   for (const call of fanOut) {
     assert.deepEqual(Object.keys(call.questionToChunkId), Object.keys(call.body.questions));
     assert.equal(call.body.state.note, UNTRUSTED_DATA_NOTE);
@@ -107,6 +111,41 @@ test("evaluation labels do not change adapter inputs or scripted fake evidence",
     assert.deepEqual(first.layouts[layout].evidence, second.layouts[layout].evidence);
   }
   assert.notDeepEqual(first.input.chunks.map(chunk => chunk.relevant), second.input.chunks.map(chunk => chunk.relevant));
+});
+
+test("each layout serializes each chunk text once and measures its actual request bodies", async () => {
+  const input = structuredClone(DEMO_INPUT);
+  input.chunks[0]!.text = 'Synthetic timeout note: "café" takes 250 ms.\nNo retry.';
+  const calls: ScoringCall[] = [];
+  const result = await runContextShadowExperiment(input, {
+    kind: "scripted_fake",
+    async score(call) {
+      calls.push(structuredClone(call));
+      return scriptedFakeAdapter.score(call);
+    },
+  });
+  for (const layout of ["fan_out", "per_chunk"] as const) {
+    const bodies = calls.filter(call => call.layout === layout).map(call => JSON.stringify(call.body));
+    for (const chunk of input.chunks) {
+      const occurrences = bodies.reduce((sum, body) => sum + body.split(JSON.stringify(chunk.text)).length - 1, 0);
+      assert.equal(occurrences, 1, `${layout} must carry ${chunk.id} text exactly once`);
+    }
+    const sizes = bodies.map(body => Buffer.byteLength(body, "utf8"));
+    assert.equal(result.layouts[layout].metrics.plannedRequestBytes, sizes.reduce((sum, size) => sum + size, 0));
+    assert.equal(result.layouts[layout].metrics.plannedRequestTokenProxy, sizes.reduce((sum, size) => sum + Math.ceil(size / 4), 0));
+  }
+});
+
+test("the committed sample exactly matches CLI JSON and Markdown has distinct layout headings", () => {
+  const cli = fileURLToPath(new URL("../examples/context-scoring-shadow/cli.ts", import.meta.url));
+  const options = { cwd: fileURLToPath(new URL("..", import.meta.url)), encoding: "utf8" as const, timeout: 10_000 };
+  const json = execFileSync(process.execPath, ["--import", "tsx", cli], options);
+  const sample = readFileSync(new URL("../examples/context-scoring-shadow/sample-result.json", import.meta.url), "utf8");
+  assert.equal(json, sample, "Regenerate with pnpm --silent experiment:context-shadow > examples/context-scoring-shadow/sample-result.json");
+  const markdown = execFileSync(process.execPath, ["--import", "tsx", cli, "--format", "markdown"], options);
+  assert.equal(markdown, renderReport(JSON.parse(json), "markdown"));
+  assert.ok(markdown.includes("### All chunks in one request (fan_out)"));
+  assert.ok(markdown.includes("### One request per chunk (per_chunk)"));
 });
 
 test("the runner preserves caller context and snapshots task, chunks, labels, and cost before awaiting", async () => {
@@ -278,6 +317,29 @@ test("an abort queued just after a response still suppresses that response's evi
   assert.deepEqual(result.layouts.per_chunk.proposedKeepIds, DEMO_INPUT.chunks.map(chunk => chunk.id));
   assert.equal(result.layouts.per_chunk.evidence[2]!.probability, null);
   assert.ok(result.layouts.per_chunk.failures.some(failure => failure.code === "cancelled"));
+});
+
+test("cancelling a middle per-chunk request marks the remaining calls once without sending them", async () => {
+  const controller = new AbortController();
+  const sent: string[] = [];
+  const result = await runContextShadowExperiment(structuredClone(DEMO_INPUT), {
+    kind: "scripted_fake",
+    async score(call) {
+      sent.push(call.requestId);
+      if (call.requestId === "per_chunk:timeout_caller") controller.abort();
+      return scriptedFakeAdapter.score(call);
+    },
+  }, { signal: controller.signal });
+  assert.deepEqual(sent, ["fan_out:all", "per_chunk:timeout_config", "per_chunk:timeout_caller"]);
+  const layout = result.layouts.per_chunk;
+  assert.equal(layout.status, "unavailable");
+  assert.deepEqual(layout.failures, [
+    { requestId: "per_chunk:timeout_caller", code: "cancelled" },
+    { requestId: "per_chunk:button_styles", code: "cancelled" },
+  ]);
+  assert.deepEqual(layout.evidence.map(row => row.probability), [0.94, null, null]);
+  assert.deepEqual(layout.proposedDropIds, []);
+  assert.deepEqual(layout.proposedKeepIds, DEMO_INPUT.chunks.map(chunk => chunk.id));
 });
 
 function measuredCostInput(): ContextShadowInput {

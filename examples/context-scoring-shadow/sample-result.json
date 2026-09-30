@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "experimentVersion": 1,
   "model": "jev-1.13.0",
-  "questionSetVersion": "context-relevance-v1",
+  "questionSetVersion": "context-relevance-v2",
   "provenance": {
     "label": "synthetic demonstration",
     "adapter": "scripted_fake",
@@ -75,8 +75,8 @@
         "originalContextTokenProxy": 55,
         "proposedContextTokenProxy": 37,
         "plannedRequestCount": 1,
-        "plannedRequestBytes": 1879,
-        "plannedRequestTokenProxy": 470
+        "plannedRequestBytes": 1552,
+        "plannedRequestTokenProxy": 388
       },
       "costEstimate": {
         "status": "unknown",

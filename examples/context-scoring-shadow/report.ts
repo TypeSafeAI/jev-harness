@@ -85,7 +85,7 @@ export function renderMarkdownReport(artifact: ContextShadowArtifact): string {
     "",
     "This is an offline shadow result. The source context was not changed; incomplete evidence keeps every chunk and makes no drop recommendation.",
     "",
-    ...layoutMarkdown("All chunks, one Noul per chunk", "fan_out", artifact.layouts.fan_out),
+    ...layoutMarkdown("All chunks in one request", "fan_out", artifact.layouts.fan_out),
     ...layoutMarkdown("One request per chunk", "per_chunk", artifact.layouts.per_chunk),
     "## Versioned JSON artifact",
     "",
