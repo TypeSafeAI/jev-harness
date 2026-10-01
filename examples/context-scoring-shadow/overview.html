@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <title>Sort the notes. Keep the stack.</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        background: #0f1012;
+        color: #f4f4f5;
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+      }
+      * { box-sizing: border-box; }
+      html, body { width: 100%; min-height: 100%; margin: 0; }
+      body { min-height: 100svh; display: grid; place-items: center; background: #0f1012; }
+      main { width: min(100vw, calc(100svh * 16 / 9), 1280px); aspect-ratio: 16 / 9; }
+      img { display: block; width: 100%; height: 100%; }
+      @media print {
+        body { min-height: 0; }
+        main { width: 100%; max-width: 1280px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <img src="overview.svg" width="1280" height="720" alt="Offline synthetic demonstration of relevance scoring for three context notes. For the task “Why does this request time out?”, timeout_config receives scripted p equals 0.94 and would be kept as relevant; timeout_caller receives p equals 0.68 and would be kept as uncertain; button_styles receives p equals 0.08 and would be dropped. The probabilities are scripted in demo.ts and are never live. Illustrative cutoffs: below 0.2 would drop, 0.2 through 0.8 is uncertain and retained, and above 0.8 is relevant and retained. Incomplete evidence retains all notes and proposes no drops. Bundled demo costs are unknown. The original context keeps all three notes unchanged; no agent runs and no replacement context is returned.">
+    </main>
+  </body>
+</html>
