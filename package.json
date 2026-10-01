@@ -32,7 +32,7 @@
     "typescript": "7.0.2"
   },
   "dependencies": {
-    "next": "16.3.5",
+    "next": "16.3.6",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "zod": "4.6.5"
