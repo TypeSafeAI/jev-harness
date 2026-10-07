@@ -4,6 +4,14 @@ An LLM proposes one action; Jev supplies semantic evidence; deterministic code
 produces a verdict; the host owns authorization, storage, and any execution.
 This package is not a full agent runtime. No proposal executes here.
 
+The optional Arena remains loopback-only. Rejected origins receive explicit local
+setup instructions before provider or CLI work; the UI retains failed/partial
+run reasons in a prominent alert. `pnpm --silent mcp:fixture --case read` exposes
+the existing bounded fixture MCP over stdio independently of the Arena. It uses
+only a fixed case ID, an ephemeral manifest and trace, and the same synthetic
+handlers. It needs no credentials, executes no proposals, and deletes its
+temporary records on normal exit or handled termination.
+
 ## Roles and trust boundaries
 
 | Role | Owner | Boundary |

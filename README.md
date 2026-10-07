@@ -257,7 +257,8 @@ records 171/171 expected routing outcomes and 39/39 assessable routed outputs
 meeting the blinded rubric. Every first response was valid, so no live recovery
 benefit was observed. See the [host recovery and accounting rules](docs/routing.md#experiment-protocol-n-tools-in-context-vs-jev-top-k).
 
-For the dark, full-width **Agent arena**:
+For the **Agent arena**, with graphite surfaces and IBM Plex typography aligned
+with [TypeSafe UI](https://ui.jev.works/):
 
 ```sh
 pnpm demo

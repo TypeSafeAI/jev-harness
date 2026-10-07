@@ -20,6 +20,7 @@
     "experiment:routing": "tsx scripts/experiment-routing.ts",
     "experiment:review": "tsx scripts/experiment-review.ts",
     "demo": "pnpm dev",
+    "mcp:fixture": "tsx scripts/fixture-mcp.ts",
     "dev": "next dev --webpack --hostname 127.0.0.1 --port 4173",
     "build": "next build --webpack",
     "start": "next start --hostname 127.0.0.1 --port 4173"
