@@ -9,7 +9,7 @@ export const runtime = "nodejs";
 export const maxDuration = 300;
 let running = false;
 export async function POST(request: Request) {
-  if (!localOrigin(request)) return json(403, { error: "Use this app's local origin." });
+  if (!localOrigin(request)) return json(403, { attempted: false, error: "Run comparison requires a local host; it is unavailable from this origin. Run pnpm dev on a Mac or Linux machine with Codex installed and signed in, then open http://127.0.0.1:4173 and add your TypeSafe API key in Settings. No provider request or CLI run was started." });
   if (request.headers.get("content-type") !== "application/json") return json(415, { error: "Use application/json." });
   let caseId: string;
   try { const input = JSON.parse(await boundedText(request.body, 1024)); if (!input || Object.keys(input).join() !== "caseId" || typeof input.caseId !== "string") throw Error(); caseId = input.caseId; }
