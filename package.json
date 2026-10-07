@@ -21,6 +21,7 @@
     "bench:review": "tsx scripts/bench-review.ts",
     "experiment:routing": "tsx scripts/experiment-routing.ts",
     "experiment:review": "tsx scripts/experiment-review.ts",
+    "experiment:context-shadow": "tsx scripts/experiment-context-shadow.ts",
     "demo": "pnpm dev",
     "mcp:fixture": "tsx scripts/fixture-mcp.ts",
     "dev": "next dev --webpack --hostname 127.0.0.1 --port 4173",
