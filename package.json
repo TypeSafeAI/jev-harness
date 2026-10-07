@@ -12,6 +12,8 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
+    "check:boundaries": "node scripts/check-boundaries.mjs",
+    "verify": "pnpm check:boundaries && pnpm typecheck && pnpm test && pnpm build && pnpm check:secrets",
     "test": "tsx --test tests/*.test.ts",
     "prepare": "git config core.hooksPath .githooks || true",
     "check:secrets": "node scripts/check-secrets.mjs --all",

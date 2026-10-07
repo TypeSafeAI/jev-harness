@@ -1,7 +1,9 @@
 # Security
 
-This repository has no live provider transport and no code path that executes
-a proposal. Bugs that make evidence look more trustworthy than it is still
+The exported package has no live provider transport. The optional demo host in
+`examples/host/` owns explicit provider requests and isolated Codex CLI runs
+against synthetic fixtures. No code path applies or executes a proposal.
+Bugs that make evidence look more trustworthy than it is still
 matter. The optional audit adapter does not authenticate records merely by
 hashing them; see [receipt-binding limitations](docs/hardening/05-receipt-binding.md).
 

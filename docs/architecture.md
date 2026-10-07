@@ -23,6 +23,47 @@ temporary records on normal exit or handled termination.
 | Evidence audit | Optional `src/audit/receipt.ts` | Node hashing and offline replay; no authentication or persistence |
 | Authorization and execution | Host only | Independently checks identity, grants, capabilities, freshness, and outcomes |
 
+## Dependency direction
+
+```mermaid
+flowchart TD
+  UI[React interface: components] --> Routes[Next.js routes: app/api]
+  Routes --> Host[Example host: provider and CLI adapters]
+  Host --> Core[Pure contract and routing: src/index.ts]
+  UI --> Core
+  Bench[Synthetic benchmark] --> Core
+  Audit[Optional Node audit adapter] --> Core
+  Core --> Schema[zod schema validation]
+  Host --> MCP[Bounded synthetic fixture MCP]
+```
+
+Arrows mean imports or adapter calls, not permission grants. The root API
+never imports the host, benchmark, audit adapter, or React. The optional Node
+audit adapter is a separate entrypoint. `pnpm check:boundaries` checks the
+core diagnostics and compiler-resolved inventory for the root and every contract/routing module;
+`tsconfig.core.json` excludes ambient Node types. Only core source, zod type
+declarations, and TypeScript standard libraries are allowed. This is a
+dependency-direction guard, not a runtime sandbox or proof of complete purity.
+
+For one proposal, responsibility moves through these stages:
+
+1. The host obtains the task, proposal, and file snapshot.
+2. Validation rejects malformed or out-of-scope proposals before provider work.
+3. The host permits egress and obtains evidence through an injected transport.
+4. Deterministic policy returns a verdict; unavailable evidence stays unavailable.
+5. The host records the receipt and independently decides what it may do.
+
+Routing is a separate closed-set selection flow. It selects schemas for a host,
+not a proposal-review verdict or an execution grant. The Arena demonstrates
+that flow with synthetic MCP tools. Public hosted origins cannot start its
+local CLI; failures remain visible in the interface and saved history.
+
+See the [development guide](development.md) for owning files, regression
+checks, and failure tracing. Settled-run lessons and example counts are
+memoized only by their inputs in the UI; evidence and decisions are never
+cached across unrelated runs. The locally served body font is preloaded from
+the document. Neither change establishes a measured performance improvement.
+
 Repository content, quoted evidence, and rationale are untrusted data. A
 model-generated field does not acquire authority by matching a schema. A local
 read grant does not automatically allow uploading that file to a provider.

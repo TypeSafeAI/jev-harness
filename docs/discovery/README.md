@@ -8,6 +8,9 @@
 
 ## Start offline
 
+The [development guide](../development.md) maps common tasks to implementation
+and tests, with failure tracing and a complete signed delivery workflow.
+
 Use Node.js 22+ and the exact pnpm version in `package.json`. Install with `pnpm install --frozen-lockfile`. The offline contract tests and synthetic fixture benchmark do not need a provider key. Keep dependency changes separate from documentation, and preserve the single lockfile and secret guards.
 
 The important boundary is between evidence and authority. Jev supplies narrow judgments; deterministic code produces a review outcome; a host independently decides what it may do. A favorable verdict does not apply a patch, execute proposed code, authenticate a receipt, or grant permissions.
