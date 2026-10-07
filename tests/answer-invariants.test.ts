@@ -32,6 +32,28 @@ test("finite but out-of-range probabilities and confidence cannot permit", () =>
   }
 });
 
+// Restored from TypeSafeAI/typesafe-playground tests/proposal-review.test.ts at
+// 408ebb55086fb9b6d517dc5a11aa1c404117f699 ("decision table: out-of-range
+// probabilities and confidence never permit"), which the phase 1 extraction
+// did not carry over. Covers every question id and names the miss.
+test("out-of-range probability or confidence on any question never permits and is named", () => {
+  for (const id of REVIEW_QUESTION_IDS) {
+    for (const field of ["probability", "confidence"] as const) {
+      for (const value of [-0.01, 1.01, -2, 2]) {
+        const a = favorable();
+        a[id] = { ...a[id], [field]: value };
+        const decision = decide(ok, review(a));
+        assert.equal(decision.verdict, "proposal_only", `${id}.${field}=${value}`);
+        assert.match(decision.reason, new RegExp(`${id}: no usable answer`), `${id}.${field}=${value}`);
+      }
+    }
+  }
+  const certain = Object.fromEntries(
+    REVIEW_QUESTION_IDS.map(id => [id, answer(FAVORABLE[id] === "yes" ? 1 : 0)]),
+  ) as ReviewAnswers;
+  assert.equal(decide(ok, review(certain)).verdict, "permit");
+});
+
 test("canonical probability grid preserves the v1 decision table", () => {
   const values = [0, 0.1, 0.5, 0.9, 1];
   for (const p of values) for (const q of values) for (const r of values) for (const s of values) {
