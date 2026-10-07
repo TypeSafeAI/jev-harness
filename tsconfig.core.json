@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": [],
+    "incremental": false,
+    "plugins": []
+  },
+  "include": ["src/index.ts", "src/contract/**/*.ts", "src/routing/**/*.ts"],
+  "exclude": ["node_modules"]
+}

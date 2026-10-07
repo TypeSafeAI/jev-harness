@@ -10,6 +10,8 @@ Dates and phases are planning targets, not delivery promises.
 - [x] Runtime invariants, immutable policy metadata, and offline regression tests
 - [x] Optional bound-receipt audit, benchmark-only API, and evaluation/blinding helpers
 - [x] Documentation and host-conformance specification
+- [x] [Task-oriented development guide](development.md), compiler-resolved core
+  import guard, unified offline verification, and documented interface foundations
 - [ ] Signed hardening commits and passing pinned checks on each current PR head before merge
 
 These additions do not constitute a full validator, transport, runner, live
@@ -133,6 +135,7 @@ candidates are not held-out calibration.
 ## 4 · Context scoring
 
 - [x] Compare scoring/re-prefill costs with forfeited prefix-cache reuse. [Cost model](context-scoring-cost-model.md): no-go for integration code; conditional go for a synthetic shadow experiment
+- [x] Offline [synthetic shadow experiment kit](../examples/context-scoring-shadow/README.md): two Noul request layouts, scripted evidence, proposed keep/drop sets, uncertainty and explicit cache accounting; `pnpm experiment:context-shadow`. This is a synthetic demonstration, not a live measurement.
 - [ ] Review data egress and run a shadow experiment on synthetic or consented context
 - [ ] Make the integration decision from measured results, not token counts alone
 

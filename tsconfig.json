@@ -37,10 +37,12 @@
     "tests",
     "examples",
     "scripts/bench-routing.ts",
+    "scripts/fixture-mcp.ts",
     "scripts/bench-review.ts",
     "scripts/analyze-review-runs.ts",
     "scripts/experiment-routing.ts",
     "scripts/experiment-review.ts",
+    "scripts/experiment-context-shadow.ts",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],

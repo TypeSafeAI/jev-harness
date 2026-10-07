@@ -12,6 +12,8 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
+    "check:boundaries": "node scripts/check-boundaries.mjs",
+    "verify": "pnpm check:boundaries && pnpm typecheck && pnpm test && pnpm build && pnpm check:secrets",
     "test": "tsx --test tests/*.test.ts",
     "prepare": "git config core.hooksPath .githooks || true",
     "check:secrets": "node scripts/check-secrets.mjs --all",
@@ -19,13 +21,15 @@
     "bench:review": "tsx scripts/bench-review.ts",
     "experiment:routing": "tsx scripts/experiment-routing.ts",
     "experiment:review": "tsx scripts/experiment-review.ts",
+    "experiment:context-shadow": "tsx scripts/experiment-context-shadow.ts",
     "demo": "pnpm dev",
+    "mcp:fixture": "tsx scripts/fixture-mcp.ts",
     "dev": "next dev --webpack --hostname 127.0.0.1 --port 4173",
     "build": "next build --webpack",
     "start": "next start --hostname 127.0.0.1 --port 4173"
   },
   "devDependencies": {
-    "@types/node": "26.6.3",
+    "@types/node": "26.6.4",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "tsx": "4.23.15",

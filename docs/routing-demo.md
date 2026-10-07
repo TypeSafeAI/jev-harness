@@ -1,6 +1,6 @@
 # Jev Harness demo
 
-A local Next.js App Router application with a dark, full-width React interface. The pure harness in `src/` is shared by the UI and host; it has no provider client or executor.
+A local Next.js App Router application with a graphite React workspace styled after [TypeSafe UI](https://ui.jev.works/). The pure harness in `src/` is shared by the UI and host; it has no provider client or executor. See the [interface guide](interface.md) for typography, tokens, component treatments, and responsive behavior.
 
 ```sh
 pnpm install --frozen-lockfile
@@ -75,6 +75,24 @@ Input and duration trends pair completed lanes only when the fixture id, task, f
 History is unencrypted local evidence, not authenticated provenance or an account-wide database. It contains no API-key fields. Clear local history requires confirmation and leaves the API key and usage log intact; clearing usage leaves comparisons intact. Saved results from another port or device are not synchronized.
 
 ## Local host boundary
+
+Hosted pages cannot start comparisons: the Arena returns HTTP 403 with local
+setup instructions before any provider request or CLI process. Run `pnpm dev`
+on macOS or Linux, open `http://127.0.0.1:4173`, configure the TypeSafe key in
+Settings, and use a file-based Codex sign-in on that host. Failed and partial
+comparisons display a persistent alert, including when reopened from History.
+Each lane creates its own bounded synthetic MCP server automatically; there is
+no separate MCP service to deploy for the Run comparison button.
+
+To connect another MCP client directly to the synthetic fixture tools, configure
+a stdio server with command `pnpm`, working directory set to this repository,
+and arguments `["--silent", "mcp:fixture", "--case", "read"]`. The supported
+case IDs are `read`, `patch`, `inspect`, and `ambiguous`. Use `--silent` so pnpm
+does not write script banners into the JSON-RPC stream. The command exposes
+`read_file`, `propose_patch`, and `inspect_agent` from the fixed synthetic case;
+it accepts no filesystem path or user-supplied source. No key or Codex sign-in
+is required. Pending proposal traces are temporary and removed when the server
+exits; retain tool responses in the client if needed.
 
 The Next.js API requires loopback Host/Origin for live operations, bounded JSON bodies and explicit POST requests. `/api/route` rebuilds its payload from the fixed catalog, pins `jev-1.13.0`, validates the full distribution and strips provider error bodies. It limits physical provider requests, including recovery, to 30/minute and two concurrent logical calls per process across tabs and keys. These are local safeguards, not authentication or account-wide quotas. Do not forward this local app publicly.
 
