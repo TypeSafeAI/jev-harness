@@ -4,6 +4,12 @@ These instructions apply throughout the repository unless a more specific `AGENT
 
 Start with `README.md`, then `docs/architecture.md`, `docs/roadmap.md`, and the code and tests for the module being changed. Read before editing.
 
+Use `docs/development.md` for task-to-file ownership, failure tracing, performance
+measurement, and PR delivery. Run `pnpm verify` before committing: import
+boundaries, typecheck, offline tests, production build, and secret patterns.
+`pnpm check:boundaries` checks the compiler-resolved pure dependency graph; it
+does not replace review of runtime behavior or host authorization.
+
 ## What this project is
 
 A coding-agent harness in which an LLM proposes one action, TypeSafe AI's Jev answers four narrow yes/no (`noul`) questions about it, and pure code turns those answers into one of four verdicts: `permit`, `proposal_only`, `reject`, `unavailable`. A host constructs and stores each receipt; a fixture-bench runner in `src/benchmark/` records receipts for synthetic fixtures only. Nothing in this repository executes a proposal.

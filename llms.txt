@@ -4,6 +4,9 @@
 
 ## Entry points
 
+- [Task map and development workflow](https://github.com/TypeSafeAI/jev-harness/blob/main/docs/development.md)
+- [Interface foundations](https://github.com/TypeSafeAI/jev-harness/blob/main/docs/interface.md)
+- [Local demo and fixture MCP](https://github.com/TypeSafeAI/jev-harness/blob/main/docs/routing-demo.md)
 - [README](https://github.com/TypeSafeAI/jev-harness/blob/main/README.md)
 - [Developer and agent guide](https://github.com/TypeSafeAI/jev-harness/blob/main/docs/discovery/README.md)
 - [Repository instructions](https://github.com/TypeSafeAI/jev-harness/blob/main/AGENTS.md)

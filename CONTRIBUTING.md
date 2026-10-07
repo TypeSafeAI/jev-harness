@@ -4,16 +4,22 @@ This is an independent community harness for TypeSafe AI's Jev. Useful contribut
 
 Read [README.md](README.md) for the contract and [AGENTS.md](AGENTS.md) for boundaries. Keep changes focused; do not bundle dependency upgrades, provider transports, or new execution authority into a fixture or documentation fix.
 
+Use the [development guide](docs/development.md) to find the owning module,
+trace failures, measure performance, and prepare a reviewable PR.
+
 ## Development
 
 ```sh
 pnpm install --frozen-lockfile   # also installs the pre-commit secret check (.githooks/)
-pnpm typecheck
-pnpm test
-pnpm check:secrets               # what the hook and CI run; gitleaks adds more if installed
+pnpm verify                      # boundaries, types, offline tests, build, secret patterns
 ```
 
-Tests run offline. Nothing here needs a TypeSafe API key, and no key should ever be in a commit; see [SECURITY.md](SECURITY.md) for the guards and what to do if one slips.
+Tests run offline. Verification needs no TypeSafe API key, and no key should ever be in a commit; see [SECURITY.md](SECURITY.md) for the guards and what to do if one slips.
+
+Explicit live demo comparisons require a TypeSafe API key.
+CI additionally checks real sharing responses and scans full history with
+gitleaks. Run the relevant browser verifiers for interface changes; report
+human accessibility and live-provider acceptance separately.
 
 ## Pull requests
 

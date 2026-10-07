@@ -19,5 +19,5 @@ export const metadata: Metadata = {
   },
 };
 export default function Layout({ children }: { children: ReactNode }) {
-  return <html lang="en"><body><a className="skip" href="#arena-workspace">Skip to arena</a><Header />{children}</body></html>;
+  return <html lang="en"><head><link rel="preload" href="/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossOrigin="anonymous" /></head><body><a className="skip" href="#arena-workspace">Skip to arena</a><Header />{children}</body></html>;
 }

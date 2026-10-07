@@ -8,6 +8,7 @@ export async function verifyArena(page, baseURL) {
   let mode = "normal";
   const result = { status: "completed", answer: "The synthetic sum returns 5.", durationMs: 1000, inputTokens: 1000, cachedInputTokens: 300, outputTokens: 50, toolCallCount: 1, traceTruncated: false, toolCalls: [{ tool: "read_file", status: "returned", at: "2026-09-22T00:00:00Z" }], error: null };
   await page.route("**/api/arena", async route => {
+    if (mode === "hosted") return route.fulfill({ status: 403, contentType: "application/json", body: JSON.stringify({ attempted: false, error: "Run comparison requires a local host. Run pnpm dev and open http://127.0.0.1:4173. No provider request or CLI run was started." }) });
     let events = [
       { type: "usage", attempted: true, measurement: { inputTokens: 100, outputTokens: 10, requestBytes: 400, responseBytes: 40, latencyMs: 200 } },
       { type: "routing", receipt: browserReceipt() },
@@ -16,6 +17,7 @@ export async function verifyArena(page, baseURL) {
       { type: "done" },
     ];
     if (mode === "proposal") events = events.map(event => event.type === "result" ? { ...event, result: { ...event.result, toolCalls: [{ tool: "propose_patch", status: "returned", at: "2026-09-22T00:00:00Z", proposal: { path: "src/sum.ts", patch: "@@\n- before\n+ after", rationale: "Synthetic pending fix", applied: false } }] } } : event);
+    if (mode === "failed-lane") events = events.map(event => event.type === "result" && event.lane === "integrated" ? { ...event, result: { ...event.result, status: "failed", error: "Codex CLI could not start." } } : event);
     if (mode === "eof") events = [{ type: "stage", value: "Asking Jev…" }];
     if (mode === "skipped") events = [{ type: "usage", attempted: false }, { type: "error", value: "No key. No request made." }];
     await route.fulfill({ contentType: "application/x-ndjson", body: events.map(e => JSON.stringify(e)).join("\n") + "\n" });
@@ -65,7 +67,7 @@ export async function verifyArena(page, baseURL) {
     mode = "eof"; await run();
     check((await page.locator(".saved-run-message").textContent()).includes("partial"), "early EOF shows partial status");
     await page.getByRole("button", { name: "Usage · 4", exact: true }).click();
-    check((await page.locator("#usage-unknown").textContent()).includes("1 requests"), "early EOF records unknown usage");
+    check((await page.locator("#usage-unknown").textContent()).includes("1 logical calls have incomplete usage"), "early EOF records unknown usage");
     await page.getByRole("button", { name: "Close usage dashboard" }).click();
     mode = "skipped"; await run();
     check(await page.getByRole("button", { name: "Usage · 4", exact: true }).isVisible(), "explicit skipped request does not add usage");
@@ -77,6 +79,15 @@ export async function verifyArena(page, baseURL) {
     const proposalDownload = page.waitForEvent("download"); await page.getByRole("button", { name: "Download comparison" }).click();
     const proposalStream = await (await proposalDownload).createReadStream(); let proposalJson = ""; for await (const chunk of proposalStream) proposalJson += chunk;
     check(JSON.parse(proposalJson).lanes.baseline.result.toolCalls[0].proposal.applied === false, "proposal export preserves nonexecution and recorded data");
+    await page.getByRole("button", { name: "Close details" }).click();
+    mode = "failed-lane"; await run();
+    check((await page.getByRole("alert").filter({ hasText: "Comparison did not complete." }).textContent()).includes("failed or is incomplete"), "failed lane does not claim comparison success");
+    mode = "hosted"; await run();
+    const failure = page.getByRole("alert").filter({ hasText: "Comparison did not complete." });
+    check((await failure.textContent()).includes("pnpm dev"), "hosted rejection shows actionable alert");
+    await page.reload();
+    await failure.waitFor();
+    check((await failure.textContent()).includes("No provider request or CLI run"), "failure reason survives history reload");
     return { checks, count: checks.length, providerCalls: 0, humanAccessibilityAcceptance: "not performed" };
   } finally { await page.unroute("**/api/arena"); }
 }

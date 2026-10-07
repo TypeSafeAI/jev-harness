@@ -19,13 +19,14 @@ The badge above points to this repository; inspect the exact PR head for CI evid
 
 ## Quick start
 
+For a task-to-file map, failure tracing, performance checks, and signed PR
+delivery, read the [development guide](docs/development.md).
+
 ```sh
 git clone https://github.com/TypeSafeAI/jev-harness.git
 cd jev-harness
 pnpm install --frozen-lockfile
-pnpm typecheck
-pnpm test
-pnpm check:secrets
+pnpm verify
 pnpm bench:review
 ```
 
@@ -258,7 +259,8 @@ records 171/171 expected routing outcomes and 39/39 assessable routed outputs
 meeting the blinded rubric. Every first response was valid, so no live recovery
 benefit was observed. See the [host recovery and accounting rules](docs/routing.md#experiment-protocol-n-tools-in-context-vs-jev-top-k).
 
-For the dark, full-width **Agent arena**:
+For the **Agent arena**, with graphite surfaces and IBM Plex typography aligned
+with [TypeSafe UI](https://ui.jev.works/):
 
 ```sh
 pnpm demo
