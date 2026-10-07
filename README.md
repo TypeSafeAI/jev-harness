@@ -19,13 +19,14 @@ The badge above points to this repository; inspect the exact PR head for CI evid
 
 ## Quick start
 
+For a task-to-file map, failure tracing, performance checks, and signed PR
+delivery, read the [development guide](docs/development.md).
+
 ```sh
 git clone https://github.com/TypeSafeAI/jev-harness.git
 cd jev-harness
 pnpm install --frozen-lockfile
-pnpm typecheck
-pnpm test
-pnpm check:secrets
+pnpm verify
 pnpm bench:review
 ```
 
