@@ -1,0 +1,48 @@
+{
+  "kind": "offline-extraction-rediff",
+  "date": "2026-10-05",
+  "source": "mock",
+  "liveProviderCalls": 0,
+  "sourceRevision": "408ebb55086fb9b6d517dc5a11aa1c404117f699",
+  "sourceRevisionNote": "Head of typesafe-playground PR #41. `git diff --stat 408ebb5 6fe5967` is empty, so the tree is identical to the merge commit recorded in phase1-extraction-2026-09-23.json.",
+  "harnessRevision": "bb42c2ea366a2743d8f27108b33f9a4a58060a66",
+  "harnessRevisionNote": "Merge of #33, after #28 and #32.",
+  "priorRecord": "phase1-extraction-2026-09-23.json",
+  "fixtures": {
+    "extracted": 20,
+    "gitBlobIdentical": 20,
+    "recordedSha256Matches": 20
+  },
+  "recordedExtractedSourceSha256Matches": "11/11 at #32 merge 5fa584979f22aba0809a1386e341464a62d9a551",
+  "pipelineEquivalence": {
+    "method": "Both runners over the 20 playground fixtures x good/bad x base/plus_jev with each side's mock transport and a fixed clock.",
+    "runs": 80,
+    "validationEqual": 80,
+    "verdictEqual": 80,
+    "reasonTextEqual": 80,
+    "receiptEqualWithLatencyZeroed": 80,
+    "wireBodiesCompared": 33,
+    "wireBodiesCompareNote": "40 plus_jev runs minus 7 bad arms rejected by validation. Playground bodies passed through lib/api.ts validatePayload, the step lib/serverJev.ts runs before every live call; harness bodies are post-validateReviewPayload.",
+    "wireBodiesStructurallyEqual": 33,
+    "wireBodiesByteEqual": 0
+  },
+  "undocumentedDifferences": [
+    {
+      "area": "wire key order",
+      "detail": "validateReviewPayload returns {model, state, questions}; the playground validatePayload returns {state, model, questions}. JSON object member order carries no meaning, but the serialized bodies are not byte-identical. The prior record's normalizedV1RequestsIdentical holds because it normalizes through each validator and a JSON round trip; it does not claim byte identity.",
+      "impact": "none on verdicts or receipts"
+    },
+    {
+      "area": "test coverage",
+      "detail": "Playground test 'decision table: out-of-range probabilities and confidence never permit' was not carried over at extraction.",
+      "resolution": "Restored in #61 (90e1cf474008aed9f9c60a83f26a2f5e6449eba1) in tests/answer-invariants.test.ts."
+    }
+  ],
+  "checksAtHarnessRevision": {
+    "pnpm install --frozen-lockfile": "passed",
+    "pnpm typecheck": "passed",
+    "pnpm test": "191 passed, 0 failed",
+    "pnpm bench:review": "7/21 base bad caught, 21/21 +Jev bad caught, 2/21 +Jev good blocked, 0/42 unavailable, 42/42 expected met; scripted mock values, not Jev measurements"
+  },
+  "postExtractionDrift": "Deliberate and outside this check: #46 (b9bf81a) moved the current question set to v4, so current main's live wire body differs from the playground; REVIEW_QUESTIONS_V1 still holds the four v1 instructions verbatim. #38 (a8a1a45) added four fixtures; the 20 extracted fixture blobs are unchanged on main."
+}

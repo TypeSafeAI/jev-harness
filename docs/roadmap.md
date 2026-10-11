@@ -25,7 +25,10 @@ durable log store, and production host remain out of scope. See the
 Source: `typesafe-playground/lib/harness/`, re-diffed against canonical merged
 `main` commit `6fe5967dc020521a0731682b06c4d8eeeab95ffb` (playground PR #41).
 The [offline extraction check](verification/phase1-extraction-2026-09-23.json)
-confirms all original 20 fixtures and normalized v1 requests remain unchanged. The
+confirms all original 20 fixtures and normalized v1 requests remain unchanged. An
+[independent re-diff against the #41 head](verification/phase1-rediff-408ebb5-2026-10-05.json)
+reproduced it over 80 mock runs and found the requests equal in content but not
+byte order (`model` is serialized before `state`). The
 [hardened extraction adaptations](architecture.md#question-sets) retain the
 existing decision table and require the exact model pin before transport and
 on real-source replies. The original historical run links remain pinned to
